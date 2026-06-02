@@ -77,14 +77,16 @@
         .mob-drawer-item:active{background:#f3f4f6}
         .mob-drawer-item i{width:24px;text-align:center;font-size:18px;color:#6b7280}
         /* ── GITHUB GIST SYNC ── */
-        #sync-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-secondary);padding:4px 10px;border-radius:20px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);cursor:default;user-select:none;transition:all .3s}
-        #sync-status.syncing{color:#185FA5;border-color:#85B7EB;background:#E6F1FB}
-        #sync-status.synced{color:#3B6D11;border-color:#C0DD97;background:#EAF3DE}
-        #sync-status.error{color:#A32D2D;border-color:#F7C1C1;background:#FCEBEB}
-        #sync-status.offline{color:#854F0B;border-color:#FAC775;background:#FAEEDA}
-        #sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+        .sync-status-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-secondary);padding:4px 10px;border-radius:20px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);cursor:pointer;user-select:none;transition:all .3s;white-space:nowrap}
+        .sync-status-badge.syncing{color:#185FA5;border-color:#85B7EB;background:#E6F1FB}
+        .sync-status-badge.synced{color:#3B6D11;border-color:#C0DD97;background:#EAF3DE}
+        .sync-status-badge.error{color:#A32D2D;border-color:#F7C1C1;background:#FCEBEB}
+        .sync-status-badge.offline{color:#854F0B;border-color:#FAC775;background:#FAEEDA}
+        .sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-        #sync-status.syncing #sync-dot{animation:pulse .8s ease-in-out infinite}
+        .sync-status-badge.syncing .sync-dot{animation:pulse .8s ease-in-out infinite}
+        .sync-refresh-btn{background:none;border:none;cursor:pointer;color:var(--color-text-secondary);padding:4px 6px;border-radius:8px;font-size:13px;transition:color .2s}
+        .sync-refresh-btn:hover{color:var(--color-text-primary)}
         #gist-setup-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}
         #gist-setup-modal.show{display:flex}
         @media(max-width:767px){
@@ -120,7 +122,7 @@
             <div class="p-4 border-t space-y-3"><div class="flex items-center justify-between" id="settings-gear-container"><span class="text-sm font-medium text-gray-600">Settings</span><button onclick="showSettingsPanel()" class="text-gray-400 hover:text-gray-600 settings-gear transition" title="Settings"><i class="fa-solid fa-gear text-xl"></i></button></div><div class="bg-blue-50 rounded-2xl p-4 text-sm"><div class="font-semibold text-blue-900">Roy's Contact</div><div class="text-blue-700 text-xs mt-1" id="roy-info"></div><button onclick="editRoyInfo()" class="text-xs mt-2 text-blue-600 hover:underline">Edit</button></div><div class="bg-gray-50 rounded-2xl p-4 text-sm"><div class="flex justify-between"><div><div class="font-semibold" id="logged-user-name"></div><div class="text-xs text-gray-500" id="logged-user-role"></div></div><button onclick="showChangePasswordModal()" class="text-blue-600 text-xs underline">Change</button></div><button onclick="logout()" class="mt-3 w-full py-2 btn btn-danger text-sm"><i class="fa-solid fa-right-from-bracket mr-1"></i>Logout</button></div><div id="user-mgmt-container" style="display:none"><button onclick="showUserManagementPanel()" class="w-full py-2 btn btn-warning text-xs"><i class="fa-solid fa-users-gear mr-1"></i>Manage Users</button></div><button onclick="showAboutPanel()" class="w-full py-2 text-xs text-gray-500 hover:text-blue-600 transition"><i class="fa-solid fa-circle-info mr-1"></i>About ToolTrack</button></div>
         </div>
         <div class="flex-1 flex flex-col overflow-hidden">
-            <header class="h-16 bg-white border-b flex items-center justify-between px-8 flex-shrink-0"><h2 class="text-xl font-semibold" id="page-title">Dashboard</h2><div class="flex items-center gap-4"><div class="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-1.5 text-sm"><div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div><span>Online</span></div><button onclick="openReadmeViewer()" class="btn btn-outline px-5 py-2 text-sm"><i class="fa-solid fa-book-open"></i><span> Help</span></button></div></header>
+            <header class="h-16 bg-white border-b flex items-center justify-between px-8 flex-shrink-0"><h2 class="text-xl font-semibold" id="page-title">Dashboard</h2><div class="flex items-center gap-4"><button class="sync-refresh-btn" onclick="manualSync()" title="Refresh data now"><i class="fa-solid fa-rotate"></i></button><div class="sync-status-badge offline" onclick="showGistSetup()" title="Click to configure sync"><div class="sync-dot"></div><span class="sync-label">Offline</span></div><button onclick="openReadmeViewer()" class="btn btn-outline px-5 py-2 text-sm"><i class="fa-solid fa-book-open"></i><span> Help</span></button></div></header>
             <!-- Main content area with forced scroll -->
             <div class="flex-1 overflow-auto" id="main-content-area">
             <!-- Dashboard Tab -->
@@ -237,8 +239,18 @@ function formatPhoneDisplay(p){return'(+965) '+p;}
 // ==================== LOGIN ====================
 function populateLoginDropdown(){document.getElementById('login-user-select').innerHTML='<option value="">-- Select Your Name --</option>'+authManager.getAllUsers().map(u=>`<option value="${u}">${u}</option>`).join('');}
 function showLoginError(m){const d=document.getElementById('login-error-msg');d.querySelector('#login-error-text').textContent=m;d.classList.remove('hidden');setTimeout(()=>d.classList.add('hidden'),5000);}
-async function performLogin(){const u=document.getElementById('login-user-select').value,p=document.getElementById('login-password').value;if(!u){showLoginError('Select name.');return;}if(authManager.login(u,p)){document.getElementById('login-screen').classList.add('hidden');document.getElementById('main-app').classList.remove('hidden');document.getElementById('logged-user-name').textContent=u;document.getElementById('logged-user-role').textContent=authManager.getCurrentUser().role;buildSidebarNavigation();buildMobileNav();await logManager.logAuth(u,'Successful login');if(GistSync.isConfigured()){const pulled=await GistSync.pull();if(pulled)refreshAllPanels();}const startTab=(authManager.getCurrentUser().isAdmin||authManager.getCurrentUser().isRoy)?0:1;switchTab(startTab);updateAllUI();}else{showLoginError('Invalid password.');logManager.logAuth('SYSTEM','Failed login: '+u);}}
-async function logout(){const u=authManager.getCurrentUser();if(u){await logManager.logAuth(u.name,'User logged out');}authManager.logout();closeMobileMoreDrawer();document.getElementById('main-app').classList.add('hidden');document.getElementById('login-screen').classList.remove('hidden');}
+async function performLogin(){const u=document.getElementById('login-user-select').value,p=document.getElementById('login-password').value;if(!u){showLoginError('Select name.');return;}if(authManager.login(u,p)){document.getElementById('login-screen').classList.add('hidden');document.getElementById('main-app').classList.remove('hidden');document.getElementById('logged-user-name').textContent=u;document.getElementById('logged-user-role').textContent=authManager.getCurrentUser().role;buildSidebarNavigation();buildMobileNav();await logManager.logAuth(u,'Successful login');
+        if(GistSync.isConfigured()){
+            GistSync.setStatus('syncing','Syncing...');
+            await GistSync.pull();
+            refreshAllPanels();
+            populateLoginDropdown();
+            GistSync.startPolling();
+        } else {
+            GistSync.setStatus('offline','Offline');
+        }
+        const startTab=(authManager.getCurrentUser().isAdmin||authManager.getCurrentUser().isRoy)?0:1;switchTab(startTab);updateAllUI();}else{showLoginError('Invalid password.');logManager.logAuth('SYSTEM','Failed login: '+u);}}
+async function logout(){const u=authManager.getCurrentUser();if(u){await logManager.logAuth(u.name,'User logged out');}authManager.logout();GistSync.stopPolling();GistSync.setStatus('offline','Offline');closeMobileMoreDrawer();document.getElementById('main-app').classList.add('hidden');document.getElementById('login-screen').classList.remove('hidden');}
 function togglePasswordVisibility(){const p=document.getElementById('login-password');p.type=p.type==='password'?'text':'password';document.getElementById('password-toggle-icon').classList.toggle('fa-eye');document.getElementById('password-toggle-icon').classList.toggle('fa-eye-slash');}
 
 // Password Recovery
@@ -444,26 +456,29 @@ function handleCertFileSelect(i){if(i.files&&i.files[0]){const r=new FileReader(
 function useCameraForCert(){openFilePicker('_file_image_camera',function(file){const dt=new DataTransfer();dt.items.add(file);const tmp=document.getElementById('_file_image_camera');tmp.files=dt.files;handleCertFileSelect(tmp);});}
 
 // ==================== GITHUB GIST SYNC ENGINE ====================
-const GIST_FILE = 'tooltrack_data.json';
+const GIST_FILE     = 'tooltrack_data.json';
 const GIST_LOG_FILE = 'tooltrack_log.txt';
-let _syncTimer = null;
+let _syncTimer   = null;
 let _pendingSync = false;
+let _pollTimer   = null;
+const POLL_INTERVAL = 30000; // auto-refresh every 30 seconds
 
 const GistSync = {
-    getToken(){ return localStorage.getItem('gist_token')||''; },
+    getToken (){ return localStorage.getItem('gist_token')||''; },
     getGistId(){ return localStorage.getItem('gist_id')||''; },
     isConfigured(){ return !!this.getToken(); },
 
     setStatus(state, label){
-        const el = document.getElementById('sync-status');
-        const lb = document.getElementById('sync-label');
-        if(!el) return;
-        el.className = state;
-        if(lb) lb.textContent = label;
+        // Update ALL sync badges (desktop header + mobile header)
+        document.querySelectorAll('.sync-status-badge').forEach(el=>{
+            el.className = 'sync-status-badge '+state;
+            const lb = el.querySelector('.sync-label');
+            if(lb) lb.textContent = label;
+        });
     },
 
     async apiCall(method, path, body){
-        const res = await fetch('https://api.github.com'+path, {
+        const res = await fetch('https://api.github.com'+path,{
             method,
             headers:{
                 'Authorization':'token '+this.getToken(),
@@ -479,25 +494,21 @@ const GistSync = {
         return res.json();
     },
 
-    // Pull latest data from Gist into localStorage
-    async pull(){
+    // Pull latest data from Gist and reload everything in memory
+    async pull(silent){
         if(!this.isConfigured()) return false;
         const gistId = this.getGistId();
         if(!gistId) return false;
         try{
-            this.setStatus('syncing','Syncing...');
+            if(!silent) this.setStatus('syncing','Syncing...');
             const gist = await this.apiCall('GET','/gists/'+gistId);
-            const raw = gist.files[GIST_FILE]?.content;
-            if(!raw) return false;
+            const raw  = gist.files[GIST_FILE]?.content;
+            if(!raw){ this.setStatus('synced','Synced ✓'); return false; }
             const data = JSON.parse(raw);
-            // Restore all keys into localStorage
-            Object.keys(data).forEach(k=>{ try{ localStorage.setItem(k, data[k]); }catch(e){} });
-            // Reload app data from localStorage
-            try{ tools = JSON.parse(localStorage.getItem('tools')||'[]'); }catch(e){ tools=[]; }
-            try{ engineers = JSON.parse(localStorage.getItem('engineers')||'[]'); }catch(e){ engineers=[]; }
-            try{ transactions = JSON.parse(localStorage.getItem('transactions')||'[]'); }catch(e){ transactions=[]; }
-            try{ returnRequests = JSON.parse(localStorage.getItem('returnRequests')||'[]'); }catch(e){ returnRequests=[]; }
-            try{ roy = JSON.parse(localStorage.getItem('royContact')||'{}'); }catch(e){}
+            // Write all keys back to localStorage
+            Object.keys(data).forEach(k=>{ try{ localStorage.setItem(k,data[k]); }catch(e){} });
+            // Reload ALL in-memory data
+            _reloadMemoryFromStorage();
             this.setStatus('synced','Synced ✓');
             return true;
         }catch(e){
@@ -507,11 +518,11 @@ const GistSync = {
         }
     },
 
-    // Push current localStorage to Gist (debounced)
+    // Debounced push — immediate flag skips the delay
     schedulePush(immediate){
         _pendingSync = true;
         if(_syncTimer) clearTimeout(_syncTimer);
-        _syncTimer = setTimeout(()=>this.push(), immediate?500:3000);
+        _syncTimer = setTimeout(()=>this.push(), immediate ? 800 : 4000);
     },
 
     async push(){
@@ -519,118 +530,142 @@ const GistSync = {
         _pendingSync = false;
         this.setStatus('syncing','Saving...');
         try{
-            // Bundle all localStorage keys
             const snapshot = {};
-            const keysToSync = ['tools','engineers','transactions','returnRequests','royContact',
-                                'tooltrack_users','deletionRecords','logConfig'];
-            keysToSync.forEach(k=>{ const v=localStorage.getItem(k); if(v) snapshot[k]=v; });
+            ['tools','engineers','transactions','returnRequests','royContact',
+             'tooltrack_users','deletionRecords','logConfig'].forEach(k=>{
+                const v = localStorage.getItem(k);
+                if(v) snapshot[k] = v;
+            });
             snapshot['_meta'] = JSON.stringify({
                 v:'1.21',
-                savedBy: authManager.getCurrentUser()?.name||'unknown',
+                savedBy: authManager.getCurrentUser()?.name||'system',
                 ts: new Date().toISOString()
             });
 
             let gistId = this.getGistId();
-            const files = { [GIST_FILE]: { content: JSON.stringify(snapshot,null,2) } };
-            // Also sync current log
+            const files = { [GIST_FILE]:{ content: JSON.stringify(snapshot,null,2) } };
             const logContent = logManager.getCurrentLog();
             if(logContent) files[GIST_LOG_FILE] = { content: logContent };
 
             if(!gistId){
-                // Create new gist
                 const res = await this.apiCall('POST','/gists',{
                     description:'ToolTrack v1.21 Data — DO NOT DELETE',
-                    public: false,
-                    files
+                    public: false, files
                 });
                 gistId = res.id;
                 localStorage.setItem('gist_id', gistId);
-                console.log('Gist created:', gistId);
+                console.info('Gist created:', gistId);
             } else {
-                // Update existing gist
                 await this.apiCall('PATCH','/gists/'+gistId,{ files });
             }
             this.setStatus('synced','Saved ✓');
-            // Revert to "synced" label after 3s
-            setTimeout(()=>{
-                if(!_pendingSync) this.setStatus('synced','Synced ✓');
-            }, 3000);
+            setTimeout(()=>{ if(!_pendingSync) this.setStatus('synced','Synced ✓'); }, 3000);
         }catch(e){
             console.warn('Gist push failed:',e.message);
-            this.setStatus('error','Save failed');
+            this.setStatus('error','Save failed — check connection');
         }
     },
 
-    // Test token + gist connectivity
     async test(token, gistId){
         const savedToken = this.getToken();
         localStorage.setItem('gist_token', token);
         try{
-            // Test token is valid
             await this.apiCall('GET','/user');
-            if(gistId){
-                // Test gist is accessible
-                await this.apiCall('GET','/gists/'+gistId);
-                localStorage.setItem('gist_id', gistId);
-            }
+            if(gistId) await this.apiCall('GET','/gists/'+gistId);
             return { ok:true };
         }catch(e){
             localStorage.setItem('gist_token', savedToken);
             return { ok:false, error: e.message };
         }
+    },
+
+    // Start 30-second auto-poll (runs while app is open)
+    startPolling(){
+        this.stopPolling();
+        if(!this.isConfigured()) return;
+        _pollTimer = setInterval(async()=>{
+            if(document.hidden) return; // skip if tab is in background
+            const pulled = await this.pull(true); // silent pull
+            if(pulled){
+                refreshAllPanels();
+                populateLoginDropdown();
+            }
+        }, POLL_INTERVAL);
+    },
+
+    stopPolling(){
+        if(_pollTimer){ clearInterval(_pollTimer); _pollTimer=null; }
     }
 };
 
-// Gist setup modal controls
+// Reload ALL in-memory variables from localStorage (called after every pull)
+function _reloadMemoryFromStorage(){
+    try{ tools          = JSON.parse(localStorage.getItem('tools')||'[]');          }catch(e){ tools=[];          }
+    try{ engineers      = JSON.parse(localStorage.getItem('engineers')||'[]');      }catch(e){ engineers=[];      }
+    try{ transactions   = JSON.parse(localStorage.getItem('transactions')||'[]');   }catch(e){ transactions=[];   }
+    try{ returnRequests = JSON.parse(localStorage.getItem('returnRequests')||'[]'); }catch(e){ returnRequests=[]; }
+    try{ roy            = JSON.parse(localStorage.getItem('royContact')||'{}');     }catch(e){}
+    // Reload auth users so new engineers appear in login dropdown
+    try{ authManager.users = JSON.parse(localStorage.getItem('tooltrack_users')||'{}'); }catch(e){}
+    // Reload deletion records static field
+    try{ DeletionLogger.deletionRecords = JSON.parse(localStorage.getItem('deletionRecords')||'[]'); }catch(e){}
+}
+
+// ── Sync Setup Modal ──
 function showGistSetup(){
-    const modal = document.getElementById('gist-setup-modal');
     document.getElementById('gist-token-input').value = GistSync.getToken();
-    document.getElementById('gist-id-input').value = GistSync.getGistId();
+    document.getElementById('gist-id-input').value    = GistSync.getGistId();
     document.getElementById('gist-setup-error').classList.add('hidden');
     const st = document.getElementById('gist-current-status');
-    if(GistSync.isConfigured()){
-        st.textContent = 'Connected · Gist ID: '+(GistSync.getGistId()||'(will be created on first save)');
-    } else {
-        st.textContent = 'Not configured — data only saves locally';
-    }
-    modal.classList.add('show');
+    st.textContent = GistSync.isConfigured()
+        ? 'Connected · Gist ID: '+(GistSync.getGistId()||'(created on first save)')
+        : 'Not configured — data is local only';
+    document.getElementById('gist-setup-modal').classList.add('show');
 }
 function hideGistSetup(){
     document.getElementById('gist-setup-modal').classList.remove('show');
 }
 async function saveGistConfig(){
-    const token = document.getElementById('gist-token-input').value.trim();
+    const token  = document.getElementById('gist-token-input').value.trim();
     const gistId = document.getElementById('gist-id-input').value.trim();
-    const errEl = document.getElementById('gist-setup-error');
+    const errEl  = document.getElementById('gist-setup-error');
     errEl.classList.add('hidden');
     if(!token){ errEl.textContent='Please enter your GitHub token.'; errEl.classList.remove('hidden'); return; }
     const btn = document.querySelector('#gist-setup-modal .btn-primary');
-    btn.disabled = true; btn.textContent = 'Testing...';
+    btn.disabled=true; btn.textContent='Testing...';
     const result = await GistSync.test(token, gistId);
-    btn.disabled = false; btn.textContent = 'Connect & Test';
+    btn.disabled=false; btn.textContent='Connect & Test';
     if(!result.ok){
-        errEl.textContent = 'Connection failed: '+result.error+'. Check your token has the "gist" scope.';
+        errEl.textContent='Connection failed: '+result.error+'. Check the token has "gist" scope.';
         errEl.classList.remove('hidden');
         return;
     }
     localStorage.setItem('gist_token', token);
     if(gistId) localStorage.setItem('gist_id', gistId);
-    document.getElementById('gist-current-status').textContent = 'Connected! Doing initial sync...';
     hideGistSetup();
-    // Pull first, then push current data
+    // Pull latest from Gist, then push local data up
     const pulled = await GistSync.pull();
-    if(pulled){ refreshAllPanels(); }
+    if(pulled){ refreshAllPanels(); populateLoginDropdown(); }
     GistSync.schedulePush(true);
+    GistSync.startPolling();
 }
 function clearGistConfig(){
     if(!confirm('Disconnect GitHub sync? Data stays local only.')) return;
+    GistSync.stopPolling();
     localStorage.removeItem('gist_token');
     localStorage.removeItem('gist_id');
     GistSync.setStatus('offline','Offline');
     hideGistSetup();
 }
 
-// ==================== FILE PICKER HELPER ====================
+// Manual refresh button handler
+async function manualSync(){
+    if(!GistSync.isConfigured()){ showGistSetup(); return; }
+    const pulled = await GistSync.pull();
+    if(pulled){ refreshAllPanels(); populateLoginDropdown(); }
+}
+
+// ==================== FILE PICKER HELPER ====================// ==================== FILE PICKER HELPER ====================
 // Single reusable file picker — fixes browser security block on 2nd+ dynamic clicks
 function openFilePicker(inputId, cb){
     window._filePickerCb = function(el){
@@ -691,8 +726,8 @@ window.onload=async function(){
     document.getElementById('taken-date').value=new Date().toISOString().split('T')[0];document.getElementById('return-date').value=new Date(Date.now()+7*86400000).toISOString().split('T')[0];populateLoginDropdown();updateRoyUI();document.getElementById('login-screen').classList.remove('hidden');document.getElementById('main-app').classList.add('hidden');currentEngineerView='table';logManager.log('SYSTEM','ToolTrack v1.21 initialized');
     if(GistSync.isConfigured()){
         GistSync.setStatus('syncing','Loading...');
-        const pulled=await GistSync.pull();
-        if(pulled){populateLoginDropdown();}
+        await GistSync.pull();
+        populateLoginDropdown();
     } else {
         GistSync.setStatus('offline','Offline');
     }};
@@ -761,7 +796,13 @@ window.onload=async function(){
         <div class="mob-drawer-item" onclick="showChangePasswordModal();closeMobileMoreDrawer()"><i class="fa-solid fa-key"></i><span>Change Password</span></div>
         <div class="mob-drawer-item" id="mob-drawer-users" onclick="showUserManagementPanel();closeMobileMoreDrawer()"><i class="fa-solid fa-users-gear"></i><span>Manage Users</span></div>
         <div class="mob-drawer-item" style="color:#dc2626" onclick="logout()"><i class="fa-solid fa-right-from-bracket" style="color:#dc2626"></i><span>Logout</span></div>
-        <div style="padding:8px 12px;font-size:12px;color:#9ca3af" id="mob-drawer-user-info"></div>
+        <div style="padding:8px 12px;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:12px;color:#9ca3af" id="mob-drawer-user-info"></span>
+            <div class="sync-status-badge offline" onclick="closeMobileMoreDrawer();showGistSetup();" style="font-size:11px;padding:3px 8px">
+                <div class="sync-dot"></div>
+                <span class="sync-label">Offline</span>
+            </div>
+        </div>
     </div>
 
 </body>
