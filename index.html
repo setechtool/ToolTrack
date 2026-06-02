@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Service Tools Tracker v1.20</title>
+    <title>Service Tools Tracker v1.21</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -76,6 +76,17 @@
         .mob-drawer-item{display:flex;align-items:center;gap:14px;padding:14px 12px;border-radius:12px;font-size:15px;color:#374151;cursor:pointer;-webkit-tap-highlight-color:transparent}
         .mob-drawer-item:active{background:#f3f4f6}
         .mob-drawer-item i{width:24px;text-align:center;font-size:18px;color:#6b7280}
+        /* ── GITHUB GIST SYNC ── */
+        #sync-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-secondary);padding:4px 10px;border-radius:20px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);cursor:default;user-select:none;transition:all .3s}
+        #sync-status.syncing{color:#185FA5;border-color:#85B7EB;background:#E6F1FB}
+        #sync-status.synced{color:#3B6D11;border-color:#C0DD97;background:#EAF3DE}
+        #sync-status.error{color:#A32D2D;border-color:#F7C1C1;background:#FCEBEB}
+        #sync-status.offline{color:#854F0B;border-color:#FAC775;background:#FAEEDA}
+        #sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        #sync-status.syncing #sync-dot{animation:pulse .8s ease-in-out infinite}
+        #gist-setup-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}
+        #gist-setup-modal.show{display:flex}
         @media(max-width:767px){
             body{overflow:auto}
             #mobile-nav{display:flex}
@@ -211,7 +222,7 @@ let pendingDeletionType=null,pendingDeletionId=null;
 let historySortCol='transDate',historySortDir='desc';
 const DATA_RECORD_DIR='C:\\Users\\Doddie\\Documents\\Project\\DataRecord\\';
 
-function saveData(){localStorage.setItem('tools',JSON.stringify(tools));localStorage.setItem('engineers',JSON.stringify(engineers));localStorage.setItem('transactions',JSON.stringify(transactions));localStorage.setItem('returnRequests',JSON.stringify(returnRequests));localStorage.setItem('royContact',JSON.stringify(roy));}
+function saveData(){localStorage.setItem('tools',JSON.stringify(tools));localStorage.setItem('engineers',JSON.stringify(engineers));localStorage.setItem('transactions',JSON.stringify(transactions));localStorage.setItem('returnRequests',JSON.stringify(returnRequests));localStorage.setItem('royContact',JSON.stringify(roy));GistSync.schedulePush();}
 function refreshAllPanels(){renderDashboard();renderTools();renderEngineers();renderBorrowTab();renderHistory();try{renderAnalytics();}catch(e){}try{refreshLogViewer();}catch(e){}}
 function getBorrowerInfo(tid){const t=transactions.find(tr=>tr.toolId===tid&&!tr.returned);if(!t)return null;const e=engineers.find(en=>en.id===t.engineerId);return e?{name:e.name,firstName:e.name.split(' ')[0],department:e.department||'N/A',phone:e.phone,email:e.email,location:t.location||'N/A',expectedReturn:t.expectedReturn,transId:t.id}:null;}
 function isCalExpired(d){return new Date(d)<new Date();}
@@ -226,7 +237,7 @@ function formatPhoneDisplay(p){return'(+965) '+p;}
 // ==================== LOGIN ====================
 function populateLoginDropdown(){document.getElementById('login-user-select').innerHTML='<option value="">-- Select Your Name --</option>'+authManager.getAllUsers().map(u=>`<option value="${u}">${u}</option>`).join('');}
 function showLoginError(m){const d=document.getElementById('login-error-msg');d.querySelector('#login-error-text').textContent=m;d.classList.remove('hidden');setTimeout(()=>d.classList.add('hidden'),5000);}
-async function performLogin(){const u=document.getElementById('login-user-select').value,p=document.getElementById('login-password').value;if(!u){showLoginError('Select name.');return;}if(authManager.login(u,p)){document.getElementById('login-screen').classList.add('hidden');document.getElementById('main-app').classList.remove('hidden');document.getElementById('logged-user-name').textContent=u;document.getElementById('logged-user-role').textContent=authManager.getCurrentUser().role;buildSidebarNavigation();buildMobileNav();await logManager.logAuth(u,'Successful login');const startTab=(authManager.getCurrentUser().isAdmin||authManager.getCurrentUser().isRoy)?0:1;switchTab(startTab);updateAllUI();}else{showLoginError('Invalid password.');logManager.logAuth('SYSTEM','Failed login: '+u);}}
+async function performLogin(){const u=document.getElementById('login-user-select').value,p=document.getElementById('login-password').value;if(!u){showLoginError('Select name.');return;}if(authManager.login(u,p)){document.getElementById('login-screen').classList.add('hidden');document.getElementById('main-app').classList.remove('hidden');document.getElementById('logged-user-name').textContent=u;document.getElementById('logged-user-role').textContent=authManager.getCurrentUser().role;buildSidebarNavigation();buildMobileNav();await logManager.logAuth(u,'Successful login');if(GistSync.isConfigured()){const pulled=await GistSync.pull();if(pulled)refreshAllPanels();}const startTab=(authManager.getCurrentUser().isAdmin||authManager.getCurrentUser().isRoy)?0:1;switchTab(startTab);updateAllUI();}else{showLoginError('Invalid password.');logManager.logAuth('SYSTEM','Failed login: '+u);}}
 async function logout(){const u=authManager.getCurrentUser();if(u){await logManager.logAuth(u.name,'User logged out');}authManager.logout();closeMobileMoreDrawer();document.getElementById('main-app').classList.add('hidden');document.getElementById('login-screen').classList.remove('hidden');}
 function togglePasswordVisibility(){const p=document.getElementById('login-password');p.type=p.type==='password'?'text':'password';document.getElementById('password-toggle-icon').classList.toggle('fa-eye');document.getElementById('password-toggle-icon').classList.toggle('fa-eye-slash');}
 
@@ -432,6 +443,193 @@ function hideCalCertModal(){document.getElementById('cal-cert-modal').classList.
 function handleCertFileSelect(i){if(i.files&&i.files[0]){const r=new FileReader();r.onload=function(e){const t=tools.find(x=>x.id===currentCalCertToolId);if(t){t.calCert=e.target.result;t.calCertDate=new Date().toISOString().split('T')[0];saveData();showCalCertModal(currentCalCertToolId);renderTools();}};r.readAsDataURL(i.files[0]);}}
 function useCameraForCert(){openFilePicker('_file_image_camera',function(file){const dt=new DataTransfer();dt.items.add(file);const tmp=document.getElementById('_file_image_camera');tmp.files=dt.files;handleCertFileSelect(tmp);});}
 
+// ==================== GITHUB GIST SYNC ENGINE ====================
+const GIST_FILE = 'tooltrack_data.json';
+const GIST_LOG_FILE = 'tooltrack_log.txt';
+let _syncTimer = null;
+let _pendingSync = false;
+
+const GistSync = {
+    getToken(){ return localStorage.getItem('gist_token')||''; },
+    getGistId(){ return localStorage.getItem('gist_id')||''; },
+    isConfigured(){ return !!this.getToken(); },
+
+    setStatus(state, label){
+        const el = document.getElementById('sync-status');
+        const lb = document.getElementById('sync-label');
+        if(!el) return;
+        el.className = state;
+        if(lb) lb.textContent = label;
+    },
+
+    async apiCall(method, path, body){
+        const res = await fetch('https://api.github.com'+path, {
+            method,
+            headers:{
+                'Authorization':'token '+this.getToken(),
+                'Accept':'application/vnd.github.v3+json',
+                'Content-Type':'application/json'
+            },
+            body: body ? JSON.stringify(body) : undefined
+        });
+        if(!res.ok){
+            const err = await res.json().catch(()=>({message:res.statusText}));
+            throw new Error(err.message||res.statusText);
+        }
+        return res.json();
+    },
+
+    // Pull latest data from Gist into localStorage
+    async pull(){
+        if(!this.isConfigured()) return false;
+        const gistId = this.getGistId();
+        if(!gistId) return false;
+        try{
+            this.setStatus('syncing','Syncing...');
+            const gist = await this.apiCall('GET','/gists/'+gistId);
+            const raw = gist.files[GIST_FILE]?.content;
+            if(!raw) return false;
+            const data = JSON.parse(raw);
+            // Restore all keys into localStorage
+            Object.keys(data).forEach(k=>{ try{ localStorage.setItem(k, data[k]); }catch(e){} });
+            // Reload app data from localStorage
+            try{ tools = JSON.parse(localStorage.getItem('tools')||'[]'); }catch(e){ tools=[]; }
+            try{ engineers = JSON.parse(localStorage.getItem('engineers')||'[]'); }catch(e){ engineers=[]; }
+            try{ transactions = JSON.parse(localStorage.getItem('transactions')||'[]'); }catch(e){ transactions=[]; }
+            try{ returnRequests = JSON.parse(localStorage.getItem('returnRequests')||'[]'); }catch(e){ returnRequests=[]; }
+            try{ roy = JSON.parse(localStorage.getItem('royContact')||'{}'); }catch(e){}
+            this.setStatus('synced','Synced ✓');
+            return true;
+        }catch(e){
+            console.warn('Gist pull failed:',e.message);
+            this.setStatus('error','Sync error');
+            return false;
+        }
+    },
+
+    // Push current localStorage to Gist (debounced)
+    schedulePush(immediate){
+        _pendingSync = true;
+        if(_syncTimer) clearTimeout(_syncTimer);
+        _syncTimer = setTimeout(()=>this.push(), immediate?500:3000);
+    },
+
+    async push(){
+        if(!this.isConfigured()){ this.setStatus('offline','Offline'); return; }
+        _pendingSync = false;
+        this.setStatus('syncing','Saving...');
+        try{
+            // Bundle all localStorage keys
+            const snapshot = {};
+            const keysToSync = ['tools','engineers','transactions','returnRequests','royContact',
+                                'tooltrack_users','deletionRecords','logConfig'];
+            keysToSync.forEach(k=>{ const v=localStorage.getItem(k); if(v) snapshot[k]=v; });
+            snapshot['_meta'] = JSON.stringify({
+                v:'1.21',
+                savedBy: authManager.getCurrentUser()?.name||'unknown',
+                ts: new Date().toISOString()
+            });
+
+            let gistId = this.getGistId();
+            const files = { [GIST_FILE]: { content: JSON.stringify(snapshot,null,2) } };
+            // Also sync current log
+            const logContent = logManager.getCurrentLog();
+            if(logContent) files[GIST_LOG_FILE] = { content: logContent };
+
+            if(!gistId){
+                // Create new gist
+                const res = await this.apiCall('POST','/gists',{
+                    description:'ToolTrack v1.21 Data — DO NOT DELETE',
+                    public: false,
+                    files
+                });
+                gistId = res.id;
+                localStorage.setItem('gist_id', gistId);
+                console.log('Gist created:', gistId);
+            } else {
+                // Update existing gist
+                await this.apiCall('PATCH','/gists/'+gistId,{ files });
+            }
+            this.setStatus('synced','Saved ✓');
+            // Revert to "synced" label after 3s
+            setTimeout(()=>{
+                if(!_pendingSync) this.setStatus('synced','Synced ✓');
+            }, 3000);
+        }catch(e){
+            console.warn('Gist push failed:',e.message);
+            this.setStatus('error','Save failed');
+        }
+    },
+
+    // Test token + gist connectivity
+    async test(token, gistId){
+        const savedToken = this.getToken();
+        localStorage.setItem('gist_token', token);
+        try{
+            // Test token is valid
+            await this.apiCall('GET','/user');
+            if(gistId){
+                // Test gist is accessible
+                await this.apiCall('GET','/gists/'+gistId);
+                localStorage.setItem('gist_id', gistId);
+            }
+            return { ok:true };
+        }catch(e){
+            localStorage.setItem('gist_token', savedToken);
+            return { ok:false, error: e.message };
+        }
+    }
+};
+
+// Gist setup modal controls
+function showGistSetup(){
+    const modal = document.getElementById('gist-setup-modal');
+    document.getElementById('gist-token-input').value = GistSync.getToken();
+    document.getElementById('gist-id-input').value = GistSync.getGistId();
+    document.getElementById('gist-setup-error').classList.add('hidden');
+    const st = document.getElementById('gist-current-status');
+    if(GistSync.isConfigured()){
+        st.textContent = 'Connected · Gist ID: '+(GistSync.getGistId()||'(will be created on first save)');
+    } else {
+        st.textContent = 'Not configured — data only saves locally';
+    }
+    modal.classList.add('show');
+}
+function hideGistSetup(){
+    document.getElementById('gist-setup-modal').classList.remove('show');
+}
+async function saveGistConfig(){
+    const token = document.getElementById('gist-token-input').value.trim();
+    const gistId = document.getElementById('gist-id-input').value.trim();
+    const errEl = document.getElementById('gist-setup-error');
+    errEl.classList.add('hidden');
+    if(!token){ errEl.textContent='Please enter your GitHub token.'; errEl.classList.remove('hidden'); return; }
+    const btn = document.querySelector('#gist-setup-modal .btn-primary');
+    btn.disabled = true; btn.textContent = 'Testing...';
+    const result = await GistSync.test(token, gistId);
+    btn.disabled = false; btn.textContent = 'Connect & Test';
+    if(!result.ok){
+        errEl.textContent = 'Connection failed: '+result.error+'. Check your token has the "gist" scope.';
+        errEl.classList.remove('hidden');
+        return;
+    }
+    localStorage.setItem('gist_token', token);
+    if(gistId) localStorage.setItem('gist_id', gistId);
+    document.getElementById('gist-current-status').textContent = 'Connected! Doing initial sync...';
+    hideGistSetup();
+    // Pull first, then push current data
+    const pulled = await GistSync.pull();
+    if(pulled){ refreshAllPanels(); }
+    GistSync.schedulePush(true);
+}
+function clearGistConfig(){
+    if(!confirm('Disconnect GitHub sync? Data stays local only.')) return;
+    localStorage.removeItem('gist_token');
+    localStorage.removeItem('gist_id');
+    GistSync.setStatus('offline','Offline');
+    hideGistSetup();
+}
+
 // ==================== FILE PICKER HELPER ====================
 // Single reusable file picker — fixes browser security block on 2nd+ dynamic clicks
 function openFilePicker(inputId, cb){
@@ -484,14 +682,54 @@ function closeMobileMoreDrawer(){
 }
 
 // ==================== INIT ====================
-window.onload=function(){
+window.onload=async function(){
     // Version guard: force reload if browser cached an older version
-    const APP_VERSION='1.20';
+    const APP_VERSION='1.21';
     const storedVersion=sessionStorage.getItem('tooltrack_app_version');
     if(storedVersion&&storedVersion!==APP_VERSION){sessionStorage.setItem('tooltrack_app_version',APP_VERSION);location.reload(true);return;}
     sessionStorage.setItem('tooltrack_app_version',APP_VERSION);
-    document.getElementById('taken-date').value=new Date().toISOString().split('T')[0];document.getElementById('return-date').value=new Date(Date.now()+7*86400000).toISOString().split('T')[0];populateLoginDropdown();updateRoyUI();document.getElementById('login-screen').classList.remove('hidden');document.getElementById('main-app').classList.add('hidden');currentEngineerView='table';logManager.log('SYSTEM','ToolTrack v1.20 initialized');};
+    document.getElementById('taken-date').value=new Date().toISOString().split('T')[0];document.getElementById('return-date').value=new Date(Date.now()+7*86400000).toISOString().split('T')[0];populateLoginDropdown();updateRoyUI();document.getElementById('login-screen').classList.remove('hidden');document.getElementById('main-app').classList.add('hidden');currentEngineerView='table';logManager.log('SYSTEM','ToolTrack v1.21 initialized');
+    if(GistSync.isConfigured()){
+        GistSync.setStatus('syncing','Loading...');
+        const pulled=await GistSync.pull();
+        if(pulled){populateLoginDropdown();}
+    } else {
+        GistSync.setStatus('offline','Offline');
+    }};
 </script>
+    <!-- GITHUB GIST SYNC SETUP MODAL -->
+    <div id="gist-setup-modal" role="dialog" aria-label="GitHub Sync Setup">
+        <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold">GitHub Sync Setup</h3>
+                <button onclick="hideGistSetup()" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+            </div>
+            <div id="gist-setup-content">
+                <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-5 text-sm text-blue-800 leading-relaxed">
+                    <strong>How it works:</strong> ToolTrack saves all data to a private GitHub Gist — a free secure file on your GitHub account. Any device that opens the app will automatically load the latest data.
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">GitHub Personal Access Token</label>
+                        <input type="password" id="gist-token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="w-full p-3 border rounded-xl text-sm font-mono">
+                        <p class="text-xs text-gray-500 mt-1">Go to GitHub → Settings → Developer Settings → Personal Access Tokens → Tokens (classic) → Generate new token → select <strong>gist</strong> scope only.</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Gist ID <span class="text-gray-400 font-normal">(leave blank to create new)</span></label>
+                        <input type="text" id="gist-id-input" placeholder="Auto-created on first save" class="w-full p-3 border rounded-xl text-sm font-mono">
+                        <p class="text-xs text-gray-500 mt-1">If you already have a ToolTrack Gist, paste its ID here (the long string in the URL).</p>
+                    </div>
+                </div>
+                <div id="gist-setup-error" class="hidden mt-3 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700"></div>
+                <div class="flex gap-3 mt-6">
+                    <button onclick="saveGistConfig()" class="flex-1 btn btn-primary py-3">Connect &amp; Test</button>
+                    <button onclick="clearGistConfig()" class="btn btn-outline px-5 py-3 text-sm text-red-500 border-red-200">Disconnect</button>
+                </div>
+                <div id="gist-current-status" class="mt-4 text-xs text-gray-400 text-center"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- REUSABLE HIDDEN FILE INPUTS (fixes second-attempt browser block) -->
     <input type="file" id="_file_image_camera" accept="image/*" capture="environment" style="display:none" onchange="window._filePickerCb&&window._filePickerCb(this)">
     <input type="file" id="_file_image_any"    accept="image/*"                       style="display:none" onchange="window._filePickerCb&&window._filePickerCb(this)">
