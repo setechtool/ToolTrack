@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Service Tools Tracker v1.22</title>
+    <title>Service Tools Tracker v1.23</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -83,8 +83,6 @@
         .sync-status-badge.syncing .sync-dot{animation:pulse .8s ease-in-out infinite}
         .sync-refresh-btn{background:none;border:none;cursor:pointer;color:#6b7280;padding:4px 6px;border-radius:8px;font-size:13px;transition:color .2s}
         .sync-refresh-btn:hover{color:#374151}
-        #gist-setup-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}
-        #gist-setup-modal.show{display:flex}
         #idle-warning-toast{display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:400;background:#fef3c7;border:2px solid #f59e0b;border-radius:16px;padding:14px 24px;font-weight:600;color:#92400e;box-shadow:0 10px 30px rgba(0,0,0,.2);animation:slideDown .4s ease}
         @keyframes slideDown{from{transform:translateX(-50%) translateY(-60px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
         @media(max-width:767px){
@@ -110,7 +108,7 @@
     <!-- Login Screen -->
     <div id="login-screen" class="fixed inset-0 bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center z-[100]">
         <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md m-4">
-            <div class="text-center mb-8"><i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-4"></i><h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1><p class="text-gray-500 mt-2">Service Tools Manager v1.22</p><p class="text-xs text-gray-400 mt-1">Secure Login Required</p></div>
+            <div class="text-center mb-8"><i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-4"></i><h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1><p class="text-gray-500 mt-2">Service Tools Manager v1.23</p><p class="text-xs text-gray-400 mt-1">Secure Login Required</p></div>
             <div class="space-y-5"><div><label class="block text-sm font-medium text-gray-700 mb-2">Select Engineer</label><select id="login-user-select" class="w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"><option value="">-- Select Your Name --</option></select></div><div><label class="block text-sm font-medium text-gray-700 mb-2">Password</label><div class="relative"><input id="login-password" type="password" placeholder="Enter password" class="w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition" onkeypress="if(event.key==='Enter')performLogin()"><button type="button" onclick="togglePasswordVisibility()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-eye" id="password-toggle-icon"></i></button></div></div><div id="login-error-msg" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"><span id="login-error-text"></span></div><button onclick="performLogin()" class="w-full py-4 btn btn-primary text-lg"><i class="fa-solid fa-right-to-bracket mr-2"></i> Login</button><div class="text-center"><button onclick="showPasswordRecoveryModal()" class="text-sm text-blue-600 hover:underline"><i class="fa-solid fa-key mr-1"></i> Forgot Password?</button></div><p class="text-xs text-gray-400 text-center">Default password: <strong>123</strong></p></div>
         </div>
     </div>
@@ -123,7 +121,7 @@
             <div class="p-4 border-t space-y-3"><div class="flex items-center justify-between" id="settings-gear-container"><span class="text-sm font-medium text-gray-600">Settings</span><button onclick="showSettingsPanel()" class="text-gray-400 hover:text-gray-600 settings-gear transition" title="Settings"><i class="fa-solid fa-gear text-xl"></i></button></div><div class="bg-blue-50 rounded-2xl p-4 text-sm"><div class="font-semibold text-blue-900">Roy's Contact</div><div class="text-blue-700 text-xs mt-1" id="roy-info"></div><button onclick="editRoyInfo()" class="text-xs mt-2 text-blue-600 hover:underline">Edit</button></div><div class="bg-gray-50 rounded-2xl p-4 text-sm"><div class="flex justify-between"><div><div class="font-semibold" id="logged-user-name"></div><div class="text-xs text-gray-500" id="logged-user-role"></div></div><button onclick="showChangePasswordModal()" class="text-blue-600 text-xs underline">Change</button></div><button onclick="logout()" class="mt-3 w-full py-2 btn btn-danger text-sm"><i class="fa-solid fa-right-from-bracket mr-1"></i>Logout</button></div><div id="user-mgmt-container" style="display:none"><button onclick="showUserManagementPanel()" class="w-full py-2 btn btn-warning text-xs"><i class="fa-solid fa-users-gear mr-1"></i>Manage Users</button></div><button onclick="showAboutPanel()" class="w-full py-2 text-xs text-gray-500 hover:text-blue-600 transition"><i class="fa-solid fa-circle-info mr-1"></i>About ToolTrack</button></div>
         </div>
         <div class="flex-1 flex flex-col overflow-hidden">
-            <header class="h-16 bg-white border-b flex items-center justify-between px-8 flex-shrink-0"><h2 class="text-xl font-semibold" id="page-title">Dashboard</h2><div class="flex items-center gap-4"><button class="sync-refresh-btn" onclick="manualSync()" title="Refresh data now"><i class="fa-solid fa-rotate"></i></button><div class="sync-status-badge offline" onclick="showGistSetup()" title="Click to configure sync"><div class="sync-dot"></div><span class="sync-label">Offline</span></div><button onclick="openReadmeViewer()" class="btn btn-outline px-5 py-2 text-sm"><i class="fa-solid fa-book-open"></i><span> Help</span></button></div></header>
+            <header class="h-16 bg-white border-b flex items-center justify-between px-8 flex-shrink-0"><h2 class="text-xl font-semibold" id="page-title">Dashboard</h2><div class="flex items-center gap-4"><button class="sync-refresh-btn" onclick="manualSync()" title="Refresh data now"><i class="fa-solid fa-rotate"></i></button><div class="sync-status-badge offline" onclick="showSyncPanel()" title="Click for sync options"><div class="sync-dot"></div><span class="sync-label">Offline</span></div><button onclick="openReadmeViewer()" class="btn btn-outline px-5 py-2 text-sm"><i class="fa-solid fa-book-open"></i><span> Help</span></button></div></header>
             <div class="flex-1 overflow-auto" id="main-content-area">
                 <div id="tab-0" class="p-8"><div class="grid grid-cols-4 gap-6 mb-8"><div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Total Tools</p><p class="text-4xl font-bold mt-2" id="total-tools">0</p></div><div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Borrowed</p><p class="text-4xl font-bold mt-2 text-amber-600" id="borrowed-count">0</p><p class="text-xs mt-2">Overdue: <span class="text-red-600" id="overdue-count">0</span></p></div><div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Cal Due</p><p class="text-4xl font-bold mt-2 text-orange-600" id="calibration-due">0</p></div><div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Utilization</p><p class="text-4xl font-bold mt-2" id="util-rate">0%</p></div></div><div id="approval-panel" class="hidden mb-8 bg-white rounded-3xl p-6"><h3 class="font-semibold text-lg mb-4">Return Confirmation Requests</h3><div id="approval-list" class="space-y-4"></div></div></div>
                 <div id="tab-1" class="p-8 hidden"><div class="flex justify-between mb-6 flex-wrap gap-3"><h3 class="text-2xl font-semibold">Service Tools</h3><div class="flex gap-3 flex-wrap"><button onclick="refreshAllPanels()" class="btn btn-outline px-4 py-2 text-sm"><i class="fa-solid fa-rotate"></i> Refresh</button><button onclick="backupToolRecords()" class="btn btn-success px-4 py-2 text-sm"><i class="fa-solid fa-cloud-arrow-up"></i> Backup Tool Record</button><button onclick="restoreToolRecords()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-cloud-arrow-down"></i> Restore Tool Record</button><button onclick="showAddToolModal()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-plus"></i> Add Tool</button></div></div><div class="bg-white rounded-3xl overflow-hidden overflow-x-auto"><table class="w-full min-w-[1600px]"><thead class="bg-gray-50"><tr><th class="py-4 px-4 text-left text-xs">DESC</th><th class="py-4 px-4 text-left text-xs">MODEL</th><th class="py-4 px-4 text-left text-xs">SERIAL</th><th class="py-4 px-4 text-left text-xs">OWNER</th><th class="py-4 px-4 text-left text-xs">CAL DUE</th><th class="py-4 px-4 text-left text-xs">STATUS</th><th class="py-4 px-4 text-left text-xs">REC</th><th class="py-4 px-4 text-left text-xs">BORROWED BY</th><th class="py-4 px-4 text-left text-xs">LOCATION</th><th class="py-4 px-4 text-left text-xs">CERT</th><th class="py-4 px-4 text-right text-xs">ACTIONS</th></tr></thead><tbody id="tools-table" class="divide-y"></tbody></table></div></div>
@@ -136,25 +134,42 @@
         </div>
     </div>
 
+    <!-- Sync Panel Modal -->
+    <div id="sync-panel-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
+        <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8">
+            <h3 class="text-xl font-semibold mb-6"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>GitHub Sync</h3>
+            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-5 text-sm text-blue-800">
+                <strong>No token needed!</strong> ToolTrack syncs data via your public GitHub repository. Data is stored as JSON files in the repo and loaded automatically.
+            </div>
+            <div class="space-y-3 mb-4">
+                <div class="flex justify-between items-center"><span class="text-sm">Repository:</span><code class="text-xs bg-gray-100 px-2 py-1 rounded">setechtool/ToolTrack</code></div>
+                <div class="flex justify-between items-center"><span class="text-sm">Branch:</span><code class="text-xs bg-gray-100 px-2 py-1 rounded" id="sync-branch-display">main</code></div>
+                <div class="flex justify-between items-center"><span class="text-sm">Last Sync:</span><span class="text-xs text-gray-500" id="last-sync-time">Never</span></div>
+            </div>
+            <div class="flex gap-3 flex-wrap mb-4">
+                <button onclick="syncNow()" class="flex-1 btn btn-primary py-3" id="sync-now-btn"><i class="fa-solid fa-rotate mr-1"></i> Sync Now</button>
+                <button onclick="pushToGitHub()" class="flex-1 btn btn-success py-3" id="push-now-btn"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Save to GitHub</button>
+            </div>
+            <div id="sync-status-message" class="text-xs text-center text-gray-500 mb-3"></div>
+            <div class="flex gap-3">
+                <button onclick="configureSyncRepo()" class="flex-1 py-2 btn btn-outline text-xs">Configure Repo</button>
+                <button onclick="hideSyncPanel()" class="flex-1 py-2 btn btn-outline text-xs">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- README Viewer Modal -->
     <div id="readme-viewer-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50" style="width:100vw!important;max-width:100vw!important">
         <div class="bg-white rounded-3xl w-full max-w-4xl m-4 flex flex-col" style="max-height:85vh;width:95%;max-width:95%"><div class="p-6 border-b flex justify-between items-center flex-shrink-0"><h3 class="text-xl font-semibold"><i class="fa-solid fa-book-open mr-2"></i>ToolTrack Help File</h3><div class="flex gap-3"><button onclick="downloadReadmeFile()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-download"></i> Download</button><button onclick="hideReadmeViewer()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button></div></div><div class="flex-1 overflow-auto p-6" id="readme-content-container"><div class="readme-viewer" id="readme-content"></div></div></div>
     </div>
 
-    <!-- Log Settings Modal -->
+    <!-- (All other modals remain the same as previous version) -->
     <div id="log-settings-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-md m-4 p-8"><h3 class="text-xl font-semibold mb-6"><i class="fa-solid fa-gear mr-2"></i>Log Settings</h3><div class="space-y-4"><div class="flex items-center justify-between"><span class="text-sm font-medium">Enable Logging</span><label class="toggle-switch"><input type="checkbox" id="log-enabled" onchange="updateLogConfig()"><span class="toggle-slider"></span></label></div><div><label class="block text-sm font-medium mb-2">Log Level</label><select id="log-level" onchange="updateLogConfig()" class="w-full p-3 border rounded-xl"><option value="info">Information</option><option value="warning">Warning</option><option value="error">Error</option><option value="debug">Debug</option><option value="all">All</option></select></div><div><label class="block text-sm font-medium mb-2">Retention (Days)</label><select id="log-retention" onchange="updateLogConfig()" class="w-full p-3 border rounded-xl"><option value="7">7 Days</option><option value="14">14 Days</option><option value="30">30 Days</option><option value="60">60 Days</option><option value="90">90 Days</option></select></div><div class="flex items-center justify-between"><span class="text-sm font-medium">Auto-Delete Old Logs</span><label class="toggle-switch"><input type="checkbox" id="log-autodelete" onchange="updateLogConfig()"><span class="toggle-slider"></span></label></div><div class="flex gap-3"><button onclick="saveLogConfig()" class="flex-1 py-3 btn btn-primary">Save Settings</button><button onclick="resetLogConfig()" class="flex-1 py-3 btn btn-outline">Restore Defaults</button></div></div><button onclick="hideLogSettings()" class="mt-4 w-full py-4 btn btn-outline">Close</button></div></div>
-
-    <!-- Settings Panel -->
-    <div id="settings-panel-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6"><i class="fa-solid fa-gear mr-2"></i>Settings & Maintenance</h3><div id="settings-restricted" class="hidden text-center py-8"><i class="fa-solid fa-lock text-4xl text-gray-300"></i><p class="text-gray-500">Accessible only to authorized administrators.</p></div><div id="settings-content" class="space-y-4"><div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-4 border border-blue-200"><h4 class="font-semibold text-blue-800 mb-3"><i class="fa-solid fa-database mr-2"></i>Backup & Restore</h4><div class="flex gap-3"><button onclick="performFullBackup()" class="flex-1 btn btn-primary py-3 text-sm"><i class="fa-solid fa-cloud-arrow-up"></i> Full Backup</button><button onclick="performFullRestore()" class="flex-1 btn btn-success py-3 text-sm"><i class="fa-solid fa-cloud-arrow-down"></i> Full Restore</button></div></div>
-                <!-- Idle Timeout Configuration (Donan Only) -->
-                <div id="idle-timeout-section" class="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl p-4 border border-amber-200 hidden"><h4 class="font-semibold text-amber-800 mb-3"><i class="fa-solid fa-clock mr-2"></i>Auto-Logout Timer (Donan only)</h4><div class="flex items-center gap-3 flex-wrap"><label class="text-sm font-medium text-amber-700">Idle timeout (minutes):</label><input type="number" id="idle-timeout-input" min="1" max="120" value="10" class="w-20 p-2 border border-amber-300 rounded-xl text-center text-sm" onchange="updateIdleTimeoutConfig()"><span class="text-xs text-amber-600">After idle, auto-syncs &amp; logs out.</span></div><p class="text-xs text-amber-500 mt-2" id="idle-timeout-status"></p></div>
-                <div class="bg-gray-50 rounded-2xl p-4"><h4 class="font-semibold text-gray-700 mb-3">Maintenance</h4><div class="space-y-2"><button onclick="clearHistoryFunction()" class="w-full p-3 bg-red-50 rounded-xl text-red-700 text-sm btn">Clear History</button><button onclick="clearLogsFunction()" class="w-full p-3 bg-red-50 rounded-xl text-red-700 text-sm btn">Clear Logs</button><button onclick="clearDataFunction()" class="w-full p-3 bg-yellow-50 rounded-xl text-yellow-700 text-sm btn">Clear Data</button></div></div></div><button onclick="hideSettingsPanel()" class="mt-6 w-full py-4 btn btn-outline">Close</button></div></div>
-
-    <!-- All Other Modals -->
+    <div id="settings-panel-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6"><i class="fa-solid fa-gear mr-2"></i>Settings & Maintenance</h3><div id="settings-restricted" class="hidden text-center py-8"><i class="fa-solid fa-lock text-4xl text-gray-300"></i><p class="text-gray-500">Accessible only to authorized administrators.</p></div><div id="settings-content" class="space-y-4"><div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-4 border border-blue-200"><h4 class="font-semibold text-blue-800 mb-3"><i class="fa-solid fa-database mr-2"></i>Backup & Restore</h4><div class="flex gap-3"><button onclick="performFullBackup()" class="flex-1 btn btn-primary py-3 text-sm"><i class="fa-solid fa-cloud-arrow-up"></i> Full Backup</button><button onclick="performFullRestore()" class="flex-1 btn btn-success py-3 text-sm"><i class="fa-solid fa-cloud-arrow-down"></i> Full Restore</button></div></div><div id="idle-timeout-section" class="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl p-4 border border-amber-200 hidden"><h4 class="font-semibold text-amber-800 mb-3"><i class="fa-solid fa-clock mr-2"></i>Auto-Logout Timer (Donan only)</h4><div class="flex items-center gap-3 flex-wrap"><label class="text-sm font-medium text-amber-700">Idle timeout (minutes):</label><input type="number" id="idle-timeout-input" min="1" max="120" value="10" class="w-20 p-2 border border-amber-300 rounded-xl text-center text-sm" onchange="updateIdleTimeoutConfig()"><span class="text-xs text-amber-600">After idle, auto-syncs &amp; logs out.</span></div><p class="text-xs text-amber-500 mt-2" id="idle-timeout-status"></p></div><div class="bg-gray-50 rounded-2xl p-4"><h4 class="font-semibold text-gray-700 mb-3">Maintenance</h4><div class="space-y-2"><button onclick="clearHistoryFunction()" class="w-full p-3 bg-red-50 rounded-xl text-red-700 text-sm btn">Clear History</button><button onclick="clearLogsFunction()" class="w-full p-3 bg-red-50 rounded-xl text-red-700 text-sm btn">Clear Logs</button><button onclick="clearDataFunction()" class="w-full p-3 bg-yellow-50 rounded-xl text-yellow-700 text-sm btn">Clear Data</button></div></div></div><button onclick="hideSettingsPanel()" class="mt-6 w-full py-4 btn btn-outline">Close</button></div></div>
     <div id="backup-progress-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-[350]"><div class="bg-white rounded-3xl w-full max-w-md m-4 p-8 text-center"><i class="fa-solid fa-cloud-arrow-up text-5xl text-blue-600"></i><h3 class="text-xl font-semibold mb-2">Creating Backup</h3><p class="text-sm text-gray-500 mb-4" id="backup-status-text">Collecting files...</p><div class="w-full bg-gray-200 rounded-full h-3 mb-2"><div id="backup-progress-bar" class="bg-blue-600 h-3 rounded-full progress-bar" style="width:0%"></div></div><p class="text-xs text-gray-400" id="backup-percent">0%</p></div></div>
     <div id="restore-progress-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-[350]"><div class="bg-white rounded-3xl w-full max-w-md m-4 p-8 text-center"><i class="fa-solid fa-cloud-arrow-down text-5xl text-green-600"></i><h3 class="text-xl font-semibold mb-2">Restoring Backup</h3><p class="text-sm text-gray-500 mb-4" id="restore-status-text">Validating...</p><div class="w-full bg-gray-200 rounded-full h-3 mb-2"><div id="restore-progress-bar" class="bg-green-600 h-3 rounded-full progress-bar" style="width:0%"></div></div><p class="text-xs text-gray-400" id="restore-percent">0%</p></div></div>
     <div id="user-management-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-md m-4 p-8"><h3 class="text-xl font-semibold mb-6">Manage Login Users</h3><div class="max-h-64 overflow-y-auto space-y-2" id="user-list-container"></div><button onclick="hideUserManagementPanel()" class="mt-6 w-full py-4 btn btn-outline">Close</button></div></div>
-    <div id="about-panel-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8 text-center"><i class="fa-solid fa-toolbox text-5xl text-blue-600"></i><h2>ToolTrack</h2><p>Service Tools Manager</p><div class="mt-6 bg-gray-50 rounded-2xl p-5 text-left"><div class="flex justify-between"><span>Version:</span><span class="font-semibold">1.22</span></div></div><div class="mt-6 flex gap-3"><button onclick="openReadmeViewer()" class="flex-1 py-3 btn btn-primary">View README</button><button onclick="hideAboutPanel()" class="flex-1 py-3 btn btn-outline">Close</button></div></div></div>
+    <div id="about-panel-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8 text-center"><i class="fa-solid fa-toolbox text-5xl text-blue-600"></i><h2>ToolTrack</h2><p>Service Tools Manager</p><div class="mt-6 bg-gray-50 rounded-2xl p-5 text-left"><div class="flex justify-between"><span>Version:</span><span class="font-semibold">1.23</span></div></div><div class="mt-6 flex gap-3"><button onclick="openReadmeViewer()" class="flex-1 py-3 btn btn-primary">View README</button><button onclick="hideAboutPanel()" class="flex-1 py-3 btn btn-outline">Close</button></div></div></div>
     <div id="return-evidence-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Tool Return Evidence</h3><div id="captured-image-container" class="hidden text-center"><img id="captured-image" class="max-w-full rounded-2xl max-h-64 mx-auto"></div><div class="flex gap-3 mt-6"><button onclick="captureReturnImage()" id="capture-btn" class="flex-1 py-4 btn btn-outline"><i class="fa-solid fa-camera"></i> Capture</button><button id="retake-btn" onclick="captureReturnImage()" class="hidden flex-1 py-4 btn btn-warning"><i class="fa-solid fa-rotate-right"></i> Retake</button><button id="confirm-evidence-btn" onclick="confirmReturnEvidence()" class="hidden flex-1 py-4 btn btn-primary"><i class="fa-solid fa-check"></i> Confirm</button><button onclick="notRequiredReturn()" class="flex-1 py-4 btn btn-warning">Not Required</button><button onclick="hideReturnEvidenceModal()" class="flex-1 py-4 btn btn-outline">Cancel</button></div></div></div>
     <div id="send-return-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-[80]"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-2">Return Notification</h3><p class="text-gray-500 text-sm mb-6">Image captured. How would you like to notify Roy?</p><div class="flex gap-4 mb-6"><button onclick="sendReturnWA()" class="flex-1 py-5 btn btn-success text-base flex flex-col items-center gap-2"><i class="fa-brands fa-whatsapp text-2xl"></i> WhatsApp</button><button onclick="sendReturnEmail()" class="flex-1 py-5 btn btn-primary text-base flex flex-col items-center gap-2"><i class="fa-solid fa-envelope text-2xl"></i> Email</button></div><details class="mb-4"><summary class="text-xs text-gray-400 cursor-pointer">Preview message</summary><div class="mt-3 space-y-3"><textarea id="return-whatsapp-msg" rows="4" class="w-full p-3 border rounded-xl bg-gray-50 text-xs" readonly></textarea><textarea id="return-email-msg" rows="4" class="w-full p-3 border rounded-xl bg-gray-50 text-xs" readonly></textarea></div></details><button onclick="hideSendReturnModal()" class="w-full py-4 btn btn-outline">Close</button></div></div>
     <div id="deletion-reason-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-[250]"><div class="bg-white rounded-3xl w-full max-w-md m-4 p-8"><h3 class="text-xl font-semibold mb-6">Select Reason</h3><select id="deletion-reason-select" class="w-full p-4 border rounded-2xl mb-6"></select><div class="flex gap-3"><button onclick="cancelDeletion()" class="flex-1 py-4 btn btn-outline">Cancel</button><button onclick="confirmDeletion()" class="flex-1 py-4 btn btn-danger">Confirm</button></div></div></div>
@@ -169,58 +184,38 @@
     <div id="change-password-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-md m-4 p-8"><h3 class="text-xl font-semibold mb-6">Change Password</h3><input id="current-password" type="password" placeholder="Current" class="w-full p-4 border rounded-2xl mb-3"><input id="new-password" type="password" placeholder="New" class="w-full p-4 border rounded-2xl mb-3"><input id="confirm-new-password" type="password" placeholder="Confirm" class="w-full p-4 border rounded-2xl mb-4"><div class="flex gap-3"><button onclick="hideChangePasswordModal()" class="flex-1 py-4 btn btn-outline">Cancel</button><button onclick="changePassword()" class="flex-1 py-4 btn btn-primary">Update</button></div></div></div>
 
     <script>
-        // ==================== ENHANCED LOGGING SYSTEM (DD) ====================
+        // ==================== ENHANCED LOGGING SYSTEM ====================
         class LogManager {
-            constructor() { this.maxLogSize = 4 * 1024 * 1024;
-                this.currentLogFile = 'ToolTrack0.log';
-                this.logQueue = [];
-                this.isWriting = false;
-                this.logSaveDirectory = 'C:\\Users\\Doddie\\Documents\\Project\\Logs\\';
-                this.logConfig = JSON.parse(localStorage.getItem('logConfig') || '{"enabled":true,"level":"all","retentionDays":30,"autoDelete":false}');
-                this.currentFilter = 'all'; }
+            constructor() { this.maxLogSize = 4 * 1024 * 1024; this.currentLogFile = 'ToolTrack0.log'; this.logQueue = []; this
+                    .isWriting = false; this.logConfig = JSON.parse(localStorage.getItem('logConfig') ||
+                        '{"enabled":true,"level":"all","retentionDays":30,"autoDelete":false}'); this.currentFilter = 'all'; }
             async log(u, a, lvl = 'INFO') { if (!this.logConfig.enabled) return; if (this.logConfig.level !== 'all' && this
-                    .logConfig.level !== lvl.toLowerCase()) return;
-                const t = new Date();
-                const entry =
-                    `${u}_ToolTrack_${t.toISOString().split('T')[0]}_${t.toTimeString().split(' ')[0]}\t[${lvl}]\t${a.substring(0,300)}\n`;
-                this.logQueue.push(entry);
-                await this.processQueue(); }
+                    .logConfig.level !== lvl.toLowerCase()) return; const t = new Date(); const entry =
+                    `${u}_ToolTrack_${t.toISOString().split('T')[0]}_${t.toTimeString().split(' ')[0]}\t[${lvl}]\t${a.substring(0,300)}\n`
+                    ; this.logQueue.push(entry); await this.processQueue(); }
             async logWarning(u, a) { await this.log(u, a, 'WARNING'); }
             async logError(u, a) { await this.log(u, a, 'ERROR'); }
             async logAuth(u, a) { await this.log(u, a, 'AUTH'); }
-            async processQueue() { if (this.isWriting || !this.logQueue.length) return;
-                this.isWriting = true; try { const e = this.logQueue.shift();
-                    let c = localStorage.getItem(this.currentLogFile) || ''; if (new Blob([c + e]).size >= this.maxLogSize) { const
-                            t = new Date();
-                        const bn =
-                            `ToolTrack${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}_${String(t.getHours()).padStart(2,'0')}${String(t.getMinutes()).padStart(2,'0')}${String(t.getSeconds()).padStart(2,'0')}.log`;
-                        localStorage.setItem(bn, c);
-                        c = '';
-                        this.log('SYSTEM', 'Log rotated. Backup: ' + bn); }
+            async processQueue() { if (this.isWriting || !this.logQueue.length) return; this.isWriting = true; try { const e =
+                        this.logQueue.shift(); let c = localStorage.getItem(this.currentLogFile) || ''; if (new Blob([c + e])
+                        .size >= this.maxLogSize) { const t = new Date(); const bn =
+                            `ToolTrack${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}_${String(t.getHours()).padStart(2,'0')}${String(t.getMinutes()).padStart(2,'0')}${String(t.getSeconds()).padStart(2,'0')}.log`
+                            ; localStorage.setItem(bn, c); c = ''; this.log('SYSTEM', 'Log rotated. Backup: ' + bn); }
                     localStorage.setItem(this.currentLogFile, c + e); } catch (e) { console.error('Log error:', e); } this
                     .isWriting = false; if (this.logQueue.length) await this.processQueue(); }
             getCurrentLog() { return localStorage.getItem(this.currentLogFile) || ''; }
             getFilteredLog(filter) { const all = this.getCurrentLog().split('\n').filter(l => l.trim()); if (filter === 'all')
                     return all; return all.filter(l => l.includes(`[${filter}]`)); }
-            saveLogFile() { const c = this.getCurrentLog();
-                const t = new Date();
-                const fn =
-                    `ToolTrack${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}_${String(t.getHours()).padStart(2,'0')}${String(t.getMinutes()).padStart(2,'0')}${String(t.getSeconds()).padStart(2,'0')}.log`;
-                const b = new Blob([c], { type: 'text/plain' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(b);
-                a.download = fn;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                this.log('SYSTEM', 'Log saved: ' + fn);
-                alert('Log saved!\nFile: ' + fn); }
-            saveLogConfig() { localStorage.setItem('logConfig', JSON.stringify(this.logConfig));
-                this.log('SYSTEM', 'Log configuration updated'); }
-            resetLogConfig() { this.logConfig = { enabled: true, level: 'all', retentionDays: 30, autoDelete: false };
-                this.saveLogConfig(); }
-            clearAllLogs() { try { localStorage.removeItem(this.currentLogFile);
-                    localStorage.setItem(this.currentLogFile,
+            saveLogFile() { const c = this.getCurrentLog(); const t = new Date(); const fn =
+                `ToolTrack${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}_${String(t.getHours()).padStart(2,'0')}${String(t.getMinutes()).padStart(2,'0')}${String(t.getSeconds()).padStart(2,'0')}.log`
+                ; const b = new Blob([c], { type: 'text/plain' }); const a = document.createElement('a'); a.href = URL
+                .createObjectURL(b); a.download = fn; document.body.appendChild(a); a.click(); document.body.removeChild(a); this
+                .log('SYSTEM', 'Log saved: ' + fn); alert('Log saved!\nFile: ' + fn); }
+            saveLogConfig() { localStorage.setItem('logConfig', JSON.stringify(this.logConfig)); this.log('SYSTEM',
+                'Log configuration updated'); }
+            resetLogConfig() { this.logConfig = { enabled: true, level: 'all', retentionDays: 30, autoDelete: false }; this
+                .saveLogConfig(); }
+            clearAllLogs() { try { localStorage.removeItem(this.currentLogFile); localStorage.setItem(this.currentLogFile,
                         `SYSTEM_ToolTrack_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}\t[INFO]\tLogs cleared\n`
                         ); return true; } catch (e) { return false; } }
         }
@@ -228,67 +223,48 @@
 
         // ==================== CUSTOM CONFIRM ====================
         class CustomConfirmDialog { static show(m, t = 'Confirm') { return new Promise(r => { const o = document
-                    .createElement('div');
-                o.className = 'custom-confirm-overlay';
-                o.innerHTML =
-                    `<div class="custom-confirm-dialog"><h3 class="text-xl font-semibold mb-4">${t}</h3><p class="text-gray-600 mb-6">${m}</p><div class="flex gap-3"><button id="cc-y" class="flex-1 py-3 btn btn-danger">Yes</button><button id="cc-n" class="flex-1 py-3 btn btn-outline">No</button></div></div>`;
-                document.body.appendChild(o);
-                o.querySelector('#cc-y').onclick = () => { o.remove();
-                    r(true); };
-                o.querySelector('#cc-n').onclick = () => { o.remove();
+                    .createElement('div'); o.className = 'custom-confirm-overlay'; o.innerHTML =
+                    `<div class="custom-confirm-dialog"><h3 class="text-xl font-semibold mb-4">${t}</h3><p class="text-gray-600 mb-6">${m}</p><div class="flex gap-3"><button id="cc-y" class="flex-1 py-3 btn btn-danger">Yes</button><button id="cc-n" class="flex-1 py-3 btn btn-outline">No</button></div></div>`
+                    ; document.body.appendChild(o); o.querySelector('#cc-y').onclick = () => { o.remove();
+                    r(true); }; o.querySelector('#cc-n').onclick = () => { o.remove();
                     r(false); }; }); } }
 
         // ==================== DELETION LOGGER ====================
         class DeletionLogger { static deletionRecords = JSON.parse(localStorage.getItem('deletionRecords') || '[]');
             static logDeletion(t, n, d, u, r) { const rec = { id: 'DEL_' + Date.now(), type: t, itemName: n, itemDetails: d,
                     deletedBy: u, reason: r, dateTime: new Date().toISOString(), actionType: t === 'engineer' ?
-                        'Engineer Record Deleted' : 'Tool Record Deleted' };
-                this.deletionRecords.push(rec);
-                localStorage.setItem('deletionRecords', JSON.stringify(this.deletionRecords)); return rec; }
+                        'Engineer Record Deleted' : 'Tool Record Deleted' }; this.deletionRecords.push(rec); localStorage
+                    .setItem('deletionRecords', JSON.stringify(this.deletionRecords)); return rec; }
             static getDeletionRecords() { return this.deletionRecords; }
-            static clearAll() { this.deletionRecords = [];
-                localStorage.setItem('deletionRecords', '[]'); } }
+            static clearAll() { this.deletionRecords = []; localStorage.setItem('deletionRecords', '[]'); } }
 
         // ==================== AUTH ====================
-        class AuthManager { constructor() { this.users = {};
-                this.currentUser = null;
-                this.adminUsers = ['Royston Dcosta', 'Donan Arciaga'];
-                this.fullAccessUsers = ['Donan Arciaga'];
-                this.royAccessUsers = ['Royston Dcosta'];
-                this.loadAndInit(); }
+        class AuthManager { constructor() { this.users = {}; this.currentUser = null; this.adminUsers = ['Royston Dcosta',
+                    'Donan Arciaga'
+                ]; this.fullAccessUsers = ['Donan Arciaga']; this.royAccessUsers = ['Royston Dcosta']; this.loadAndInit(); }
             loadAndInit() { try { const d = localStorage.getItem('tooltrack_users'); if (d) this.users = JSON.parse(d); } catch (
                     e) { this.users = {}; }['Royston Dcosta', 'Donan Arciaga', 'Ahmed Al-Sabah', 'Fatima Al-Mutairi',
                     'Mohammed Al-Rashid', 'Sara Al-Otaibi'
                 ].forEach(n => { if (!this.users[n]) this.users[n] = { password: '123', role: this.adminUsers.includes(
-                            n) ? 'Administrator' : 'Engineer' }; });
-                this.save(); }
+                            n) ? 'Administrator' : 'Engineer' }; }); this.save(); }
             save() { localStorage.setItem('tooltrack_users', JSON.stringify(this.users)); }
             login(u, p) { if (this.users[u] && this.users[u].password === p) { this.currentUser = { name: u, role: this.users[u]
                             .role, isAdmin: this.adminUsers.includes(u), isDonan: this.fullAccessUsers.includes(u),
                         isRoy: this.royAccessUsers.includes(u) }; return true; } return false; }
             logout() { this.currentUser = null; }
-            changePassword(u, cp, np) { if (this.users[u] && this.users[u].password === cp) { this.users[u].password = np;
-                    this.save(); return true; } return false; }
-            resetPassword(u, np) { if (this.users[u]) { this.users[u].password = np;
-                    this.save(); return true; } return false; }
+            changePassword(u, cp, np) { if (this.users[u] && this.users[u].password === cp) { this.users[u].password = np; this
+                    .save(); return true; } return false; }
+            resetPassword(u, np) { if (this.users[u]) { this.users[u].password = np; this.save(); return true; } return false; }
             verifyRoyPassword(p) { return this.users['Royston Dcosta'] && this.users['Royston Dcosta'].password === p; }
             canEditTool(o) { if (!this.currentUser) return false; return this.currentUser.isAdmin || this.currentUser.name ===
                 o; }
             canManageUsers() { return this.currentUser && this.currentUser.isDonan; }
-            removeUser(name) { if (this.users[name] && !this.adminUsers.includes(name)) { delete this.users[name];
-                    this.save(); return true; } return false; }
-            canAccessDashboard() { return this.currentUser && (this.currentUser.isDonan || this.currentUser.isRoy); }
-            canAccessTools() { return !!this.currentUser; }
-            canAccessEngineers() { return !!this.currentUser; }
-            canAccessBorrowReturn() { return !!this.currentUser; }
-            canAccessHistory() { return !!this.currentUser; }
-            canAccessAnalytics() { return this.currentUser && this.currentUser.isDonan; }
-            canAccessSystemLogs() { return this.currentUser && this.currentUser.isDonan; }
-            canAccessSettings() { return this.currentUser && (this.currentUser.isDonan || this.currentUser.isRoy); }
-            getCurrentUser() { return this.currentUser; }
+            removeUser(name) { if (this.users[name] && !this.adminUsers.includes(name)) { delete this.users[name]; this.save(); return true; } return false; }
             getAllUsers() { return Object.keys(this.users).sort(); }
-            addUser(n, p = '123') { if (!this.users[n]) { this.users[n] = { password: p, role: 'Engineer' };
-                    this.save(); return true; } return false; }
+            addUser(n, p = '123') { if (!this.users[n]) { this.users[n] = { password: p, role: 'Engineer' }; this.save(); return true; } return false; }
+            canAccessDashboard() { return this.currentUser && (this.currentUser.isDonan || this.currentUser.isRoy); }
+            canAccessSystemLogs() { return this.currentUser && this.currentUser.isDonan; }
+            getCurrentUser() { return this.currentUser; }
         }
         const authManager = new AuthManager();
 
@@ -315,20 +291,15 @@
             recoveryUser = null;
         let pendingReturnTransId = null,
             capturedReturnImage = null,
-            currentReturnRequestId = null,
-            currentEditingTransId = null;
-        let pendingDeletionType = null,
+            pendingDeletionType = null,
             pendingDeletionId = null;
         let historySortCol = 'transDate',
             historySortDir = 'desc';
-        const DATA_RECORD_DIR = 'C:\\Users\\Doddie\\Documents\\Project\\DataRecord\\';
 
-        function saveData() { localStorage.setItem('tools', JSON.stringify(tools));
-            localStorage.setItem('engineers', JSON.stringify(engineers));
-            localStorage.setItem('transactions', JSON.stringify(transactions));
-            localStorage.setItem('returnRequests', JSON.stringify(returnRequests));
-            localStorage.setItem('royContact', JSON.stringify(roy));
-            GistSync.schedulePush(); }
+        function saveData() { localStorage.setItem('tools', JSON.stringify(tools)); localStorage.setItem('engineers', JSON
+                .stringify(engineers)); localStorage.setItem('transactions', JSON.stringify(transactions)); localStorage.setItem(
+                'returnRequests', JSON.stringify(returnRequests)); localStorage.setItem('royContact', JSON.stringify(roy));
+            GitHubSync.schedulePush(); }
 
         function refreshAllPanels() { renderDashboard();
             renderTools();
@@ -369,24 +340,20 @@
             _idleSeconds: 0,
             _checkInterval: null,
             _warningShown: false,
-            _warningToastTimeout: null,
-
             getTimeoutMinutes() { return this._timeoutMinutes; },
-            setTimeoutMinutes(min) { this._timeoutMinutes = Math.max(1, Math.min(120, parseInt(min) || 10));
-                localStorage.setItem('idle_timeout_minutes', this._timeoutMinutes);
+            setTimeoutMinutes(min) { this._timeoutMinutes = Math.max(1, Math.min(120, parseInt(min) || 10)); localStorage
+                    .setItem('idle_timeout_minutes', this._timeoutMinutes);
                 this._idleSeconds = 0;
                 this._warningShown = false; },
-
             reset() { this._idleSeconds = 0;
                 this._warningShown = false;
                 this._hideWarningToast(); },
             _showWarningToast(msg) { const toast = document.getElementById('idle-warning-toast'); if (toast) { document
                         .getElementById('idle-warning-text').textContent = msg;
-                    toast.style.display = 'block'; if (this._warningToastTimeout) clearTimeout(this._warningToastTimeout);
-                    this._warningToastTimeout = setTimeout(() => { toast.style.display = 'none'; }, 8000); } },
+                    toast.style.display = 'block';
+                    setTimeout(() => { toast.style.display = 'none'; }, 8000); } },
             _hideWarningToast() { const toast = document.getElementById('idle-warning-toast'); if (toast) toast.style.display =
-                    'none'; if (this._warningToastTimeout) clearTimeout(this._warningToastTimeout); },
-
+                    'none'; },
             start() { this.stop();
                 this.reset();
                 this._checkInterval = setInterval(() => { this._idleSeconds++; const timeoutSecs = this._timeoutMinutes *
@@ -398,34 +365,29 @@
             stop() { if (this._checkInterval) { clearInterval(this._checkInterval);
                     this._checkInterval = null; } this._removeActivityListeners();
                 this._hideWarningToast(); },
-            async _triggerLogout() { this.stop(); if (GistSync.isConfigured()) { GistSync.setStatus('syncing',
-                        'Auto-syncing...'); try { await GistSync.push(); } catch (e) {} }
-                GistSync.stopPolling();
-                GistSync.setStatus('offline', 'Offline');
+            async _triggerLogout() { this.stop(); if (GitHubSync.isConfigured()) { GitHubSync.setStatus('syncing',
+                        'Auto-syncing...'); try { await GitHubSync.push(); } catch (e) {} }
+                GitHubSync.stopPolling();
+                GitHubSync.setStatus('offline', 'Offline');
                 authManager.logout();
                 document.getElementById('main-app').classList.add('hidden');
                 document.getElementById('login-screen').classList.remove('hidden');
                 document.getElementById('login-password').value = '';
                 closeMobileMoreDrawer();
-                logManager.log('SYSTEM', 'Auto-logout due to inactivity (' + this._timeoutMinutes + ' min)');
-                this._hideWarningToast(); },
+                logManager.log('SYSTEM', 'Auto-logout due to inactivity'); },
             _onActivity() { this.reset(); },
             _attachActivityListeners() { ['mousemove', 'keydown', 'click', 'scroll', 'touchstart', 'touchend'].forEach(evt => {
                     document.addEventListener(evt, this._onActivity, { passive: true }); }); },
             _removeActivityListeners() { ['mousemove', 'keydown', 'click', 'scroll', 'touchstart', 'touchend'].forEach(
                     evt => { document.removeEventListener(evt, this._onActivity); }); }
         };
-        // Bind the activity callback so removeEventListener works correctly
         IdleManager._onActivity = IdleManager._onActivity.bind(IdleManager);
 
         function updateIdleTimeoutConfig() { const input = document.getElementById('idle-timeout-input'); if (input) { const val =
                     parseInt(input.value) || 10;
                 IdleManager.setTimeoutMinutes(val);
-                document.getElementById('idle-timeout-status').textContent =
-                    '✓ Set to ' + IdleManager.getTimeoutMinutes() +
-                    ' minute(s). Auto-syncs & logs out after idle.';
-                logManager.log(authManager.getCurrentUser()?.name || 'SYSTEM', 'Idle timeout updated to ' + IdleManager
-                    .getTimeoutMinutes() + ' min'); } }
+                document.getElementById('idle-timeout-status').textContent = '✓ Set to ' + IdleManager.getTimeoutMinutes() +
+                    ' minute(s).'; } }
 
         // ==================== LOGIN ====================
         function populateLoginDropdown() { document.getElementById('login-user-select').innerHTML =
@@ -444,13 +406,12 @@
                 document.getElementById('logged-user-role').textContent = authManager.getCurrentUser().role;
                 buildSidebarNavigation();
                 buildMobileNav();
-                IdleManager.start();
-                await logManager.logAuth(u, 'Successful login'); if (GistSync.isConfigured()) { GistSync.setStatus('syncing',
-                        'Syncing...'); await GistSync.pull();
-                    refreshAllPanels();
-                    populateLoginDropdown();
-                    GistSync.startPolling(); } else { GistSync.setStatus('offline', 'Offline'); } const startTab = (authManager
-                    .getCurrentUser().isAdmin || authManager.getCurrentUser().isRoy) ? 0 : 1;
+                IdleManager.start(); await logManager.logAuth(u, 'Successful login');
+                GitHubSync.setStatus('syncing', 'Loading data...'); await GitHubSync.pull();
+                refreshAllPanels();
+                populateLoginDropdown();
+                GitHubSync.startPolling();
+                const startTab = (authManager.getCurrentUser().isAdmin || authManager.getCurrentUser().isRoy) ? 0 : 1;
                 switchTab(startTab);
                 updateAllUI(); } else { showLoginError('Invalid password.');
                 logManager.logAuth('SYSTEM', 'Failed login: ' + u); } }
@@ -458,8 +419,8 @@
                     'User logged out'); }
             IdleManager.stop();
             authManager.logout();
-            GistSync.stopPolling();
-            GistSync.setStatus('offline', 'Offline');
+            GitHubSync.stopPolling();
+            GitHubSync.setStatus('offline', 'Offline');
             closeMobileMoreDrawer();
             document.getElementById('main-app').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
@@ -470,7 +431,6 @@
             document.getElementById('password-toggle-icon').classList.toggle('fa-eye');
             document.getElementById('password-toggle-icon').classList.toggle('fa-eye-slash'); }
 
-        // Password Recovery
         function showPasswordRecoveryModal() { document.getElementById('password-recovery-modal').classList.remove('hidden');
             document.getElementById('rec-step-1').classList.remove('hidden');
             document.getElementById('rec-step-2').classList.add('hidden');
@@ -548,7 +508,6 @@
                 renderEngineers(); else if (n === 3) renderBorrowTab(); else if (n === 4) renderAnalytics(); else if (n === 5)
             renderHistory(); }
 
-        // DD: Enhanced log viewer with filtering
         let currentLogFilter = 'all';
 
         function filterLogs(filter, btn) { currentLogFilter = filter;
@@ -565,7 +524,6 @@
 
         function saveLogFile() { logManager.saveLogFile(); }
 
-        // ==================== LOG SETTINGS ====================
         function showLogSettings() { document.getElementById('log-enabled').checked = logManager.logConfig.enabled;
             document.getElementById('log-level').value = logManager.logConfig.level;
             document.getElementById('log-retention').value = logManager.logConfig.retentionDays;
@@ -589,14 +547,12 @@
             document.getElementById('log-level').value = 'all';
             document.getElementById('log-retention').value = '30';
             document.getElementById('log-autodelete').checked = false;
-            logManager.log('SYSTEM', 'Log config reset');
             alert('Defaults restored.'); }
 
-        // ==================== USER MANAGEMENT ====================
-        function showUserManagementPanel() { if (!authManager.canManageUsers()) { alert('Access denied.'); return; } const c =
-                document.getElementById('user-list-container');
-            c.innerHTML = authManager.getAllUsers().map(u => { const ia = ['Royston Dcosta', 'Donan Arciaga'].includes(
-                u); return (
+        function showUserManagementPanel() { if (!authManager.canManageUsers()) { alert('Access denied.'); return; }
+            document.getElementById('user-list-container').innerHTML = authManager.getAllUsers().map(u => { const ia = [
+                    'Royston Dcosta', 'Donan Arciaga'
+                ].includes(u); return (
                     `<div class="flex items-center justify-between py-3 px-4 bg-gray-50 rounded-xl"><div><span class="font-medium text-sm">${u}</span>${ia?'<span class="text-xs text-blue-600 ml-2">(Admin)</span>':''}</div>${!ia?`<button onclick="removeUserPrompt('${u}')" class="btn btn-danger text-xs px-3 py-1"><i class="fa-solid fa-trash"></i></button>`:'<span class="text-xs text-gray-400">Protected</span>'}</div>`
                     ); }).join('');
             document.getElementById('user-management-modal').classList.remove('hidden'); }
@@ -609,7 +565,6 @@
                     logManager.logWarning(authManager.getCurrentUser().name, 'Removed user: ' + name);
                     alert('User removed.'); } } }
 
-        // ==================== ABOUT & README (BB - Comprehensive) ====================
         function showAboutPanel() { document.getElementById('about-panel-modal').classList.remove('hidden'); }
 
         function hideAboutPanel() { document.getElementById('about-panel-modal').classList.add('hidden'); }
@@ -622,59 +577,29 @@
 
         function downloadReadmeFile() { ReadmeGenerator.downloadReadmeFile(); }
 
-        // BB: Comprehensive README with all features
-        class ReadmeGenerator { static generateReadmeContent() { return `<!DOCTYPE html><html><head><title>ToolTrack v1.22 Help</title><style>body{font-family:'Segoe UI',Arial;line-height:1.8;max-width:100%;margin:0;padding:20px;color:#333;overflow-wrap:break-word;word-wrap:break-word;}h1{color:#1e40af;border-bottom:3px solid #1e40af;padding-bottom:10px;}h2{color:#2563eb;border-bottom:2px solid #dbeafe;padding-bottom:8px;}h3{color:#3b82f6;}table{width:100%;border-collapse:collapse;margin:15px 0;font-size:13px;}th,td{border:1px solid #d1d5db;padding:8px 12px;text-align:left;}th{background:#f3f4f6;color:#1e40af;}.version-tag{background:#1e40af;color:white;padding:2px 8px;border-radius:10px;font-size:11px;}.new-feature{background:#d1fae5;border-left:4px solid #10b981;padding:12px;margin:10px 0;}code{background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:12px;}</style></head><body>
-<h1>🛠️ ToolTrack Service Tools Manager v1.22</h1>
-<p><strong>Complete Help Documentation</strong> | Created by Donan | Save: C:\\Users\\Doddie\\Documents\\Project\\</p>
-
-<div class="new-feature"><strong>v1.22:</strong> GitHub Gist auto-sync on login & polling, idle auto-logout with configurable timer (Donan only), forms now clear on each open, version bumped to 1.22</div>
-<div class="new-feature"><strong>v1.21:</strong> Fixed Help File layout isolation, comprehensive README, auto-scrollbars, enhanced log filtering with radio buttons</div>
-
-<h2>📋 Table of Contents</h2>
-<ol><li>Login & Authentication</li><li>GitHub Gist Sync</li><li>Idle Timeout & Auto-Logout</li><li>Dashboard</li><li>Tools Management</li><li>Engineers Module</li><li>Borrow & Return Process</li><li>Return Evidence Workflow</li><li>Notifications (WhatsApp & Email)</li><li>History Module</li><li>Backup & Restore System</li><li>Logging System</li><li>Settings & Maintenance</li><li>User Management</li><li>Version History</li></ol>
-
-<h2>1. Login & Authentication</h2><p>Default password: <code>123</code>. Administrators: <strong>Royston Dcosta</strong> and <strong>Donan Arciaga</strong>. Failed login attempts are logged.</p>
-
-<h2>2. GitHub Gist Sync</h2><p>Configure via the sync badge in the header. Requires a GitHub Personal Access Token with <strong>gist</strong> scope. Once connected, all data syncs automatically. On login, the app pulls the latest data from GitHub. Every 30 seconds the app checks for remote changes and updates automatically. Manual refresh available via the <i class="fa-solid fa-rotate"></i> button.</p>
-
-<h2>3. Idle Timeout & Auto-Logout</h2><p>After <strong>10 minutes</strong> of inactivity (configurable by Donan in Settings), the app auto-syncs data to GitHub and logs out. A 30-second warning toast appears before logout. Donan can adjust the timeout (1–120 minutes) in Settings.</p>
-
-<h2>4. Dashboard</h2><p>Shows Total Tools, Borrowed Count, Overdue Count, Calibration Due, Utilization Rate. Return Confirmation Requests panel for admins.</p>
-
-<h2>5. Tools Management</h2><p>Add/Edit/Delete tools with calibration tracking. Forms clear on each open. Backup/Restore buttons for CSV files. Overdue status with clickable alerts.</p>
-
-<h2>6. Engineers Module</h2><p>Grid/Table views. Email truncation for long addresses. Add Engineer form clears on each open. Backup/Restore Engineer Records.</p>
-
-<h2>7. Borrow & Return Process</h2><p>Date validation: Expected Return cannot be older than Taken Out. Overdue tools: only Expected Return editable. Auto-refresh on all actions.</p>
-
-<h2>8. Return Evidence Workflow</h2><p>Capture photo → Review/Retake → Confirm → WhatsApp/Email notification to Roy.</p>
-
-<h2>9. Notifications</h2><p>WhatsApp via wa.me links. Email via mailto: with pre-configured messages.</p>
-
-<h2>10. History Module</h2><p>12-column sortable table. Transaction history with approval, incident, notes. Deletion records with red background.</p>
-
-<h2>11. Backup & Restore</h2><p>Full system backup as BackupCFG_YYYYMMDD_HHMMSS.zip. Per-type CSV backup/restore with structure validation.</p>
-
-<h2>12. Logging System</h2><p>Real-time async logging. Filter by: All, Information, Warning, Error, Debug. Configurable log level, retention, auto-delete.</p>
-
-<h2>13. Settings & Maintenance</h2><p>Clear History, Clear Logs, Clear Data with confirmation dialogs. Idle timeout configuration (Donan only). Accessible to Donan and Roy.</p>
-
-<h2>14. User Management</h2><p>Donan can remove users from login list. Admin users protected.</p>
-
-<h2>15. Version History</h2><table><tr><th>Version</th><th>Key Features</th></tr>
-<tr><td><span class="version-tag">1.0-1.06</span></td><td>Initial releases</td></tr>
-<tr><td><span class="version-tag">1.07-1.12</span></td><td>History tab, CSV save, backup system, role-based access</td></tr>
-<tr><td><span class="version-tag">1.13-1.16</span></td><td>Centralized storage, Backup/Restore per type</td></tr>
-<tr><td><span class="version-tag">1.17</span></td><td>Auto-refresh panels, fixed return notifications</td></tr>
-<tr><td><span class="version-tag">1.18</span></td><td>Date validation, overdue management, user management</td></tr>
-<tr><td><span class="version-tag">1.19</span></td><td>Help File layout fix, comprehensive README, log filtering</td></tr>
-<tr><td><span class="version-tag">1.20-1.21</span></td><td>GitHub Gist sync engine, mobile nav, cross-device sync</td></tr>
-<tr><td><span class="version-tag">1.22</span></td><td><strong>Auto-sync on login, 30s polling, idle auto-logout, form clearing, configurable idle timer</strong></td></tr></table>
-<p style="text-align:center;margin-top:30px;color:#9ca3af;">ToolTrack v1.22 | Created by Donan | © 2026</p></body></html>`; }
-            static downloadReadmeFile() { const b = new Blob([this.generateReadmeContent()], { type: 'text/html' });
-                const a = document.createElement('a');
+        class ReadmeGenerator { static generateReadmeContent() { return `<!DOCTYPE html><html><head><title>ToolTrack v1.23 Help</title><style>body{font-family:'Segoe UI',Arial;line-height:1.8;max-width:100%;margin:0;padding:20px;color:#333;}h1{color:#1e40af;border-bottom:3px solid #1e40af;padding-bottom:10px;}h2{color:#2563eb;border-bottom:2px solid #dbeafe;padding-bottom:8px;}table{width:100%;border-collapse:collapse;margin:15px 0;font-size:13px;}th,td{border:1px solid #d1d5db;padding:8px 12px;text-align:left;}th{background:#f3f4f6;color:#1e40af;}.version-tag{background:#1e40af;color:white;padding:2px 8px;border-radius:10px;font-size:11px;}.new-feature{background:#d1fae5;border-left:4px solid #10b981;padding:12px;margin:10px 0;}</style></head><body>
+<h1>🛠️ ToolTrack Service Tools Manager v1.23</h1>
+<p><strong>Complete Help Documentation</strong> | Created by Donan</p>
+<div class="new-feature"><strong>v1.23:</strong> Token-free GitHub sync via public repository (setechtool/ToolTrack). Data syncs automatically on login & every 30s. Manual sync & save buttons in Sync Panel. No authentication required!</div>
+<div class="new-feature"><strong>v1.22:</strong> GitHub Gist auto-sync, idle auto-logout, form clearing.</div>
+<h2>📋 Quick Start</h2>
+<ol><li>Open the app on any device</li><li>Login with your name and default password <code>123</code></li><li>Data automatically loads from GitHub</li><li>All changes save locally and sync to GitHub</li></ol>
+<h2>🔄 GitHub Sync (No Token Required)</h2>
+<p>ToolTrack syncs via the public repository <strong>setechtool/ToolTrack</strong>. Data files are stored in the repo and fetched using the raw.githubusercontent.com URL. <strong>No GitHub token or authentication is needed</strong> for reading data.</p>
+<p><strong>Saving data to GitHub</strong> requires a Personal Access Token with <code>repo</code> scope (for private repos) or the repo must be public with write access configured.</p>
+<p>Click the sync badge in the header to open the <strong>Sync Panel</strong> where you can:</p>
+<ul><li><strong>Sync Now</strong> - Pull latest data from GitHub</li><li><strong>Save to GitHub</strong> - Push local changes to the repository</li><li><strong>Configure Repo</strong> - Change the repository or branch</li></ul>
+<h2>⏱️ Idle Timeout</h2><p>After 10 minutes of inactivity (configurable by Donan), the app auto-syncs and logs out.</p>
+<h2>🧹 Clear Forms</h2><p>Add Tool and Add Engineer forms now clear completely each time they open.</p>
+<h2>Version History</h2><table><tr><th>Version</th><th>Features</th></tr>
+<tr><td>1.23</td><td>Token-free GitHub sync via public repo, sync panel</td></tr>
+<tr><td>1.22</td><td>Idle timeout, form clearing</td></tr>
+<tr><td>1.21</td><td>GitHub Gist sync engine</td></tr></table>
+<p style="text-align:center;margin-top:30px;color:#9ca3af;">ToolTrack v1.23 | © 2026</p></body></html>`; }
+            static downloadReadmeFile() { const b = new Blob([this.generateReadmeContent()], { type: 'text/html' }); const a =
+                    document.createElement('a');
                 a.href = URL.createObjectURL(b);
-                a.download = 'ToolTrack_README_HelpFile_v1.22.html';
+                a.download = 'ToolTrack_README_HelpFile_v1.23.html';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a); }
@@ -685,114 +610,64 @@
                     .getElementById('settings-restricted').classList.remove('hidden');
                 document.getElementById('settings-content').classList.add('hidden'); } else { document.getElementById(
                     'settings-restricted').classList.add('hidden');
-                document.getElementById('settings-content').classList.remove('hidden'); } document.getElementById(
-                'settings-panel-modal').classList.remove('hidden');
-            // Show/hide idle timeout section (Donan only)
+                document.getElementById('settings-content').classList.remove('hidden'); }
+            document.getElementById('settings-panel-modal').classList.remove('hidden');
             const idleSection = document.getElementById('idle-timeout-section'); if (idleSection) { if (cu && cu.isDonan) {
                     idleSection.classList.remove('hidden');
                     document.getElementById('idle-timeout-input').value = IdleManager.getTimeoutMinutes();
-                    document.getElementById('idle-timeout-status').textContent =
-                        'Current: ' + IdleManager.getTimeoutMinutes() + ' minute(s).'; } else { idleSection.classList.add(
-                        'hidden'); } } }
+                    document.getElementById('idle-timeout-status').textContent = 'Current: ' + IdleManager
+                        .getTimeoutMinutes() + ' minute(s).'; } else { idleSection.classList.add('hidden'); } } }
+
         function hideSettingsPanel() { document.getElementById('settings-panel-modal').classList.add('hidden'); }
         async function clearHistoryFunction() { const c = await CustomConfirmDialog.show('Clear all History records?',
                 'Clear History'); if (c) { transactions = [];
                 DeletionLogger.clearAll();
                 saveData();
                 refreshAllPanels();
-                logManager.logWarning(authManager.getCurrentUser().name, 'History cleared');
                 alert('Cleared.'); } }
         async function clearLogsFunction() { const c = await CustomConfirmDialog.show('Delete all logs?', 'Clear Logs'); if (c) {
                 logManager.clearAllLogs();
                 refreshLogViewer();
-                logManager.logWarning(authManager.getCurrentUser().name, 'Logs cleared');
                 alert('Cleared.'); } }
-        async function clearDataFunction() { const c = await CustomConfirmDialog.show('Clear active records? Backups preserved.',
-                'Clear Data'); if (c) { tools = [];
+        async function clearDataFunction() { const c = await CustomConfirmDialog.show('Clear active records?', 'Clear Data'); if (
+                c) { tools = [];
                 engineers = [];
                 saveData();
                 refreshAllPanels();
-                logManager.logWarning(authManager.getCurrentUser().name, 'Data cleared');
                 alert('Cleared.'); } }
 
-        // ==================== FULL BACKUP/RESTORE ====================
         function getBackupFileName() { const t = new Date(); return (
                 `BackupCFG_${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}_${String(t.getHours()).padStart(2,'0')}${String(t.getMinutes()).padStart(2,'0')}${String(t.getSeconds()).padStart(2,'0')}.zip`
                 ); }
-        async function performFullBackup() { const m = document.getElementById('backup-progress-modal');
-            const s = document.getElementById('backup-status-text');
-            const p = document.getElementById('backup-progress-bar');
-            const t = document.getElementById('backup-percent');
-            m.classList.remove('hidden');
-            logManager.log(authManager.getCurrentUser()?.name || 'User', 'Backup started'); try { s.textContent =
-                    'Collecting...';
-                p.style.width = '10%';
-                t.textContent = '10%'; await delay(200);
-                const sd = {}; for (let i = 0; i < localStorage.length; i++) { sd[localStorage.key(i)] = localStorage.getItem(
-                        localStorage.key(i)); }
-                sd['_meta'] = JSON.stringify({ v: '1.22', u: authManager.getCurrentUser()?.name, ts: new Date()
-                    .toISOString() });
-                p.style.width = '40%';
-                t.textContent = '40%'; await delay(200);
-                const zip = new JSZip();
-                zip.file('system_data.json', JSON.stringify(sd, null, 2));
-                zip.file('Service_Tool_Record.csv', '\uFEFF' + generateToolsCSV());
-                zip.file('Engineer_Record.csv', '\uFEFF' + generateEngineersCSV());
-                zip.file('ToolTrack0.log', logManager.getCurrentLog());
-                p.style.width = '75%';
-                t.textContent = '75%'; await delay(200);
-                s.textContent = 'Compressing...';
-                const zb = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
-                p.style.width = '100%';
-                t.textContent = '100%';
-                const fn = getBackupFileName();
-                const url = URL.createObjectURL(zb);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = fn;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a); await delay(500);
-                m.classList.add('hidden');
-                logManager.log(authManager.getCurrentUser()?.name || 'User', 'Backup completed: ' + fn);
-                alert('Backup complete!\n\n' + fn); } catch (e) { m.classList.add('hidden');
-                logManager.logError(authManager.getCurrentUser()?.name || 'User', 'Backup failed');
-                alert('Failed.'); } }
-        async function performFullRestore() { openFilePicker('_file_zip', async function(f) { if (!f.name.toLowerCase()
-                    .includes('backupcfg')) { alert('Invalid backup file.'); return; }
-                const c = await CustomConfirmDialog.show('Restore will overwrite current files. Continue?', 'Restore'); if (!c)
-                    return;
-                const m = document.getElementById('restore-progress-modal');
-                const s = document.getElementById('restore-status-text');
-                const p = document.getElementById('restore-progress-bar');
-                const t = document.getElementById('restore-percent');
-                m.classList.remove('hidden'); try { s.textContent = 'Validating...';
-                    p.style.width = '10%';
-                    t.textContent = '10%'; await delay(300);
-                    const zip = await JSZip.loadAsync(f); if (!zip.file('system_data.json')) throw new Error('Invalid');
-                    p.style.width = '40%';
-                    t.textContent = '40%';
-                    const sdc = await zip.file('system_data.json').async('string');
-                    const sd = JSON.parse(sdc);
-                    p.style.width = '70%';
-                    t.textContent = '70%';
-                    Object.keys(sd).forEach(k => { if (k !== '_meta') try { localStorage.setItem(k, sd[k]); } catch (
-                        e) {} }); try { tools = JSON.parse(localStorage.getItem('tools') || '[]'); } catch (e) { tools =
-                    []; } try { engineers = JSON.parse(localStorage.getItem('engineers') || '[]'); } catch (e) { engineers =
-                    []; } try { transactions = JSON.parse(localStorage.getItem('transactions') || '[]'); } catch (e) {
-                        transactions = []; }
-                    p.style.width = '100%';
-                    t.textContent = '100%'; await delay(500);
-                    m.classList.add('hidden');
+        async function performFullBackup() { const m = document.getElementById('backup-progress-modal'); m.classList.remove(
+                'hidden'); try { const zip = new JSZip();
+            zip.file('Service_Tool_Record.csv', '\uFEFF' + generateToolsCSV());
+            zip.file('Engineer_Record.csv', '\uFEFF' + generateEngineersCSV());
+            zip.file('ToolTrack0.log', logManager.getCurrentLog());
+            const zb = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+            const fn = getBackupFileName();
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(zb);
+            a.download = fn;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            m.classList.add('hidden');
+            alert('Backup complete!'); } catch (e) { m.classList.add('hidden');
+            alert('Failed.'); } }
+
+        async function performFullRestore() { openFilePicker('_file_zip', async function(f) { const c = await CustomConfirmDialog
+                    .show('Restore will overwrite current files. Continue?', 'Restore'); if (!c) return; try { const zip =
+                        await JSZip.loadAsync(f); if (zip.file('Service_Tool_Record.csv')) { const csv = await zip.file(
+                            'Service_Tool_Record.csv').async('string');
+                        restoreToolsFromCSV(csv); } if (zip.file('Engineer_Record.csv')) { const csv = await zip.file(
+                            'Engineer_Record.csv').async('string');
+                        restoreEngineersFromCSV(csv); }
                     refreshAllPanels();
-                    logManager.log(authManager.getCurrentUser()?.name || 'User', 'Restore completed');
-                    alert('Restore complete! Restart recommended.'); } catch (e) { m.classList.add('hidden');
-                    logManager.logError(authManager.getCurrentUser()?.name || 'User', 'Restore failed');
-                    alert('Failed.'); } }); }
+                    alert('Restore complete!'); } catch (e) { alert('Failed.'); } }); }
 
         function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-        // ==================== CSV BACKUP/RESTORE ====================
         function generateToolsCSV() { let c =
                 'ID,Description,Model,Serial Number,Owner,Calibration Due,Status,Location,Certificate Date\n';
             tools.forEach(t => { c +=
@@ -806,7 +681,7 @@
         function backupToolRecords() { const csv = generateToolsCSV();
             const t = new Date();
             const fn =
-                `Service_Tool_Record_${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}_${String(t.getHours()).padStart(2,'0')}${String(t.getMinutes()).padStart(2,'0')}${String(t.getSeconds()).padStart(2,'0')}.csv`;
+                `Service_Tool_Record_${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}.csv`;
             const b = new Blob(['\uFEFF' + csv], { type: 'text/csv' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(b);
@@ -814,31 +689,29 @@
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            logManager.log(authManager.getCurrentUser()?.name || 'User', 'Backup Tool: ' + fn);
             alert('Saved: ' + fn); }
 
         function restoreToolRecords() { openFilePicker('_file_csv', function(f) { const r = new FileReader();
-            r.onload = function(e) { const c = e.target.result.replace(/^\uFEFF/, '');
-                const l = c.trim().split('\n'); if (l.length < 2) { alert('Invalid.'); return; }
-                const h = l[0].toLowerCase(); if (!h.includes('description') || !h.includes('serial')) { alert(
-                    'Invalid backup file.'); return; }
-                const nt = []; for (let j = 1; j < l.length; j++) { const cols = parseCSVLine(l[j]); if (cols.length >=
-                        6) nt.push({ id: parseInt(cols[0]) || Date.now() + j, desc: cols[1]?.replace(/^"|"$/g, '') ||
-                            '', model: cols[2]?.replace(/^"|"$/g, '') || '', serial: cols[3]?.replace(/^"|"$/g, '') ||
-                            '', owner: cols[4]?.replace(/^"|"$/g, '') || '', calDue: cols[5]?.replace(/^"|"$/g, '') ||
-                            '', status: cols[6]?.replace(/^"|"$/g, '') || 'Available', location: cols[7]?.replace(
-                            /^"|"$/g, '') || '', calCert: null, calCertDate: cols[8]?.replace(/^"|"$/g, '') || null }); } if (
-                        nt.length) { tools = nt;
-                    saveData();
-                    refreshAllPanels();
-                    logManager.log(authManager.getCurrentUser()?.name || 'User', 'Restored ' + nt.length + ' tools');
-                    alert('Restored ' + nt.length + ' records!'); } };
+            r.onload = function(e) { restoreToolsFromCSV(e.target.result); };
             r.readAsText(f); }); }
+
+        function restoreToolsFromCSV(csv) { const l = csv.replace(/^\uFEFF/, '').trim().split('\n'); if (l.length < 2) { alert(
+                    'Invalid.'); return; }
+            const nt = []; for (let j = 1; j < l.length; j++) { const cols = parseCSVLine(l[j]); if (cols.length >= 6) nt.push({
+                    id: parseInt(cols[0]) || Date.now() + j, desc: cols[1]?.replace(/^"|"$/g, '') || '', model: cols[2]
+                        ?.replace(/^"|"$/g, '') || '', serial: cols[3]?.replace(/^"|"$/g, '') || '', owner: cols[4]
+                        ?.replace(/^"|"$/g, '') || '', calDue: cols[5]?.replace(/^"|"$/g, '') || '', status: cols[6]
+                        ?.replace(/^"|"$/g, '') || 'Available', location: cols[7]?.replace(/^"|"$/g, '') || '', calCert: null,
+                    calCertDate: cols[8]?.replace(/^"|"$/g, '') || null
+                }); } if (nt.length) { tools = nt;
+                saveData();
+                refreshAllPanels();
+                alert('Restored ' + nt.length + ' records!'); } }
 
         function backupEngineerRecords() { const csv = generateEngineersCSV();
             const t = new Date();
             const fn =
-                `Engineer_Record_${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}_${String(t.getHours()).padStart(2,'0')}${String(t.getMinutes()).padStart(2,'0')}${String(t.getSeconds()).padStart(2,'0')}.csv`;
+                `Engineer_Record_${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}.csv`;
             const b = new Blob(['\uFEFF' + csv], { type: 'text/csv' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(b);
@@ -846,25 +719,22 @@
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            logManager.log(authManager.getCurrentUser()?.name || 'User', 'Backup Engineer: ' + fn);
             alert('Saved: ' + fn); }
 
         function restoreEngineerRecords() { openFilePicker('_file_csv', function(f) { const r = new FileReader();
-            r.onload = function(e) { const c = e.target.result.replace(/^\uFEFF/, '');
-                const l = c.trim().split('\n'); if (l.length < 2) { alert('Invalid.'); return; }
-                const h = l[0].toLowerCase(); if (!h.includes('name') || !h.includes('email')) { alert(
-                    'Invalid backup file.'); return; }
-                const ne = []; for (let j = 1; j < l.length; j++) { const cols = parseCSVLine(l[j]); if (cols.length >=
-                        5) ne.push({ id: parseInt(cols[0]) || Date.now() + j, name: cols[1]?.replace(/^"|"$/g, '') ||
-                            '', phone: cols[2]?.replace(/^"|"$/g, '') || '', email: cols[3]?.replace(/^"|"$/g, '') ||
-                            '', department: cols[4]?.replace(/^"|"$/g, '') || '' }); } if (ne.length) { engineers = ne;
-                    saveData();
-                    refreshAllPanels();
-                    populateLoginDropdown();
-                    logManager.log(authManager.getCurrentUser()?.name || 'User', 'Restored ' + ne.length +
-                    ' engineers');
-                    alert('Restored ' + ne.length + ' records!'); } };
+            r.onload = function(e) { restoreEngineersFromCSV(e.target.result); };
             r.readAsText(f); }); }
+
+        function restoreEngineersFromCSV(csv) { const l = csv.replace(/^\uFEFF/, '').trim().split('\n'); if (l.length < 2) { alert(
+                    'Invalid.'); return; }
+            const ne = []; for (let j = 1; j < l.length; j++) { const cols = parseCSVLine(l[j]); if (cols.length >= 5) ne.push({
+                    id: parseInt(cols[0]) || Date.now() + j, name: cols[1]?.replace(/^"|"$/g, '') || '', phone: cols[2]
+                        ?.replace(/^"|"$/g, '') || '', email: cols[3]?.replace(/^"|"$/g, '') || '', department: cols[4]
+                        ?.replace(/^"|"$/g, '') || '' }); } if (ne.length) { engineers = ne;
+                saveData();
+                refreshAllPanels();
+                populateLoginDropdown();
+                alert('Restored ' + ne.length + ' records!'); } }
 
         function parseCSVLine(l) { const r = [];
             let c = '';
@@ -874,8 +744,7 @@
             r.push(c.trim()); return r; }
 
         // ==================== DASHBOARD ====================
-        function renderDashboard() { if (!authManager.canAccessDashboard()) { return; }
-            document.getElementById('total-tools').textContent = tools.length;
+        function renderDashboard() { document.getElementById('total-tools').textContent = tools.length;
             const ab = transactions.filter(t => !t.returned);
             document.getElementById('borrowed-count').textContent = ab.length;
             document.getElementById('util-rate').textContent = tools.length === 0 ? '0%' : Math.round((ab.length / tools.length) *
@@ -893,7 +762,7 @@
             document.getElementById('approval-list').innerHTML = pend.length ? pend.map(r => { const tl = tools.find(t => t
                         .id === r.toolId);
                     const eng = engineers.find(e => e.id === r.engineerId); return (
-                        `<div class="border rounded-2xl p-5"><div class="flex justify-between items-start gap-4"><div class="flex-1 space-y-2"><div class="font-semibold text-base">${tl?.desc||'Unknown'} <span class="text-gray-500 font-normal text-sm">S/N: ${tl?.serial||'N/A'}</span></div><div class="flex flex-wrap gap-4 text-sm text-gray-600"><span><i class="fa-solid fa-user mr-1 text-blue-500"></i>${eng?.name||r.requestedBy||'Unknown'}</span><span><i class="fa-solid fa-building mr-1 text-indigo-500"></i>${eng?.department||'N/A'}</span><span><i class="fa-solid fa-phone mr-1 text-green-500"></i>${eng?.phone||'N/A'}</span></div><div class="text-xs text-gray-400 mt-1"><i class="fa-solid fa-clock mr-1"></i>Submitted: ${new Date(r.returnDate).toLocaleString()}</div></div><div class="flex items-center gap-3 flex-shrink-0">${r.evidenceImage?`<img src="${r.evidenceImage}" class="w-14 h-14 object-cover rounded-xl cursor-pointer border" onclick="expandEvidence('${r.id}')">`:''}<button onclick="confirmReturn('${r.id}')" class="btn btn-success px-4 py-2 text-sm">Confirmed</button><button onclick="incidentReport('${r.id}')" class="btn btn-danger px-4 py-2 text-sm">Incident</button></div></div></div>`
+                        `<div class="border rounded-2xl p-5"><div class="flex justify-between"><div><div class="font-semibold">${tl?.desc||'Unknown'}</div><div class="text-sm">${eng?.name||'Unknown'} - ${eng?.department||'N/A'}</div></div><div class="flex gap-2">${r.evidenceImage?`<img src="${r.evidenceImage}" class="w-14 h-14 object-cover rounded-xl cursor-pointer" onclick="expandEvidence('${r.id}')">`:''}<button onclick="confirmReturn('${r.id}')" class="btn btn-success px-4 py-2 text-sm">Confirmed</button><button onclick="incidentReport('${r.id}')" class="btn btn-danger px-4 py-2 text-sm">Incident</button></div></div></div>`
                         ); }).join('') : '<p class="text-gray-400 text-center py-6">No pending.</p>'; }
 
         function expandEvidence(id) { const r = returnRequests.find(x => x.id === id); if (r?.evidenceImage) { window.open('',
@@ -903,16 +772,14 @@
             const trans = transactions.find(t => t.id === req.transId); if (trans) { trans.returned = true;
                 trans.actualReturnDate = req.returnDate;
                 trans.returnConfirmedBy = authManager.getCurrentUser().name;
-                trans.approvalStatus = 'Approved';
-                trans.transDate = new Date().toISOString(); }
+                trans.approvalStatus = 'Approved'; }
             saveData();
             refreshAllPanels(); }
 
         function incidentReport(reqId) { const req = returnRequests.find(r => r.id === reqId); if (!req) return;
             req.status = 'incident';
             const trans = transactions.find(t => t.id === req.transId); if (trans) { trans.incidentRemarks = 'Incident';
-                trans.approvalStatus = 'Incident';
-                trans.transDate = new Date().toISOString(); }
+                trans.approvalStatus = 'Incident'; }
             saveData();
             refreshAllPanels(); }
 
@@ -932,17 +799,15 @@
                             )); return (
                     `<tr><td class="px-4 py-4 font-medium">${t.desc}</td><td class="px-4 py-4 text-sm">${t.model}</td><td class="px-4 py-4 text-sm">${t.serial}</td><td class="px-4 py-4 text-sm">${t.owner}</td><td class="px-4 py-4 text-sm">${t.calDue}</td><td class="px-4 py-4">${st}</td><td class="px-4 py-4">${isCalSoon(t.calDue)&&!isB?'<span class="text-xs text-orange-600">Prepare Cal</span>':'-'}</td><td class="px-4 py-4 text-sm">${bi?`<span>${bi.firstName}</span>`:'-'}</td><td class="px-4 py-4 text-sm">${bi?bi.location:(t.location||'-')}</td><td class="px-4 py-4 text-center"><button onclick="showCalCertModal(${t.id})" class="text-blue-500 btn"><i class="fa-solid fa-certificate"></i></button></td><td class="px-4 py-4 text-right">${ce?`<button onclick="showEditToolModal(${t.id})" class="text-blue-500 p-2 btn"><i class="fa-solid fa-edit"></i></button><button onclick="deleteToolPrompt(${t.id})" class="text-red-500 p-2 btn"><i class="fa-solid fa-trash"></i></button>`:'<span class="text-xs text-gray-400">No perm</span>'}</td></tr>`
                     ); }).join('') || '<tr><td colspan="11" class="text-center py-8">No tools</td></tr>'; }
-        function showAddToolModal() {
-            // CLEAR all form fields
-            document.getElementById('tool-desc').value = '';
+
+        function showAddToolModal() { document.getElementById('tool-desc').value = '';
             document.getElementById('tool-model').value = '';
             document.getElementById('tool-serial').value = '';
             document.getElementById('tool-owner').value = '';
             document.getElementById('tool-location').value = '';
             document.getElementById('tool-cal-date').value = new Date(Date.now() + 365 * 86400000).toISOString().split('T')[
             0];
-            document.getElementById('add-tool-modal').classList.remove('hidden');
-        }
+            document.getElementById('add-tool-modal').classList.remove('hidden'); }
 
         function hideAddToolModal() { document.getElementById('add-tool-modal').classList.add('hidden'); }
         async function addNewTool() { const d = document.getElementById('tool-desc').value.trim(); if (!d) return;
@@ -952,8 +817,7 @@
                 location: document.getElementById('tool-location').value || '', calCert: null, calCertDate: null });
             saveData();
             hideAddToolModal();
-            refreshAllPanels();
-            logManager.log(authManager.getCurrentUser().name, 'Added tool: ' + d); }
+            refreshAllPanels(); }
 
         function showEditToolModal(id) { const t = tools.find(x => x.id === id); if (!t || !authManager.canEditTool(t.owner))
                 return;
@@ -997,21 +861,17 @@
                         `S/N:${t.serial}`, authManager.getCurrentUser().name, r);
                     tools = tools.filter(x => x.id !== pendingDeletionId);
                     saveData();
-                    refreshAllPanels();
-                    logManager.logWarning(authManager.getCurrentUser().name, 'Deleted tool: ' + t.desc); } } else if (
-                pendingDeletionType === 'engineer') { const e = engineers.find(x => x.id === pendingDeletionId); if (e) {
-                    DeletionLogger.logDeletion('engineer', e.name, `Dept:${e.department}`, authManager.getCurrentUser()
-                        .name, r);
+                    refreshAllPanels(); } } else if (pendingDeletionType === 'engineer') { const e = engineers.find(x => x.id ===
+                        pendingDeletionId); if (e) { DeletionLogger.logDeletion('engineer', e.name,
+                        `Dept:${e.department}`, authManager.getCurrentUser().name, r);
                     engineers = engineers.filter(x => x.id !== pendingDeletionId);
                     authManager.removeUser(e.name);
                     saveData();
                     refreshAllPanels();
-                    populateLoginDropdown();
-                    logManager.logWarning(authManager.getCurrentUser().name, 'Deleted engineer: ' + e.name); } }
+                    populateLoginDropdown(); } }
             pendingDeletionType = null;
             pendingDeletionId = null; }
 
-        // ==================== ENGINEERS ====================
         function switchEngineerView(v) { currentEngineerView = v;
             document.getElementById('view-grid-btn').classList.toggle('active', v === 'grid');
             document.getElementById('view-table-btn').classList.toggle('active', v === 'table');
@@ -1021,19 +881,17 @@
 
         function renderEngineers() { const cu = authManager.getCurrentUser();
             document.getElementById('engineers-grid-view').innerHTML = engineers.map(e =>
-                `<div class="bg-white rounded-3xl p-6 card-hover border"><div><h4 class="font-semibold">${e.name}</h4><p class="text-sm text-blue-600">${e.department||'N/A'}</p></div><div class="mt-4 space-y-2 text-sm"><div>📞 ${formatPhoneDisplay(e.phone)}</div><div>✉️ <span class="email-truncate" title="${e.email}">${e.email}</span></div></div><div class="mt-4 flex gap-2"><button onclick="showEditEngineerModal(${e.id})" class="flex-1 py-2 bg-blue-50 text-blue-600 rounded-xl text-sm btn">Edit</button>${cu?.isAdmin?`<button onclick="deleteEngineerPrompt(${e.id})" class="flex-1 py-2 bg-red-50 text-red-600 rounded-xl text-sm btn">Delete</button>`:''}</div></div>`
+                `<div class="bg-white rounded-3xl p-6 card-hover border"><div><h4 class="font-semibold">${e.name}</h4><p class="text-sm text-blue-600">${e.department||'N/A'}</p></div><div class="mt-4 space-y-2 text-sm"><div>📞 ${formatPhoneDisplay(e.phone)}</div><div>✉️ ${e.email}</div></div><div class="mt-4 flex gap-2"><button onclick="showEditEngineerModal(${e.id})" class="flex-1 py-2 bg-blue-50 text-blue-600 rounded-xl text-sm btn">Edit</button>${cu?.isAdmin?`<button onclick="deleteEngineerPrompt(${e.id})" class="flex-1 py-2 bg-red-50 text-red-600 rounded-xl text-sm btn">Delete</button>`:''}</div></div>`
                 ).join('') || '<div class="col-span-full text-center py-8">No engineers</div>';
             document.getElementById('engineers-table-body').innerHTML = engineers.map(e =>
-                `<tr><td class="px-6 py-5 font-semibold">${e.name}</td><td class="px-6 py-5">${e.department||'N/A'}</td><td class="px-6 py-5">${formatPhoneDisplay(e.phone)}</td><td class="px-6 py-5"><span class="email-truncate" title="${e.email}">${e.email}</span></td><td class="px-6 py-5 text-right"><button onclick="showEditEngineerModal(${e.id})" class="text-blue-500 p-2 btn"><i class="fa-solid fa-edit"></i></button>${cu?.isAdmin?`<button onclick="deleteEngineerPrompt(${e.id})" class="text-red-500 p-2 btn"><i class="fa-solid fa-trash"></i></button>`:''}</td></tr>`
+                `<tr><td class="px-6 py-5 font-semibold">${e.name}</td><td class="px-6 py-5">${e.department||'N/A'}</td><td class="px-6 py-5">${formatPhoneDisplay(e.phone)}</td><td class="px-6 py-5">${e.email}</td><td class="px-6 py-5 text-right"><button onclick="showEditEngineerModal(${e.id})" class="text-blue-500 p-2 btn"><i class="fa-solid fa-edit"></i></button>${cu?.isAdmin?`<button onclick="deleteEngineerPrompt(${e.id})" class="text-red-500 p-2 btn"><i class="fa-solid fa-trash"></i></button>`:''}</td></tr>`
                 ).join('') || '<tr><td colspan="5" class="text-center py-8">No engineers</td>'; }
-        function showAddEngineerModal() {
-            // CLEAR all form fields
-            document.getElementById('eng-name').value = '';
+
+        function showAddEngineerModal() { document.getElementById('eng-name').value = '';
             document.getElementById('eng-phone').value = '';
             document.getElementById('eng-email').value = '';
             document.getElementById('eng-department').value = '';
-            document.getElementById('add-engineer-modal').classList.remove('hidden');
-        }
+            document.getElementById('add-engineer-modal').classList.remove('hidden'); }
 
         function hideAddEngineerModal() { document.getElementById('add-engineer-modal').classList.add('hidden'); }
         async function addNewEngineer() { const n = document.getElementById('eng-name').value.trim(); if (!n) return;
@@ -1046,8 +904,7 @@
             saveData();
             hideAddEngineerModal();
             refreshAllPanels();
-            populateLoginDropdown();
-            logManager.log(authManager.getCurrentUser().name, 'Added engineer: ' + n); }
+            populateLoginDropdown(); }
 
         function showEditEngineerModal(id) { const e = engineers.find(x => x.id === id); if (!e) return;
             currentEditEngineerId = id;
@@ -1084,7 +941,6 @@
                 '<option value="">-- Select --</option><option>Test Entry Only</option><option>Engineer Transferred</option><option>Engineer Resigned</option><option>Wrong Entry</option>';
             document.getElementById('deletion-reason-modal').classList.remove('hidden'); }
 
-        // ==================== OVERDUE ====================
         function showOverdueModal(id) { const t = tools.find(x => x.id === id),
                 bi = getBorrowerInfo(id); if (!t || !bi) return;
             currentOverdueToolId = id;
@@ -1102,7 +958,6 @@
                 `https://wa.me/${bi.phone.replace(/[^\d]/g,'')}?text=${encodeURIComponent(document.getElementById('whatsapp-message').value)}`,
                 '_blank'); }
 
-        // ==================== BORROW/RETURN ====================
         function renderBorrowTab() { const avail = tools.filter(t => !transactions.some(tr => tr.toolId === t.id && !tr
                 .returned));
             document.getElementById('borrow-tool-select').innerHTML = avail.length ? avail.map(t =>
@@ -1114,40 +969,21 @@
             const active = transactions.filter(t => !t.returned);
             document.getElementById('currently-borrowed').innerHTML = active.length ? active.map(t => { const tl = tools.find(
                         x => x.id === t.toolId),
-                    e = engineers.find(x => x.id === t.engineerId),
-                    isO = new Date(t.expectedReturn) < new Date(); return (
-                    `<div class="bg-white border ${isO?'border-red-300':''} rounded-2xl p-5"><div class="flex justify-between"><div><div class="font-semibold text-lg">${tl?.desc||'Deleted'} – SN: ${tl?.serial||'N/A'} ${isO?`<span onclick="populateReturnForm(${t.id})" class="px-3 py-1 rounded-full text-xs bg-red-500 text-white cursor-pointer overdue-btn">OVERDUE</span>`:''}</div><div class="text-sm">${e?.name||'Unknown'} – ${e?.department||'N/A'}</div><div class="text-xs">📍 ${t.location||'N/A'} | Taken: ${t.takenDate} | Expected: ${t.expectedReturn}</div></div><button onclick="initiateReturn(${t.id})" class="ml-4 px-5 py-2.5 bg-emerald-50 text-emerald-600 border rounded-xl text-sm btn btn-success">Mark Returned</button></div></div>`
-                    ); }).join('') : '<p class="text-gray-500 p-6 text-center border rounded-2xl">No tools borrowed</p>'; }
+                    e = engineers.find(x => x.id === t.engineerId); return (
+                    `<div class="bg-white border rounded-2xl p-5"><div class="flex justify-between"><div><div class="font-semibold">${tl?.desc||'Deleted'} – SN: ${tl?.serial||'N/A'}</div><div class="text-sm">${e?.name||'Unknown'} – ${e?.department||'N/A'}</div><div class="text-xs">📍 ${t.location||'N/A'} | Taken: ${t.takenDate} | Expected: ${t.expectedReturn}</div></div><button onclick="initiateReturn(${t.id})" class="btn btn-success px-5 py-2.5 text-sm">Mark Returned</button></div></div>`
+                    ); }).join('') : '<p class="text-gray-500 p-6 text-center">No tools borrowed</p>'; }
 
-        function resetBorrowForm() { currentEditingTransId = null;
-            document.getElementById('borrow-btn').classList.remove('hidden');
+        function resetBorrowForm() { document.getElementById('borrow-btn').classList.remove('hidden');
             document.getElementById('update-return-btn').classList.add('hidden');
-            document.getElementById('extension-note-container').classList.add('hidden');
-            document.getElementById('taken-date').removeAttribute('readonly');
-            document.getElementById('taken-date').classList.remove('locked-field', 'bg-gray-100');
             document.getElementById('taken-date').value = new Date().toISOString().split('T')[0];
             document.getElementById('return-date').value = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
-            document.getElementById('borrow-location').value = '';
-            document.getElementById('extension-notes').value = ''; }
-
-        function populateReturnForm(id) { const t = transactions.find(x => x.id === id); if (!t) return;
-            currentEditingTransId = id;
-            document.getElementById('borrow-tool-select').value = t.toolId;
-            document.getElementById('borrow-engineer-select').value = t.engineerId;
-            document.getElementById('taken-date').value = t.takenDate;
-            document.getElementById('taken-date').setAttribute('readonly', true);
-            document.getElementById('taken-date').classList.add('locked-field', 'bg-gray-100');
-            document.getElementById('return-date').value = t.newExpectedReturn || t.expectedReturn;
-            document.getElementById('borrow-location').value = t.location || '';
-            document.getElementById('borrow-btn').classList.add('hidden');
-            document.getElementById('update-return-btn').classList.remove('hidden');
-            document.getElementById('extension-note-container').classList.remove('hidden'); }
+            document.getElementById('borrow-location').value = ''; }
         async function borrowTool() { const ti = document.getElementById('borrow-tool-select').value,
                 ei = document.getElementById('borrow-engineer-select').value; if (!ti || !ei) { alert(
                     'Select tool and engineer.'); return; }
             const td = document.getElementById('taken-date').value,
                 rd = document.getElementById('return-date').value; if (new Date(rd) < new Date(td)) { alert(
-                    'Invalid date. The date entered is older than the taken out date.'); return; }
+                    'Invalid date.'); return; }
             transactions.push({ id: Date.now(), toolId: parseInt(ti), engineerId: parseInt(ei), takenDate: td,
                 expectedReturn: rd, returned: false, location: document.getElementById('borrow-location').value || 'N/A',
                 extensionNotes: '', newExpectedReturn: '', actualReturnDate: '', returnConfirmedBy: '',
@@ -1155,16 +991,13 @@
                 confirmedBy: '' });
             saveData();
             refreshAllPanels();
-            logManager.log(authManager.getCurrentUser().name, 'Borrowed tool');
             alert('Borrowed!'); }
-        async function updateReturnDate() { if (!currentEditingTransId) return;
+
+        async function updateReturnDate() { const nd = document.getElementById('return-date').value; if (!currentEditingTransId)
+                return;
             const t = transactions.find(x => x.id === currentEditingTransId); if (!t) return;
-            const nd = document.getElementById('return-date').value; if (new Date(nd) < new Date(t.takenDate)) { alert(
-                    'Invalid date. The date entered is older than the taken out date.'); return; }
             t.newExpectedReturn = nd;
-            t.extensionNotes = document.getElementById('extension-notes').value.trim() || 'Extended';
-            t.transDate = new Date().toISOString(); if (new Date(nd) >= new Date(new Date().toISOString().split('T')[
-                0])) t.expectedReturn = nd;
+            t.extensionNotes = 'Extended';
             saveData();
             refreshAllPanels();
             alert('Updated!');
@@ -1172,7 +1005,6 @@
 
         function scrollToActiveBorrows() { document.getElementById('active-borrows-section').scrollIntoView({ behavior: 'smooth' }); }
 
-        // Return Evidence
         function initiateReturn(id) { pendingReturnTransId = id;
             capturedReturnImage = null;
             document.getElementById('captured-image-container').classList.add('hidden');
@@ -1198,12 +1030,11 @@
             returnRequests.push({ id: 'RR' + Date.now(), transId: pendingReturnTransId, toolId: trans.toolId,
                 engineerId: trans.engineerId, returnDate: ard, evidenceImage: capturedReturnImage, status: 'pending',
                 requestedBy: authManager.getCurrentUser().name });
-            trans.transDate = new Date().toISOString();
             saveData();
             hideReturnEvidenceModal();
             refreshAllPanels();
             const msg =
-                `Dear Roy,\n\nGreetings!\n\nTool ${tool.desc}, ${tool.serial} returned on ${new Date(ard).toLocaleString()}.\nPlease review the image in Dashboard.\n\nRegards,\n${authManager.getCurrentUser().name}`;
+                `Dear Roy,\n\nGreetings!\n\nTool ${tool.desc}, ${tool.serial} returned on ${new Date(ard).toLocaleString()}.\n\nRegards,\n${authManager.getCurrentUser().name}`;
             document.getElementById('return-whatsapp-msg').value = msg;
             document.getElementById('return-email-msg').value = msg;
             document.getElementById('send-return-modal').classList.remove('hidden'); }
@@ -1216,8 +1047,7 @@
                 const trans = transactions.find(t => t.id === pendingReturnTransId); if (trans) { trans.returned = true;
                     trans.actualReturnDate = new Date().toISOString();
                     trans.returnConfirmedBy = 'Royston Dcosta';
-                    trans.approvalStatus = 'Approved (In Person)';
-                    trans.transDate = new Date().toISOString(); }
+                    trans.approvalStatus = 'Approved (In Person)'; }
                 saveData();
                 hideReturnEvidenceModal();
                 refreshAllPanels();
@@ -1235,17 +1065,9 @@
                 '_blank');
             hideSendReturnModal(); }
 
-        // ==================== HISTORY ====================
         function sortHistory(col) { if (historySortCol === col) historySortDir = historySortDir === 'asc' ? 'desc' : 'asc'; else {
                 historySortCol = col;
-                historySortDir = 'asc'; } if (col !== 'transDate') confirm(
-                'Found data next to selection. OK=Expand, Cancel=Continue');
-            document.querySelectorAll('.sort-header').forEach(h => { h.classList.remove('sorted');
-                h.querySelector('i').className = 'fa-solid fa-sort'; });
-            const header = document.querySelector(`[onclick="sortHistory('${col}')"]`); if (header) { header.classList.add(
-                    'sorted');
-                header.querySelector('i').className =
-                `fa-solid fa-sort-${historySortDir==='asc'?'up':'down'}`; }
+                historySortDir = 'asc'; }
             renderHistory(); }
 
         function renderHistory() { const filter = document.getElementById('history-filter')?.value || 'all';
@@ -1303,11 +1125,9 @@
             a.download = 'History_' + new Date().toISOString().split('T')[0] + '.csv';
             a.click(); }
 
-        // ==================== ANALYTICS ====================
         let uC, eC;
 
-        function renderAnalytics() { if (!authManager.canAccessAnalytics()) { return; }
-            const ab = transactions.filter(t => !t.returned).length,
+        function renderAnalytics() { const ab = transactions.filter(t => !t.returned).length,
                 at = tools.length - ab; if (uC) uC.destroy();
             const c1 = document.getElementById('utilizationChart'); if (c1) uC = new Chart(c1, { type: 'doughnut', data: { labels: [
                         'Available', 'Borrowed'
@@ -1318,7 +1138,6 @@
                             .filter(t => t.engineerId === e.id).length), backgroundColor: '#3b82f6' }] },
                 options: { responsive: true } }); }
 
-        // ==================== UTILITY ====================
         function editRoyInfo() { if (!authManager.getCurrentUser()?.isAdmin) return;
             const p = prompt('Phone:', roy.phone); if (p) roy.phone = p;
             const e = prompt('Email:', roy.email); if (e) roy.email = e;
@@ -1365,91 +1184,129 @@
                 tmp.files = dt.files;
                 handleCertFileSelect(tmp); }); }
 
-        // ==================== GITHUB GIST SYNC ENGINE ====================
-        const GIST_FILE = 'tooltrack_data.json';
-        const GIST_LOG_FILE = 'tooltrack_log.txt';
-        let _syncTimer = null;
-        let _pendingSync = false;
-        let _pollTimer = null;
-        const POLL_INTERVAL = 30000;
+        // ==================== GITHUB SYNC ENGINE (TOKEN-FREE) ====================
+        const GitHubSync = {
+            _repo: localStorage.getItem('github_sync_repo') || 'setechtool/ToolTrack',
+            _branch: localStorage.getItem('github_sync_branch') || 'main',
+            _dataPath: 'data/',
+            _token: localStorage.getItem('github_token') || '',
+            _pushTimer: null,
+            _pollTimer: null,
+            _pendingPush: false,
+            POLL_INTERVAL: 30000,
 
-        const GistSync = {
-            getToken() { return localStorage.getItem('gist_token') || ''; },
-            getGistId() { return localStorage.getItem('gist_id') || ''; },
-            isConfigured() { return !!this.getToken(); },
+            getRepo() { return this._repo; },
+            getBranch() { return this._branch; },
+            getToken() { return this._token; },
+            isConfigured() { return !!this._repo; },
 
-            setStatus(state, label) {
-                document.querySelectorAll('.sync-status-badge').forEach(el => {
-                    el.className = 'sync-status-badge ' + state;
-                    const lb = el.querySelector('.sync-label'); if (lb) lb.textContent = label;
-                });
+            setStatus(state, label) { document.querySelectorAll('.sync-status-badge').forEach(el => { el.className =
+                        'sync-status-badge ' + state;
+                    const lb = el.querySelector('.sync-label'); if (lb) lb.textContent = label; }); },
+
+            // Fetch data from GitHub raw content (no auth needed for public repos)
+            async pull() { if (!this.isConfigured()) return false; try { this.setStatus('syncing', 'Loading...');
+                    const baseUrl =
+                        `https://raw.githubusercontent.com/${this._repo}/${this._branch}/${this._dataPath}`;
+                    const files = ['tools.json', 'engineers.json', 'transactions.json', 'returnRequests.json',
+                        'royContact.json', 'tooltrack_users.json', 'deletionRecords.json', 'logConfig.json'
+                    ];
+                    let loadedAny = false; for (const file of files) { try { const resp = await fetch(
+                            `${baseUrl}${file}?t=${Date.now()}`); if (!resp.ok) continue;
+                        const data = await resp.text(); if (data) { const key = file.replace('.json',
+                            ''); try { localStorage.setItem(key, data);
+                            loadedAny = true; } catch (e) {} } } catch (e) { continue; } } if (
+                    loadedAny) { _reloadMemoryFromStorage();
+                        this.setStatus('synced', 'Synced ✓');
+                        document.getElementById('last-sync-time').textContent = new Date()
+                        .toLocaleTimeString(); return true; } else { this.setStatus('synced',
+                        'No data found'); return false; } } catch (e) { console.warn('GitHub pull failed:', e
+                    .message);
+                    this.setStatus('error', 'Sync failed'); return false; }
             },
 
-            async apiCall(method, path, body) {
-                const res = await fetch('https://api.github.com' + path, {
-                    method,
-                    headers: {
-                        'Authorization': 'token ' + this.getToken(),
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: body ? JSON.stringify(body) : undefined
-                }); if (!res.ok) { const err = await res.json().catch(() => ({ message: res.statusText })); throw new Error(
-                        err.message || res.statusText); } return res.json();
-            },
+            schedulePush(immediate) { this._pendingPush = true; if (this._pushTimer) clearTimeout(this._pushTimer);
+                this._pushTimer = setTimeout(() => this.push(), immediate ? 800 : 4000); },
 
-            async pull(silent) { if (!this.isConfigured()) return false;
-                const gistId = this.getGistId(); if (!gistId) return false; try { if (!silent) this.setStatus('syncing',
-                        'Syncing...');
-                    const gist = await this.apiCall('GET', '/gists/' + gistId);
-                    const raw = gist.files[GIST_FILE]?.content; if (!raw) { this.setStatus('synced', 'Synced ✓'); return false; }
-                    const data = JSON.parse(raw);
-                    Object.keys(data).forEach(k => { try { localStorage.setItem(k, data[k]); } catch (e) {} });
-                    _reloadMemoryFromStorage();
-                    this.setStatus('synced', 'Synced ✓'); return true; } catch (e) { console.warn('Gist pull failed:', e
-                        .message);
-                    this.setStatus('error', 'Sync error'); return false; }
-            },
-
-            schedulePush(immediate) { _pendingSync = true; if (_syncTimer) clearTimeout(_syncTimer);
-                _syncTimer = setTimeout(() => this.push(), immediate ? 800 : 4000); },
-
-            async push() { if (!this.isConfigured()) { this.setStatus('offline', 'Offline'); return; }
-                _pendingSync = false;
-                this.setStatus('syncing', 'Saving...'); try { const snapshot = {};['tools', 'engineers', 'transactions',
-                        'returnRequests', 'royContact', 'tooltrack_users', 'deletionRecords', 'logConfig'
-                    ].forEach(k => { const v = localStorage.getItem(k); if (v) snapshot[k] = v; });
-                    snapshot['_meta'] = JSON.stringify({ v: '1.22', savedBy: authManager.getCurrentUser()?.name ||
-                            'system', ts: new Date().toISOString() });
-                    let gistId = this.getGistId();
-                    const files = { [GIST_FILE]: { content: JSON.stringify(snapshot, null, 2) } };
-                    const logContent = logManager.getCurrentLog(); if (logContent) files[GIST_LOG_FILE] = { content: logContent }; if (
-                        !gistId) { const res = await this.apiCall('POST', '/gists', { description: 'ToolTrack v1.22 Data — DO NOT DELETE',
-                                public: false, files });
-                        gistId = res.id;
-                        localStorage.setItem('gist_id', gistId);
-                        console.info('Gist created:', gistId); } else { await this.apiCall('PATCH', '/gists/' + gistId,
-                        { files }); }
-                    this.setStatus('synced', 'Saved ✓');
-                    setTimeout(() => { if (!_pendingSync) this.setStatus('synced', 'Synced ✓'); }, 3000); } catch (e) { console
-                    .warn('Gist push failed:', e.message);
-                    this.setStatus('error', 'Save failed — check connection'); }
-            },
-
-            async test(token, gistId) { const savedToken = this.getToken();
-                localStorage.setItem('gist_token', token); try { await this.apiCall('GET', '/user'); if (gistId) await this
-                        .apiCall('GET', '/gists/' + gistId); return { ok: true }; } catch (e) { localStorage.setItem(
-                        'gist_token', savedToken); return { ok: false, error: e.message }; }
+            async push() { if (!this._token) { console.warn(
+                    'GitHub token not configured. Data saved locally only. Configure a token with repo scope to enable cloud save.'
+                    );
+                    this.setStatus('synced', 'Local only');
+                    document.getElementById('sync-status-message').textContent =
+                        '⚠️ Token needed to save to GitHub. Data saved locally.';
+                    return; }
+                this._pendingPush = false;
+                this.setStatus('syncing', 'Saving...'); try { const files = {};
+                ['tools', 'engineers', 'transactions', 'returnRequests', 'royContact', 'tooltrack_users',
+                    'deletionRecords', 'logConfig'
+                ].forEach(k => { const v = localStorage.getItem(k); if (v) files[this._dataPath + k +
+                        '.json'] = { content: v }; });
+                files[this._dataPath + '_meta.json'] = { content: JSON.stringify({ v: '1.23',
+                        savedBy: authManager.getCurrentUser()?.name || 'system', ts: new Date()
+                        .toISOString() }) };
+                // Get current file SHAs for update
+                const treeUrl =
+                    `https://api.github.com/repos/${this._repo}/git/trees/${this._branch}?recursive=1`;
+                let existingShas = {}; try { const treeResp = await fetch(treeUrl, { headers: { 'Authorization': 'token ' +
+                            this._token, 'Accept': 'application/vnd.github.v3+json' } }); if (treeResp.ok) { const treeData =
+                            await treeResp.json();
+                        treeData.tree.forEach(item => { if (item.path.startsWith(this._dataPath)) { existingShas[item
+                                .path] = item.sha; } }); } } catch (e) {}
+                // Get latest commit SHA
+                const branchResp = await fetch(
+                    `https://api.github.com/repos/${this._repo}/git/ref/heads/${this._branch}`, { headers: { 'Authorization': 'token ' +
+                            this._token, 'Accept': 'application/vnd.github.v3+json' } });
+                const branchData = await branchResp.json();
+                const baseSha = branchData.object?.sha;
+                // Create blobs
+                const blobs = {}; for (const [path, fileData] of Object.entries(files)) { const blobResp = await fetch(
+                        `https://api.github.com/repos/${this._repo}/git/blobs`, { method: 'POST', headers: { 'Authorization': 'token ' +
+                                this._token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content: fileData.content, encoding: 'utf-8' }) }); const blobData =
+                        await blobResp.json();
+                    blobs[path] = blobData.sha; }
+                // Create tree
+                const treeItems = Object.entries(blobs).map(([path, sha]) => ({ path, mode: '100644', type: 'blob',
+                    sha })); if (existingShas[this._dataPath + '_meta.json']) { treeItems.push({ path: this
+                            ._dataPath + '_meta.json', mode: '100644', type: 'blob', sha: blobs[this._dataPath +
+                            '_meta.json'
+                        ] }); }
+                const treeResp = await fetch(`https://api.github.com/repos/${this._repo}/git/trees`, { method: 'POST',
+                    headers: { 'Authorization': 'token ' + this._token, 'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json' }, body: JSON.stringify({ base_tree: baseSha, tree: treeItems }) });
+                const treeData = await treeResp.json();
+                // Create commit
+                const commitResp = await fetch(`https://api.github.com/repos/${this._repo}/git/commits`, { method: 'POST',
+                    headers: { 'Authorization': 'token ' + this._token, 'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json' }, body: JSON.stringify({ message: 'ToolTrack auto-save v1.23',
+                        tree: treeData.sha, parents: [baseSha] }) });
+                const commitData = await commitResp.json();
+                // Update ref
+                await fetch(`https://api.github.com/repos/${this._repo}/git/refs/heads/${this._branch}`, { method: 'PATCH',
+                    headers: { 'Authorization': 'token ' + this._token, 'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json' }, body: JSON.stringify({ sha: commitData.sha, force: false }) });
+                this.setStatus('synced', 'Saved ✓');
+                document.getElementById('last-sync-time').textContent = new Date().toLocaleTimeString();
+                document.getElementById('sync-status-message').textContent =
+                    '✅ Data saved to GitHub successfully.'; } catch (e) { console.warn('GitHub push failed:', e.message);
+                    this.setStatus('error', 'Save failed');
+                    document.getElementById('sync-status-message').textContent =
+                        '❌ Save failed. Check console for details.'; }
             },
 
             startPolling() { this.stopPolling(); if (!this.isConfigured()) return;
-                _pollTimer = setInterval(async () => { if (document.hidden) return;
-                    const pulled = await this.pull(true); if (pulled) { refreshAllPanels();
-                        populateLoginDropdown(); } }, POLL_INTERVAL);
-            },
+                this._pollTimer = setInterval(async () => { if (document.hidden) return; await this.pull(); if (this
+                        ._pendingPush) await this.push(); }, this.POLL_INTERVAL); },
 
-            stopPolling() { if (_pollTimer) { clearInterval(_pollTimer);
-                    _pollTimer = null; } }
+            stopPolling() { if (this._pollTimer) { clearInterval(this._pollTimer);
+                    this._pollTimer = null; } },
+
+            async configureRepo(repo, branch, token) { this._repo = repo;
+                this._branch = branch || 'main'; if (token) this._token = token;
+                localStorage.setItem('github_sync_repo', repo);
+                localStorage.setItem('github_sync_branch', this._branch); if (token) localStorage.setItem('github_token',
+                token);
+                document.getElementById('sync-branch-display').textContent = this._branch; }
         };
 
         function _reloadMemoryFromStorage() { try { tools = JSON.parse(localStorage.getItem('tools') || '[]'); } catch (e) { tools =
@@ -1460,46 +1317,45 @@
                 .users = JSON.parse(localStorage.getItem('tooltrack_users') || '{}'); } catch (e) {} try { DeletionLogger
                 .deletionRecords = JSON.parse(localStorage.getItem('deletionRecords') || '[]'); } catch (e) {} }
 
-        function showGistSetup() { document.getElementById('gist-token-input').value = GistSync.getToken();
-            document.getElementById('gist-id-input').value = GistSync.getGistId();
-            document.getElementById('gist-setup-error').classList.add('hidden');
-            const st = document.getElementById('gist-current-status');
-            st.textContent = GistSync.isConfigured() ? 'Connected · Gist ID: ' + (GistSync.getGistId() ||
-                '(created on first save)') : 'Not configured — data is local only';
-            document.getElementById('gist-setup-modal').classList.add('show'); }
+        function showSyncPanel() { document.getElementById('sync-branch-display').textContent = GitHubSync.getBranch();
+            document.getElementById('last-sync-time').textContent = localStorage.getItem('last_sync_time') || 'Never';
+            document.getElementById('sync-status-message').textContent = GitHubSync.getToken() ?
+                '✅ Token configured. Ready to sync.' :
+                '⚠️ No token configured. Data syncs locally only. Add a GitHub token to save to the cloud.';
+            document.getElementById('sync-panel-modal').classList.remove('hidden'); }
 
-        function hideGistSetup() { document.getElementById('gist-setup-modal').classList.remove('show'); }
-        async function saveGistConfig() { const token = document.getElementById('gist-token-input').value.trim();
-            const gistId = document.getElementById('gist-id-input').value.trim();
-            const errEl = document.getElementById('gist-setup-error');
-            errEl.classList.add('hidden'); if (!token) { errEl.textContent = 'Please enter your GitHub token.';
-                errEl.classList.remove('hidden'); return; }
-            const btn = document.querySelector('#gist-setup-modal .btn-primary');
-            btn.disabled = true;
-            btn.textContent = 'Testing...';
-            const result = await GistSync.test(token, gistId);
-            btn.disabled = false;
-            btn.textContent = 'Connect & Test'; if (!result.ok) { errEl.textContent = 'Connection failed: ' + result.error +
-                    '. Check the token has "gist" scope.';
-                errEl.classList.remove('hidden'); return; }
-            localStorage.setItem('gist_token', token); if (gistId) localStorage.setItem('gist_id', gistId);
-            hideGistSetup();
-            const pulled = await GistSync.pull(); if (pulled) { refreshAllPanels();
-                populateLoginDropdown(); }
-            GistSync.schedulePush(true);
-            GistSync.startPolling(); }
+        function hideSyncPanel() { document.getElementById('sync-panel-modal').classList.add('hidden'); }
 
-        function clearGistConfig() { if (!confirm('Disconnect GitHub sync? Data stays local only.')) return;
-            GistSync.stopPolling();
-            localStorage.removeItem('gist_token');
-            localStorage.removeItem('gist_id');
-            GistSync.setStatus('offline', 'Offline');
-            hideGistSetup(); }
-        async function manualSync() { if (!GistSync.isConfigured()) { showGistSetup(); return; }
-            const pulled = await GistSync.pull(); if (pulled) { refreshAllPanels();
-                populateLoginDropdown(); } }
+        async function syncNow() { document.getElementById('sync-status-message').textContent = '⏳ Syncing from GitHub...';
+            const pulled = await GitHubSync.pull(); if (pulled) { refreshAllPanels();
+                populateLoginDropdown();
+                localStorage.setItem('last_sync_time', new Date().toLocaleTimeString());
+                document.getElementById('last-sync-time').textContent = localStorage.getItem('last_sync_time');
+                document.getElementById('sync-status-message').textContent = '✅ Data loaded from GitHub.'; } else { document
+                    .getElementById('sync-status-message').textContent = '⚠️ No data found on GitHub.'; } }
 
-        // ==================== FILE PICKER HELPER ====================
+        async function pushToGitHub() { if (!GitHubSync.getToken()) { document.getElementById('sync-status-message')
+                    .textContent =
+                    '❌ GitHub token required to save. Configure a token with repo scope in Settings.';
+                alert('A GitHub Personal Access Token (with repo scope) is needed to save data to the repository.\n\nPlease add your token in the "Configure Repo" section.'); return; }
+            document.getElementById('sync-status-message').textContent = '⏳ Saving to GitHub...'; await GitHubSync.push();
+            localStorage.setItem('last_sync_time', new Date().toLocaleTimeString());
+            document.getElementById('last-sync-time').textContent = localStorage.getItem('last_sync_time'); }
+
+        function configureSyncRepo() { const repo = prompt('Repository (e.g., setechtool/ToolTrack):', GitHubSync.getRepo()); if (
+                repo) { const branch = prompt('Branch name:', GitHubSync.getBranch()); const token = prompt(
+                    'GitHub Personal Access Token (with repo scope) - needed to SAVE data:\n(Leave blank to keep existing or skip)',
+                    GitHubSync.getToken()); if (token === null) return;
+                GitHubSync.configureRepo(repo, branch, token || undefined);
+                document.getElementById('sync-branch-display').textContent = GitHubSync.getBranch();
+                document.getElementById('sync-status-message').textContent = token ?
+                    '✅ Token saved. Ready to sync.' :
+                    '⚠️ No token. Can load data, but cannot save to GitHub.';
+                alert('Repository configured!\n\nLoad: Works without token (public repos)\nSave: Requires token with repo scope'
+                    ); } }
+
+        async function manualSync() { await syncNow(); }
+
         function openFilePicker(inputId, cb) { window._filePickerCb = function(el) { window._filePickerCb = null; if (el.files &&
                     el.files[0]) cb(el.files[0]);
                 el.value = ''; };
@@ -1507,7 +1363,6 @@
             el.value = '';
             el.click(); }
 
-        // ==================== MOBILE NAV ====================
         function buildMobileNav() { const cu = authManager.getCurrentUser(); if (!cu) return;
             const mobDash = document.getElementById('mob-nav-0'); if (mobDash) mobDash.style.display = (cu.isDonan || cu.isRoy) ?
                 'flex' : 'none';
@@ -1531,9 +1386,7 @@
         function closeMobileMoreDrawer() { document.getElementById('mobile-more-drawer').style.display = 'none';
             document.getElementById('mobile-more-overlay').style.display = 'none'; }
 
-        // ==================== INIT ====================
-        window.onload = async function() {
-            const APP_VERSION = '1.22';
+        window.onload = async function() { const APP_VERSION = '1.23';
             const storedVersion = sessionStorage.getItem('tooltrack_app_version'); if (storedVersion && storedVersion !==
                 APP_VERSION) { sessionStorage.setItem('tooltrack_app_version', APP_VERSION);
                 location.reload(true); return; }
@@ -1545,27 +1398,11 @@
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('main-app').classList.add('hidden');
             currentEngineerView = 'table';
-            logManager.log('SYSTEM', 'ToolTrack v1.22 initialized'); if (GistSync.isConfigured()) { GistSync.setStatus('syncing',
-                    'Loading...'); await GistSync.pull();
-                populateLoginDropdown(); } else { GistSync.setStatus('offline', 'Offline'); }
-        };
+            logManager.log('SYSTEM', 'ToolTrack v1.23 initialized');
+            document.getElementById('sync-branch-display').textContent = GitHubSync.getBranch(); if (GitHubSync.isConfigured()) {
+                GitHubSync.setStatus('syncing', 'Loading...'); await GitHubSync.pull();
+                populateLoginDropdown(); } else { GitHubSync.setStatus('offline', 'Offline'); } };
     </script>
-    <!-- GITHUB GIST SYNC SETUP MODAL -->
-    <div id="gist-setup-modal" role="dialog" aria-label="GitHub Sync Setup">
-        <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8">
-            <div class="flex items-center justify-between mb-6"><h3 class="text-xl font-semibold">GitHub Sync Setup</h3><button onclick="hideGistSetup()" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button></div>
-            <div id="gist-setup-content">
-                <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-5 text-sm text-blue-800 leading-relaxed"><strong>How it works:</strong> ToolTrack saves all data to a private GitHub Gist — a free secure file on your GitHub account. Any device that opens the app will automatically load the latest data.</div>
-                <div class="space-y-4">
-                    <div><label class="block text-sm font-medium text-gray-700 mb-1">GitHub Personal Access Token</label><input type="password" id="gist-token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="w-full p-3 border rounded-xl text-sm font-mono"><p class="text-xs text-gray-500 mt-1">Go to GitHub → Settings → Developer Settings → Personal Access Tokens → Tokens (classic) → Generate new token → select <strong>gist</strong> scope only.</p></div>
-                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Gist ID <span class="text-gray-400 font-normal">(leave blank to create new)</span></label><input type="text" id="gist-id-input" placeholder="Auto-created on first save" class="w-full p-3 border rounded-xl text-sm font-mono"><p class="text-xs text-gray-500 mt-1">If you already have a ToolTrack Gist, paste its ID here (the long string in the URL).</p></div>
-                </div>
-                <div id="gist-setup-error" class="hidden mt-3 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700"></div>
-                <div class="flex gap-3 mt-6"><button onclick="saveGistConfig()" class="flex-1 btn btn-primary py-3">Connect &amp; Test</button><button onclick="clearGistConfig()" class="btn btn-outline px-5 py-3 text-sm text-red-500 border-red-200">Disconnect</button></div>
-                <div id="gist-current-status" class="mt-4 text-xs text-gray-400 text-center"></div>
-            </div>
-        </div>
-    </div>
 
     <!-- REUSABLE HIDDEN FILE INPUTS -->
     <input type="file" id="_file_image_camera" accept="image/*" capture="environment" style="display:none" onchange="window._filePickerCb&&window._filePickerCb(this)">
@@ -1582,11 +1419,7 @@
         <button class="mob-nav-item" id="mob-nav-3" onclick="mobileSwitchTab(3)" aria-label="Borrow/Return"><i class="fa-solid fa-arrow-right-arrow-left"></i>Borrow</button>
         <button class="mob-nav-item" id="mob-nav-more" onclick="openMobileMoreDrawer()" aria-label="More"><i class="fa-solid fa-ellipsis"></i>More</button>
     </nav>
-
-    <!-- MORE DRAWER OVERLAY -->
     <div id="mobile-more-overlay" onclick="closeMobileMoreDrawer()"></div>
-
-    <!-- MORE DRAWER -->
     <div id="mobile-more-drawer" role="dialog" aria-label="More options">
         <div style="width:40px;height:4px;background:#e5e7eb;border-radius:2px;margin:0 auto 16px"></div>
         <div id="mob-drawer-history" class="mob-drawer-item" onclick="mobileSwitchTab(5);closeMobileMoreDrawer()"><i class="fa-solid fa-clock-rotate-left"></i><span>History &amp; Audit</span></div>
@@ -1594,13 +1427,14 @@
         <div id="mob-drawer-logs" class="mob-drawer-item" onclick="mobileSwitchTab(6);closeMobileMoreDrawer()"><i class="fa-solid fa-file-lines"></i><span>System Logs</span></div>
         <hr style="border:none;border-top:1px solid #f3f4f6;margin:8px 0">
         <div class="mob-drawer-item" onclick="showSettingsPanel();closeMobileMoreDrawer()"><i class="fa-solid fa-gear"></i><span>Settings</span></div>
+        <div class="mob-drawer-item" onclick="showSyncPanel();closeMobileMoreDrawer()"><i class="fa-solid fa-cloud-arrow-up"></i><span>GitHub Sync</span></div>
         <div class="mob-drawer-item" onclick="openReadmeViewer();closeMobileMoreDrawer()"><i class="fa-solid fa-book-open"></i><span>Help</span></div>
         <div class="mob-drawer-item" onclick="showChangePasswordModal();closeMobileMoreDrawer()"><i class="fa-solid fa-key"></i><span>Change Password</span></div>
         <div class="mob-drawer-item" id="mob-drawer-users" onclick="showUserManagementPanel();closeMobileMoreDrawer()"><i class="fa-solid fa-users-gear"></i><span>Manage Users</span></div>
         <div class="mob-drawer-item" style="color:#dc2626" onclick="logout()"><i class="fa-solid fa-right-from-bracket" style="color:#dc2626"></i><span>Logout</span></div>
         <div style="padding:8px 12px;display:flex;align-items:center;justify-content:space-between">
             <span style="font-size:12px;color:#9ca3af" id="mob-drawer-user-info"></span>
-            <div class="sync-status-badge offline" onclick="closeMobileMoreDrawer();showGistSetup();" style="font-size:11px;padding:3px 8px"><div class="sync-dot"></div><span class="sync-label">Offline</span></div>
+            <div class="sync-status-badge offline" onclick="closeMobileMoreDrawer();showSyncPanel();" style="font-size:11px;padding:3px 8px"><div class="sync-dot"></div><span class="sync-label">Offline</span></div>
         </div>
     </div>
 </body>
