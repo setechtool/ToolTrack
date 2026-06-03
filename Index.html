@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Service Tools Tracker v1.22</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        *{box-sizing:border-box}
+        body{font-family:'Inter',system-ui,sans-serif;overflow:hidden}
+        /* CC: Auto scrollbar display */
+        .overflow-auto{overflow:auto!important}
+        .overflow-x-auto{overflow-x:auto!important}
+        .overflow-y-auto{overflow-y:auto!important}
+        .card-hover{transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+        .card-hover:hover{transform:translateY(-8px);box-shadow:0 20px 25px -5px rgb(0 0 0/0.1),0 8px 10px -6px rgb(0 0 0/0.1)}
+        .nav-link{transition:all 0.2s}
+        .nav-link.active{background-color:#1e40af;color:white;border-radius:8px}
+        .modal-overlay{backdrop-filter:blur(2px)}
+        .view-toggle-btn{transition:all 0.2s}
+        .view-toggle-btn.active{background-color:#1e40af;color:white}
+        .overdue-btn{animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+        .custom-confirm-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:300;display:flex;align-items:center;justify-content:center}
+        .custom-confirm-dialog{background:white;border-radius:20px;padding:30px;max-width:480px;width:90%;box-shadow:0 25px 50px rgba(0,0,0,.3);animation:slideIn .3s ease}
+        @keyframes slideIn{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
+        .log-entry{font-family:'Courier New',monospace;font-size:12px}
+        .log-viewer{max-height:500px;overflow-y:auto!important;background:#1a1a2e;color:#00ff88;padding:15px;border-radius:12px}
+        .settings-gear{transition:transform .3s}
+        .settings-gear:hover{transform:rotate(90deg)}
+        /* AA: README viewer - independent, doesn't affect main layout */
+        .readme-viewer{max-height:70vh;overflow:auto!important;padding:20px;background:#fefefe;border:1px solid #e5e7eb;border-radius:16px;line-height:1.8;width:100%;max-width:100%}
+        .progress-bar{transition:width .3s ease}
+        .btn{transition:all .2s ease;cursor:pointer;border-radius:12px;font-weight:500}
+        .btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+        .btn:active{transform:translateY(0);box-shadow:0 2px 4px rgba(0,0,0,.1)}
+        .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+        .btn-primary{background-color:#2563eb;color:white}.btn-primary:hover{background-color:#1d4ed8}
+        .btn-success{background-color:#059669;color:white}.btn-success:hover{background-color:#047857}
+        .btn-danger{background-color:#dc2626;color:white}.btn-danger:hover{background-color:#b91c1c}
+        .btn-warning{background-color:#d97706;color:white}.btn-warning:hover{background-color:#b45309}
+        .btn-outline{background-color:transparent;border:1px solid #d1d5db;color:#374151}.btn-outline:hover{background-color:#f3f4f6}
+        .email-truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;display:inline-block}
+        .sort-header{cursor:pointer;user-select:none;white-space:nowrap}
+        .sort-header:hover{background-color:#e5e7eb}
+        .sort-header i{margin-left:5px;font-size:10px;opacity:.5}
+        .sort-header.sorted i{opacity:1;color:#1e40af}
+        .toggle-switch{position:relative;display:inline-block;width:50px;height:26px}
+        .toggle-switch input{opacity:0;width:0;height:0}
+        .toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#ccc;transition:.3s;border-radius:26px}
+        .toggle-slider:before{position:absolute;content:"";height:20px;width:20px;left:3px;bottom:3px;background-color:white;transition:.3s;border-radius:50%}
+        input:checked+.toggle-slider{background-color:#059669}
+        input:checked+.toggle-slider:before{transform:translateX(24px)}
+        /* DD: Log filter radio buttons */
+        .log-filter-btn{padding:4px 12px;border-radius:16px;font-size:11px;cursor:pointer;transition:all .2s;border:1px solid #4a5568;color:#a0aec0;background:transparent}
+        .log-filter-btn.active{background:#059669;color:white;border-color:#059669}
+        .log-filter-btn:hover{background:#2d3748;color:white}
+        /* CC: Ensure all scrollable containers show scrollbars */
+        .flex-1.overflow-auto{overflow:auto!important}
+        table{width:100%}
+
+        /* ── HYBRID MOBILE LAYOUT ── */
+        #mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #e5e7eb;z-index:50;padding:4px 0 env(safe-area-inset-bottom,4px)}
+        .mob-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;font-size:10px;color:#6b7280;background:none;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent;min-height:44px}
+        .mob-nav-item.active{color:#1e40af}
+        .mob-nav-item i{font-size:20px}
+        #mobile-more-drawer{display:none;position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #e5e7eb;border-radius:20px 20px 0 0;z-index:60;padding:16px 16px calc(env(safe-area-inset-bottom,0px) + 80px)}
+        #mobile-more-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:55}
+        .mob-drawer-item{display:flex;align-items:center;gap:14px;padding:14px 12px;border-radius:12px;font-size:15px;color:#374151;cursor:pointer;-webkit-tap-highlight-color:transparent}
+        .mob-drawer-item:active{background:#f3f4f6}
+        .mob-drawer-item i{width:24px;text-align:center;font-size:18px;color:#6b7280}
+        /* ── GITHUB GIST SYNC ── */
+        .sync-status-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-secondary);padding:4px 10px;border-radius:20px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);cursor:pointer;user-select:none;transition:all .3s;white-space:nowrap}
+        .sync-status-badge.syncing{color:#185FA5;border-color:#85B7EB;background:#E6F1FB}
+        .sync-status-badge.synced{color:#3B6D11;border-color:#C0DD97;background:#EAF3DE}
+        .sync-status-badge.error{color:#A32D2D;border-color:#F7C1C1;background:#FCEBEB}
+        .sync-status-badge.offline{color:#854F0B;border-color:#FAC775;background:#FAEEDA}
+        .sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        .sync-status-badge.syncing .sync-dot{animation:pulse .8s ease-in-out infinite}
+        .sync-refresh-btn{background:none;border:none;cursor:pointer;color:var(--color-text-secondary);padding:4px 6px;border-radius:8px;font-size:13px;transition:color .2s}
+        .sync-refresh-btn:hover{color:var(--color-text-primary)}
+        #gist-setup-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}
+        #gist-setup-modal.show{display:flex}
+        @media(max-width:767px){
+            body{overflow:auto}
+            #mobile-nav{display:flex}
+            #main-app>div:first-child{display:none!important}
+            #main-app header{padding:0 16px}
+            #main-app header h2{font-size:16px}
+            #main-app header .btn span{display:none}
+            #main-content-area{padding-bottom:68px}
+            #tab-0,#tab-1,#tab-2,#tab-3,#tab-4,#tab-5,#tab-6{padding:16px!important}
+            #tab-0 .grid.grid-cols-4{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+            #engineers-grid-view{grid-template-columns:1fr!important}
+            #tab-3 .max-w-2xl{max-width:100%!important}
+            #tab-3 .grid.grid-cols-2{grid-template-columns:1fr!important}
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Login Screen -->
+    <div id="login-screen" class="fixed inset-0 bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center z-[100]">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md m-4">
+            <div class="text-center mb-8"><i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-4"></i><h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1><p class="text-gray-500 mt-2">Service Tools Manager v1.22</p><p class="text-xs text-gray-400 mt-1">Secure Login Required</p></div>
+            <div class="space-y-5"><div><label class="block text-sm font-medium text-gray-700 mb-2">Select Engineer</label><select id="login-user-select" class="w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"><option value="">-- Select Your Name --</option></select></div><div><label class="block text-sm font-medium text-gray-700 mb-2">Password</label><div class="relative"><input id="login-password" type="password" placeholder="Enter password" class="w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition" onkeypress="if(event.key==='Enter')performLogin()"><button type="button" onclick="togglePasswordVisibility()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-eye" id="password-toggle-icon"></i></button></div></div><div id="login-error-msg" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"><span id="login-error-text"></span></div><button onclick="performLogin()" class="w-full py-4 btn btn-primary text-lg"><i class="fa-solid fa-right-to-bracket mr-2"></i> Login</button><div class="text-center"><button onclick="showPasswordRecoveryModal()" class="text-sm text-blue-600 hover:underline"><i class="fa-solid fa-key mr-1"></i> Forgot Password?</button></div><p class="text-xs text-gray-400 text-center">Default password: <strong>123</strong></p></div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="main-app" class="hidden flex h-screen overflow-hidden">
+        <div class="w-72 bg-white border-r border-gray-200 flex flex-col flex-shrink-0">
+            <div class="p-6 border-b"><div class="flex items-center gap-3"><i class="fa-solid fa-toolbox text-3xl text-blue-600"></i><div><h1 class="text-2xl font-bold">ToolTrack</h1><p class="text-xs text-gray-500">Service Tools Manager</p></div></div></div>
+            <nav class="flex-1 p-4 space-y-1 overflow-y-auto" id="sidebar-nav"></nav>
+            <div class="p-4 border-t space-y-3"><div class="flex items-center justify-between" id="settings-gear-container"><span class="text-sm font-medium text-gray-600">Settings</span><button onclick="showSettingsPanel()" class="text-gray-400 hover:text-gray-600 settings-gear transition" title="Settings"><i class="fa-solid fa-gear text-xl"></i></button></div><div class="bg-blue-50 rounded-2xl p-4 text-sm"><div class="font-semibold text-blue-900">Roy's Contact</div><div class="text-blue-700 text-xs mt-1" id="roy-info"></div><button onclick="editRoyInfo()" class="text-xs mt-2 text-blue-600 hover:underline">Edit</button></div><div class="bg-gray-50 rounded-2xl p-4 text-sm"><div class="flex justify-between"><div><div class="font-semibold" id="logged-user-name"></div><div class="text-xs text-gray-500" id="logged-user-role"></div></div><button onclick="showChangePasswordModal()" class="text-blue-600 text-xs underline">Change</button></div><button onclick="logout()" class="mt-3 w-full py-2 btn btn-danger text-sm"><i class="fa-solid fa-right-from-bracket mr-1"></i>Logout</button></div><div id="user-mgmt-container" style="display:none"><button onclick="showUserManagementPanel()" class="w-full py-2 btn btn-warning text-xs"><i class="fa-solid fa-users-gear mr-1"></i>Manage Users</button></div><button onclick="showAboutPanel()" class="w-full py-2 text-xs text-gray-500 hover:text-blue-600 transition"><i class="fa-solid fa-circle-info mr-1"></i>About ToolTrack</button></div>
+        </div>
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="h-16 bg-white border-b flex items-center justify-between px-8 flex-shrink-0"><h2 class="text-xl font-semibold" id="page-title">Dashboard</h2><div class="flex items-center gap-4"><button class="sync-refresh-btn" onclick="manualSync()" title="Refresh data now"><i class="fa-solid fa-rotate"></i></button><div class="sync-status-badge offline" onclick="showGistSetup()" title="Click to configure sync"><div class="sync-dot"></div><span class="sync-label">Offline</span></div><button onclick="openReadmeViewer()" class="btn btn-outline px-5 py-2 text-sm"><i class="fa-solid fa-book-open"></i><span> Help</span></button></div></header>
+            <!-- Main content area with forced scroll -->
+            <div class="flex-1 overflow-auto" id="main-content-area">
+            <!-- Dashboard Tab -->
+            <div id="tab-0" class="p-8"><div class="grid grid-cols-4 gap-6 mb-8"><div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Total Tools</p><p class="text-4xl font-bold mt-2" id="total-tools">0</p></div><div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Borrowed</p><p class="text-4xl font-bold mt-2 text-amber-600" id="borrowed-count">0</p><p class="text-xs mt-2">Overdue: <span class="text-red-600" id="overdue-count">0</span></p></div><div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Cal Due</p><p class="text-4xl font-bold mt-2 text-orange-600" id="calibration-due">0</p></div><div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Utilization</p><p class="text-4xl font-bold mt-2" id="util-rate">0%</p></div></div><div id="approval-panel" class="hidden mb-8 bg-white rounded-3xl p-6"><h3 class="font-semibold text-lg mb-4">Return Confirmation Requests</h3><div id="approval-list" class="space-y-4"></div></div></div>
+            <!-- Tools Tab -->
+            <div id="tab-1" class="p-8 hidden"><div class="flex justify-between mb-6 flex-wrap gap-3"><h3 class="text-2xl font-semibold">Service Tools</h3><div class="flex gap-3 flex-wrap"><button onclick="refreshAllPanels()" class="btn btn-outline px-4 py-2 text-sm"><i class="fa-solid fa-rotate"></i> Refresh</button><button onclick="backupToolRecords()" class="btn btn-success px-4 py-2 text-sm"><i class="fa-solid fa-cloud-arrow-up"></i> Backup Tool Record</button><button onclick="restoreToolRecords()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-cloud-arrow-down"></i> Restore Tool Record</button><button onclick="showAddToolModal()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-plus"></i> Add Tool</button></div></div><div class="bg-white rounded-3xl overflow-hidden overflow-x-auto"><table class="w-full min-w-[1600px]"><thead class="bg-gray-50"><tr><th class="py-4 px-4 text-left text-xs">DESC</th><th class="py-4 px-4 text-left text-xs">MODEL</th><th class="py-4 px-4 text-left text-xs">SERIAL</th><th class="py-4 px-4 text-left text-xs">OWNER</th><th class="py-4 px-4 text-left text-xs">CAL DUE</th><th class="py-4 px-4 text-left text-xs">STATUS</th><th class="py-4 px-4 text-left text-xs">REC</th><th class="py-4 px-4 text-left text-xs">BORROWED BY</th><th class="py-4 px-4 text-left text-xs">LOCATION</th><th class="py-4 px-4 text-left text-xs">CERT</th><th class="py-4 px-4 text-right text-xs">ACTIONS</th></tr></thead><tbody id="tools-table" class="divide-y"></tbody></table></div></div>
+            <!-- Engineers Tab -->
+            <div id="tab-2" class="p-8 hidden"><div class="flex justify-between mb-6 flex-wrap gap-3"><div class="flex items-center gap-4"><h3 class="text-2xl font-semibold">Engineers</h3><div class="flex bg-gray-100 rounded-xl p-1"><button onclick="switchEngineerView('grid')" id="view-grid-btn" class="view-toggle-btn px-4 py-2 rounded-lg text-sm">Grid</button><button onclick="switchEngineerView('table')" id="view-table-btn" class="view-toggle-btn active px-4 py-2 rounded-lg text-sm">Table</button></div></div><div class="flex gap-3 flex-wrap"><button onclick="backupEngineerRecords()" class="btn btn-success px-4 py-2 text-sm"><i class="fa-solid fa-cloud-arrow-up"></i> Backup Engineer Record</button><button onclick="restoreEngineerRecords()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-cloud-arrow-down"></i> Restore Engineer Record</button><button onclick="showAddEngineerModal()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-user-plus"></i> Add Engineer</button></div></div><div id="engineers-grid-view" class="hidden grid grid-cols-3 gap-6"></div><div id="engineers-table-view" class="bg-white rounded-3xl overflow-hidden overflow-x-auto"><table class="w-full"><thead class="bg-gray-50"><tr><th class="py-4 px-6 text-left text-xs">NAME</th><th class="py-4 px-6 text-left text-xs">DEPT</th><th class="py-4 px-6 text-left text-xs">PHONE</th><th class="py-4 px-6 text-left text-xs">EMAIL</th><th class="py-4 px-6 text-right text-xs">ACTIONS</th></tr></thead><tbody id="engineers-table-body" class="divide-y"></tbody></table></div></div>
+            <!-- Borrow/Return Tab -->
+            <div id="tab-3" class="p-8 hidden"><div class="max-w-2xl mx-auto"><div class="bg-white rounded-3xl p-8 shadow-sm"><h3 class="text-xl font-semibold mb-6">Record Transaction</h3><div class="space-y-5"><div><label class="block text-sm mb-2">Select Tool</label><select id="borrow-tool-select" class="w-full p-4 border rounded-2xl"></select></div><div><label class="block text-sm mb-2">Engineer</label><select id="borrow-engineer-select" class="w-full p-4 border rounded-2xl"></select></div><div><label class="block text-sm mb-2">Location</label><input id="borrow-location" class="w-full p-4 border rounded-2xl" placeholder="e.g., Mubarak Hospital"></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm mb-2">Taken Out <span class="text-xs text-gray-400">(Locked)</span></label><input type="date" id="taken-date" class="w-full p-4 border rounded-2xl locked-field bg-gray-100" readonly></div><div><label class="block text-sm mb-2">Expected Return <span class="text-red-500">*</span></label><input type="date" id="return-date" class="w-full p-4 border rounded-2xl"></div></div><div id="extension-note-container" class="hidden"><label class="block text-sm mb-2">Notes</label><textarea id="extension-notes" rows="2" class="w-full p-4 border rounded-2xl"></textarea></div><div class="flex gap-4"><button onclick="borrowTool()" id="borrow-btn" class="flex-1 py-4 btn btn-success">Borrow Tool</button><button onclick="updateReturnDate()" id="update-return-btn" class="hidden flex-1 py-4 btn btn-primary">Update Return Date</button><button onclick="scrollToActiveBorrows()" class="flex-1 py-4 btn btn-outline">View Active ↓</button></div></div></div><div class="mt-12" id="active-borrows-section"><h4 class="font-semibold mb-4 text-xl">Currently Borrowed Tools</h4><div id="currently-borrowed" class="space-y-3"></div></div></div></div>
+            <!-- History Tab -->
+            <div id="tab-5" class="p-8 hidden"><div class="flex justify-between mb-6"><h3 class="text-2xl font-semibold">Transaction History</h3><div class="flex gap-3"><select id="history-filter" onchange="renderHistory()" class="p-3 border rounded-xl text-sm"><option value="all">All Records</option><option value="active">Active Borrows</option><option value="returned">Returned</option><option value="overdue">Overdue</option><option value="deletions">Deletion Records</option></select><button onclick="exportHistory()" class="btn btn-outline px-4 py-2 text-sm"><i class="fa-solid fa-download"></i> Export</button></div></div><div class="bg-white rounded-3xl overflow-hidden overflow-x-auto"><table class="w-full min-w-[1800px]"><thead class="bg-gray-50"><tr><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('transDate')">Transaction Date <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('toolDesc')">Tools Description <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('serial')">Serial Number <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('borrower')">Borrower <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('dept')">Department <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('takenOut')">Taken Out Date <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('expectedReturn')">Expected Return Date <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('actualReturn')">Actual Return Date <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('status')">Status <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs">Approval</th><th class="py-4 px-4 text-left text-xs">Incident</th><th class="py-4 px-4 text-left text-xs">Notes</th></tr></thead><tbody id="history-table" class="divide-y"></tbody></table></div></div>
+            <!-- System Logs Tab (DD - Enhanced with filters) -->
+            <div id="tab-6" class="p-8 hidden"><div id="logs-restricted" class="hidden text-center py-20"><i class="fa-solid fa-lock text-6xl text-gray-300"></i><h3 class="text-2xl text-gray-500">Access Restricted</h3></div><div id="logs-content"><div class="flex justify-between mb-6 flex-wrap gap-3"><h3 class="text-2xl font-semibold">System Logs</h3><div class="flex gap-3 flex-wrap"><button onclick="refreshLogViewer()" class="btn btn-outline px-4 py-2 text-sm"><i class="fa-solid fa-rotate"></i> Refresh</button><button onclick="saveLogFile()" class="btn btn-success px-4 py-2 text-sm"><i class="fa-solid fa-floppy-disk"></i> Save Log</button><button onclick="showLogSettings()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-gear"></i> Log Settings</button></div></div>
+            <!-- DD: Log filter radio buttons -->
+            <div class="flex gap-2 mb-4 flex-wrap" id="log-filter-buttons">
+                <button class="log-filter-btn active" onclick="filterLogs('all',this)">All</button>
+                <button class="log-filter-btn" onclick="filterLogs('INFO',this)">Information</button>
+                <button class="log-filter-btn" onclick="filterLogs('WARNING',this)">Warning</button>
+                <button class="log-filter-btn" onclick="filterLogs('ERROR',this)">Error</button>
+                <button class="log-filter-btn" onclick="filterLogs('DEBUG',this)">Debug</button>
+            </div>
+            <div class="log-viewer" id="log-viewer-content">Loading...</div></div></div>
+            <!-- Analytics Tab -->
+            <div id="tab-4" class="p-8 hidden"><div class="grid grid-cols-2 gap-8"><div class="bg-white rounded-3xl p-6"><h3 class="font-semibold mb-4">Utilization</h3><div class="h-64"><canvas id="utilizationChart"></canvas></div></div><div class="bg-white rounded-3xl p-6"><h3 class="font-semibold mb-4">Borrows</h3><div class="h-64"><canvas id="engineerChart"></canvas></div></div></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- README Viewer Modal (AA - Fixed, independent layout) -->
+    <div id="readme-viewer-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50" style="width:100vw!important;max-width:100vw!important">
+        <div class="bg-white rounded-3xl w-full max-w-4xl m-4 flex flex-col" style="max-height:85vh;width:95%;max-width:95%">
+            <div class="p-6 border-b flex justify-between items-center flex-shrink-0"><h3 class="text-xl font-semibold"><i class="fa-solid fa-book-open mr-2"></i>ToolTrack Help File</h3><div class="flex gap-3"><button onclick="downloadReadmeFile()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-download"></i> Download</button><button onclick="hideReadmeViewer()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button></div></div>
+            <div class="flex-1 overflow-auto p-6" id="readme-content-container"><div class="readme-viewer" id="readme-content"></div></div>
+        </div>
+    </div>
+
+    <!-- Log Settings Modal -->
+    <div id="log-settings-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-md m-4 p-8"><h3 class="text-xl font-semibold mb-6"><i class="fa-solid fa-gear mr-2"></i>Log Settings</h3><div class="space-y-4"><div class="flex items-center justify-between"><span class="text-sm font-medium">Enable Logging</span><label class="toggle-switch"><input type="checkbox" id="log-enabled" onchange="updateLogConfig()"><span class="toggle-slider"></span></label></div><div><label class="block text-sm font-medium mb-2">Log Level</label><select id="log-level" onchange="updateLogConfig()" class="w-full p-3 border rounded-xl"><option value="info">Information</option><option value="warning">Warning</option><option value="error">Error</option><option value="debug">Debug</option><option value="all">All</option></select></div><div><label class="block text-sm font-medium mb-2">Retention (Days)</label><select id="log-retention" onchange="updateLogConfig()" class="w-full p-3 border rounded-xl"><option value="7">7 Days</option><option value="14">14 Days</option><option value="30">30 Days</option><option value="60">60 Days</option><option value="90">90 Days</option></select></div><div class="flex items-center justify-between"><span class="text-sm font-medium">Auto-Delete Old Logs</span><label class="toggle-switch"><input type="checkbox" id="log-autodelete" onchange="updateLogConfig()"><span class="toggle-slider"></span></label></div><div class="flex gap-3"><button onclick="saveLogConfig()" class="flex-1 py-3 btn btn-primary">Save Settings</button><button onclick="resetLogConfig()" class="flex-1 py-3 btn btn-outline">Restore Defaults</button></div></div><button onclick="hideLogSettings()" class="mt-4 w-full py-4 btn btn-outline">Close</button></div></div>
+
+    <!-- Settings Panel -->
+    <div id="settings-panel-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6"><i class="fa-solid fa-gear mr-2"></i>Settings & Maintenance</h3><div id="settings-restricted" class="hidden text-center py-8"><i class="fa-solid fa-lock text-4xl text-gray-300"></i><p class="text-gray-500">Accessible only to authorized administrators.</p></div><div id="settings-content" class="space-y-4 max-h-[70vh] overflow-y-auto pr-1"><div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-4 border border-blue-200"><h4 class="font-semibold text-blue-800 mb-3"><i class="fa-solid fa-database mr-2"></i>Backup & Restore</h4><div class="flex gap-3"><button onclick="performFullBackup()" class="flex-1 btn btn-primary py-3 text-sm"><i class="fa-solid fa-cloud-arrow-up"></i> Full Backup</button><button onclick="performFullRestore()" class="flex-1 btn btn-success py-3 text-sm"><i class="fa-solid fa-cloud-arrow-down"></i> Full Restore</button></div></div><div id="settings-gh-section"></div><div id="settings-idle-section" style="display:none"></div><div class="bg-gray-50 rounded-2xl p-4"><h4 class="font-semibold text-gray-700 mb-3">Maintenance</h4><div class="space-y-2"><button onclick="clearHistoryFunction()" class="w-full p-3 bg-red-50 rounded-xl text-red-700 text-sm btn">Clear History</button><button onclick="clearLogsFunction()" class="w-full p-3 bg-red-50 rounded-xl text-red-700 text-sm btn">Clear Logs</button><button onclick="clearDataFunction()" class="w-full p-3 bg-yellow-50 rounded-xl text-yellow-700 text-sm btn">Clear Data</button></div></div></div><button onclick="hideSettingsPanel()" class="mt-6 w-full py-4 btn btn-outline">Close</button></div></div>
+
+    <!-- All Other Modals (abbreviated) -->
+    <div id="backup-progress-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-[350]"><div class="bg-white rounded-3xl w-full max-w-md m-4 p-8 text-center"><i class="fa-solid fa-cloud-arrow-up text-5xl text-blue-600"></i><h3 class="text-xl font-semibold mb-2">Creating Backup</h3><p class="text-sm text-gray-500 mb-4" id="backup-status-text">Collecting files...</p><div class="w-full bg-gray-200 rounded-full h-3 mb-2"><div id="backup-progress-bar" class="bg-blue-600 h-3 rounded-full progress-bar" style="width:0%"></div></div><p class="text-xs text-gray-400" id="backup-percent">0%</p></div></div>
+    <div id="restore-progress-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-[350]"><div class="bg-white rounded-3xl w-full max-w-md m-4 p-8 text-center"><i class="fa-solid fa-cloud-arrow-down text-5xl text-green-600"></i><h3 class="text-xl font-semibold mb-2">Restoring Backup</h3><p class="text-sm text-gray-500 mb-4" id="restore-status-text">Validating...</p><div class="w-full bg-gray-200 rounded-full h-3 mb-2"><div id="restore-progress-bar" class="bg-green-600 h-3 rounded-full progress-bar" style="width:0%"></div></div><p class="text-xs text-gray-400" id="restore-percent">0%</p></div></div>
+    <div id="user-management-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-md m-4 p-8"><h3 class="text-xl font-semibold mb-6">Manage Login Users</h3><div class="max-h-64 overflow-y-auto space-y-2" id="user-list-container"></div><button onclick="hideUserManagementPanel()" class="mt-6 w-full py-4 btn btn-outline">Close</button></div></div>
+    <div id="about-panel-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8 text-center"><i class="fa-solid fa-toolbox text-5xl text-blue-600"></i><h2>ToolTrack</h2><p>Service Tools Manager</p><div class="mt-6 bg-gray-50 rounded-2xl p-5 text-left"><div class="flex justify-between"><span>Version:</span><span class="font-semibold">1.22</span></div></div><div class="mt-6 flex gap-3"><button onclick="openReadmeViewer()" class="flex-1 py-3 btn btn-primary">View README</button><button onclick="hideAboutPanel()" class="flex-1 py-3 btn btn-outline">Close</button></div></div></div>
+    <div id="return-evidence-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Tool Return Evidence</h3><div id="captured-image-container" class="hidden text-center"><img id="captured-image" class="max-w-full rounded-2xl max-h-64 mx-auto"></div><div class="flex gap-3 mt-6"><button onclick="captureReturnImage()" id="capture-btn" class="flex-1 py-4 btn btn-outline"><i class="fa-solid fa-camera"></i> Capture</button><button id="retake-btn" onclick="captureReturnImage()" class="hidden flex-1 py-4 btn btn-warning"><i class="fa-solid fa-rotate-right"></i> Retake</button><button id="confirm-evidence-btn" onclick="confirmReturnEvidence()" class="hidden flex-1 py-4 btn btn-primary"><i class="fa-solid fa-check"></i> Confirm</button><button onclick="notRequiredReturn()" class="flex-1 py-4 btn btn-warning">Not Required</button><button onclick="hideReturnEvidenceModal()" class="flex-1 py-4 btn btn-outline">Cancel</button></div></div></div>
+    <div id="send-return-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-[80]"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-2">Return Notification</h3><p class="text-gray-500 text-sm mb-6">Image captured. How would you like to notify Roy?</p><div class="flex gap-4 mb-6"><button onclick="sendReturnWA()" class="flex-1 py-5 btn btn-success text-base flex flex-col items-center gap-2"><i class="fa-brands fa-whatsapp text-2xl"></i> WhatsApp</button><button onclick="sendReturnEmail()" class="flex-1 py-5 btn btn-primary text-base flex flex-col items-center gap-2"><i class="fa-solid fa-envelope text-2xl"></i> Email</button></div><details class="mb-4"><summary class="text-xs text-gray-400 cursor-pointer">Preview message</summary><div class="mt-3 space-y-3"><textarea id="return-whatsapp-msg" rows="4" class="w-full p-3 border rounded-xl bg-gray-50 text-xs" readonly></textarea><textarea id="return-email-msg" rows="4" class="w-full p-3 border rounded-xl bg-gray-50 text-xs" readonly></textarea></div></details><button onclick="hideSendReturnModal()" class="w-full py-4 btn btn-outline">Close</button></div></div>
+    <div id="deletion-reason-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-[250]"><div class="bg-white rounded-3xl w-full max-w-md m-4 p-8"><h3 class="text-xl font-semibold mb-6">Select Reason</h3><select id="deletion-reason-select" class="w-full p-4 border rounded-2xl mb-6"></select><div class="flex gap-3"><button onclick="cancelDeletion()" class="flex-1 py-4 btn btn-outline">Cancel</button><button onclick="confirmDeletion()" class="flex-1 py-4 btn btn-danger">Confirm</button></div></div></div>
+    <div id="overdue-tool-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-4xl m-4 max-h-[90vh] overflow-y-auto p-8"><div class="flex justify-between mb-6"><h3 class="text-xl font-semibold text-red-600">Overdue Alert</h3><button onclick="hideOverdueModal()" class="text-gray-400 text-2xl">&times;</button></div><div class="grid grid-cols-2 gap-6"><div class="bg-gray-50 rounded-2xl p-5"><div id="overdue-tool-info" class="space-y-2 text-sm"></div></div><div class="bg-gray-50 rounded-2xl p-5"><div id="overdue-borrower-info" class="space-y-2 text-sm"></div></div></div><textarea id="whatsapp-message" rows="4" class="w-full p-4 border rounded-2xl bg-gray-50 mt-4" readonly></textarea><button onclick="sendOverdueWA()" class="mt-2 btn btn-success px-6 py-3 text-sm"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button></div></div>
+    <div id="roy-password-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-[60]"><div class="bg-white rounded-3xl w-full max-w-md m-4 p-8"><h3 class="text-xl font-semibold mb-6">Roy's Authorization</h3><input id="roy-password-input" type="password" placeholder="Password" class="w-full p-4 border rounded-2xl mb-4"><div class="flex gap-3"><button onclick="verifyRoyPassword()" class="flex-1 py-4 btn btn-primary">Confirm</button><button onclick="hideRoyPasswordModal()" class="flex-1 py-4 btn btn-outline">Cancel</button></div></div></div>
+    <div id="add-tool-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Add Tool</h3><div class="space-y-5"><input id="tool-desc" placeholder="Description" class="w-full p-4 border rounded-2xl"><input id="tool-model" placeholder="Model" class="w-full p-4 border rounded-2xl"><input id="tool-serial" placeholder="Serial" class="w-full p-4 border rounded-2xl"><input id="tool-owner" placeholder="Owner" class="w-full p-4 border rounded-2xl"><input id="tool-cal-date" type="date" class="w-full p-4 border rounded-2xl"><input id="tool-location" placeholder="Location" class="w-full p-4 border rounded-2xl"></div><div class="flex gap-3 mt-6"><button onclick="hideAddToolModal()" class="flex-1 py-4 btn btn-outline">Cancel</button><button onclick="addNewTool()" class="flex-1 py-4 btn btn-primary">Save</button></div></div></div>
+    <div id="edit-tool-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Edit Tool</h3><div class="space-y-5"><input id="edit-tool-id" type="hidden"><input id="edit-tool-desc" class="w-full p-4 border rounded-2xl"><input id="edit-tool-model" class="w-full p-4 border rounded-2xl"><input id="edit-tool-serial" class="w-full p-4 border rounded-2xl"><input id="edit-tool-owner" class="w-full p-4 border rounded-2xl"><input id="edit-tool-cal-date" type="date" class="w-full p-4 border rounded-2xl"><input id="edit-tool-location" class="w-full p-4 border rounded-2xl"></div><div class="flex gap-3 mt-6"><button onclick="hideEditToolModal()" class="flex-1 py-4 btn btn-outline">Cancel</button><button onclick="updateTool()" class="flex-1 py-4 btn btn-primary">Update</button></div></div></div>
+    <div id="add-engineer-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Add Engineer</h3><div class="space-y-5"><input id="eng-name" placeholder="Full Name" class="w-full p-4 border rounded-2xl" oninput="autoGenerateEmail()"><div class="relative"><span class="absolute left-4 top-4">(+965)</span><input id="eng-phone" class="w-full p-4 pl-20 border rounded-2xl" oninput="formatPhoneNumber(this)" maxlength="9"></div><input id="eng-email" placeholder="Email" class="w-full p-4 border rounded-2xl"><input id="eng-department" placeholder="Department" class="w-full p-4 border rounded-2xl" onblur="formatDepartment(this)"></div><div class="flex gap-3 mt-6"><button onclick="hideAddEngineerModal()" class="flex-1 py-4 btn btn-outline">Cancel</button><button onclick="addNewEngineer()" class="flex-1 py-4 btn btn-primary">Save</button></div></div></div>
+    <div id="edit-engineer-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Edit Engineer</h3><div class="space-y-5"><input id="edit-eng-id" type="hidden"><input id="edit-eng-name" class="w-full p-4 border rounded-2xl" oninput="autoGenerateEditEmail()"><div class="relative"><span class="absolute left-4 top-4">(+965)</span><input id="edit-eng-phone" class="w-full p-4 pl-20 border rounded-2xl" oninput="formatPhoneNumber(this)" maxlength="9"></div><input id="edit-eng-email" class="w-full p-4 border rounded-2xl"><input id="edit-eng-department" class="w-full p-4 border rounded-2xl" onblur="formatEditDepartment()"></div><div class="flex gap-3 mt-6"><button onclick="hideEditEngineerModal()" class="flex-1 py-4 btn btn-outline">Cancel</button><button onclick="updateEngineer()" class="flex-1 py-4 btn btn-primary">Save</button></div></div></div>
+    <div id="cal-cert-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Calibration Certificate</h3><div id="cal-cert-content"></div><div class="mt-4 flex gap-3"><label class="flex-1"><input type="file" accept="image/*,.pdf" onchange="handleCertFileSelect(this)" class="hidden"><span class="flex items-center justify-center gap-2 py-4 bg-gray-100 rounded-2xl cursor-pointer text-sm btn">Upload</span></label><button onclick="useCameraForCert()" class="flex-1 py-4 bg-gray-100 rounded-2xl text-sm btn">Camera</button></div><button onclick="hideCalCertModal()" class="mt-4 w-full py-4 btn btn-outline">Close</button></div></div>
+    <div id="password-recovery-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-[200]"><div class="bg-white rounded-3xl w-full max-w-md m-4 p-8"><h3 class="text-xl font-semibold mb-6">Password Recovery</h3><div id="rec-step-1"><select id="recovery-user-select" class="w-full p-4 border rounded-2xl mb-4"></select><div class="flex gap-3"><button onclick="sendRecoveryWA()" class="flex-1 py-4 btn btn-success">WhatsApp</button><button onclick="sendRecoveryEmail()" class="flex-1 py-4 btn btn-primary">Email</button></div></div><div id="rec-step-2" class="hidden"><input id="recovery-code" placeholder="123456" maxlength="6" class="w-full p-4 border rounded-2xl text-center text-2xl mb-4"><button onclick="verifyRecoveryCode()" class="w-full py-4 btn btn-primary">Verify</button></div><div id="rec-step-3" class="hidden"><input id="rec-new-pass" type="password" placeholder="New" class="w-full p-4 border rounded-2xl mb-3"><input id="rec-conf-pass" type="password" placeholder="Confirm" class="w-full p-4 border rounded-2xl mb-4"><button onclick="resetPassword()" class="w-full py-4 btn btn-primary">Reset</button></div><button onclick="hidePasswordRecoveryModal()" class="mt-4 w-full py-2 text-gray-500">Back</button></div></div>
+    <div id="change-password-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-md m-4 p-8"><h3 class="text-xl font-semibold mb-6">Change Password</h3><input id="current-password" type="password" placeholder="Current" class="w-full p-4 border rounded-2xl mb-3"><input id="new-password" type="password" placeholder="New" class="w-full p-4 border rounded-2xl mb-3"><input id="confirm-new-password" type="password" placeholder="Confirm" class="w-full p-4 border rounded-2xl mb-4"><div class="flex gap-3"><button onclick="hideChangePasswordModal()" class="flex-1 py-4 btn btn-outline">Cancel</button><button onclick="changePassword()" class="flex-1 py-4 btn btn-primary">Update</button></div></div></div>
+
+<script>
+// ==================== ENHANCED LOGGING SYSTEM (DD) ====================
+class LogManager {
+    constructor(){this.maxLogSize=4*1024*1024;this.currentLogFile='ToolTrack0.log';this.logQueue=[];this.isWriting=false;this.logSaveDirectory='C:\\Users\\Doddie\\Documents\\Project\\Logs\\';this.logConfig=JSON.parse(localStorage.getItem('logConfig')||'{"enabled":true,"level":"all","retentionDays":30,"autoDelete":false}');this.currentFilter='all';}
+    async log(u,a,lvl='INFO'){if(!this.logConfig.enabled)return;if(this.logConfig.level!=='all'&&this.logConfig.level!==lvl.toLowerCase())return;const t=new Date();const entry=`${u}_ToolTrack_${t.toISOString().split('T')[0]}_${t.toTimeString().split(' ')[0]}\t[${lvl}]\t${a.substring(0,300)}\n`;this.logQueue.push(entry);await this.processQueue();}
+    async logWarning(u,a){await this.log(u,a,'WARNING');}
+    async logError(u,a){await this.log(u,a,'ERROR');}
+    async logAuth(u,a){await this.log(u,a,'AUTH');}
+    async processQueue(){if(this.isWriting||!this.logQueue.length)return;this.isWriting=true;try{const e=this.logQueue.shift();let c=localStorage.getItem(this.currentLogFile)||'';if(new Blob([c+e]).size>=this.maxLogSize){const t=new Date();const bn=`ToolTrack${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}_${String(t.getHours()).padStart(2,'0')}${String(t.getMinutes()).padStart(2,'0')}${String(t.getSeconds()).padStart(2,'0')}.log`;localStorage.setItem(bn,c);c='';this.log('SYSTEM','Log rotated. Backup: '+bn);}localStorage.setItem(this.currentLogFile,c+e);}catch(e){console.error('Log error:',e);}this.isWriting=false;if(this.logQueue.length)await this.processQueue();}
+    getCurrentLog(){return localStorage.getItem(this.currentLogFile)||'';}
+    getFilteredLog(filter){const all=this.getCurrentLog().split('\n').filter(l=>l.trim());if(filter==='all')return all;return all.filter(l=>l.includes(`[${filter}]`));}
+    saveLogFile(){const c=this.getCurrentLog();const t=new Date();const fn=`ToolTrack${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}_${String(t.getHours()).padStart(2,'0')}${String(t.getMinutes()).padStart(2,'0')}${String(t.getSeconds()).padStart(2,'0')}.log`;const b=new Blob([c],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);this.log('SYSTEM','Log saved: '+fn);alert('Log saved!\nFile: '+fn);}
+    saveLogConfig(){localStorage.setItem('logConfig',JSON.stringify(this.logConfig));this.log('SYSTEM','Log configuration updated');}
+    resetLogConfig(){this.logConfig={enabled:true,level:'all',retentionDays:30,autoDelete:false};this.saveLogConfig();}
+    clearAllLogs(){try{localStorage.removeItem(this.currentLogFile);localStorage.setItem(this.currentLogFile,`SYSTEM_ToolTrack_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0]}\t[INFO]\tLogs cleared\n`);return true;}catch(e){return false;}}
+}
+const logManager=new LogManager();
+
+// ==================== CUSTOM CONFIRM ====================
+class CustomConfirmDialog{static show(m,t='Confirm'){return new Promise(r=>{const o=document.createElement('div');o.className='custom-confirm-overlay';o.innerHTML=`<div class="custom-confirm-dialog"><h3 class="text-xl font-semibold mb-4">${t}</h3><p class="text-gray-600 mb-6">${m}</p><div class="flex gap-3"><button id="cc-y" class="flex-1 py-3 btn btn-danger">Yes</button><button id="cc-n" class="flex-1 py-3 btn btn-outline">No</button></div></div>`;document.body.appendChild(o);o.querySelector('#cc-y').onclick=()=>{o.remove();r(true);};o.querySelector('#cc-n').onclick=()=>{o.remove();r(false);};});}}
+
+// ==================== DELETION LOGGER ====================
+class DeletionLogger{static deletionRecords=JSON.parse(localStorage.getItem('deletionRecords')||'[]');static logDeletion(t,n,d,u,r){const rec={id:'DEL_'+Date.now(),type:t,itemName:n,itemDetails:d,deletedBy:u,reason:r,dateTime:new Date().toISOString(),actionType:t==='engineer'?'Engineer Record Deleted':'Tool Record Deleted'};this.deletionRecords.push(rec);localStorage.setItem('deletionRecords',JSON.stringify(this.deletionRecords));return rec;}static getDeletionRecords(){return this.deletionRecords;}static clearAll(){this.deletionRecords=[];localStorage.setItem('deletionRecords','[]');}}
+
+// ==================== AUTH ====================
+class AuthManager{constructor(){this.users={};this.currentUser=null;this.adminUsers=['Royston Dcosta','Donan Arciaga'];this.fullAccessUsers=['Donan Arciaga'];this.royAccessUsers=['Royston Dcosta'];this.loadAndInit();}loadAndInit(){try{const d=localStorage.getItem('tooltrack_users');if(d)this.users=JSON.parse(d);}catch(e){this.users={};}['Royston Dcosta','Donan Arciaga','Ahmed Al-Sabah','Fatima Al-Mutairi','Mohammed Al-Rashid','Sara Al-Otaibi'].forEach(n=>{if(!this.users[n])this.users[n]={password:'123',role:this.adminUsers.includes(n)?'Administrator':'Engineer'};});this.save();}save(){localStorage.setItem('tooltrack_users',JSON.stringify(this.users));}login(u,p){if(this.users[u]&&this.users[u].password===p){this.currentUser={name:u,role:this.users[u].role,isAdmin:this.adminUsers.includes(u),isDonan:this.fullAccessUsers.includes(u),isRoy:this.royAccessUsers.includes(u)};return true;}return false;}logout(){this.currentUser=null;}changePassword(u,cp,np){if(this.users[u]&&this.users[u].password===cp){this.users[u].password=np;this.save();return true;}return false;}resetPassword(u,np){if(this.users[u]){this.users[u].password=np;this.save();return true;}return false;}verifyRoyPassword(p){return this.users['Royston Dcosta']&&this.users['Royston Dcosta'].password===p;}canEditTool(o){if(!this.currentUser)return false;return this.currentUser.isAdmin||this.currentUser.name===o;}canManageUsers(){return this.currentUser&&this.currentUser.isDonan;}removeUser(name){if(this.users[name]&&!this.adminUsers.includes(name)){delete this.users[name];this.save();return true;}return false;}canAccessDashboard(){return this.currentUser&&(this.currentUser.isDonan||this.currentUser.isRoy);}canAccessTools(){return!!this.currentUser;}canAccessEngineers(){return!!this.currentUser;}canAccessBorrowReturn(){return!!this.currentUser;}canAccessHistory(){return!!this.currentUser;}canAccessAnalytics(){return this.currentUser&&this.currentUser.isDonan;}canAccessSystemLogs(){return this.currentUser&&this.currentUser.isDonan;}canAccessSettings(){return this.currentUser&&(this.currentUser.isDonan||this.currentUser.isRoy);}getCurrentUser(){return this.currentUser;}getAllUsers(){return Object.keys(this.users).sort();}addUser(n,p='123'){if(!this.users[n]){this.users[n]={password:p,role:'Engineer'};this.save();return true;}return false;}}
+const authManager=new AuthManager();
+
+// ==================== DATA ====================
+let tools=JSON.parse(localStorage.getItem('tools'))||[{id:1,desc:"Digital Multimeter",model:"Fluke 87V",serial:"FLK87234",owner:"Royston Dcosta",calDue:"2026-07-05",status:"Available",location:"",calCert:null,calCertDate:null},{id:2,desc:"Pressure Calibrator",model:"Fluke 729",serial:"FLK72991",owner:"Donan Arciaga",calDue:"2026-05-15",status:"Borrowed",location:"Jaber Hospital",calCert:null,calCertDate:null},{id:3,desc:"Oscilloscope",model:"Keysight DSOX",serial:"KEYS1102",owner:"Ahmed Al-Sabah",calDue:"2026-04-20",status:"Available",location:"",calCert:null,calCertDate:null}];
+let engineers=JSON.parse(localStorage.getItem('engineers'))||[{id:1,name:"Ahmed Al-Sabah",phone:"9747 1122",email:"ahmed.al-sabah@sultanunited.com",department:"X-ray Department"},{id:2,name:"Fatima Al-Mutairi",phone:"9747 3344",email:"fatima.al-mutairi@sultanunited.com",department:"MRI Department"}];
+let transactions=JSON.parse(localStorage.getItem('transactions'))||[];
+let returnRequests=JSON.parse(localStorage.getItem('returnRequests'))||[];
+let roy=JSON.parse(localStorage.getItem('royContact'))||{phone:"+965 97421668",email:"royston.dcosta@sultanunited.com"};
+let currentEditToolId=null,currentEditEngineerId=null,currentEngineerView='table',currentOverdueToolId=null,currentCalCertToolId=null,recoveryUser=null;
+let pendingReturnTransId=null,capturedReturnImage=null,currentReturnRequestId=null,currentEditingTransId=null;
+let pendingDeletionType=null,pendingDeletionId=null;
+let historySortCol='transDate',historySortDir='desc';
+const DATA_RECORD_DIR='C:\\Users\\Doddie\\Documents\\Project\\DataRecord\\';
+
+function saveData(){localStorage.setItem('tools',JSON.stringify(tools));localStorage.setItem('engineers',JSON.stringify(engineers));localStorage.setItem('transactions',JSON.stringify(transactions));localStorage.setItem('returnRequests',JSON.stringify(returnRequests));localStorage.setItem('royContact',JSON.stringify(roy));if(typeof GistSync!=='undefined')GistSync.schedulePush();}
+function refreshAllPanels(){renderDashboard();renderTools();renderEngineers();renderBorrowTab();renderHistory();try{renderAnalytics();}catch(e){}try{refreshLogViewer();}catch(e){}}
+function getBorrowerInfo(tid){const t=transactions.find(tr=>tr.toolId===tid&&!tr.returned);if(!t)return null;const e=engineers.find(en=>en.id===t.engineerId);return e?{name:e.name,firstName:e.name.split(' ')[0],department:e.department||'N/A',phone:e.phone,email:e.email,location:t.location||'N/A',expectedReturn:t.expectedReturn,transId:t.id}:null;}
+function isCalExpired(d){return new Date(d)<new Date();}
+function isCalSoon(d){return Math.ceil((new Date(d)-new Date())/86400000)<=15;}
+function autoGenerateEmail(){const n=document.getElementById('eng-name')?.value.trim();if(n)document.getElementById('eng-email').value=n.toLowerCase().replace(/\s+/g,'.')+'@sultanunited.com';}
+function autoGenerateEditEmail(){const n=document.getElementById('edit-eng-name')?.value.trim();if(n)document.getElementById('edit-eng-email').value=n.toLowerCase().replace(/\s+/g,'.')+'@sultanunited.com';}
+function formatPhoneNumber(i){let v=i.value.replace(/[^\d]/g,'');if(v.length>8)v=v.slice(0,8);if(v.length>4)v=v.slice(0,4)+' '+v.slice(4);i.value=v;}
+function formatDepartment(i){let v=i.value.trim();if(v&&!v.toLowerCase().endsWith('department'))i.value=v+' Department';}
+function formatEditDepartment(){const i=document.getElementById('edit-eng-department');if(i){let v=i.value.trim();if(v&&!v.toLowerCase().endsWith('department'))i.value=v+' Department';}}
+function formatPhoneDisplay(p){return'(+965) '+p;}
+
+// ==================== LOGIN ====================
+function populateLoginDropdown(){document.getElementById('login-user-select').innerHTML='<option value="">-- Select Your Name --</option>'+authManager.getAllUsers().map(u=>`<option value="${u}">${u}</option>`).join('');}
+function showLoginError(m){const d=document.getElementById('login-error-msg');d.querySelector('#login-error-text').textContent=m;d.classList.remove('hidden');setTimeout(()=>d.classList.add('hidden'),5000);}
+async function performLogin(){const u=document.getElementById('login-user-select').value,p=document.getElementById('login-password').value;if(!u){showLoginError('Select name.');return;}if(authManager.login(u,p)){document.getElementById('login-screen').classList.add('hidden');document.getElementById('main-app').classList.remove('hidden');document.getElementById('logged-user-name').textContent=u;document.getElementById('logged-user-role').textContent=authManager.getCurrentUser().role;buildSidebarNavigation();buildMobileNav();await logManager.logAuth(u,'Successful login');
+        // Always pull on login — reading is public, no token needed
+        GistSync.setStatus('syncing','Syncing...');
+        try { await GistSync.pull(false); } catch(e) { console.warn('Login pull failed:', e); }
+        refreshAllPanels();
+        populateLoginDropdown();
+        GistSync.startPolling();
+        startIdleTracking();
+        const startTab=(authManager.getCurrentUser().isAdmin||authManager.getCurrentUser().isRoy)?0:1;switchTab(startTab);updateAllUI();}else{showLoginError('Invalid password.');logManager.logAuth('SYSTEM','Failed login: '+u);}}
+async function logout(){const u=authManager.getCurrentUser();if(u){await logManager.logAuth(u.name,'User logged out');}authManager.logout();GistSync.stopPolling();stopIdleTracking();GistSync.setStatus('offline','Offline');closeMobileMoreDrawer();document.getElementById('main-app').classList.add('hidden');document.getElementById('login-screen').classList.remove('hidden');}
+function togglePasswordVisibility(){const p=document.getElementById('login-password');p.type=p.type==='password'?'text':'password';document.getElementById('password-toggle-icon').classList.toggle('fa-eye');document.getElementById('password-toggle-icon').classList.toggle('fa-eye-slash');}
+
+// Password Recovery
+function showPasswordRecoveryModal(){document.getElementById('password-recovery-modal').classList.remove('hidden');document.getElementById('rec-step-1').classList.remove('hidden');document.getElementById('rec-step-2').classList.add('hidden');document.getElementById('rec-step-3').classList.add('hidden');document.getElementById('recovery-user-select').innerHTML='<option value="">-- Select --</option>'+authManager.getAllUsers().map(u=>`<option>${u}</option>`).join('');}
+function hidePasswordRecoveryModal(){document.getElementById('password-recovery-modal').classList.add('hidden');}
+function sendRecoveryWA(){recoveryUser=document.getElementById('recovery-user-select').value;if(!recoveryUser)return;const e=engineers.find(en=>en.name===recoveryUser);if(e)window.open(`https://wa.me/${e.phone.replace(/[^\d]/g,'')}?text=Code:%20123456`,'_blank');document.getElementById('rec-step-1').classList.add('hidden');document.getElementById('rec-step-2').classList.remove('hidden');}
+function sendRecoveryEmail(){recoveryUser=document.getElementById('recovery-user-select').value;if(!recoveryUser)return;const e=engineers.find(en=>en.name===recoveryUser);if(e)window.open(`mailto:${e.email}?subject=Recovery&body=Code:%20123456`,'_blank');document.getElementById('rec-step-1').classList.add('hidden');document.getElementById('rec-step-2').classList.remove('hidden');}
+function verifyRecoveryCode(){if(document.getElementById('recovery-code').value==='123456'){document.getElementById('rec-step-2').classList.add('hidden');document.getElementById('rec-step-3').classList.remove('hidden');}else alert('Invalid code.');}
+function resetPassword(){const np=document.getElementById('rec-new-pass').value,cp=document.getElementById('rec-conf-pass').value;if(!np||np!==cp)return;if(authManager.resetPassword(recoveryUser,np)){alert('Reset!');hidePasswordRecoveryModal();}}
+
+// ==================== BUILD SIDEBAR ====================
+function buildSidebarNavigation(){const nav=document.getElementById('sidebar-nav');const cu=authManager.getCurrentUser();if(!cu)return;let h='';if(cu.isDonan||cu.isRoy){h+=`<a href="#" onclick="switchTab(0)" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg" id="nav-0"><i class="fa-solid fa-gauge-high w-5"></i><span>Dashboard</span></a>`;}h+=`<a href="#" onclick="switchTab(1)" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg" id="nav-1"><i class="fa-solid fa-list-check w-5"></i><span>Tools</span></a>`;h+=`<a href="#" onclick="switchTab(2)" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg" id="nav-2"><i class="fa-solid fa-users w-5"></i><span>Engineers</span></a>`;h+=`<a href="#" onclick="switchTab(3)" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg" id="nav-3"><i class="fa-solid fa-arrow-right-arrow-left w-5"></i><span>Borrow/Return</span></a>`;h+=`<a href="#" onclick="switchTab(5)" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg" id="nav-5"><i class="fa-solid fa-clock-rotate-left w-5"></i><span>History</span></a>`;if(cu.isDonan){h+=`<a href="#" onclick="switchTab(4)" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg" id="nav-4"><i class="fa-solid fa-chart-pie w-5"></i><span>Analytics</span></a>`;h+=`<a href="#" onclick="switchTab(6)" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg" id="nav-6"><i class="fa-solid fa-file-lines w-5"></i><span>System Logs</span></a>`;}nav.innerHTML=h;const gc=document.getElementById('settings-gear-container');if(gc)gc.style.display=(cu.isDonan||cu.isRoy)?'flex':'none';const umc=document.getElementById('user-mgmt-container');if(umc)umc.style.display=cu.isDonan?'block':'none';}
+
+// ==================== NAVIGATION ====================
+async function switchTab(n){const cu=authManager.getCurrentUser();if(n===0&&cu&&!cu.isAdmin&&!cu.isRoy){n=1;}for(let i=0;i<=6;i++){const t=document.getElementById('tab-'+i);if(t)t.classList.add('hidden');const nav=document.getElementById('nav-'+i);if(nav)nav.classList.remove('active');}const at=document.getElementById('tab-'+n);if(at)at.classList.remove('hidden');const an=document.getElementById('nav-'+n);if(an)an.classList.add('active');
+    // Sync mobile bottom nav
+    [0,1,2,3].forEach(i=>{const mb=document.getElementById('mob-nav-'+i);if(mb)mb.classList.toggle('active',i===n);});
+    const moreActive=[4,5,6].includes(n);const mobMore=document.getElementById('mob-nav-more');if(mobMore)mobMore.classList.toggle('active',moreActive);document.getElementById('page-title').textContent=['Dashboard','Service Tools','Engineers','Borrow / Return','Analytics','History & Audit','System Logs'][n]||'Dashboard';if(n===6){if(!authManager.canAccessSystemLogs()){document.getElementById('logs-restricted').classList.remove('hidden');document.getElementById('logs-content').classList.add('hidden');}else{document.getElementById('logs-restricted').classList.add('hidden');document.getElementById('logs-content').classList.remove('hidden');refreshLogViewer();}}if(n===0)renderDashboard();else if(n===1)renderTools();else if(n===2)renderEngineers();else if(n===3)renderBorrowTab();else if(n===4)renderAnalytics();else if(n===5)renderHistory();}
+
+// DD: Enhanced log viewer with filtering
+let currentLogFilter='all';
+function filterLogs(filter,btn){
+    currentLogFilter=filter;
+    document.querySelectorAll('#log-filter-buttons .log-filter-btn').forEach(b=>b.classList.remove('active'));
+    if(btn)btn.classList.add('active');
+    refreshLogViewer();
+}
+function refreshLogViewer(){
+    const logs=logManager.getFilteredLog(currentLogFilter);
+    document.getElementById('log-viewer-content').innerHTML=logs.slice(-100).map(l=>{
+        let color='#00ff88';
+        if(l.includes('[ERROR]'))color='#ff4444';
+        else if(l.includes('[WARNING]'))color='#ffaa00';
+        else if(l.includes('[AUTH]'))color='#44aaff';
+        else if(l.includes('[DEBUG]'))color='#888888';
+        return`<div class="log-entry" style="color:${color}">${l.replace(/</g,'&lt;')}</div>`;
+    }).join('')||'<span style="color:#888">No log entries matching filter.</span>';
+}
+function saveLogFile(){logManager.saveLogFile();}
+
+// ==================== LOG SETTINGS ====================
+function showLogSettings(){document.getElementById('log-enabled').checked=logManager.logConfig.enabled;document.getElementById('log-level').value=logManager.logConfig.level;document.getElementById('log-retention').value=logManager.logConfig.retentionDays;document.getElementById('log-autodelete').checked=logManager.logConfig.autoDelete;document.getElementById('log-settings-modal').classList.remove('hidden');}
+function hideLogSettings(){document.getElementById('log-settings-modal').classList.add('hidden');}
+function updateLogConfig(){logManager.logConfig.enabled=document.getElementById('log-enabled').checked;logManager.logConfig.level=document.getElementById('log-level').value;logManager.logConfig.retentionDays=parseInt(document.getElementById('log-retention').value);logManager.logConfig.autoDelete=document.getElementById('log-autodelete').checked;}
+function saveLogConfig(){updateLogConfig();logManager.saveLogConfig();hideLogSettings();alert('Log settings saved!');}
+function resetLogConfig(){logManager.resetLogConfig();document.getElementById('log-enabled').checked=true;document.getElementById('log-level').value='all';document.getElementById('log-retention').value='30';document.getElementById('log-autodelete').checked=false;logManager.log('SYSTEM','Log config reset');alert('Defaults restored.');}
+
+// ==================== USER MANAGEMENT ====================
+function showUserManagementPanel(){if(!authManager.canManageUsers()){alert('Access denied.');return;}const c=document.getElementById('user-list-container');c.innerHTML=authManager.getAllUsers().map(u=>{const ia=['Royston Dcosta','Donan Arciaga'].includes(u);return`<div class="flex items-center justify-between py-3 px-4 bg-gray-50 rounded-xl"><div><span class="font-medium text-sm">${u}</span>${ia?'<span class="text-xs text-blue-600 ml-2">(Admin)</span>':''}</div>${!ia?`<button onclick="removeUserPrompt('${u}')" class="btn btn-danger text-xs px-3 py-1"><i class="fa-solid fa-trash"></i></button>`:'<span class="text-xs text-gray-400">Protected</span>'}</div>`;}).join('');document.getElementById('user-management-modal').classList.remove('hidden');}
+function hideUserManagementPanel(){document.getElementById('user-management-modal').classList.add('hidden');}
+async function removeUserPrompt(name){const c=await CustomConfirmDialog.show(`Remove user "${name}" from login list?`,'Remove User');if(c){if(authManager.removeUser(name)){populateLoginDropdown();showUserManagementPanel();logManager.logWarning(authManager.getCurrentUser().name,'Removed user: '+name);alert('User removed.');}}}
+
+// ==================== ABOUT & README (BB - Comprehensive) ====================
+function showAboutPanel(){document.getElementById('about-panel-modal').classList.remove('hidden');}
+function hideAboutPanel(){document.getElementById('about-panel-modal').classList.add('hidden');}
+// AA: Fixed - opens in modal, doesn't affect main layout
+function openReadmeViewer(){document.getElementById('readme-content').innerHTML=ReadmeGenerator.generateReadmeContent();document.getElementById('readme-viewer-modal').classList.remove('hidden');}
+function hideReadmeViewer(){document.getElementById('readme-viewer-modal').classList.add('hidden');}
+function downloadReadmeFile(){ReadmeGenerator.downloadReadmeFile();}
+
+// BB: Comprehensive README with all features
+class ReadmeGenerator {
+    static generateReadmeContent(){return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.7;color:#1f2937;max-width:900px;margin:0 auto;padding:20px;background:#fff}
+h1{font-size:1.8em;font-weight:700;color:#1e40af;border-bottom:3px solid #1e40af;padding-bottom:8px;margin-bottom:4px}
+h2{font-size:1.2em;font-weight:600;color:#1e3a8a;margin-top:1.5em;padding:6px 12px;background:#eff6ff;border-left:4px solid #3b82f6;border-radius:4px}
+h3{font-size:1em;font-weight:600;color:#374151;margin-top:1em}
+p,li{font-size:.93em}
+code{background:#f3f4f6;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:.85em;color:#be185d}
+table{border-collapse:collapse;width:100%;font-size:.88em;margin:.75em 0}
+th{background:#1e40af;color:white;padding:8px 12px;text-align:left}
+td{padding:7px 12px;border-bottom:1px solid #e5e7eb}
+tr:nth-child(even)td{background:#f9fafb}
+.new{background:#dcfce7;color:#166534;padding:2px 8px;border-radius:12px;font-size:.78em;font-weight:500}
+.tag{background:#dbeafe;color:#1e40af;padding:2px 8px;border-radius:12px;font-size:.78em;font-weight:500}
+.warn{background:#fef3c7;border:1px solid #fcd34d;border-radius:6px;padding:8px 12px;font-size:.88em;color:#78350f;margin:.5em 0}
+.info{background:#eff6ff;border:1px solid #93c5fd;border-radius:6px;padding:8px 12px;font-size:.88em;color:#1e40af;margin:.5em 0}
+ul{padding-left:1.4em}li{margin-bottom:3px}
+</style></head><body>
+<h1>&#128295; ToolTrack v1.22 — Service Tools Tracker</h1>
+<p style="color:#6b7280;font-size:.88em">Sultan United Service Team &nbsp;|&nbsp; June 2026</p>
+<h2>Overview</h2>
+<p>ToolTrack is a web app hosted on GitHub Pages that tracks who borrows service tools, return dates, and calibration records. All data is stored directly in the GitHub repository and synced automatically to every device — no installation needed, works on any phone or computer.</p>
+<h2>Login</h2>
+<ul>
+<li>Select your name from the dropdown and enter your password (default: <code>123</code>).</li>
+<li><strong>Donan / Roy</strong> — Administrator. Full access to all tabs including Dashboard, Analytics, Logs, Settings.</li>
+<li><strong>Engineers</strong> — Can view Tools, borrow/return tools, see History.</li>
+<li>Change your password anytime: sidebar or mobile More menu → Change Password.</li>
+</ul>
+<h2>GitHub Sync</h2>
+<div class="info"><strong>Reading is always automatic</strong> — the app loads the latest data from GitHub on every login. No token needed for any engineer.</div>
+<div class="warn"><strong>Writing requires a GitHub Token (admin only)</strong> — Donan sets this once in Settings. Once set, any change (new tool, borrow, return) is saved back to GitHub and visible on all devices.</div>
+<h3>One-time Token Setup (Donan only)</h3>
+<ol>
+<li>Go to github.com → Settings → Developer settings → Personal access tokens → Tokens (classic)</li>
+<li>Click Generate new token → Name: ToolTrack → Expiry: No expiration → Scope: check <strong>repo</strong></li>
+<li>Copy the token (starts with <code>ghp_</code>)</li>
+<li>In ToolTrack: open Settings (gear icon) → GitHub Sync Token → paste → Save</li>
+</ol>
+<h2>Sync Status Badge</h2>
+<table><tr><th>Badge</th><th>Meaning</th></tr>
+<tr><td>Synced ✓</td><td>Latest data loaded from GitHub.</td></tr>
+<tr><td>Syncing…</td><td>Loading or saving. Wait a moment.</td></tr>
+<tr><td>Read-only</td><td>No token — data loads but cannot be saved to GitHub.</td></tr>
+<tr><td>Save failed</td><td>Network error. Data still saved locally.</td></tr>
+</table>
+<h2>Borrowing a Tool</h2>
+<ol><li>Go to Borrow / Return tab</li><li>Select tool, engineer, dates, location</li><li>Click Borrow</li></ol>
+<h2>Returning a Tool</h2>
+<ol><li>Borrow / Return tab → find the active transaction</li><li>Click Return → Take Photo (camera or file)</li><li>Confirm image → choose WhatsApp or Email to notify Roy</li><li>Roy reviews the photo in Dashboard and clicks Confirmed or Incident</li></ol>
+<h2>Auto-Logout</h2>
+<p>After the configured idle time (default 10 min), a 30-second warning appears. If no activity, data is synced and the user is logged out. Admin can change the timeout in Settings → Idle Timeout.</p>
+<h2>Mobile Usage</h2>
+<ul><li>Bottom nav bar: Dash / Tools / Engineers / Borrow / More</li><li>More drawer: History, Analytics, Logs, Settings, Change Password, Logout</li><li>Tap &#8635; in the top bar to manually refresh from GitHub</li><li>Add to Home Screen for app-like experience</li></ul>
+<h2>Version History</h2>
+<table><tr><th>Version</th><th>Changes</th></tr>
+<tr><td><span class="new">1.22</span></td><td>Fixed critical JS syntax error (broken README class). GitHub sync without token for reads. Idle auto-logout. Form fields clear on Add. Sync badge always accurate.</td></tr>
+<tr><td><span class="tag">1.21</span></td><td>GitHub Gist sync engine, auto-polling, memory reload fix</td></tr>
+<tr><td><span class="tag">1.20</span></td><td>Hybrid mobile layout, file picker fix, borrower info in Dashboard</td></tr>
+<tr><td><span class="tag">1.13–1.19</span></td><td>Return evidence photos, WhatsApp/Email, cache-busting, README</td></tr>
+<tr><td><span class="tag">1.07–1.12</span></td><td>History, CSV backup, role-based access, Settings</td></tr>
+<tr><td><span class="tag">1.01–1.06</span></td><td>Initial build: tool list, engineers, borrow/return, calibration</td></tr>
+</table>
+<h2>Default Password</h2><p>All users: <code>123</code>. Change after first login.</p>
+<h2>Support</h2><p>Contact <strong>Donan</strong> for account issues, token setup, or data recovery.</p>
+</body></html>`;}
+
+    static downloadReadmeFile(){const b=new Blob([this.generateReadmeContent()],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ToolTrack_README_v1.22.html';document.body.appendChild(a);a.click();document.body.removeChild(a);}
+}
+
+// ==================== SETTINGS ====================
+function showSettingsPanel(){
+    const cu=authManager.getCurrentUser();
+    const isAdmin = cu && (cu.isDonan || cu.isRoy);
+    if(!isAdmin){document.getElementById('settings-restricted').classList.remove('hidden');document.getElementById('settings-content').classList.add('hidden');}
+    else{
+        document.getElementById('settings-restricted').classList.add('hidden');
+        document.getElementById('settings-content').classList.remove('hidden');
+        // Inject dynamic sections
+        const ghSection = document.getElementById('settings-gh-section');
+        if(ghSection) ghSection.innerHTML = renderGitHubTokenSection();
+        const idleSection = document.getElementById('settings-idle-section');
+        if(idleSection && cu.isDonan) {
+            idleSection.innerHTML = renderIdleSection();
+            idleSection.style.display='block';
+        } else if(idleSection) { idleSection.style.display='none'; }
+    }
+    document.getElementById('settings-panel-modal').classList.remove('hidden');
+}
+function hideSettingsPanel(){document.getElementById('settings-panel-modal').classList.add('hidden');}
+async function clearHistoryFunction(){const c=await CustomConfirmDialog.show('Clear all History records?','Clear History');if(c){transactions=[];DeletionLogger.clearAll();saveData();refreshAllPanels();logManager.logWarning(authManager.getCurrentUser().name,'History cleared');alert('Cleared.');}}
+async function clearLogsFunction(){const c=await CustomConfirmDialog.show('Delete all logs?','Clear Logs');if(c){logManager.clearAllLogs();refreshLogViewer();logManager.logWarning(authManager.getCurrentUser().name,'Logs cleared');alert('Cleared.');}}
+async function clearDataFunction(){const c=await CustomConfirmDialog.show('Clear active records? Backups preserved.','Clear Data');if(c){tools=[];engineers=[];saveData();refreshAllPanels();logManager.logWarning(authManager.getCurrentUser().name,'Data cleared');alert('Cleared.');}}
+
+// ==================== FULL BACKUP/RESTORE ====================
+function getBackupFileName(){const t=new Date();return`BackupCFG_${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}_${String(t.getHours()).padStart(2,'0')}${String(t.getMinutes()).padStart(2,'0')}${String(t.getSeconds()).padStart(2,'0')}.zip`;}
+async function performFullBackup(){const m=document.getElementById('backup-progress-modal');const s=document.getElementById('backup-status-text');const p=document.getElementById('backup-progress-bar');const t=document.getElementById('backup-percent');m.classList.remove('hidden');logManager.log(authManager.getCurrentUser()?.name||'User','Backup started');try{s.textContent='Collecting...';p.style.width='10%';t.textContent='10%';await delay(200);const sd={};for(let i=0;i<localStorage.length;i++){sd[localStorage.key(i)]=localStorage.getItem(localStorage.key(i));}sd['_meta']=JSON.stringify({v:'1.19',u:authManager.getCurrentUser()?.name,ts:new Date().toISOString()});p.style.width='40%';t.textContent='40%';await delay(200);const zip=new JSZip();zip.file('system_data.json',JSON.stringify(sd,null,2));zip.file('Service_Tool_Record.csv','\uFEFF'+generateToolsCSV());zip.file('Engineer_Record.csv','\uFEFF'+generateEngineersCSV());zip.file('ToolTrack0.log',logManager.getCurrentLog());p.style.width='75%';t.textContent='75%';await delay(200);s.textContent='Compressing...';const zb=await zip.generateAsync({type:'blob',compression:'DEFLATE'});p.style.width='100%';t.textContent='100%';const fn=getBackupFileName();const url=URL.createObjectURL(zb);const a=document.createElement('a');a.href=url;a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);await delay(500);m.classList.add('hidden');logManager.log(authManager.getCurrentUser()?.name||'User','Backup completed: '+fn);alert('Backup complete!\n\n'+fn);}catch(e){m.classList.add('hidden');logManager.logError(authManager.getCurrentUser()?.name||'User','Backup failed');alert('Failed.');}}
+async function performFullRestore(){openFilePicker('_file_zip',async function(f){if(!f.name.toLowerCase().includes('backupcfg')){alert('Invalid backup file.');return;}const c=await CustomConfirmDialog.show('Restore will overwrite current files. Continue?','Restore');if(!c)return;const m=document.getElementById('restore-progress-modal');const s=document.getElementById('restore-status-text');const p=document.getElementById('restore-progress-bar');const t=document.getElementById('restore-percent');m.classList.remove('hidden');try{s.textContent='Validating...';p.style.width='10%';t.textContent='10%';await delay(300);const zip=await JSZip.loadAsync(f);if(!zip.file('system_data.json'))throw new Error('Invalid');p.style.width='40%';t.textContent='40%';const sdc=await zip.file('system_data.json').async('string');const sd=JSON.parse(sdc);p.style.width='70%';t.textContent='70%';Object.keys(sd).forEach(k=>{if(k!=='_meta')try{localStorage.setItem(k,sd[k]);}catch(e){}});try{tools=JSON.parse(localStorage.getItem('tools')||'[]');}catch(e){tools=[];}try{engineers=JSON.parse(localStorage.getItem('engineers')||'[]');}catch(e){engineers=[];}try{transactions=JSON.parse(localStorage.getItem('transactions')||'[]');}catch(e){transactions=[];}p.style.width='100%';t.textContent='100%';await delay(500);m.classList.add('hidden');refreshAllPanels();logManager.log(authManager.getCurrentUser()?.name||'User','Restore completed');alert('Restore complete! Restart recommended.');}catch(e){m.classList.add('hidden');logManager.logError(authManager.getCurrentUser()?.name||'User','Restore failed');alert('Failed.');}});}
+function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ==================== CSV BACKUP/RESTORE ====================
+function generateToolsCSV(){let c='ID,Description,Model,Serial Number,Owner,Calibration Due,Status,Location,Certificate Date\n';tools.forEach(t=>{c+=`${t.id},"${t.desc}","${t.model}","${t.serial}","${t.owner}","${t.calDue}","${t.status}","${t.location||''}","${t.calCertDate||''}"\n`;});return c;}
+function generateEngineersCSV(){let c='ID,Name,Phone,Email,Department\n';engineers.forEach(e=>{c+=`${e.id},"${e.name}","${e.phone}","${e.email}","${e.department||'N/A'}"\n`;});return c;}
+function backupToolRecords(){const csv=generateToolsCSV();const t=new Date();const fn=`Service_Tool_Record_${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}_${String(t.getHours()).padStart(2,'0')}${String(t.getMinutes()).padStart(2,'0')}${String(t.getSeconds()).padStart(2,'0')}.csv`;const b=new Blob(['\uFEFF'+csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);logManager.log(authManager.getCurrentUser()?.name||'User','Backup Tool: '+fn);alert('Saved: '+fn);}
+function restoreToolRecords(){openFilePicker('_file_csv',function(f){const r=new FileReader();r.onload=function(e){const c=e.target.result.replace(/^\uFEFF/,'');const l=c.trim().split('\n');if(l.length<2){alert('Invalid.');return;}const h=l[0].toLowerCase();if(!h.includes('description')||!h.includes('serial')){alert('Invalid backup file.');return;}const nt=[];for(let j=1;j<l.length;j++){const cols=parseCSVLine(l[j]);if(cols.length>=6)nt.push({id:parseInt(cols[0])||Date.now()+j,desc:cols[1]?.replace(/^"|"$/g,'')||'',model:cols[2]?.replace(/^"|"$/g,'')||'',serial:cols[3]?.replace(/^"|"$/g,'')||'',owner:cols[4]?.replace(/^"|"$/g,'')||'',calDue:cols[5]?.replace(/^"|"$/g,'')||'',status:cols[6]?.replace(/^"|"$/g,'')||'Available',location:cols[7]?.replace(/^"|"$/g,'')||'',calCert:null,calCertDate:cols[8]?.replace(/^"|"$/g,'')||null});}if(nt.length){tools=nt;saveData();refreshAllPanels();logManager.log(authManager.getCurrentUser()?.name||'User','Restored '+nt.length+' tools');alert('Restored '+nt.length+' records!');}};r.readAsText(f);});}
+function backupEngineerRecords(){const csv=generateEngineersCSV();const t=new Date();const fn=`Engineer_Record_${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}_${String(t.getHours()).padStart(2,'0')}${String(t.getMinutes()).padStart(2,'0')}${String(t.getSeconds()).padStart(2,'0')}.csv`;const b=new Blob(['\uFEFF'+csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);logManager.log(authManager.getCurrentUser()?.name||'User','Backup Engineer: '+fn);alert('Saved: '+fn);}
+function restoreEngineerRecords(){openFilePicker('_file_csv',function(f){const r=new FileReader();r.onload=function(e){const c=e.target.result.replace(/^\uFEFF/,'');const l=c.trim().split('\n');if(l.length<2){alert('Invalid.');return;}const h=l[0].toLowerCase();if(!h.includes('name')||!h.includes('email')){alert('Invalid backup file.');return;}const ne=[];for(let j=1;j<l.length;j++){const cols=parseCSVLine(l[j]);if(cols.length>=5)ne.push({id:parseInt(cols[0])||Date.now()+j,name:cols[1]?.replace(/^"|"$/g,'')||'',phone:cols[2]?.replace(/^"|"$/g,'')||'',email:cols[3]?.replace(/^"|"$/g,'')||'',department:cols[4]?.replace(/^"|"$/g,'')||''});}if(ne.length){engineers=ne;saveData();refreshAllPanels();populateLoginDropdown();logManager.log(authManager.getCurrentUser()?.name||'User','Restored '+ne.length+' engineers');alert('Restored '+ne.length+' records!');}};r.readAsText(f);});}
+function parseCSVLine(l){const r=[];let c='';let q=false;for(let i=0;i<l.length;i++){const ch=l[i];if(ch==='"')q=!q;else if(ch===','&&!q){r.push(c.trim());c='';}else c+=ch;}r.push(c.trim());return r;}
+
+// ==================== DASHBOARD ====================
+function renderDashboard(){if(!authManager.canAccessDashboard()){return;}document.getElementById('total-tools').textContent=tools.length;const ab=transactions.filter(t=>!t.returned);document.getElementById('borrowed-count').textContent=ab.length;document.getElementById('util-rate').textContent=tools.length===0?'0%':Math.round((ab.length/tools.length)*100)+'%';document.getElementById('overdue-count').textContent=ab.filter(t=>new Date(t.expectedReturn)<new Date()).length;document.getElementById('calibration-due').textContent=tools.filter(t=>Math.ceil((new Date(t.calDue)-new Date())/86400000)<=30).length;renderApprovalPanel();}
+function renderApprovalPanel(){const u=authManager.getCurrentUser(),p=document.getElementById('approval-panel');if(!u?.isAdmin){p.classList.add('hidden');return;}const pend=returnRequests.filter(r=>r.status==='pending');p.classList.remove('hidden');document.getElementById('approval-list').innerHTML=pend.length?pend.map(r=>{const tl=tools.find(t=>t.id===r.toolId);const eng=engineers.find(e=>e.id===r.engineerId);return`<div class="border rounded-2xl p-5"><div class="flex justify-between items-start gap-4"><div class="flex-1 space-y-2"><div class="font-semibold text-base">${tl?.desc||'Unknown'} <span class="text-gray-500 font-normal text-sm">S/N: ${tl?.serial||'N/A'}</span></div><div class="flex flex-wrap gap-4 text-sm text-gray-600"><span><i class="fa-solid fa-user mr-1 text-blue-500"></i>${eng?.name||r.requestedBy||'Unknown'}</span><span><i class="fa-solid fa-building mr-1 text-indigo-500"></i>${eng?.department||'N/A'}</span><span><i class="fa-solid fa-phone mr-1 text-green-500"></i>${eng?.phone||'N/A'}</span></div><div class="text-xs text-gray-400 mt-1"><i class="fa-solid fa-clock mr-1"></i>Submitted: ${new Date(r.returnDate).toLocaleString()}</div></div><div class="flex items-center gap-3 flex-shrink-0">${r.evidenceImage?`<img src="${r.evidenceImage}" class="w-14 h-14 object-cover rounded-xl cursor-pointer border" onclick="expandEvidence('${r.id}')">`:''}<button onclick="confirmReturn('${r.id}')" class="btn btn-success px-4 py-2 text-sm">Confirmed</button><button onclick="incidentReport('${r.id}')" class="btn btn-danger px-4 py-2 text-sm">Incident</button></div></div></div>`;}).join(''):'<p class="text-gray-400 text-center py-6">No pending.</p>';}
+function expandEvidence(id){const r=returnRequests.find(x=>x.id===id);if(r?.evidenceImage){window.open('','_blank','width=800,height=600').document.write(`<img src="${r.evidenceImage}" style="max-width:100%">`);}}
+async function confirmReturn(reqId){const req=returnRequests.find(r=>r.id===reqId);if(!req)return;req.status='approved';const trans=transactions.find(t=>t.id===req.transId);if(trans){trans.returned=true;trans.actualReturnDate=req.returnDate;trans.returnConfirmedBy=authManager.getCurrentUser().name;trans.approvalStatus='Approved';trans.transDate=new Date().toISOString();}saveData();refreshAllPanels();}
+function incidentReport(reqId){const req=returnRequests.find(r=>r.id===reqId);if(!req)return;req.status='incident';const trans=transactions.find(t=>t.id===req.transId);if(trans){trans.incidentRemarks='Incident';trans.approvalStatus='Incident';trans.transDate=new Date().toISOString();}saveData();refreshAllPanels();}
+
+// ==================== TOOLS ====================
+function renderTools(){document.getElementById('tools-table').innerHTML=tools.map(t=>{const isB=transactions.some(tr=>tr.toolId===t.id&&!tr.returned),ce=authManager.getCurrentUser()&&(authManager.getCurrentUser().isAdmin||authManager.getCurrentUser().name===t.owner),bi=isB?getBorrowerInfo(t.id):null,isO=bi&&new Date(bi.expectedReturn)<new Date();let st=isCalExpired(t.calDue)&&!isB?'<span class="px-3 py-1 rounded-full text-xs bg-red-100 text-red-700">Cal Expired</span>':(isB&&isO?`<button onclick="showOverdueModal(${t.id})" class="px-3 py-1 rounded-full text-xs bg-red-500 text-white overdue-btn">OVERDUE</button>`:(isB?'<span class="px-3 py-1 rounded-full text-xs bg-amber-100 text-amber-700">BORROWED</span>':'<span class="px-3 py-1 rounded-full text-xs bg-emerald-100 text-emerald-700">AVAILABLE</span>'));return`<tr><td class="px-4 py-4 font-medium">${t.desc}</td><td class="px-4 py-4 text-sm">${t.model}</td><td class="px-4 py-4 text-sm">${t.serial}</td><td class="px-4 py-4 text-sm">${t.owner}</td><td class="px-4 py-4 text-sm">${t.calDue}</td><td class="px-4 py-4">${st}</td><td class="px-4 py-4">${isCalSoon(t.calDue)&&!isB?'<span class="text-xs text-orange-600">Prepare Cal</span>':'-'}</td><td class="px-4 py-4 text-sm">${bi?`<span>${bi.firstName}</span>`:'-'}</td><td class="px-4 py-4 text-sm">${bi?bi.location:(t.location||'-')}</td><td class="px-4 py-4 text-center"><button onclick="showCalCertModal(${t.id})" class="text-blue-500 btn"><i class="fa-solid fa-certificate"></i></button></td><td class="px-4 py-4 text-right">${ce?`<button onclick="showEditToolModal(${t.id})" class="text-blue-500 p-2 btn"><i class="fa-solid fa-edit"></i></button><button onclick="deleteToolPrompt(${t.id})" class="text-red-500 p-2 btn"><i class="fa-solid fa-trash"></i></button>`:'<span class="text-xs text-gray-400">No perm</span>'}</td></tr>`;}).join('')||'<tr><td colspan="11" class="text-center py-8">No tools</td></tr>';}
+
+function showAddToolModal(){['tool-desc','tool-model','tool-serial','tool-owner','tool-location'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});const cd=document.getElementById('tool-cal-date');if(cd)cd.value=new Date(Date.now()+365*86400000).toISOString().split('T')[0];document.getElementById('add-tool-modal').classList.remove('hidden');}
+function showAddEngineerModal(){['eng-name','eng-phone','eng-email','eng-department'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('add-engineer-modal').classList.remove('hidden');}
+function hideAddToolModal(){document.getElementById('add-tool-modal').classList.add('hidden');['tool-desc','tool-model','tool-serial','tool-owner','tool-location'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});const cd=document.getElementById('tool-cal-date');if(cd)cd.value='';}
+async function addNewTool(){const d=document.getElementById('tool-desc').value.trim();if(!d)return;tools.push({id:Date.now(),desc:d,model:document.getElementById('tool-model').value||'N/A',serial:document.getElementById('tool-serial').value||'N/A',owner:authManager.getCurrentUser().name,calDue:document.getElementById('tool-cal-date').value,status:'Available',location:document.getElementById('tool-location').value||'',calCert:null,calCertDate:null});saveData();hideAddToolModal();refreshAllPanels();logManager.log(authManager.getCurrentUser().name,'Added tool: '+d);}
+function showEditToolModal(id){const t=tools.find(x=>x.id===id);if(!t||!authManager.canEditTool(t.owner))return;currentEditToolId=id;document.getElementById('edit-tool-id').value=id;document.getElementById('edit-tool-desc').value=t.desc;document.getElementById('edit-tool-model').value=t.model;document.getElementById('edit-tool-serial').value=t.serial;document.getElementById('edit-tool-owner').value=t.owner;document.getElementById('edit-tool-cal-date').value=t.calDue;document.getElementById('edit-tool-location').value=t.location||'';document.getElementById('edit-tool-modal').classList.remove('hidden');}
+function hideEditToolModal(){document.getElementById('edit-tool-modal').classList.add('hidden');}
+async function updateTool(){const t=tools.find(x=>x.id===parseInt(document.getElementById('edit-tool-id').value));if(!t)return;t.desc=document.getElementById('edit-tool-desc').value.trim()||t.desc;t.model=document.getElementById('edit-tool-model').value||t.model;t.serial=document.getElementById('edit-tool-serial').value||t.serial;if(authManager.getCurrentUser().isAdmin)t.owner=document.getElementById('edit-tool-owner').value||t.owner;t.calDue=document.getElementById('edit-tool-cal-date').value||t.calDue;t.location=document.getElementById('edit-tool-location').value||t.location;saveData();hideEditToolModal();refreshAllPanels();}
+async function deleteToolPrompt(id){const t=tools.find(x=>x.id===id);if(!t)return;const c=await CustomConfirmDialog.show('Delete tool?','Delete');if(!c)return;pendingDeletionType='tool';pendingDeletionId=id;document.getElementById('deletion-reason-select').innerHTML='<option value="">-- Select --</option><option>Test Entry Only</option><option>Defective Tool</option><option>Missing Tool</option>';document.getElementById('deletion-reason-modal').classList.remove('hidden');}
+function cancelDeletion(){document.getElementById('deletion-reason-modal').classList.add('hidden');pendingDeletionType=null;pendingDeletionId=null;}
+async function confirmDeletion(){const r=document.getElementById('deletion-reason-select').value;if(!r){alert('Select reason.');return;}document.getElementById('deletion-reason-modal').classList.add('hidden');if(pendingDeletionType==='tool'){const t=tools.find(x=>x.id===pendingDeletionId);if(t){DeletionLogger.logDeletion('tool',t.desc,`S/N:${t.serial}`,authManager.getCurrentUser().name,r);tools=tools.filter(x=>x.id!==pendingDeletionId);saveData();refreshAllPanels();logManager.logWarning(authManager.getCurrentUser().name,'Deleted tool: '+t.desc);}}else if(pendingDeletionType==='engineer'){const e=engineers.find(x=>x.id===pendingDeletionId);if(e){DeletionLogger.logDeletion('engineer',e.name,`Dept:${e.department}`,authManager.getCurrentUser().name,r);engineers=engineers.filter(x=>x.id!==pendingDeletionId);authManager.removeUser(e.name);saveData();refreshAllPanels();populateLoginDropdown();logManager.logWarning(authManager.getCurrentUser().name,'Deleted engineer: '+e.name);}}pendingDeletionType=null;pendingDeletionId=null;}
+
+// ==================== ENGINEERS ====================
+function switchEngineerView(v){currentEngineerView=v;document.getElementById('view-grid-btn').classList.toggle('active',v==='grid');document.getElementById('view-table-btn').classList.toggle('active',v==='table');document.getElementById('engineers-grid-view').classList.toggle('hidden',v!=='grid');document.getElementById('engineers-table-view').classList.toggle('hidden',v!=='table');renderEngineers();}
+function renderEngineers(){const cu=authManager.getCurrentUser();document.getElementById('engineers-grid-view').innerHTML=engineers.map(e=>`<div class="bg-white rounded-3xl p-6 card-hover border"><div><h4 class="font-semibold">${e.name}</h4><p class="text-sm text-blue-600">${e.department||'N/A'}</p></div><div class="mt-4 space-y-2 text-sm"><div>📞 ${formatPhoneDisplay(e.phone)}</div><div>✉️ <span class="email-truncate" title="${e.email}">${e.email}</span></div></div><div class="mt-4 flex gap-2"><button onclick="showEditEngineerModal(${e.id})" class="flex-1 py-2 bg-blue-50 text-blue-600 rounded-xl text-sm btn">Edit</button>${cu?.isAdmin?`<button onclick="deleteEngineerPrompt(${e.id})" class="flex-1 py-2 bg-red-50 text-red-600 rounded-xl text-sm btn">Delete</button>`:''}</div></div>`).join('')||'<div class="col-span-full text-center py-8">No engineers</div>';document.getElementById('engineers-table-body').innerHTML=engineers.map(e=>`<tr><td class="px-6 py-5 font-semibold">${e.name}</td><td class="px-6 py-5">${e.department||'N/A'}</td><td class="px-6 py-5">${formatPhoneDisplay(e.phone)}</td><td class="px-6 py-5"><span class="email-truncate" title="${e.email}">${e.email}</span></td><td class="px-6 py-5 text-right"><button onclick="showEditEngineerModal(${e.id})" class="text-blue-500 p-2 btn"><i class="fa-solid fa-edit"></i></button>${cu?.isAdmin?`<button onclick="deleteEngineerPrompt(${e.id})" class="text-red-500 p-2 btn"><i class="fa-solid fa-trash"></i></button>`:''}</td></tr>`).join('')||'<tr><td colspan="5" class="text-center py-8">No engineers</td>';}
+
+function hideAddEngineerModal(){document.getElementById('add-engineer-modal').classList.add('hidden');['eng-name','eng-phone','eng-email','eng-department'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});}
+async function addNewEngineer(){const n=document.getElementById('eng-name').value.trim();if(!n)return;let d=document.getElementById('eng-department').value.trim();if(d&&!d.toLowerCase().endsWith('department'))d+=' Department';engineers.push({id:Date.now(),name:n,phone:document.getElementById('eng-phone').value||'N/A',email:document.getElementById('eng-email').value||n.toLowerCase().replace(/\s+/g,'.')+'@sultanunited.com',department:d||'N/A'});authManager.addUser(n);saveData();hideAddEngineerModal();refreshAllPanels();populateLoginDropdown();logManager.log(authManager.getCurrentUser().name,'Added engineer: '+n);}
+function showEditEngineerModal(id){const e=engineers.find(x=>x.id===id);if(!e)return;currentEditEngineerId=id;document.getElementById('edit-eng-id').value=id;document.getElementById('edit-eng-name').value=e.name;document.getElementById('edit-eng-phone').value=e.phone;document.getElementById('edit-eng-email').value=e.email;document.getElementById('edit-eng-department').value=e.department||'';document.getElementById('edit-engineer-modal').classList.remove('hidden');}
+function hideEditEngineerModal(){document.getElementById('edit-engineer-modal').classList.add('hidden');}
+async function updateEngineer(){const e=engineers.find(x=>x.id===parseInt(document.getElementById('edit-eng-id').value));if(!e)return;const on=e.name,nn=document.getElementById('edit-eng-name').value.trim();if(!nn)return;if(on!==nn){const od=authManager.users[on];if(od){authManager.addUser(nn,od.password);authManager.removeUser(on);}}let d=document.getElementById('edit-eng-department').value.trim();if(d&&!d.toLowerCase().endsWith('department'))d+=' Department';e.name=nn;e.phone=document.getElementById('edit-eng-phone').value||e.phone;e.email=document.getElementById('edit-eng-email').value||e.email;e.department=d||e.department;saveData();hideEditEngineerModal();refreshAllPanels();populateLoginDropdown();}
+async function deleteEngineerPrompt(id){const e=engineers.find(x=>x.id===id);if(!e||!authManager.getCurrentUser()?.isAdmin)return;const c=await CustomConfirmDialog.show('Delete engineer?','Delete');if(!c)return;pendingDeletionType='engineer';pendingDeletionId=id;document.getElementById('deletion-reason-select').innerHTML='<option value="">-- Select --</option><option>Test Entry Only</option><option>Engineer Transferred</option><option>Engineer Resigned</option><option>Wrong Entry</option>';document.getElementById('deletion-reason-modal').classList.remove('hidden');}
+
+// ==================== OVERDUE ====================
+function showOverdueModal(id){const t=tools.find(x=>x.id===id),bi=getBorrowerInfo(id);if(!t||!bi)return;currentOverdueToolId=id;document.getElementById('overdue-tool-info').innerHTML=`<div><strong>Tool:</strong> ${t.desc}</div><div><strong>Serial:</strong> ${t.serial}</div>`;document.getElementById('overdue-borrower-info').innerHTML=`<div><strong>Name:</strong> ${bi.name}</div><div><strong>Phone:</strong> ${formatPhoneDisplay(bi.phone)}</div>`;document.getElementById('whatsapp-message').value=`Greeting!\n\nTool "${t.desc}" is overdue.\n\nRegards,\n${authManager.getCurrentUser()?.name}`;document.getElementById('overdue-tool-modal').classList.remove('hidden');}
+function hideOverdueModal(){document.getElementById('overdue-tool-modal').classList.add('hidden');}
+function sendOverdueWA(){const bi=getBorrowerInfo(currentOverdueToolId);if(bi)window.open(`https://wa.me/${bi.phone.replace(/[^\d]/g,'')}?text=${encodeURIComponent(document.getElementById('whatsapp-message').value)}`,'_blank');}
+
+// ==================== BORROW/RETURN ====================
+function renderBorrowTab(){const avail=tools.filter(t=>!transactions.some(tr=>tr.toolId===t.id&&!tr.returned));document.getElementById('borrow-tool-select').innerHTML=avail.length?avail.map(t=>`<option value="${t.id}">${t.desc} (${t.serial})</option>`).join(''):'<option disabled>No tools</option>';document.getElementById('borrow-engineer-select').innerHTML=engineers.length?engineers.map(e=>`<option value="${e.id}">${e.name} - ${e.department||'N/A'}</option>`).join(''):'<option disabled>No engineers</option>';resetBorrowForm();const active=transactions.filter(t=>!t.returned);document.getElementById('currently-borrowed').innerHTML=active.length?active.map(t=>{const tl=tools.find(x=>x.id===t.toolId),e=engineers.find(x=>x.id===t.engineerId),isO=new Date(t.expectedReturn)<new Date();return`<div class="bg-white border ${isO?'border-red-300':''} rounded-2xl p-5"><div class="flex justify-between"><div><div class="font-semibold text-lg">${tl?.desc||'Deleted'} – SN: ${tl?.serial||'N/A'} ${isO?`<span onclick="populateReturnForm(${t.id})" class="px-3 py-1 rounded-full text-xs bg-red-500 text-white cursor-pointer overdue-btn">OVERDUE</span>`:''}</div><div class="text-sm">${e?.name||'Unknown'} – ${e?.department||'N/A'}</div><div class="text-xs">📍 ${t.location||'N/A'} | Taken: ${t.takenDate} | Expected: ${t.expectedReturn}</div></div><button onclick="initiateReturn(${t.id})" class="ml-4 px-5 py-2.5 bg-emerald-50 text-emerald-600 border rounded-xl text-sm btn btn-success">Mark Returned</button></div></div>`;}).join(''):'<p class="text-gray-500 p-6 text-center border rounded-2xl">No tools borrowed</p>';}
+function resetBorrowForm(){currentEditingTransId=null;document.getElementById('borrow-btn').classList.remove('hidden');document.getElementById('update-return-btn').classList.add('hidden');document.getElementById('extension-note-container').classList.add('hidden');document.getElementById('taken-date').removeAttribute('readonly');document.getElementById('taken-date').classList.remove('locked-field','bg-gray-100');document.getElementById('taken-date').value=new Date().toISOString().split('T')[0];document.getElementById('return-date').value=new Date(Date.now()+7*86400000).toISOString().split('T')[0];document.getElementById('borrow-location').value='';document.getElementById('extension-notes').value='';}
+function populateReturnForm(id){const t=transactions.find(x=>x.id===id);if(!t)return;currentEditingTransId=id;document.getElementById('borrow-tool-select').value=t.toolId;document.getElementById('borrow-engineer-select').value=t.engineerId;document.getElementById('taken-date').value=t.takenDate;document.getElementById('taken-date').setAttribute('readonly',true);document.getElementById('taken-date').classList.add('locked-field','bg-gray-100');document.getElementById('return-date').value=t.newExpectedReturn||t.expectedReturn;document.getElementById('borrow-location').value=t.location||'';document.getElementById('borrow-btn').classList.add('hidden');document.getElementById('update-return-btn').classList.remove('hidden');document.getElementById('extension-note-container').classList.remove('hidden');}
+async function borrowTool(){const ti=document.getElementById('borrow-tool-select').value,ei=document.getElementById('borrow-engineer-select').value;if(!ti||!ei){alert('Select tool and engineer.');return;}const td=document.getElementById('taken-date').value,rd=document.getElementById('return-date').value;if(new Date(rd)<new Date(td)){alert('Invalid date. The date entered is older than the taken out date.');return;}transactions.push({id:Date.now(),toolId:parseInt(ti),engineerId:parseInt(ei),takenDate:td,expectedReturn:rd,returned:false,location:document.getElementById('borrow-location').value||'N/A',extensionNotes:'',newExpectedReturn:'',actualReturnDate:'',returnConfirmedBy:'',confirmationNotes:'',transDate:new Date().toISOString(),approvalStatus:'',incidentRemarks:'',confirmedBy:''});saveData();refreshAllPanels();logManager.log(authManager.getCurrentUser().name,'Borrowed tool');alert('Borrowed!');}
+async function updateReturnDate(){if(!currentEditingTransId)return;const t=transactions.find(x=>x.id===currentEditingTransId);if(!t)return;const nd=document.getElementById('return-date').value;if(new Date(nd)<new Date(t.takenDate)){alert('Invalid date. The date entered is older than the taken out date.');return;}t.newExpectedReturn=nd;t.extensionNotes=document.getElementById('extension-notes').value.trim()||'Extended';t.transDate=new Date().toISOString();if(new Date(nd)>=new Date(new Date().toISOString().split('T')[0]))t.expectedReturn=nd;saveData();refreshAllPanels();alert('Updated!');resetBorrowForm();}
+function scrollToActiveBorrows(){document.getElementById('active-borrows-section').scrollIntoView({behavior:'smooth'});}
+
+// Return Evidence
+function initiateReturn(id){pendingReturnTransId=id;capturedReturnImage=null;document.getElementById('captured-image-container').classList.add('hidden');document.getElementById('retake-btn').classList.add('hidden');document.getElementById('confirm-evidence-btn').classList.add('hidden');document.getElementById('capture-btn').classList.remove('hidden');document.getElementById('return-evidence-modal').classList.remove('hidden');}
+function hideReturnEvidenceModal(){document.getElementById('return-evidence-modal').classList.add('hidden');}
+function captureReturnImage(){openFilePicker('_file_image_camera',function(file){const r=new FileReader();r.onload=function(e){capturedReturnImage=e.target.result;document.getElementById('captured-image').src=capturedReturnImage;document.getElementById('captured-image-container').classList.remove('hidden');document.getElementById('retake-btn').classList.remove('hidden');document.getElementById('confirm-evidence-btn').classList.remove('hidden');document.getElementById('capture-btn').classList.add('hidden');};r.readAsDataURL(file);});}
+async function confirmReturnEvidence(){if(!capturedReturnImage){alert('Capture image first.');return;}const trans=transactions.find(t=>t.id===pendingReturnTransId);if(!trans)return;const tool=tools.find(t=>t.id===trans.toolId);const ard=new Date().toISOString();returnRequests.push({id:'RR'+Date.now(),transId:pendingReturnTransId,toolId:trans.toolId,engineerId:trans.engineerId,returnDate:ard,evidenceImage:capturedReturnImage,status:'pending',requestedBy:authManager.getCurrentUser().name});trans.transDate=new Date().toISOString();saveData();hideReturnEvidenceModal();refreshAllPanels();const msg=`Dear Roy,\n\nGreetings!\n\nTool ${tool.desc}, ${tool.serial} returned on ${new Date(ard).toLocaleString()}.\nPlease review the image in Dashboard.\n\nRegards,\n${authManager.getCurrentUser().name}`;document.getElementById('return-whatsapp-msg').value=msg;document.getElementById('return-email-msg').value=msg;document.getElementById('send-return-modal').classList.remove('hidden');}
+function notRequiredReturn(){document.getElementById('roy-password-modal').classList.remove('hidden');}
+function hideRoyPasswordModal(){document.getElementById('roy-password-modal').classList.add('hidden');}
+async function verifyRoyPassword(){if(authManager.verifyRoyPassword(document.getElementById('roy-password-input').value)){hideRoyPasswordModal();const trans=transactions.find(t=>t.id===pendingReturnTransId);if(trans){trans.returned=true;trans.actualReturnDate=new Date().toISOString();trans.returnConfirmedBy='Royston Dcosta';trans.approvalStatus='Approved (In Person)';trans.transDate=new Date().toISOString();}saveData();hideReturnEvidenceModal();refreshAllPanels();alert('Approved!');}else alert('Invalid.');}
+function hideSendReturnModal(){document.getElementById('send-return-modal').classList.add('hidden');}
+function sendReturnWA(){window.open(`https://wa.me/${roy.phone.replace(/[^\d]/g,'')}?text=${encodeURIComponent(document.getElementById('return-whatsapp-msg').value)}`,'_blank');hideSendReturnModal();}
+function sendReturnEmail(){window.open(`mailto:${roy.email}?subject=Return&body=${encodeURIComponent(document.getElementById('return-email-msg').value)}`,'_blank');hideSendReturnModal();}
+
+// ==================== HISTORY ====================
+function sortHistory(col){if(historySortCol===col)historySortDir=historySortDir==='asc'?'desc':'asc';else{historySortCol=col;historySortDir='asc';}if(col!=='transDate')confirm('Found data next to selection. OK=Expand, Cancel=Continue');document.querySelectorAll('.sort-header').forEach(h=>{h.classList.remove('sorted');h.querySelector('i').className='fa-solid fa-sort';});const header=document.querySelector(`[onclick="sortHistory('${col}')"]`);if(header){header.classList.add('sorted');header.querySelector('i').className=`fa-solid fa-sort-${historySortDir==='asc'?'up':'down'}`;}renderHistory();}
+function renderHistory(){const filter=document.getElementById('history-filter')?.value||'all';let all=[];if(filter!=='deletions'){let ft=[...transactions];if(filter==='active')ft=transactions.filter(t=>!t.returned);else if(filter==='returned')ft=transactions.filter(t=>t.returned);else if(filter==='overdue')ft=transactions.filter(t=>!t.returned&&new Date(t.expectedReturn)<new Date());ft.forEach(t=>{all.push({transDate:t.transDate||t.takenDate,toolDesc:tools.find(x=>x.id===t.toolId)?.desc||'Deleted',serial:tools.find(x=>x.id===t.toolId)?.serial||'N/A',borrower:engineers.find(x=>x.id===t.engineerId)?.name||'Unknown',dept:engineers.find(x=>x.id===t.engineerId)?.department||'N/A',takenOut:t.takenDate,expectedReturn:t.newExpectedReturn||t.expectedReturn,actualReturn:t.actualReturnDate||'Pending',status:t.returned?'Returned':(new Date(t.expectedReturn)<new Date()?'Overdue':'Active'),approval:t.approvalStatus||'-',incident:t.incidentRemarks||'-',notes:t.confirmationNotes||t.extensionNotes||'-'});});}if(filter==='all'||filter==='deletions'){DeletionLogger.getDeletionRecords().forEach(r=>{all.push({transDate:r.dateTime,toolDesc:r.itemName,serial:'N/A',borrower:r.deletedBy,dept:'N/A',takenOut:r.dateTime,expectedReturn:'N/A',actualReturn:'N/A',status:'Deleted',approval:'-',incident:'-',notes:r.reason});});}all.sort((a,b)=>{let va,vb;switch(historySortCol){case'transDate':va=a.transDate;vb=b.transDate;break;case'toolDesc':va=a.toolDesc;vb=b.toolDesc;break;case'serial':va=a.serial;vb=b.serial;break;case'borrower':va=a.borrower;vb=b.borrower;break;case'dept':va=a.dept;vb=b.dept;break;case'takenOut':va=a.takenOut;vb=b.takenOut;break;case'expectedReturn':va=a.expectedReturn;vb=b.expectedReturn;break;case'actualReturn':va=a.actualReturn;vb=b.actualReturn;break;case'status':va=a.status;vb=b.status;break;default:va=a.transDate;vb=b.transDate;}if(va<vb)return historySortDir==='asc'?-1:1;if(va>vb)return historySortDir==='asc'?1:-1;return 0;});document.getElementById('history-table').innerHTML=all.map(r=>`<tr class="${r.status==='Deleted'?'bg-red-50':''}"><td class="px-4 py-4 text-sm">${new Date(r.transDate).toLocaleString()}</td><td class="px-4 py-4 font-medium">${r.toolDesc}</td><td class="px-4 py-4 text-sm">${r.serial}</td><td class="px-4 py-4 text-sm">${r.borrower}</td><td class="px-4 py-4 text-sm">${r.dept}</td><td class="px-4 py-4 text-sm">${r.takenOut}</td><td class="px-4 py-4 text-sm">${r.expectedReturn}</td><td class="px-4 py-4 text-sm">${r.actualReturn}</td><td class="px-4 py-4">${r.status==='Returned'?'<span class="px-2 py-1 rounded-full text-xs bg-emerald-100 text-emerald-700">Returned</span>':r.status==='Overdue'?'<span class="px-2 py-1 rounded-full text-xs bg-red-100 text-red-700">Overdue</span>':r.status==='Deleted'?'<span class="px-2 py-1 rounded-full text-xs bg-gray-200 text-gray-700">Deleted</span>':'<span class="px-2 py-1 rounded-full text-xs bg-amber-100 text-amber-700">Active</span>'}</td><td class="px-4 py-4 text-sm">${r.approval}</td><td class="px-4 py-4 text-sm">${r.incident}</td><td class="px-4 py-4 text-xs">${r.notes}</td></tr>`).join('')||'<tr><td colspan="12" class="text-center py-8">No records</td></tr>';}
+function exportHistory(){let csv='Trans Date,Tool Desc,Serial,Borrower,Dept,Taken Out,Exp Return,Act Return,Status,Approval,Incident,Notes\n';transactions.forEach(t=>{csv+=`${t.transDate||t.takenDate},"${tools.find(x=>x.id===t.toolId)?.desc||''}",${tools.find(x=>x.id===t.toolId)?.serial||''},"${engineers.find(x=>x.id===t.engineerId)?.name||''}",${engineers.find(x=>x.id===t.engineerId)?.department||''},${t.takenDate},${t.newExpectedReturn||t.expectedReturn},${t.actualReturnDate||'Pending'},${t.returned?'Returned':'Active'},${t.approvalStatus||''},${t.incidentRemarks||''},"${t.confirmationNotes||''}"\n`;});DeletionLogger.getDeletionRecords().forEach(r=>{csv+=`${r.dateTime},${r.actionType},${r.itemName},${r.itemDetails},${r.deletedBy},${r.reason},Deleted\n`;});const b=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='History_'+new Date().toISOString().split('T')[0]+'.csv';a.click();}
+
+// ==================== ANALYTICS ====================
+let uC,eC;
+function renderAnalytics(){if(!authManager.canAccessAnalytics()){return;}const ab=transactions.filter(t=>!t.returned).length,at=tools.length-ab;if(uC)uC.destroy();const c1=document.getElementById('utilizationChart');if(c1)uC=new Chart(c1,{type:'doughnut',data:{labels:['Available','Borrowed'],datasets:[{data:[at,ab],backgroundColor:['#10b981','#f59e0b']}]},options:{responsive:true}});if(eC)eC.destroy();const c2=document.getElementById('engineerChart');if(c2)eC=new Chart(c2,{type:'bar',data:{labels:engineers.map(e=>e.name.split(' ')[0]),datasets:[{label:'Borrows',data:engineers.map(e=>transactions.filter(t=>t.engineerId===e.id).length),backgroundColor:'#3b82f6'}]},options:{responsive:true}});}
+
+// ==================== UTILITY ====================
+function editRoyInfo(){if(!authManager.getCurrentUser()?.isAdmin)return;const p=prompt('Phone:',roy.phone);if(p)roy.phone=p;const e=prompt('Email:',roy.email);if(e)roy.email=e;saveData();updateRoyUI();}
+function updateRoyUI(){document.getElementById('roy-info').textContent=roy.phone+'  '+roy.email;}
+function updateAllUI(){if(authManager.getCurrentUser()){document.getElementById('logged-user-name').textContent=authManager.getCurrentUser().name;document.getElementById('logged-user-role').textContent=authManager.getCurrentUser().role;}updateRoyUI();}
+function showChangePasswordModal(){document.getElementById('change-password-modal').classList.remove('hidden');}
+function hideChangePasswordModal(){document.getElementById('change-password-modal').classList.add('hidden');}
+async function changePassword(){const cp=document.getElementById('current-password').value,np=document.getElementById('new-password').value,cnp=document.getElementById('confirm-new-password').value;if(!cp||np!==cnp)return;if(authManager.changePassword(authManager.getCurrentUser()?.name,cp,np)){alert('Updated!');hideChangePasswordModal();}else alert('Incorrect.');}
+function showCalCertModal(id){const t=tools.find(x=>x.id===id);if(!t)return;currentCalCertToolId=id;document.getElementById('cal-cert-content').innerHTML=t.calCert?`<img src="${t.calCert}" class="max-w-full rounded-2xl max-h-64 mx-auto">`:'<p class="text-center py-8">No certificate.</p>';document.getElementById('cal-cert-modal').classList.remove('hidden');}
+function hideCalCertModal(){document.getElementById('cal-cert-modal').classList.add('hidden');}
+function handleCertFileSelect(i){if(i.files&&i.files[0]){const r=new FileReader();r.onload=function(e){const t=tools.find(x=>x.id===currentCalCertToolId);if(t){t.calCert=e.target.result;t.calCertDate=new Date().toISOString().split('T')[0];saveData();showCalCertModal(currentCalCertToolId);renderTools();}};r.readAsDataURL(i.files[0]);}}
+function useCameraForCert(){openFilePicker('_file_image_camera',function(file){const dt=new DataTransfer();dt.items.add(file);const tmp=document.getElementById('_file_image_camera');tmp.files=dt.files;handleCertFileSelect(tmp);});}
+
+// ==================== GITHUB REPO SYNC ENGINE v1.22 ====================
+// Strategy: data.json lives in the GitHub repo (setechtool/ToolTrack)
+// READ  = raw.githubusercontent.com (public, no token needed by anyone)
+// WRITE = GitHub Contents API (needs one PAT token, set by Donan in Settings)
+// All engineers/users read the latest data on every login & every 30s poll.
+
+const GH_OWNER   = 'setechtool';
+const GH_REPO    = 'ToolTrack';
+const GH_BRANCH  = 'main';
+const GH_FILE    = 'data/tooltrack_data.json';
+const RAW_URL    = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}`;
+const API_URL    = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`;
+const POLL_MS    = 30000;
+
+let _syncTimer  = null;
+let _pollTimer  = null;
+let _pendingPush = false;
+let _lastSHA    = null; // track file SHA for updates
+
+const GistSync = { // keep name GistSync for compatibility with existing calls
+
+    getToken(){ return localStorage.getItem('gh_pat')||''; },
+    canWrite(){ return !!this.getToken(); },
+
+    setStatus(state, label){
+        document.querySelectorAll('.sync-status-badge').forEach(el=>{
+            el.className = 'sync-status-badge '+state;
+            const lb = el.querySelector('.sync-label');
+            if(lb) lb.textContent = label;
+        });
+    },
+
+    // ── READ: public raw URL, no token needed ──
+    async pull(silent){
+        try{
+            if(!silent) this.setStatus('syncing','Syncing...');
+            const res = await fetch(RAW_URL+'?t='+Date.now(), {cache:'no-store'});
+            if(!res.ok){
+                // If 404 the file doesn't exist yet — that's OK for first run
+                if(res.status===404){ this.setStatus('synced','Ready'); return false; }
+                throw new Error('HTTP '+res.status);
+            }
+            let data;
+            try { data = await res.json(); } catch(e){ console.warn('[Sync] JSON parse error:', e); this.setStatus('synced','Ready'); return false; }
+            if(!data || typeof data !== 'object'){ this.setStatus('synced','Ready'); return false; }
+            // Write all synced keys to localStorage
+            Object.keys(data).forEach(k=>{ try{ if(k!=='_meta') localStorage.setItem(k, data[k]); }catch(e){} });
+            _reloadMemoryFromStorage();
+            this.setStatus('synced','Synced ✓');
+            if(!silent) console.info('[Sync] Pull OK', new Date().toLocaleTimeString());
+            return true;
+        }catch(e){
+            console.warn('[Sync] Pull failed:', e.message);
+            if(!silent) this.setStatus('error','Load failed');
+            return false;
+        }
+    },
+
+    // ── WRITE: GitHub Contents API (needs PAT) ──
+    schedulePush(immediate){
+        _pendingPush = true;
+        if(_syncTimer) clearTimeout(_syncTimer);
+        _syncTimer = setTimeout(()=>this.push(), immediate ? 1000 : 5000);
+    },
+
+    async push(){
+        if(!this.canWrite()){
+            // No token — can't write, just show local
+            this.setStatus('offline','Read-only');
+            return;
+        }
+        _pendingPush = false;
+        this.setStatus('syncing','Saving...');
+        try{
+            const snapshot = {};
+            ['tools','engineers','transactions','returnRequests','royContact',
+             'tooltrack_users','deletionRecords','logConfig'].forEach(k=>{
+                const v = localStorage.getItem(k);
+                if(v) snapshot[k] = v;
+            });
+            // Always include tooltrack_users even if not in localStorage yet
+            if(!snapshot['tooltrack_users']){
+                snapshot['tooltrack_users'] = JSON.stringify(authManager.users);
+            }
+            snapshot['_meta'] = JSON.stringify({
+                v:'1.22',
+                savedBy: authManager.getCurrentUser()?.name||'system',
+                ts: new Date().toISOString()
+            });
+
+            const body = JSON.stringify(snapshot, null, 2);
+            const encoded = btoa(unescape(encodeURIComponent(body)));
+
+            // Get current SHA (needed for update)
+            let sha = _lastSHA;
+            if(!sha){
+                try{
+                    const r = await fetch(API_URL, {
+                        headers:{ Authorization:'token '+this.getToken(), Accept:'application/vnd.github.v3+json' }
+                    });
+                    if(r.ok){ const j=await r.json(); sha=j.sha; _lastSHA=sha; }
+                }catch(e){}
+            }
+
+            const payload = {
+                message:`ToolTrack sync – ${new Date().toISOString()} by ${authManager.getCurrentUser()?.name||'system'}`,
+                content: encoded,
+                branch: GH_BRANCH
+            };
+            if(sha) payload.sha = sha;
+
+            const res = await fetch(API_URL, {
+                method: 'PUT',
+                headers:{
+                    Authorization:'token '+this.getToken(),
+                    Accept:'application/vnd.github.v3+json',
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+            if(!res.ok){
+                const err = await res.json().catch(()=>({message:res.statusText}));
+                // 409 conflict = SHA mismatch, re-fetch SHA and retry once
+                if(res.status===409){ _lastSHA=null; this.schedulePush(true); return; }
+                throw new Error(err.message||res.statusText);
+            }
+            const result = await res.json();
+            _lastSHA = result.content?.sha || null;
+            this.setStatus('synced','Saved ✓');
+            setTimeout(()=>{ if(!_pendingPush) this.setStatus('synced','Synced ✓'); }, 3000);
+            console.info('[Sync] Push OK', new Date().toLocaleTimeString());
+        }catch(e){
+            console.warn('[Sync] Push failed:', e.message);
+            this.setStatus('error','Save failed');
+        }
+    },
+
+    // ── Auto-poll every 30s ──
+    startPolling(){
+        this.stopPolling();
+        _pollTimer = setInterval(async()=>{
+            if(document.hidden) return;
+            const pulled = await this.pull(true);
+            if(pulled){ refreshAllPanels(); populateLoginDropdown(); }
+        }, POLL_MS);
+    },
+
+    stopPolling(){
+        if(_pollTimer){ clearInterval(_pollTimer); _pollTimer=null; }
+    },
+
+    isConfigured(){ return true; }, // reads always work — public repo, no token needed
+
+    // Token test for settings panel
+    async testToken(token){
+        try{
+            const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`, {
+                headers:{ Authorization:'token '+token, Accept:'application/vnd.github.v3+json' }
+            });
+            if(!r.ok) throw new Error('HTTP '+r.status);
+            return { ok:true };
+        }catch(e){ return { ok:false, error:e.message }; }
+    }
+};
+
+// Reload ALL in-memory variables + auth from localStorage (called after every pull)
+function _reloadMemoryFromStorage(){
+    try{ tools          = JSON.parse(localStorage.getItem('tools')||'[]');          }catch(e){ tools=[];          }
+    try{ engineers      = JSON.parse(localStorage.getItem('engineers')||'[]');      }catch(e){ engineers=[];      }
+    try{ transactions   = JSON.parse(localStorage.getItem('transactions')||'[]');   }catch(e){ transactions=[];   }
+    try{ returnRequests = JSON.parse(localStorage.getItem('returnRequests')||'[]'); }catch(e){ returnRequests=[]; }
+    try{ roy            = JSON.parse(localStorage.getItem('royContact')||'{}');     }catch(e){}
+    try{
+        const stored = localStorage.getItem('tooltrack_users');
+        if(stored){
+            const parsed = JSON.parse(stored);
+            // Only use if it has actual users, not empty object
+            if(Object.keys(parsed).length > 0) authManager.users = parsed;
+        }
+    }catch(e){}
+    // Always ensure admin users exist with their passwords preserved
+    ['Royston Dcosta','Donan Arciaga'].forEach(n=>{
+        if(!authManager.users[n]) authManager.users[n]={password:'123',role:'Administrator'};
+    });
+    // Ensure all engineers have login accounts
+    engineers.forEach(e=>{
+        if(e.name && !authManager.users[e.name])
+            authManager.users[e.name]={password:'123',role:'Engineer'};
+    });
+    authManager.save();
+    try{ DeletionLogger.deletionRecords = JSON.parse(localStorage.getItem('deletionRecords')||'[]'); }catch(e){}
+}
+
+// Manual sync button
+async function manualSync(){
+    const pulled = await GistSync.pull(false);
+    if(pulled){ refreshAllPanels(); populateLoginDropdown(); }
+}
+
+// ── GitHub Token Setup (Donan-only, inside Settings panel) ──
+function renderGitHubTokenSection(){
+    const cu = authManager.getCurrentUser();
+    if(!cu?.isDonan && !cu?.isAdmin) return '';
+    const hasToken = !!GistSync.getToken();
+    return `
+    <div class="border rounded-2xl p-5 mt-4">
+        <h4 class="font-semibold mb-1">GitHub Sync Token <span class="text-xs font-normal text-gray-500">(Admin only)</span></h4>
+        <p class="text-sm text-gray-500 mb-3">A Personal Access Token lets the app save data back to GitHub. Reading always works without a token. Set this once and all devices can write.</p>
+        <div class="flex gap-2">
+            <input type="password" id="gh-token-field" value="${GistSync.getToken()}" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="flex-1 p-3 border rounded-xl text-sm font-mono">
+            <button onclick="saveGHToken()" class="btn btn-primary px-4 py-2 text-sm">Save</button>
+            ${hasToken?'<button onclick="clearGHToken()" class="btn btn-outline px-4 py-2 text-sm text-red-500">Clear</button>':''}
+        </div>
+        <p id="gh-token-status" class="text-xs mt-2 text-gray-400">
+            ${hasToken?'✓ Token configured — app can write to GitHub':'⚠ No token — app is read-only (data loads but cannot be saved to GitHub)'}
+        </p>
+        <details class="mt-3"><summary class="text-xs text-blue-600 cursor-pointer">How to create a token</summary>
+        <ol class="text-xs text-gray-500 mt-2 space-y-1 ml-4 list-decimal">
+            <li>Go to GitHub.com → your profile → Settings</li>
+            <li>Developer settings → Personal access tokens → Tokens (classic)</li>
+            <li>Generate new token → select <strong>repo</strong> scope</li>
+            <li>Copy the token (starts with <code>ghp_</code>) and paste above</li>
+        </ol></details>
+    </div>`;
+}
+
+function renderIdleSection(){
+    const mins = getIdleMinutes();
+    return `
+    <div class="border rounded-2xl p-5 mt-1">
+        <h4 class="font-semibold mb-1">Auto-Logout / Idle Timeout <span class="text-xs font-normal text-gray-500">(Admin only)</span></h4>
+        <p class="text-sm text-gray-500 mb-3">Automatically syncs and logs out the user after a period of inactivity. A 30-second warning appears before logout.</p>
+        <div class="flex items-center gap-3">
+            <label class="text-sm font-medium text-gray-700 w-32">Idle timeout:</label>
+            <input type="number" id="idle-mins-input" value="${mins}" min="1" max="120" class="w-24 p-2 border rounded-xl text-sm text-center">
+            <span class="text-sm text-gray-500">minutes</span>
+            <button onclick="applyIdleMinutes()" class="btn btn-primary px-4 py-2 text-sm">Apply</button>
+        </div>
+        <p class="text-xs text-gray-400 mt-2">Range: 1–120 minutes. Currently set to <strong>${mins} minute${mins===1?'':'s'}</strong>.</p>
+    </div>`;
+}
+
+function applyIdleMinutes(){
+    const el = document.getElementById('idle-mins-input');
+    if(!el) return;
+    const v = setIdleMinutes(el.value);
+    el.value = v;
+    // Restart idle tracking with new value
+    stopIdleTracking();
+    startIdleTracking();
+    alert('Idle timeout set to '+v+' minute'+(v===1?'':'s')+'.');
+}
+
+async function saveGHToken(){
+    const t = document.getElementById('gh-token-field')?.value.trim();
+    if(!t){ alert('Enter a token first.'); return; }
+    const btn = document.querySelector('#gh-token-field + button');
+    if(btn){ btn.disabled=true; btn.textContent='Testing...'; }
+    const result = await GistSync.testToken(t);
+    if(btn){ btn.disabled=false; btn.textContent='Save'; }
+    if(!result.ok){ alert('Token test failed: '+result.error+'\nMake sure the token has "repo" scope.'); return; }
+    localStorage.setItem('gh_pat', t);
+    document.getElementById('gh-token-status').textContent = '✓ Token saved — app can now write to GitHub';
+    document.getElementById('gh-token-status').style.color = '#3B6D11';
+    GistSync.setStatus('synced','Synced ✓');
+}
+
+function clearGHToken(){
+    if(!confirm('Remove the GitHub token? The app will become read-only.')) return;
+    localStorage.removeItem('gh_pat');
+    document.getElementById('gh-token-status').textContent = '⚠ Token removed — read-only mode';
+    GistSync.setStatus('synced','Read-only');
+}
+
+// Gist setup modal — repurposed as quick sync status panel
+function showGistSetup(){ showSettingsPanel(); }
+function hideGistSetup(){}
+
+// ==================== FILE PICKER HELPER ====================
+// Single reusable file picker — fixes browser security block on 2nd+ dynamic clicks
+function openFilePicker(inputId, cb){
+    window._filePickerCb = function(el){
+        window._filePickerCb = null;
+        if(el.files && el.files[0]) cb(el.files[0]);
+        // Reset so the same file can be re-selected next time
+        el.value = '';
+    };
+    const el = document.getElementById(inputId);
+    el.value = '';
+    el.click();
+}
+
+// ==================== IDLE TIMEOUT SYSTEM ====================
+let _idleTimer    = null;
+let _idleWarnTimer = null;
+let _idleActive   = false;
+const IDLE_DEFAULT_MINS = 10;
+
+function getIdleMinutes(){
+    try{ return parseInt(localStorage.getItem('idleTimeoutMins')||IDLE_DEFAULT_MINS)||IDLE_DEFAULT_MINS; }
+    catch(e){ return IDLE_DEFAULT_MINS; }
+}
+function setIdleMinutes(m){
+    const v = Math.max(1, Math.min(120, parseInt(m)||IDLE_DEFAULT_MINS));
+    localStorage.setItem('idleTimeoutMins', v);
+    return v;
+}
+
+function _idleSync(){
+    // Sync latest data before logging out
+    if(GistSync.canWrite()) GistSync.push();
+}
+
+function _idleLogout(){
+    _idleActive = false;
+    clearTimeout(_idleTimer);
+    clearTimeout(_idleWarnTimer);
+    _idleSync();
+    const overlay = document.getElementById('idle-overlay');
+    if(overlay) overlay.classList.add('hidden');
+    // Show notification then logout
+    const msg = document.getElementById('idle-msg');
+    if(msg){ msg.textContent = 'Session expired. Logging out...'; }
+    setTimeout(async()=>{
+        await logout();
+    }, 1500);
+}
+
+function _showIdleWarning(){
+    const overlay = document.getElementById('idle-overlay');
+    if(overlay) overlay.classList.remove('hidden');
+    // Countdown display
+    let remaining = 30;
+    const cntEl = document.getElementById('idle-countdown');
+    if(cntEl) cntEl.textContent = remaining;
+    const tick = setInterval(()=>{
+        remaining--;
+        if(cntEl) cntEl.textContent = remaining;
+        if(remaining <= 0){ clearInterval(tick); _idleLogout(); }
+    }, 1000);
+    // Store tick so stayActive can clear it
+    window._idleCountdownTick = tick;
+}
+
+function _resetIdleTimer(){
+    if(!_idleActive) return;
+    clearTimeout(_idleTimer);
+    clearTimeout(_idleWarnTimer);
+    // Hide warning overlay if visible
+    const overlay = document.getElementById('idle-overlay');
+    if(overlay && !overlay.classList.contains('hidden')){
+        overlay.classList.add('hidden');
+        if(window._idleCountdownTick) clearInterval(window._idleCountdownTick);
+    }
+    const mins = getIdleMinutes();
+    const warnAt = Math.max((mins * 60 - 30) * 1000, 0);
+    const logoutAt = mins * 60 * 1000;
+    _idleWarnTimer = setTimeout(_showIdleWarning, warnAt);
+    _idleTimer     = setTimeout(_idleLogout, logoutAt);
+}
+
+function startIdleTracking(){
+    _idleActive = true;
+    ['mousemove','keydown','mousedown','touchstart','scroll','click'].forEach(evt=>{
+        document.addEventListener(evt, _resetIdleTimer, { passive:true });
+    });
+    _resetIdleTimer();
+}
+
+function stopIdleTracking(){
+    _idleActive = false;
+    clearTimeout(_idleTimer);
+    clearTimeout(_idleWarnTimer);
+    if(window._idleCountdownTick) clearInterval(window._idleCountdownTick);
+    ['mousemove','keydown','mousedown','touchstart','scroll','click'].forEach(evt=>{
+        document.removeEventListener(evt, _resetIdleTimer);
+    });
+    const overlay = document.getElementById('idle-overlay');
+    if(overlay) overlay.classList.add('hidden');
+}
+
+function stayActive(){
+    if(window._idleCountdownTick) clearInterval(window._idleCountdownTick);
+    const overlay = document.getElementById('idle-overlay');
+    if(overlay) overlay.classList.add('hidden');
+    _resetIdleTimer();
+}
+
+// ==================== MOBILE NAV ====================
+function buildMobileNav(){
+    const cu=authManager.getCurrentUser();
+    if(!cu)return;
+    // Show/hide dashboard tab on mobile nav
+    const mobDash=document.getElementById('mob-nav-0');
+    if(mobDash)mobDash.style.display=(cu.isDonan||cu.isRoy)?'flex':'none';
+    // Show/hide admin-only drawer items
+    const drawerAnalytics=document.getElementById('mob-drawer-analytics');
+    const drawerLogs=document.getElementById('mob-drawer-logs');
+    const drawerUsers=document.getElementById('mob-drawer-users');
+    if(drawerAnalytics)drawerAnalytics.style.display=cu.isDonan?'flex':'none';
+    if(drawerLogs)drawerLogs.style.display=cu.isDonan?'flex':'none';
+    if(drawerUsers)drawerUsers.style.display=cu.isDonan?'flex':'none';
+    // User info in drawer footer
+    const info=document.getElementById('mob-drawer-user-info');
+    if(info)info.textContent=cu.name+' · '+cu.role;
+}
+function mobileSwitchTab(n){
+    switchTab(n);
+    // Sync bottom nav active state
+    [0,1,2,3].forEach(i=>{
+        const btn=document.getElementById('mob-nav-'+i);
+        if(btn)btn.classList.toggle('active',i===n);
+    });
+    const moreBtn=document.getElementById('mob-nav-more');
+    if(moreBtn)moreBtn.classList.toggle('active',[4,5,6].includes(n));
+}
+function openMobileMoreDrawer(){
+    document.getElementById('mobile-more-drawer').style.display='block';
+    document.getElementById('mobile-more-overlay').style.display='block';
+}
+function closeMobileMoreDrawer(){
+    document.getElementById('mobile-more-drawer').style.display='none';
+    document.getElementById('mobile-more-overlay').style.display='none';
+}
+
+// ==================== INIT ====================
+window.addEventListener('error', function(e){
+    console.error('[ToolTrack] JS Error:', e.message, 'at', e.filename, e.lineno);
+    // Ensure login screen is always visible even if init crashes
+    const ls = document.getElementById('login-screen');
+    const ma = document.getElementById('main-app');
+    if(ls && ls.classList.contains('hidden')){ ls.classList.remove('hidden'); }
+    if(ma && !ma.classList.contains('hidden')){ ma.classList.add('hidden'); }
+});
+window.onload=async function(){
+    // Version guard: force reload if browser cached an older version
+    const APP_VERSION='1.22';
+    // Use localStorage for version guard (sessionStorage caused reload loops)
+    const storedVersion=localStorage.getItem('tooltrack_app_version');
+    if(storedVersion && storedVersion!==APP_VERSION){
+        localStorage.setItem('tooltrack_app_version',APP_VERSION);
+        // Clear stale cache data but preserve user data
+        ['gh_pat','gh_id'].forEach(k=>{ /* keep these */ });
+        location.reload(true);
+        return;
+    }
+    localStorage.setItem('tooltrack_app_version',APP_VERSION);
+    document.getElementById('taken-date').value=new Date().toISOString().split('T')[0];
+    document.getElementById('return-date').value=new Date(Date.now()+7*86400000).toISOString().split('T')[0];
+    updateRoyUI();
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('main-app').classList.add('hidden');
+    currentEngineerView='table';
+    logManager.log('SYSTEM','ToolTrack v1.22 initialized');
+    // Pull latest data from GitHub first, THEN populate the login dropdown
+    // Reading is always public — no token needed
+    GistSync.setStatus('syncing','Loading...');
+    try {
+        await GistSync.pull(false);
+    } catch(e) {
+        console.warn('Initial pull failed:', e);
+        GistSync.setStatus('synced','Ready');
+    }
+    // Always populate dropdown after pull (uses refreshed authManager.users)
+    populateLoginDropdown();
+    updateRoyUI();
+};
+</script>
+
+        <!-- IDLE TIMEOUT WARNING OVERLAY -->
+    <div id="idle-overlay" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/70">
+        <div class="bg-white rounded-3xl p-10 max-w-sm w-full mx-4 text-center shadow-2xl">
+            <i class="fa-solid fa-clock text-5xl text-amber-400 mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Still there?</h3>
+            <p class="text-gray-500 text-sm mb-4" id="idle-msg">You've been idle. Logging out in</p>
+            <div class="text-4xl font-bold text-amber-500 mb-6" id="idle-countdown">30</div>
+            <button onclick="stayActive()" class="w-full py-4 btn btn-primary text-base">Stay Logged In</button>
+        </div>
+    </div>
+
+    <!-- REUSABLE HIDDEN FILE INPUTS (fixes second-attempt browser block) -->
+    <input type="file" id="_file_image_camera" accept="image/*" capture="environment" style="display:none" onchange="window._filePickerCb&&window._filePickerCb(this)">
+    <input type="file" id="_file_image_any"    accept="image/*"                       style="display:none" onchange="window._filePickerCb&&window._filePickerCb(this)">
+    <input type="file" id="_file_zip"          accept=".zip"                          style="display:none" onchange="window._filePickerCb&&window._filePickerCb(this)">
+    <input type="file" id="_file_csv"          accept=".csv"                          style="display:none" onchange="window._filePickerCb&&window._filePickerCb(this)">
+    <input type="file" id="_file_cert"         accept="image/*,.pdf"                  style="display:none" onchange="window._filePickerCb&&window._filePickerCb(this)">
+
+    <!-- MOBILE BOTTOM NAV BAR -->
+    <nav id="mobile-nav" role="navigation" aria-label="Main navigation">
+        <button class="mob-nav-item" id="mob-nav-0" onclick="mobileSwitchTab(0)" aria-label="Dashboard"><i class="fa-solid fa-gauge-high"></i>Dash</button>
+        <button class="mob-nav-item active" id="mob-nav-1" onclick="mobileSwitchTab(1)" aria-label="Tools"><i class="fa-solid fa-list-check"></i>Tools</button>
+        <button class="mob-nav-item" id="mob-nav-2" onclick="mobileSwitchTab(2)" aria-label="Engineers"><i class="fa-solid fa-users"></i>Engineers</button>
+        <button class="mob-nav-item" id="mob-nav-3" onclick="mobileSwitchTab(3)" aria-label="Borrow/Return"><i class="fa-solid fa-arrow-right-arrow-left"></i>Borrow</button>
+        <button class="mob-nav-item" id="mob-nav-more" onclick="openMobileMoreDrawer()" aria-label="More"><i class="fa-solid fa-ellipsis"></i>More</button>
+    </nav>
+
+    <!-- MORE DRAWER OVERLAY -->
+    <div id="mobile-more-overlay" onclick="closeMobileMoreDrawer()"></div>
+
+    <!-- MORE DRAWER -->
+    <div id="mobile-more-drawer" role="dialog" aria-label="More options">
+        <div style="width:40px;height:4px;background:#e5e7eb;border-radius:2px;margin:0 auto 16px"></div>
+        <div id="mob-drawer-history" class="mob-drawer-item" onclick="mobileSwitchTab(5);closeMobileMoreDrawer()"><i class="fa-solid fa-clock-rotate-left"></i><span>History &amp; Audit</span></div>
+        <div id="mob-drawer-analytics" class="mob-drawer-item" onclick="mobileSwitchTab(4);closeMobileMoreDrawer()"><i class="fa-solid fa-chart-pie"></i><span>Analytics</span></div>
+        <div id="mob-drawer-logs" class="mob-drawer-item" onclick="mobileSwitchTab(6);closeMobileMoreDrawer()"><i class="fa-solid fa-file-lines"></i><span>System Logs</span></div>
+        <hr style="border:none;border-top:1px solid #f3f4f6;margin:8px 0">
+        <div class="mob-drawer-item" onclick="showSettingsPanel();closeMobileMoreDrawer()"><i class="fa-solid fa-gear"></i><span>Settings</span></div>
+        <div class="mob-drawer-item" onclick="openReadmeViewer();closeMobileMoreDrawer()"><i class="fa-solid fa-book-open"></i><span>Help</span></div>
+        <div class="mob-drawer-item" onclick="showChangePasswordModal();closeMobileMoreDrawer()"><i class="fa-solid fa-key"></i><span>Change Password</span></div>
+        <div class="mob-drawer-item" id="mob-drawer-users" onclick="showUserManagementPanel();closeMobileMoreDrawer()"><i class="fa-solid fa-users-gear"></i><span>Manage Users</span></div>
+        <div class="mob-drawer-item" style="color:#dc2626" onclick="logout()"><i class="fa-solid fa-right-from-bracket" style="color:#dc2626"></i><span>Logout</span></div>
+        <div style="padding:8px 12px;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:12px;color:#9ca3af" id="mob-drawer-user-info"></span>
+            <div class="sync-status-badge offline" onclick="closeMobileMoreDrawer();showGistSetup();" style="font-size:11px;padding:3px 8px">
+                <div class="sync-dot"></div>
+                <span class="sync-label">Offline</span>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
