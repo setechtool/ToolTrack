@@ -105,8 +105,14 @@
     <!-- Login Screen -->
     <div id="login-screen" class="fixed inset-0 bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center z-[100]">
         <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md m-4">
-            <div class="text-center mb-8"><i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-4"></i><h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1><p class="text-gray-500 mt-2">Service Tools Manager v1.25</p><p class="text-xs text-gray-400 mt-1">Secure Login Required</p></div>
-            <div class="space-y-5"><div><label class="block text-sm font-medium text-gray-700 mb-2">Select Engineer</label><select id="login-user-select" class="w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"><option value="">-- Select Your Name --</option></select></div><div><label class="block text-sm font-medium text-gray-700 mb-2">Password</label><div class="relative"><input id="login-password" type="password" placeholder="Enter password" class="w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition" onkeypress="if(event.key==='Enter')performLogin()"><button type="button" onclick="togglePasswordVisibility()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-eye" id="password-toggle-icon"></i></button></div></div><div id="login-error-msg" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"><span id="login-error-text"></span></div><button onclick="performLogin()" class="w-full py-4 btn btn-primary text-lg"><i class="fa-solid fa-right-to-bracket mr-2"></i> Login</button><div class="text-center"><button onclick="showPasswordRecoveryModal()" class="text-sm text-blue-600 hover:underline"><i class="fa-solid fa-key mr-1"></i> Forgot Password?</button></div><p class="text-xs text-gray-400 text-center">Default password: <strong>123</strong></p></div>
+            <div class="text-center mb-8"><i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-4"></i><h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1><p class="text-gray-500 mt-2">Service Tools Manager v1.25</p></div>
+            <div class="space-y-5">
+                <div><label class="block text-sm font-medium text-gray-700 mb-2">Select Engineer</label><select id="login-user-select" class="w-full p-4 border border-gray-300 rounded-2xl"><option value="">-- Select Your Name --</option></select></div>
+                <div><label class="block text-sm font-medium text-gray-700 mb-2">Password</label><input id="login-password" type="password" placeholder="Enter password" class="w-full p-4 border border-gray-300 rounded-2xl" onkeypress="if(event.key==='Enter')performLogin()"></div>
+                <div id="login-error-msg" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"></div>
+                <button onclick="performLogin()" class="w-full py-4 btn btn-primary text-lg"><i class="fa-solid fa-right-to-bracket mr-2"></i> Login</button>
+                <p class="text-xs text-gray-400 text-center">Default password: <strong>123</strong></p>
+            </div>
         </div>
     </div>
 
@@ -115,35 +121,108 @@
         <div class="w-72 bg-white border-r border-gray-200 flex flex-col flex-shrink-0">
             <div class="p-6 border-b"><div class="flex items-center gap-3"><i class="fa-solid fa-toolbox text-3xl text-blue-600"></i><div><h1 class="text-2xl font-bold">ToolTrack</h1><p class="text-xs text-gray-500">Service Tools Manager</p></div></div></div>
             <nav class="flex-1 p-4 space-y-1 overflow-y-auto" id="sidebar-nav"></nav>
-            <div class="p-4 border-t space-y-3"><div class="flex items-center justify-between" id="settings-gear-container"><span class="text-sm font-medium text-gray-600">Settings</span><button onclick="showSettingsPanel()" class="text-gray-400 hover:text-gray-600 settings-gear transition" title="Settings"><i class="fa-solid fa-gear text-xl"></i></button></div><div class="bg-blue-50 rounded-2xl p-4 text-sm"><div class="font-semibold text-blue-900">Roy's Contact</div><div class="text-blue-700 text-xs mt-1" id="roy-info"></div><button onclick="editRoyInfo()" class="text-xs mt-2 text-blue-600 hover:underline">Edit</button></div><div class="bg-gray-50 rounded-2xl p-4 text-sm"><div class="flex justify-between"><div><div class="font-semibold" id="logged-user-name"></div><div class="text-xs text-gray-500" id="logged-user-role"></div></div><button onclick="showChangePasswordModal()" class="text-blue-600 text-xs underline">Change</button></div><button onclick="logout()" class="mt-3 w-full py-2 btn btn-danger text-sm"><i class="fa-solid fa-right-from-bracket mr-1"></i>Logout</button></div><div id="user-mgmt-container" style="display:none"><button onclick="showUserManagementPanel()" class="w-full py-2 btn btn-warning text-xs"><i class="fa-solid fa-users-gear mr-1"></i>Manage Users</button></div><button onclick="showAboutPanel()" class="w-full py-2 text-xs text-gray-500 hover:text-blue-600 transition"><i class="fa-solid fa-circle-info mr-1"></i>About ToolTrack</button></div>
+            <div class="p-4 border-t">
+                <div class="flex justify-between mb-2"><span id="logged-user-name" class="font-semibold text-sm"></span><span id="logged-user-role" class="text-xs text-gray-500"></span></div>
+                <button onclick="logout()" class="w-full py-2 btn btn-danger text-sm"><i class="fa-solid fa-right-from-bracket mr-1"></i>Logout</button>
+            </div>
         </div>
         <div class="flex-1 flex flex-col overflow-hidden">
-            <header class="h-16 bg-white border-b flex items-center justify-between px-8 flex-shrink-0"><h2 class="text-xl font-semibold" id="page-title">Dashboard</h2><div class="flex items-center gap-4"><button class="sync-refresh-btn" onclick="manualSync()" title="Sync data now"><i class="fa-solid fa-rotate"></i></button><div class="sync-status-badge offline" onclick="manualSync()" title="Click to sync"><div class="sync-dot"></div><span class="sync-label">Offline</span></div><button onclick="openReadmeViewer()" class="btn btn-outline px-5 py-2 text-sm"><i class="fa-solid fa-book-open"></i><span> Help</span></button></div></header>
+            <header class="h-16 bg-white border-b flex items-center justify-between px-8 flex-shrink-0">
+                <h2 class="text-xl font-semibold" id="page-title">Dashboard</h2>
+                <div class="flex items-center gap-4">
+                    <button class="sync-refresh-btn" onclick="manualSync()" title="Sync data"><i class="fa-solid fa-rotate"></i></button>
+                    <div class="sync-status-badge offline" onclick="manualSync()"><div class="sync-dot"></div><span class="sync-label">Offline</span></div>
+                    <button onclick="showSettingsPanel()" class="btn btn-outline px-4 py-2 text-sm"><i class="fa-solid fa-gear"></i></button>
+                </div>
+            </header>
             <div class="flex-1 overflow-auto" id="main-content-area">
-            <!-- Dashboard Tab -->
-            <div id="tab-0" class="p-8"><div class="grid grid-cols-4 gap-6 mb-8"><div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Total Tools</p><p class="text-4xl font-bold mt-2" id="total-tools">0</p></div><div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Borrowed</p><p class="text-4xl font-bold mt-2 text-amber-600" id="borrowed-count">0</p><p class="text-xs mt-2">Overdue: <span class="text-red-600" id="overdue-count">0</span></p></div><div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Cal Due</p><p class="text-4xl font-bold mt-2 text-orange-600" id="calibration-due">0</p></div><div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Utilization</p><p class="text-4xl font-bold mt-2" id="util-rate">0%</p></div></div><div id="approval-panel" class="hidden mb-8 bg-white rounded-3xl p-6"><h3 class="font-semibold text-lg mb-4">Return Confirmation Requests</h3><div id="approval-list" class="space-y-4"></div></div></div>
-            <!-- Tools Tab -->
-            <div id="tab-1" class="p-8 hidden"><div class="flex justify-between mb-6 flex-wrap gap-3"><h3 class="text-2xl font-semibold">Service Tools</h3><div class="flex gap-3 flex-wrap"><button onclick="refreshAllPanels()" class="btn btn-outline px-4 py-2 text-sm"><i class="fa-solid fa-rotate"></i> Refresh</button><button onclick="backupToolRecords()" class="btn btn-success px-4 py-2 text-sm"><i class="fa-solid fa-cloud-arrow-up"></i> Backup Tool Record</button><button onclick="restoreToolRecords()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-cloud-arrow-down"></i> Restore Tool Record</button><button onclick="showAddToolModal()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-plus"></i> Add Tool</button></div></div><div class="bg-white rounded-3xl overflow-hidden overflow-x-auto"><table class="w-full min-w-[1600px]"><thead class="bg-gray-50"><tr><th class="py-4 px-4 text-left text-xs">DESC</th><th class="py-4 px-4 text-left text-xs">MODEL</th><th class="py-4 px-4 text-left text-xs">SERIAL</th><th class="py-4 px-4 text-left text-xs">OWNER</th><th class="py-4 px-4 text-left text-xs">CAL DUE</th><th class="py-4 px-4 text-left text-xs">STATUS</th><th class="py-4 px-4 text-left text-xs">REC</th><th class="py-4 px-4 text-left text-xs">BORROWED BY</th><th class="py-4 px-4 text-left text-xs">LOCATION</th><th class="py-4 px-4 text-left text-xs">CERT</th><th class="py-4 px-4 text-right text-xs">ACTIONS</th></tr></thead><tbody id="tools-table" class="divide-y"></tbody></table></div></div>
-            <!-- Engineers Tab -->
-            <div id="tab-2" class="p-8 hidden"><div class="flex justify-between mb-6 flex-wrap gap-3"><div class="flex items-center gap-4"><h3 class="text-2xl font-semibold">Engineers</h3><div class="flex bg-gray-100 rounded-xl p-1"><button onclick="switchEngineerView('grid')" id="view-grid-btn" class="view-toggle-btn px-4 py-2 rounded-lg text-sm">Grid</button><button onclick="switchEngineerView('table')" id="view-table-btn" class="view-toggle-btn active px-4 py-2 rounded-lg text-sm">Table</button></div></div><div class="flex gap-3 flex-wrap"><button onclick="backupEngineerRecords()" class="btn btn-success px-4 py-2 text-sm"><i class="fa-solid fa-cloud-arrow-up"></i> Backup Engineer Record</button><button onclick="restoreEngineerRecords()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-cloud-arrow-down"></i> Restore Engineer Record</button><button onclick="showAddEngineerModal()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-user-plus"></i> Add Engineer</button></div></div><div id="engineers-grid-view" class="hidden grid grid-cols-3 gap-6"></div><div id="engineers-table-view" class="bg-white rounded-3xl overflow-hidden overflow-x-auto"><table class="w-full"><thead class="bg-gray-50"><tr><th class="py-4 px-6 text-left text-xs">NAME</th><th class="py-4 px-6 text-left text-xs">DEPT</th><th class="py-4 px-6 text-left text-xs">PHONE</th><th class="py-4 px-6 text-left text-xs">EMAIL</th><th class="py-4 px-6 text-right text-xs">ACTIONS</th></tr></thead><tbody id="engineers-table-body" class="divide-y"></tbody></table></div></div>
-            <!-- Borrow/Return Tab -->
-            <div id="tab-3" class="p-8 hidden"><div class="max-w-2xl mx-auto"><div class="bg-white rounded-3xl p-8 shadow-sm"><h3 class="text-xl font-semibold mb-6">Record Transaction</h3><div class="space-y-5"><div><label class="block text-sm mb-2">Select Tool</label><select id="borrow-tool-select" class="w-full p-4 border rounded-2xl"></select></div><div><label class="block text-sm mb-2">Engineer</label><select id="borrow-engineer-select" class="w-full p-4 border rounded-2xl"></select></div><div><label class="block text-sm mb-2">Location</label><input id="borrow-location" class="w-full p-4 border rounded-2xl" placeholder="e.g., Mubarak Hospital"></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm mb-2">Taken Out <span class="text-xs text-gray-400">(Locked)</span></label><input type="date" id="taken-date" class="w-full p-4 border rounded-2xl locked-field bg-gray-100" readonly></div><div><label class="block text-sm mb-2">Expected Return <span class="text-red-500">*</span></label><input type="date" id="return-date" class="w-full p-4 border rounded-2xl"></div></div><div id="extension-note-container" class="hidden"><label class="block text-sm mb-2">Notes</label><textarea id="extension-notes" rows="2" class="w-full p-4 border rounded-2xl"></textarea></div><div class="flex gap-4"><button onclick="borrowTool()" id="borrow-btn" class="flex-1 py-4 btn btn-success">Borrow Tool</button><button onclick="updateReturnDate()" id="update-return-btn" class="hidden flex-1 py-4 btn btn-primary">Update Return Date</button><button onclick="scrollToActiveBorrows()" class="flex-1 py-4 btn btn-outline">View Active ↓</button></div></div></div><div class="mt-12" id="active-borrows-section"><h4 class="font-semibold mb-4 text-xl">Currently Borrowed Tools</h4><div id="currently-borrowed" class="space-y-3"></div></div></div></div>
-            <!-- History Tab -->
-            <div id="tab-5" class="p-8 hidden"><div class="flex justify-between mb-6"><h3 class="text-2xl font-semibold">Transaction History</h3><div class="flex gap-3"><select id="history-filter" onchange="renderHistory()" class="p-3 border rounded-xl text-sm"><option value="all">All Records</option><option value="active">Active Borrows</option><option value="returned">Returned</option><option value="overdue">Overdue</option><option value="deletions">Deletion Records</option></select><button onclick="exportHistory()" class="btn btn-outline px-4 py-2 text-sm"><i class="fa-solid fa-download"></i> Export</button></div></div><div class="bg-white rounded-3xl overflow-hidden overflow-x-auto"><table class="w-full min-w-[1800px]"><thead class="bg-gray-50"><tr><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('transDate')">Transaction Date <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('toolDesc')">Tools Description <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('serial')">Serial Number <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('borrower')">Borrower <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('dept')">Department <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('takenOut')">Taken Out Date <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('expectedReturn')">Expected Return Date <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('actualReturn')">Actual Return Date <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs sort-header" onclick="sortHistory('status')">Status <i class="fa-solid fa-sort"></i></th><th class="py-4 px-4 text-left text-xs">Approval</th><th class="py-4 px-4 text-left text-xs">Incident</th><th class="py-4 px-4 text-left text-xs">Notes</th></tr></thead><tbody id="history-table" class="divide-y"></tbody></table></div></div>
-            <!-- System Logs Tab -->
-            <div id="tab-6" class="p-8 hidden"><div id="logs-restricted" class="hidden text-center py-20"><i class="fa-solid fa-lock text-6xl text-gray-300"></i><h3 class="text-2xl text-gray-500">Access Restricted</h3></div><div id="logs-content"><div class="flex justify-between mb-6 flex-wrap gap-3"><h3 class="text-2xl font-semibold">System Logs</h3><div class="flex gap-3 flex-wrap"><button onclick="refreshLogViewer()" class="btn btn-outline px-4 py-2 text-sm"><i class="fa-solid fa-rotate"></i> Refresh</button><button onclick="saveLogFile()" class="btn btn-success px-4 py-2 text-sm"><i class="fa-solid fa-floppy-disk"></i> Save Log</button><button onclick="showLogSettings()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-gear"></i> Log Settings</button></div></div><div class="flex gap-2 mb-4 flex-wrap" id="log-filter-buttons"><button class="log-filter-btn active" onclick="filterLogs('all',this)">All</button><button class="log-filter-btn" onclick="filterLogs('INFO',this)">Information</button><button class="log-filter-btn" onclick="filterLogs('WARNING',this)">Warning</button><button class="log-filter-btn" onclick="filterLogs('ERROR',this)">Error</button><button class="log-filter-btn" onclick="filterLogs('DEBUG',this)">Debug</button></div><div class="log-viewer" id="log-viewer-content">Loading...</div></div></div>
-            <!-- Analytics Tab -->
-            <div id="tab-4" class="p-8 hidden"><div class="grid grid-cols-2 gap-8"><div class="bg-white rounded-3xl p-6"><h3 class="font-semibold mb-4">Utilization</h3><div class="h-64"><canvas id="utilizationChart"></canvas></div></div><div class="bg-white rounded-3xl p-6"><h3 class="font-semibold mb-4">Borrows</h3><div class="h-64"><canvas id="engineerChart"></canvas></div></div></div></div>
+                <!-- Dashboard Tab -->
+                <div id="tab-0" class="p-8">
+                    <div class="grid grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Total Tools</p><p class="text-4xl font-bold mt-2" id="total-tools">0</p></div>
+                        <div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Borrowed</p><p class="text-4xl font-bold mt-2 text-amber-600" id="borrowed-count">0</p></div>
+                        <div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Cal Due</p><p class="text-4xl font-bold mt-2 text-orange-600" id="calibration-due">0</p></div>
+                        <div class="bg-white rounded-3xl p-6 card-hover"><p class="text-gray-500 text-sm">Utilization</p><p class="text-4xl font-bold mt-2" id="util-rate">0%</p></div>
+                    </div>
+                </div>
+                <!-- Tools Tab -->
+                <div id="tab-1" class="p-8 hidden">
+                    <div class="flex justify-between mb-6"><h3 class="text-2xl font-semibold">Service Tools</h3><button onclick="showAddToolModal()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-plus"></i> Add Tool</button></div>
+                    <div class="bg-white rounded-3xl overflow-x-auto"><table class="w-full min-w-[1000px]"><thead class="bg-gray-50"><tr><th class="py-4 px-4 text-left text-xs">DESC</th><th class="py-4 px-4 text-left text-xs">MODEL</th><th class="py-4 px-4 text-left text-xs">SERIAL</th><th class="py-4 px-4 text-left text-xs">OWNER</th><th class="py-4 px-4 text-left text-xs">CAL DUE</th><th class="py-4 px-4 text-left text-xs">STATUS</th><th class="py-4 px-4 text-left text-xs">LOCATION</th><th class="py-4 px-4 text-right text-xs">ACTIONS</th></tr></thead><tbody id="tools-table" class="divide-y"></tbody></table></div>
+                </div>
+                <!-- Engineers Tab -->
+                <div id="tab-2" class="p-8 hidden">
+                    <div class="flex justify-between mb-6"><h3 class="text-2xl font-semibold">Engineers</h3><button onclick="showAddEngineerModal()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-user-plus"></i> Add Engineer</button></div>
+                    <div class="bg-white rounded-3xl overflow-x-auto"><table class="w-full"><thead class="bg-gray-50"><tr><th class="py-4 px-6 text-left text-xs">NAME</th><th class="py-4 px-6 text-left text-xs">DEPT</th><th class="py-4 px-6 text-left text-xs">PHONE</th><th class="py-4 px-6 text-left text-xs">EMAIL</th><th class="py-4 px-6 text-right text-xs">ACTIONS</th></tr></thead><tbody id="engineers-table-body" class="divide-y"></tbody></table></div>
+                </div>
+                <!-- Borrow/Return Tab -->
+                <div id="tab-3" class="p-8 hidden">
+                    <div class="max-w-2xl mx-auto"><div class="bg-white rounded-3xl p-8 shadow-sm"><h3 class="text-xl font-semibold mb-6">Record Transaction</h3>
+                    <div class="space-y-5">
+                        <div><label class="block text-sm mb-2">Select Tool</label><select id="borrow-tool-select" class="w-full p-4 border rounded-2xl"></select></div>
+                        <div><label class="block text-sm mb-2">Engineer</label><select id="borrow-engineer-select" class="w-full p-4 border rounded-2xl"></select></div>
+                        <div><label class="block text-sm mb-2">Location</label><input id="borrow-location" class="w-full p-4 border rounded-2xl" placeholder="e.g., Mubarak Hospital"></div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="block text-sm mb-2">Taken Out</label><input type="date" id="taken-date" class="w-full p-4 border rounded-2xl bg-gray-100" readonly></div>
+                            <div><label class="block text-sm mb-2">Expected Return</label><input type="date" id="return-date" class="w-full p-4 border rounded-2xl"></div>
+                        </div>
+                        <button onclick="borrowTool()" class="w-full py-4 btn btn-success">Borrow Tool</button>
+                    </div></div>
+                    <div class="mt-12"><h4 class="font-semibold mb-4 text-xl">Currently Borrowed</h4><div id="currently-borrowed" class="space-y-3"></div></div></div>
+                </div>
+                <!-- History Tab -->
+                <div id="tab-5" class="p-8 hidden">
+                    <div class="flex justify-between mb-6"><h3 class="text-2xl font-semibold">Transaction History</h3><select id="history-filter" onchange="renderHistory()" class="p-3 border rounded-xl text-sm"><option value="all">All Records</option><option value="active">Active</option><option value="returned">Returned</option></select></div>
+                    <div class="bg-white rounded-3xl overflow-x-auto"><table class="w-full min-w-[1000px]"><thead class="bg-gray-50"><tr><th class="py-4 px-4 text-left text-xs">DATE</th><th class="py-4 px-4 text-left text-xs">TOOL</th><th class="py-4 px-4 text-left text-xs">SERIAL</th><th class="py-4 px-4 text-left text-xs">BORROWER</th><th class="py-4 px-4 text-left text-xs">TAKEN</th><th class="py-4 px-4 text-left text-xs">EXPECTED</th><th class="py-4 px-4 text-left text-xs">RETURNED</th><th class="py-4 px-4 text-left text-xs">STATUS</th></tr></thead><tbody id="history-table" class="divide-y"></tbody></table></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- All modals remain the same as v1.24 -->
-    <!-- [Keeping all modal HTML from previous version for brevity - they're identical] -->
+    <!-- Add Tool Modal -->
+    <div id="add-tool-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
+        <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Add Tool</h3>
+            <div class="space-y-5">
+                <input id="tool-desc" placeholder="Description" class="w-full p-4 border rounded-2xl">
+                <input id="tool-model" placeholder="Model" class="w-full p-4 border rounded-2xl">
+                <input id="tool-serial" placeholder="Serial" class="w-full p-4 border rounded-2xl">
+                <input id="tool-location" placeholder="Location" class="w-full p-4 border rounded-2xl">
+                <input id="tool-cal-date" type="date" class="w-full p-4 border rounded-2xl">
+            </div>
+            <div class="flex gap-3 mt-6"><button onclick="hideAddToolModal()" class="flex-1 py-4 btn btn-outline">Cancel</button><button onclick="addNewTool()" class="flex-1 py-4 btn btn-primary">Save</button></div>
+        </div>
+    </div>
+
+    <!-- Add Engineer Modal -->
+    <div id="add-engineer-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
+        <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Add Engineer</h3>
+            <div class="space-y-5">
+                <input id="eng-name" placeholder="Full Name" class="w-full p-4 border rounded-2xl">
+                <input id="eng-phone" placeholder="Phone" class="w-full p-4 border rounded-2xl">
+                <input id="eng-email" placeholder="Email" class="w-full p-4 border rounded-2xl">
+                <input id="eng-department" placeholder="Department" class="w-full p-4 border rounded-2xl">
+            </div>
+            <div class="flex gap-3 mt-6"><button onclick="hideAddEngineerModal()" class="flex-1 py-4 btn btn-outline">Cancel</button><button onclick="addNewEngineer()" class="flex-1 py-4 btn btn-primary">Save</button></div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-panel-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
+        <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Settings</h3>
+            <div class="space-y-4">
+                <div id="idle-timeout-section" class="bg-amber-50 rounded-2xl p-4 border border-amber-200 hidden">
+                    <h4 class="font-semibold text-amber-800 mb-3">Auto-Logout Timer (Donan only)</h4>
+                    <div class="flex items-center gap-3"><label class="text-sm">Idle timeout (min):</label><input type="number" id="idle-timeout-input" min="1" max="120" value="10" class="w-20 p-2 border rounded-xl text-center" onchange="updateIdleTimeoutConfig()"></div>
+                    <p class="text-xs text-amber-500 mt-2" id="idle-timeout-status"></p>
+                </div>
+                <button onclick="clearAllData()" class="w-full p-3 bg-red-50 rounded-xl text-red-700 btn">Clear All Data</button>
+            </div>
+            <button onclick="hideSettingsPanel()" class="mt-6 w-full py-4 btn btn-outline">Close</button>
+        </div>
+    </div>
 
 <script>
 // ==================== GITHUB CONFIGURATION ====================
-// ★★★ ADD YOUR GITHUB TOKEN HERE ★★★
 const GITHUB_CONFIG = {
     repo: 'setechtool/ToolTrack',
     branch: 'main',
@@ -151,125 +230,196 @@ const GITHUB_CONFIG = {
     dataPath: 'data/'
 };
 
-// ==================== LOGGING, AUTH, DATA (same as v1.24) ====================
-// [All the LogManager, AuthManager, data initialization code from v1.24]
-// [Including saveData(), refreshAllPanels(), getBorrowerInfo(), etc.]
+// ==================== DATA STORE ====================
+let tools = JSON.parse(localStorage.getItem('tools')) || [];
+let engineers = JSON.parse(localStorage.getItem('engineers')) || [];
+let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+let returnRequests = JSON.parse(localStorage.getItem('returnRequests')) || [];
 
-// ==================== FIXED GITHUB SYNC ENGINE ====================
+// ==================== AUTH MANAGER ====================
+class AuthManager {
+    constructor() {
+        this.users = {};
+        this.currentUser = null;
+        this.loadUsers();
+    }
+    loadUsers() {
+        try {
+            const d = localStorage.getItem('tooltrack_users');
+            if (d) this.users = JSON.parse(d);
+        } catch(e) { this.users = {}; }
+        // Ensure default users exist
+        const defaults = ['Royston Dcosta', 'Donan Arciaga', 'Ahmed Al-Sabah', 'Fatima Al-Mutairi'];
+        defaults.forEach(n => {
+            if (!this.users[n]) this.users[n] = { password: '123', role: 'Engineer' };
+        });
+        this.users['Royston Dcosta'].role = 'Administrator';
+        this.users['Donan Arciaga'].role = 'Administrator';
+        this.save();
+    }
+    save() { localStorage.setItem('tooltrack_users', JSON.stringify(this.users)); }
+    login(u, p) {
+        if (this.users[u] && this.users[u].password === p) {
+            this.currentUser = { name: u, role: this.users[u].role, isAdmin: this.users[u].role === 'Administrator' };
+            return true;
+        }
+        return false;
+    }
+    logout() { this.currentUser = null; }
+    getCurrentUser() { return this.currentUser; }
+    getAllUsers() { return Object.keys(this.users).sort(); }
+    addUser(n, p = '123') {
+        if (!this.users[n]) { this.users[n] = { password: p, role: 'Engineer' }; this.save(); return true; }
+        return false;
+    }
+}
+const authManager = new AuthManager();
+
+// ==================== SAVE DATA ====================
+function saveData() {
+    localStorage.setItem('tools', JSON.stringify(tools));
+    localStorage.setItem('engineers', JSON.stringify(engineers));
+    localStorage.setItem('transactions', JSON.stringify(transactions));
+    localStorage.setItem('returnRequests', JSON.stringify(returnRequests));
+    GitHubSync.schedulePush();
+}
+
+function refreshAllPanels() {
+    renderDashboard();
+    renderTools();
+    renderEngineers();
+    renderBorrowTab();
+    renderHistory();
+}
+
+// ==================== GITHUB SYNC ENGINE ====================
 const GitHubSync = {
     _pushTimer: null,
     _pollTimer: null,
     _pendingPush: false,
-    POLL_INTERVAL: 30000,
 
-    setStatus(state, label){
-        document.querySelectorAll('.sync-status-badge').forEach(el=>{
-            el.className = 'sync-status-badge '+state;
+    setStatus(state, label) {
+        document.querySelectorAll('.sync-status-badge').forEach(el => {
+            el.className = 'sync-status-badge ' + state;
             const lb = el.querySelector('.sync-label');
-            if(lb) lb.textContent = label;
+            if (lb) lb.textContent = label;
         });
     },
 
-    async pull(){
-        if(!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'YOUR_GITHUB_TOKEN_HERE') return false;
-        try{
-            this.setStatus('syncing','Loading...');
+    async pull() {
+        if (!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'YOUR_GITHUB_TOKEN_HERE') return false;
+        try {
+            this.setStatus('syncing', 'Loading...');
             const baseUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.dataPath}`;
-            const files = ['tools.json','engineers.json','transactions.json','returnRequests.json','royContact.json','tooltrack_users.json','deletionRecords.json','logConfig.json'];
+            const files = ['tools.json', 'engineers.json', 'transactions.json', 'returnRequests.json', 'tooltrack_users.json'];
             let loadedAny = false;
-            for(const file of files){
-                try{
+            for (const file of files) {
+                try {
                     const resp = await fetch(`${baseUrl}${file}?t=${Date.now()}`);
-                    if(!resp.ok) continue;
+                    if (!resp.ok) continue;
                     const data = await resp.text();
-                    if(data && data.trim() && data !== 'null'){
-                        const key = file.replace('.json','');
+                    if (data && data.trim() && data !== 'null') {
+                        const key = file.replace('.json', '');
                         localStorage.setItem(key, data);
                         loadedAny = true;
                     }
-                }catch(e){}
+                } catch (e) {}
             }
-            if(loadedAny){
+            if (loadedAny) {
                 _reloadMemoryFromStorage();
-                this.setStatus('synced','Synced ✓');
+                this.setStatus('synced', 'Synced ✓');
                 return true;
             }
-            this.setStatus('synced','No data');
+            this.setStatus('synced', 'No remote data');
             return false;
-        }catch(e){
-            console.warn('Pull failed:',e.message);
-            this.setStatus('error','Pull failed');
+        } catch (e) {
+            this.setStatus('error', 'Pull failed');
             return false;
         }
     },
 
-    schedulePush(immediate){
+    schedulePush(immediate) {
         this._pendingPush = true;
-        if(this._pushTimer) clearTimeout(this._pushTimer);
+        if (this._pushTimer) clearTimeout(this._pushTimer);
         this._pushTimer = setTimeout(() => this.push(), immediate ? 800 : 4000);
     },
 
-    async push(){
-        if(!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'YOUR_GITHUB_TOKEN_HERE'){
-            console.warn('GitHub token not configured');
-            return;
-        }
+    async push() {
+        if (!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'YOUR_GITHUB_TOKEN_HERE') return;
         this._pendingPush = false;
-        try{
-            this.setStatus('syncing','Saving...');
+        try {
+            this.setStatus('syncing', 'Saving...');
             
-            // Prepare all data files
-            const files = {};
-            ['tools','engineers','transactions','returnRequests','royContact','tooltrack_users','deletionRecords','logConfig'].forEach(k=>{
-                const v = localStorage.getItem(k);
-                if(v) files[GITHUB_CONFIG.dataPath + k + '.json'] = JSON.stringify({content:v,encoding:'utf-8'});
-            });
-            files[GITHUB_CONFIG.dataPath + '_meta.json'] = JSON.stringify({
-                content: JSON.stringify({v:'1.25',savedBy:authManager.getCurrentUser()?.name||'system',ts:new Date().toISOString()}),
-                encoding:'utf-8'
-            });
-
-            // Step 1: Get the latest commit SHA
-            const refUrl = `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/ref/heads/${GITHUB_CONFIG.branch}`;
-            const refResp = await fetch(refUrl, {
-                headers: {
-                    'Authorization': 'token ' + GITHUB_CONFIG.token,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-            
-            if(!refResp.ok){
-                const err = await refResp.json();
-                throw new Error('Failed to get ref: ' + (err.message || refResp.statusText));
-            }
-            
+            // Get current ref
+            const refResp = await fetch(
+                `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/ref/heads/${GITHUB_CONFIG.branch}`,
+                { headers: { 'Authorization': 'token ' + GITHUB_CONFIG.token, 'Accept': 'application/vnd.github.v3+json' } }
+            );
+            if (!refResp.ok) throw new Error('Failed to get branch ref');
             const refData = await refResp.json();
-            const latestCommitSha = refData.object.sha;
-
-            // Step 2: Get the latest commit to get the tree SHA
-            const commitUrl = `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/commits/${latestCommitSha}`;
-            const commitResp = await fetch(commitUrl, {
-                headers: {
-                    'Authorization': 'token ' + GITHUB_CONFIG.token,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
             
-            if(!commitResp.ok){
-                throw new Error('Failed to get commit');
+            // Get current commit
+            const commitResp = await fetch(
+                `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/commits/${refData.object.sha}`,
+                { headers: { 'Authorization': 'token ' + GITHUB_CONFIG.token, 'Accept': 'application/vnd.github.v3+json' } }
+            );
+            if (!commitResp.ok) throw new Error('Failed to get commit');
+            const commitData = await commitResp.json();
+            
+            // Prepare files
+            const treeItems = [];
+            const dataKeys = ['tools', 'engineers', 'transactions', 'returnRequests', 'tooltrack_users'];
+            
+            for (const key of dataKeys) {
+                const value = localStorage.getItem(key);
+                if (!value) continue;
+                
+                // Create blob
+                const blobResp = await fetch(
+                    `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/blobs`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'token ' + GITHUB_CONFIG.token,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ content: value, encoding: 'utf-8' })
+                    }
+                );
+                if (!blobResp.ok) continue;
+                const blobData = await blobResp.json();
+                
+                treeItems.push({
+                    path: GITHUB_CONFIG.dataPath + key + '.json',
+                    mode: '100644',
+                    type: 'blob',
+                    sha: blobData.sha
+                });
             }
             
-            const commitData = await commitResp.json();
-            const baseTreeSha = commitData.tree.sha;
-
-            // Step 3: Create blobs for each file
-            const newTreeItems = [];
+            if (treeItems.length === 0) throw new Error('No files to save');
             
-            for(const [path, fileContent] of Object.entries(files)){
-                const parsedContent = JSON.parse(fileContent);
-                
-                const blobUrl = `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/blobs`;
-                const blobResp = await fetch(blobUrl, {
+            // Create tree
+            const treeResp = await fetch(
+                `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/trees`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'token ' + GITHUB_CONFIG.token,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ base_tree: commitData.tree.sha, tree: treeItems })
+                }
+            );
+            if (!treeResp.ok) throw new Error('Failed to create tree');
+            const treeData = await treeResp.json();
+            
+            // Create commit
+            const newCommitResp = await fetch(
+                `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/commits`,
+                {
                     method: 'POST',
                     headers: {
                         'Authorization': 'token ' + GITHUB_CONFIG.token,
@@ -277,194 +427,421 @@ const GitHubSync = {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        content: parsedContent.content,
-                        encoding: parsedContent.encoding
+                        message: 'ToolTrack auto-save - ' + new Date().toLocaleString(),
+                        tree: treeData.sha,
+                        parents: [refData.object.sha]
                     })
-                });
-                
-                if(!blobResp.ok){
-                    console.error('Failed to create blob for', path);
-                    continue;
                 }
-                
-                const blobData = await blobResp.json();
-                newTreeItems.push({
-                    path: path,
-                    mode: '100644',
-                    type: 'blob',
-                    sha: blobData.sha
-                });
-            }
-
-            if(newTreeItems.length === 0){
-                throw new Error('No files to commit');
-            }
-
-            // Step 4: Create a new tree
-            const treeUrl = `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/trees`;
-            const treeResp = await fetch(treeUrl, {
-                method: 'POST',
-                headers: {
-                    'Authorization': 'token ' + GITHUB_CONFIG.token,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    base_tree: baseTreeSha,
-                    tree: newTreeItems
-                })
-            });
-            
-            if(!treeResp.ok){
-                const err = await treeResp.json();
-                throw new Error('Failed to create tree: ' + (err.message || treeResp.statusText));
-            }
-            
-            const treeData = await treeResp.json();
-
-            // Step 5: Create a commit
-            const newCommitUrl = `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/commits`;
-            const newCommitResp = await fetch(newCommitUrl, {
-                method: 'POST',
-                headers: {
-                    'Authorization': 'token ' + GITHUB_CONFIG.token,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    message: `ToolTrack auto-save by ${authManager.getCurrentUser()?.name||'system'} at ${new Date().toLocaleString()}`,
-                    tree: treeData.sha,
-                    parents: [latestCommitSha]
-                })
-            });
-            
-            if(!newCommitResp.ok){
-                const err = await newCommitResp.json();
-                throw new Error('Failed to create commit: ' + (err.message || newCommitResp.statusText));
-            }
-            
+            );
+            if (!newCommitResp.ok) throw new Error('Failed to create commit');
             const newCommitData = await newCommitResp.json();
-
-            // Step 6: Update the branch reference
-            const updateRefUrl = `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/refs/heads/${GITHUB_CONFIG.branch}`;
-            const updateRefResp = await fetch(updateRefUrl, {
-                method: 'PATCH',
-                headers: {
-                    'Authorization': 'token ' + GITHUB_CONFIG.token,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    sha: newCommitData.sha,
-                    force: false
-                })
-            });
             
-            if(!updateRefResp.ok){
-                const err = await updateRefResp.json();
-                throw new Error('Failed to update ref: ' + (err.message || updateRefResp.statusText));
-            }
-
-            this.setStatus('synced','Saved ✓');
-            console.log('✅ Data saved to GitHub by',authManager.getCurrentUser()?.name||'system');
+            // Update ref
+            const updateResp = await fetch(
+                `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/refs/heads/${GITHUB_CONFIG.branch}`,
+                {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': 'token ' + GITHUB_CONFIG.token,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ sha: newCommitData.sha, force: false })
+                }
+            );
+            if (!updateResp.ok) throw new Error('Failed to update ref');
             
-            // Reset status after 3 seconds
-            setTimeout(() => {
-                if(!this._pendingPush) this.setStatus('synced','Synced ✓');
-            }, 3000);
-            
-        }catch(e){
-            console.error('Push failed:',e);
-            this.setStatus('error','Save failed: ' + e.message.substring(0,50));
+            this.setStatus('synced', 'Saved ✓');
+            console.log('✅ Data saved to GitHub');
+        } catch (e) {
+            console.error('Push failed:', e.message);
+            this.setStatus('error', 'Save failed');
         }
     },
 
-    startPolling(){
+    startPolling() {
         this.stopPolling();
-        if(!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'YOUR_GITHUB_TOKEN_HERE') return;
-        this._pollTimer = setInterval(async()=>{
-            if(document.hidden) return;
-            const pulled = await this.pull();
-            if(pulled){ refreshAllPanels(); populateLoginDropdown(); }
-        }, this.POLL_INTERVAL);
+        if (!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'YOUR_GITHUB_TOKEN_HERE') return;
+        this._pollTimer = setInterval(async () => {
+            if (document.hidden) return;
+            await this.pull();
+            refreshAllPanels();
+            populateLoginDropdown();
+        }, 30000);
     },
 
-    stopPolling(){
-        if(this._pollTimer){ clearInterval(this._pollTimer); this._pollTimer = null; }
+    stopPolling() {
+        if (this._pollTimer) { clearInterval(this._pollTimer); this._pollTimer = null; }
     }
 };
 
-function _reloadMemoryFromStorage(){
-    try{ tools = JSON.parse(localStorage.getItem('tools')||'[]'); }catch(e){ tools=[]; }
-    try{ engineers = JSON.parse(localStorage.getItem('engineers')||'[]'); }catch(e){ engineers=[]; }
-    try{ transactions = JSON.parse(localStorage.getItem('transactions')||'[]'); }catch(e){ transactions=[]; }
-    try{ returnRequests = JSON.parse(localStorage.getItem('returnRequests')||'[]'); }catch(e){ returnRequests=[]; }
-    try{ roy = JSON.parse(localStorage.getItem('royContact')||'{}'); }catch(e){}
-    try{ authManager.users = JSON.parse(localStorage.getItem('tooltrack_users')||'{}'); }catch(e){}
-    try{ DeletionLogger.deletionRecords = JSON.parse(localStorage.getItem('deletionRecords')||'[]'); }catch(e){}
+function _reloadMemoryFromStorage() {
+    try { tools = JSON.parse(localStorage.getItem('tools') || '[]'); } catch(e) { tools = []; }
+    try { engineers = JSON.parse(localStorage.getItem('engineers') || '[]'); } catch(e) { engineers = []; }
+    try { transactions = JSON.parse(localStorage.getItem('transactions') || '[]'); } catch(e) { transactions = []; }
+    try { returnRequests = JSON.parse(localStorage.getItem('returnRequests') || '[]'); } catch(e) { returnRequests = []; }
 }
 
-async function manualSync(){
-    if(!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'YOUR_GITHUB_TOKEN_HERE'){
-        alert('⚠️ GitHub token not configured!\n\nAdd your token in the GITHUB_CONFIG at the top of the code.\n\nGet a token at: GitHub → Settings → Developer Settings → Personal Access Tokens → Tokens (classic)\nScope needed: repo');
+async function manualSync() {
+    if (!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'YOUR_GITHUB_TOKEN_HERE') {
+        alert('GitHub token not configured. Add your token in GITHUB_CONFIG.');
         return;
     }
-    const pulled = await GitHubSync.pull();
-    if(pulled){ refreshAllPanels(); populateLoginDropdown(); }
+    await GitHubSync.pull();
+    refreshAllPanels();
+    populateLoginDropdown();
     await GitHubSync.push();
 }
 
-// ==================== INIT ====================
-window.onload=async function(){
-    const APP_VERSION='1.25';
-    const storedVersion=sessionStorage.getItem('tooltrack_app_version');
-    if(storedVersion&&storedVersion!==APP_VERSION){
-        sessionStorage.setItem('tooltrack_app_version',APP_VERSION);
-        location.reload(true);
-        return;
-    }
-    sessionStorage.setItem('tooltrack_app_version',APP_VERSION);
-    
-    // Initialize form dates
-    document.getElementById('taken-date').value=new Date().toISOString().split('T')[0];
-    document.getElementById('return-date').value=new Date(Date.now()+7*86400000).toISOString().split('T')[0];
-    
-    populateLoginDropdown();
-    updateRoyUI();
-    
-    document.getElementById('login-screen').classList.remove('hidden');
-    document.getElementById('main-app').classList.add('hidden');
-    
-    currentEngineerView='table';
-    logManager.log('SYSTEM','ToolTrack v1.25 initialized');
-    
-    if(GITHUB_CONFIG.token && GITHUB_CONFIG.token !== 'YOUR_GITHUB_TOKEN_HERE'){
-        GitHubSync.setStatus('syncing','Loading...');
-        await GitHubSync.pull();
-        populateLoginDropdown();
+// ==================== LOGIN ====================
+function populateLoginDropdown() {
+    const sel = document.getElementById('login-user-select');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">-- Select Your Name --</option>' + 
+        authManager.getAllUsers().map(u => `<option value="${u}">${u}</option>`).join('');
+}
+
+async function performLogin() {
+    const u = document.getElementById('login-user-select').value;
+    const p = document.getElementById('login-password').value;
+    if (!u) { alert('Select your name.'); return; }
+    if (authManager.login(u, p)) {
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('main-app').classList.remove('hidden');
+        document.getElementById('logged-user-name').textContent = u;
+        document.getElementById('logged-user-role').textContent = authManager.getCurrentUser().role;
+        buildSidebar();
+        IdleManager.start();
+        
+        if (GITHUB_CONFIG.token && GITHUB_CONFIG.token !== 'YOUR_GITHUB_TOKEN_HERE') {
+            GitHubSync.setStatus('syncing', 'Loading...');
+            await GitHubSync.pull();
+            refreshAllPanels();
+            populateLoginDropdown();
+            GitHubSync.startPolling();
+        }
+        
+        switchTab(0);
     } else {
-        GitHubSync.setStatus('offline','No token');
-        console.warn('⚠️ GitHub token not configured. Add your token in GITHUB_CONFIG at the top of the script.');
+        alert('Invalid password.');
     }
+}
+
+async function logout() {
+    IdleManager.stop();
+    authManager.logout();
+    GitHubSync.stopPolling();
+    document.getElementById('main-app').classList.add('hidden');
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('login-password').value = '';
+}
+
+// ==================== IDLE TIMEOUT ====================
+const IdleManager = {
+    _timeoutMinutes: parseInt(localStorage.getItem('idle_timeout_minutes')) || 10,
+    _idleSeconds: 0,
+    _checkInterval: null,
+    _warningShown: false,
+    getTimeoutMinutes() { return this._timeoutMinutes; },
+    setTimeoutMinutes(min) { this._timeoutMinutes = Math.max(1, Math.min(120, min)); localStorage.setItem('idle_timeout_minutes', this._timeoutMinutes); },
+    reset() { this._idleSeconds = 0; this._warningShown = false; },
+    start() {
+        this.stop();
+        this.reset();
+        this._checkInterval = setInterval(() => {
+            this._idleSeconds++;
+            if (this._idleSeconds >= this._timeoutMinutes * 60) {
+                this.stop();
+                logout();
+            }
+        }, 1000);
+        ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(evt => {
+            document.addEventListener(evt, () => this.reset(), { passive: true });
+        });
+    },
+    stop() { if (this._checkInterval) { clearInterval(this._checkInterval); this._checkInterval = null; } }
 };
 
-// [All other functions from v1.24 remain the same]
-// [Including: performLogin, logout, renderDashboard, renderTools, etc.]
-// [The complete code has all features from v1.24]
+function updateIdleTimeoutConfig() {
+    const val = parseInt(document.getElementById('idle-timeout-input').value) || 10;
+    IdleManager.setTimeoutMinutes(val);
+    document.getElementById('idle-timeout-status').textContent = 'Set to ' + val + ' minute(s).';
+}
 
+// ==================== NAVIGATION ====================
+function buildSidebar() {
+    const nav = document.getElementById('sidebar-nav');
+    nav.innerHTML = `
+        <a href="#" onclick="switchTab(0)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg active" id="nav-0"><i class="fa-solid fa-gauge-high w-5"></i>Dashboard</a>
+        <a href="#" onclick="switchTab(1)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg" id="nav-1"><i class="fa-solid fa-list-check w-5"></i>Tools</a>
+        <a href="#" onclick="switchTab(2)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg" id="nav-2"><i class="fa-solid fa-users w-5"></i>Engineers</a>
+        <a href="#" onclick="switchTab(3)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg" id="nav-3"><i class="fa-solid fa-arrow-right-arrow-left w-5"></i>Borrow/Return</a>
+        <a href="#" onclick="switchTab(5)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg" id="nav-5"><i class="fa-solid fa-clock-rotate-left w-5"></i>History</a>
+    `;
+}
+
+function switchTab(n) {
+    for (let i = 0; i <= 5; i++) {
+        const tab = document.getElementById('tab-' + i);
+        const nav = document.getElementById('nav-' + i);
+        if (tab) tab.classList.add('hidden');
+        if (nav) nav.classList.remove('active');
+    }
+    document.getElementById('tab-' + n).classList.remove('hidden');
+    document.getElementById('nav-' + n).classList.add('active');
+    document.getElementById('page-title').textContent = ['Dashboard', 'Service Tools', 'Engineers', 'Borrow / Return', 'Analytics', 'History'][n];
+    if (n === 0) renderDashboard();
+    else if (n === 1) renderTools();
+    else if (n === 2) renderEngineers();
+    else if (n === 3) renderBorrowTab();
+    else if (n === 5) renderHistory();
+}
+
+// ==================== DASHBOARD ====================
+function renderDashboard() {
+    document.getElementById('total-tools').textContent = tools.length;
+    const borrowed = transactions.filter(t => !t.returned);
+    document.getElementById('borrowed-count').textContent = borrowed.length;
+    document.getElementById('util-rate').textContent = tools.length === 0 ? '0%' : Math.round((borrowed.length / tools.length) * 100) + '%';
+    document.getElementById('calibration-due').textContent = tools.filter(t => {
+        return t.calDue && Math.ceil((new Date(t.calDue) - new Date()) / 86400000) <= 30;
+    }).length;
+}
+
+// ==================== TOOLS ====================
+function renderTools() {
+    document.getElementById('tools-table').innerHTML = tools.map(t => {
+        const isBorrowed = transactions.some(tr => tr.toolId === t.id && !tr.returned);
+        return `
+            <tr>
+                <td class="px-4 py-4 font-medium">${t.desc}</td>
+                <td class="px-4 py-4 text-sm">${t.model || 'N/A'}</td>
+                <td class="px-4 py-4 text-sm">${t.serial || 'N/A'}</td>
+                <td class="px-4 py-4 text-sm">${t.owner || authManager.getCurrentUser()?.name || 'N/A'}</td>
+                <td class="px-4 py-4 text-sm">${t.calDue || 'N/A'}</td>
+                <td class="px-4 py-4">${isBorrowed ? '<span class="px-3 py-1 rounded-full text-xs bg-amber-100 text-amber-700">BORROWED</span>' : '<span class="px-3 py-1 rounded-full text-xs bg-emerald-100 text-emerald-700">AVAILABLE</span>'}</td>
+                <td class="px-4 py-4 text-sm">${t.location || '-'}</td>
+                <td class="px-4 py-4 text-right">
+                    <button onclick="initiateReturn(${t.id})" class="text-emerald-500 p-2 btn"><i class="fa-solid fa-rotate-left"></i></button>
+                    <button onclick="deleteTool(${t.id})" class="text-red-500 p-2 btn"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            </tr>
+        `;
+    }).join('') || '<tr><td colspan="8" class="text-center py-8">No tools found</td></tr>';
+}
+
+function showAddToolModal() {
+    document.getElementById('tool-desc').value = '';
+    document.getElementById('tool-model').value = '';
+    document.getElementById('tool-serial').value = '';
+    document.getElementById('tool-location').value = '';
+    document.getElementById('tool-cal-date').value = new Date(Date.now() + 365 * 86400000).toISOString().split('T')[0];
+    document.getElementById('add-tool-modal').classList.remove('hidden');
+}
+
+function hideAddToolModal() { document.getElementById('add-tool-modal').classList.add('hidden'); }
+
+function addNewTool() {
+    const desc = document.getElementById('tool-desc').value.trim();
+    if (!desc) { alert('Enter description.'); return; }
+    tools.push({
+        id: Date.now(),
+        desc: desc,
+        model: document.getElementById('tool-model').value || 'N/A',
+        serial: document.getElementById('tool-serial').value || 'N/A',
+        owner: authManager.getCurrentUser()?.name || 'Unknown',
+        calDue: document.getElementById('tool-cal-date').value,
+        status: 'Available',
+        location: document.getElementById('tool-location').value || ''
+    });
+    saveData();
+    hideAddToolModal();
+    refreshAllPanels();
+}
+
+function deleteTool(id) {
+    if (confirm('Delete this tool?')) {
+        tools = tools.filter(t => t.id !== id);
+        saveData();
+        refreshAllPanels();
+    }
+}
+
+// ==================== ENGINEERS ====================
+function renderEngineers() {
+    document.getElementById('engineers-table-body').innerHTML = engineers.map(e => `
+        <tr>
+            <td class="px-6 py-5 font-semibold">${e.name}</td>
+            <td class="px-6 py-5">${e.department || 'N/A'}</td>
+            <td class="px-6 py-5">${e.phone || 'N/A'}</td>
+            <td class="px-6 py-5">${e.email || 'N/A'}</td>
+            <td class="px-6 py-5 text-right">
+                <button onclick="deleteEngineer(${e.id})" class="text-red-500 p-2 btn"><i class="fa-solid fa-trash"></i></button>
+            </td>
+        </tr>
+    `).join('') || '<tr><td colspan="5" class="text-center py-8">No engineers found</td></tr>';
+}
+
+function showAddEngineerModal() {
+    document.getElementById('eng-name').value = '';
+    document.getElementById('eng-phone').value = '';
+    document.getElementById('eng-email').value = '';
+    document.getElementById('eng-department').value = '';
+    document.getElementById('add-engineer-modal').classList.remove('hidden');
+}
+
+function hideAddEngineerModal() { document.getElementById('add-engineer-modal').classList.add('hidden'); }
+
+function addNewEngineer() {
+    const name = document.getElementById('eng-name').value.trim();
+    if (!name) { alert('Enter name.'); return; }
+    engineers.push({
+        id: Date.now(),
+        name: name,
+        phone: document.getElementById('eng-phone').value || 'N/A',
+        email: document.getElementById('eng-email').value || name.toLowerCase().replace(/\s+/g, '.') + '@sultanunited.com',
+        department: document.getElementById('eng-department').value || 'N/A'
+    });
+    authManager.addUser(name);
+    saveData();
+    hideAddEngineerModal();
+    refreshAllPanels();
+    populateLoginDropdown();
+}
+
+function deleteEngineer(id) {
+    if (confirm('Delete this engineer?')) {
+        const e = engineers.find(x => x.id === id);
+        if (e) {
+            engineers = engineers.filter(x => x.id !== id);
+            saveData();
+            refreshAllPanels();
+            populateLoginDropdown();
+        }
+    }
+}
+
+// ==================== BORROW/RETURN ====================
+function renderBorrowTab() {
+    const available = tools.filter(t => !transactions.some(tr => tr.toolId === t.id && !tr.returned));
+    document.getElementById('borrow-tool-select').innerHTML = available.length ? 
+        available.map(t => `<option value="${t.id}">${t.desc} (${t.serial || 'N/A'})</option>`).join('') :
+        '<option disabled>No tools available</option>';
+    document.getElementById('borrow-engineer-select').innerHTML = engineers.length ?
+        engineers.map(e => `<option value="${e.id}">${e.name}</option>`).join('') :
+        '<option disabled>No engineers</option>';
+    document.getElementById('taken-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('return-date').value = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
+    document.getElementById('borrow-location').value = '';
+    
+    const active = transactions.filter(t => !t.returned);
+    document.getElementById('currently-borrowed').innerHTML = active.length ? active.map(t => {
+        const tl = tools.find(x => x.id === t.toolId);
+        const eng = engineers.find(x => x.id === t.engineerId);
+        return `
+            <div class="bg-white border rounded-2xl p-5 flex justify-between items-center">
+                <div>
+                    <div class="font-semibold">${tl?.desc || 'Deleted'} (${tl?.serial || 'N/A'})</div>
+                    <div class="text-sm">${eng?.name || 'Unknown'} | ${t.location || 'N/A'}</div>
+                    <div class="text-xs">Expected: ${t.expectedReturn}</div>
+                </div>
+                <button onclick="initiateReturn(${t.id})" class="btn btn-success px-4 py-2 text-sm">Return</button>
+            </div>
+        `;
+    }).join('') : '<p class="text-gray-500 p-6 text-center">No tools borrowed</p>';
+}
+
+function borrowTool() {
+    const toolId = parseInt(document.getElementById('borrow-tool-select').value);
+    const engineerId = parseInt(document.getElementById('borrow-engineer-select').value);
+    if (!toolId || !engineerId) { alert('Select tool and engineer.'); return; }
+    
+    transactions.push({
+        id: Date.now(),
+        toolId: toolId,
+        engineerId: engineerId,
+        takenDate: document.getElementById('taken-date').value,
+        expectedReturn: document.getElementById('return-date').value,
+        returned: false,
+        location: document.getElementById('borrow-location').value || 'N/A',
+        transDate: new Date().toISOString()
+    });
+    saveData();
+    refreshAllPanels();
+    alert('Tool borrowed!');
+}
+
+function initiateReturn(id) {
+    const t = transactions.find(x => x.id === id);
+    if (t && confirm('Mark as returned?')) {
+        t.returned = true;
+        t.actualReturnDate = new Date().toISOString().split('T')[0];
+        saveData();
+        refreshAllPanels();
+    }
+}
+
+// ==================== HISTORY ====================
+function renderHistory() {
+    const filter = document.getElementById('history-filter')?.value || 'all';
+    let all = [...transactions];
+    if (filter === 'active') all = transactions.filter(t => !t.returned);
+    else if (filter === 'returned') all = transactions.filter(t => t.returned);
+    
+    document.getElementById('history-table').innerHTML = all.sort((a,b) => b.id - a.id).map(t => {
+        const tl = tools.find(x => x.id === t.toolId);
+        const eng = engineers.find(x => x.id === t.engineerId);
+        return `
+            <tr>
+                <td class="px-4 py-4 text-sm">${new Date(t.transDate || t.takenDate).toLocaleDateString()}</td>
+                <td class="px-4 py-4 font-medium">${tl?.desc || 'Deleted'}</td>
+                <td class="px-4 py-4 text-sm">${tl?.serial || 'N/A'}</td>
+                <td class="px-4 py-4 text-sm">${eng?.name || 'Unknown'}</td>
+                <td class="px-4 py-4 text-sm">${t.takenDate}</td>
+                <td class="px-4 py-4 text-sm">${t.expectedReturn}</td>
+                <td class="px-4 py-4 text-sm">${t.actualReturnDate || 'Pending'}</td>
+                <td class="px-4 py-4">${t.returned ? '<span class="px-2 py-1 rounded-full text-xs bg-emerald-100 text-emerald-700">Returned</span>' : '<span class="px-2 py-1 rounded-full text-xs bg-amber-100 text-amber-700">Active</span>'}</td>
+            </tr>
+        `;
+    }).join('') || '<tr><td colspan="8" class="text-center py-8">No records</td></tr>';
+}
+
+// ==================== SETTINGS ====================
+function showSettingsPanel() {
+    const cu = authManager.getCurrentUser();
+    const idleSection = document.getElementById('idle-timeout-section');
+    if (idleSection && cu && cu.name === 'Donan Arciaga') {
+        idleSection.classList.remove('hidden');
+        document.getElementById('idle-timeout-input').value = IdleManager.getTimeoutMinutes();
+    } else if (idleSection) {
+        idleSection.classList.add('hidden');
+    }
+    document.getElementById('settings-panel-modal').classList.remove('hidden');
+}
+
+function hideSettingsPanel() { document.getElementById('settings-panel-modal').classList.add('hidden'); }
+
+function clearAllData() {
+    if (confirm('Delete all data? This cannot be undone.')) {
+        tools = [];
+        engineers = [];
+        transactions = [];
+        returnRequests = [];
+        saveData();
+        refreshAllPanels();
+        alert('All data cleared.');
+    }
+}
+
+// ==================== INIT ====================
+window.onload = async function() {
+    document.getElementById('taken-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('return-date').value = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
+    populateLoginDropdown();
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('main-app').classList.add('hidden');
+    console.log('ToolTrack v1.25 ready');
+};
 </script>
-
-<!-- All modal HTML from v1.24 -->
-<!-- [Complete set of modals: readme, log-settings, settings-panel, backup/restore, user-management, about, return-evidence, send-return, deletion-reason, overdue-tool, roy-password, add-tool, edit-tool, add-engineer, edit-engineer, cal-cert, password-recovery, change-password] -->
-
-<!-- MOBILE NAV (same as v1.24) -->
-<nav id="mobile-nav" role="navigation">
-    <button class="mob-nav-item" id="mob-nav-0" onclick="mobileSwitchTab(0)"><i class="fa-solid fa-gauge-high"></i>Dash</button>
-    <button class="mob-nav-item active" id="mob-nav-1" onclick="mobileSwitchTab(1)"><i class="fa-solid fa-list-check"></i>Tools</button>
-    <button class="mob-nav-item" id="mob-nav-2" onclick="mobileSwitchTab(2)"><i class="fa-solid fa-users"></i>Engineers</button>
-    <button class="mob-nav-item" id="mob-nav-3" onclick="mobileSwitchTab(3)"><i class="fa-solid fa-arrow-right-arrow-left"></i>Borrow</button>
-    <button class="mob-nav-item" id="mob-nav-more" onclick="openMobileMoreDrawer()"><i class="fa-solid fa-ellipsis"></i>More</button>
-</nav>
-
 </body>
 </html>
