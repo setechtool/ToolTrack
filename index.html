@@ -6,106 +6,45 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Service Tools Tracker v1.25</title>
+    <title>Service Tools Tracker v1.26</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        *{box-sizing:border-box}
-        body{font-family:'Inter',system-ui,sans-serif;overflow:hidden}
-        .overflow-auto{overflow:auto!important}
-        .overflow-x-auto{overflow-x:auto!important}
-        .overflow-y-auto{overflow-y:auto!important}
-        .card-hover{transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
-        .card-hover:hover{transform:translateY(-8px);box-shadow:0 20px 25px -5px rgb(0 0 0/0.1),0 8px 10px -6px rgb(0 0 0/0.1)}
-        .nav-link{transition:all 0.2s}
-        .nav-link.active{background-color:#1e40af;color:white;border-radius:8px}
+        *{box-sizing:border-box} body{font-family:'Inter',system-ui,sans-serif;overflow:hidden}
+        .overflow-auto{overflow:auto!important} .overflow-x-auto{overflow-x:auto!important} .overflow-y-auto{overflow-y:auto!important}
+        .card-hover{transition:all 0.3s cubic-bezier(0.4,0,0.2,1)} .card-hover:hover{transform:translateY(-8px);box-shadow:0 20px 25px -5px rgb(0 0 0/0.1),0 8px 10px -6px rgb(0 0 0/0.1)}
+        .nav-link{transition:all 0.2s} .nav-link.active{background-color:#1e40af;color:white;border-radius:8px}
         .modal-overlay{backdrop-filter:blur(2px)}
-        .view-toggle-btn{transition:all 0.2s}
-        .view-toggle-btn.active{background-color:#1e40af;color:white}
-        .overdue-btn{animation:pulse 2s infinite}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
-        .custom-confirm-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:300;display:flex;align-items:center;justify-content:center}
-        .custom-confirm-dialog{background:white;border-radius:20px;padding:30px;max-width:480px;width:90%;box-shadow:0 25px 50px rgba(0,0,0,.3);animation:slideIn .3s ease}
-        @keyframes slideIn{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
-        .log-entry{font-family:'Courier New',monospace;font-size:12px}
-        .log-viewer{max-height:500px;overflow-y:auto!important;background:#1a1a2e;color:#00ff88;padding:15px;border-radius:12px}
-        .settings-gear{transition:transform .3s}
-        .settings-gear:hover{transform:rotate(90deg)}
-        .readme-viewer{max-height:70vh;overflow:auto!important;padding:20px;background:#fefefe;border:1px solid #e5e7eb;border-radius:16px;line-height:1.8;width:100%;max-width:100%}
-        .progress-bar{transition:width .3s ease}
         .btn{transition:all .2s ease;cursor:pointer;border-radius:12px;font-weight:500}
         .btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
         .btn:active{transform:translateY(0);box-shadow:0 2px 4px rgba(0,0,0,.1)}
-        .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-        .btn-primary{background-color:#2563eb;color:white}.btn-primary:hover{background-color:#1d4ed8}
-        .btn-success{background-color:#059669;color:white}.btn-success:hover{background-color:#047857}
-        .btn-danger{background-color:#dc2626;color:white}.btn-danger:hover{background-color:#b91c1c}
-        .btn-warning{background-color:#d97706;color:white}.btn-warning:hover{background-color:#b45309}
-        .btn-outline{background-color:transparent;border:1px solid #d1d5db;color:#374151}.btn-outline:hover{background-color:#f3f4f6}
-        .email-truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;display:inline-block}
-        .sort-header{cursor:pointer;user-select:none;white-space:nowrap}
-        .sort-header:hover{background-color:#e5e7eb}
-        .sort-header i{margin-left:5px;font-size:10px;opacity:.5}
-        .sort-header.sorted i{opacity:1;color:#1e40af}
-        .toggle-switch{position:relative;display:inline-block;width:50px;height:26px}
-        .toggle-switch input{opacity:0;width:0;height:0}
-        .toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#ccc;transition:.3s;border-radius:26px}
-        .toggle-slider:before{position:absolute;content:"";height:20px;width:20px;left:3px;bottom:3px;background-color:white;transition:.3s;border-radius:50%}
-        input:checked+.toggle-slider{background-color:#059669}
-        input:checked+.toggle-slider:before{transform:translateX(24px)}
-        .log-filter-btn{padding:4px 12px;border-radius:16px;font-size:11px;cursor:pointer;transition:all .2s;border:1px solid #4a5568;color:#a0aec0;background:transparent}
-        .log-filter-btn.active{background:#059669;color:white;border-color:#059669}
-        .log-filter-btn:hover{background:#2d3748;color:white}
-        .flex-1.overflow-auto{overflow:auto!important}
-        table{width:100%}
-        #mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #e5e7eb;z-index:50;padding:4px 0 env(safe-area-inset-bottom,4px)}
-        .mob-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;font-size:10px;color:#6b7280;background:none;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent;min-height:44px}
-        .mob-nav-item.active{color:#1e40af}
-        .mob-nav-item i{font-size:20px}
-        #mobile-more-drawer{display:none;position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #e5e7eb;border-radius:20px 20px 0 0;z-index:60;padding:16px 16px calc(env(safe-area-inset-bottom,0px) + 80px)}
-        #mobile-more-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:55}
-        .mob-drawer-item{display:flex;align-items:center;gap:14px;padding:14px 12px;border-radius:12px;font-size:15px;color:#374151;cursor:pointer;-webkit-tap-highlight-color:transparent}
-        .mob-drawer-item:active{background:#f3f4f6}
-        .mob-drawer-item i{width:24px;text-align:center;font-size:18px;color:#6b7280}
+        .btn-primary{background-color:#2563eb;color:white} .btn-primary:hover{background-color:#1d4ed8}
+        .btn-success{background-color:#059669;color:white} .btn-success:hover{background-color:#047857}
+        .btn-danger{background-color:#dc2626;color:white} .btn-danger:hover{background-color:#b91c1c}
+        .btn-outline{background-color:transparent;border:1px solid #d1d5db;color:#374151} .btn-outline:hover{background-color:#f3f4f6}
         .sync-status-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:#6b7280;padding:4px 10px;border-radius:20px;background:#f3f4f6;border:0.5px solid #d1d5db;cursor:pointer;user-select:none;transition:all .3s;white-space:nowrap}
         .sync-status-badge.syncing{color:#185FA5;border-color:#85B7EB;background:#E6F1FB}
         .sync-status-badge.synced{color:#3B6D11;border-color:#C0DD97;background:#EAF3DE}
         .sync-status-badge.error{color:#A32D2D;border-color:#F7C1C1;background:#FCEBEB}
-        .sync-status-badge.offline{color:#854F0B;border-color:#FAC775;background:#FAEEDA}
         .sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-        .sync-status-badge.syncing .sync-dot{animation:pulse .8s ease-in-out infinite}
-        .sync-refresh-btn{background:none;border:none;cursor:pointer;color:#6b7280;padding:4px 6px;border-radius:8px;font-size:13px;transition:color .2s}
-        .sync-refresh-btn:hover{color:#374151}
-        #idle-warning-toast{display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:400;background:#fef3c7;border:2px solid #f59e0b;border-radius:16px;padding:14px 24px;font-weight:600;color:#92400e;box-shadow:0 10px 30px rgba(0,0,0,.2);animation:slideDown .4s ease}
-        @keyframes slideDown{from{transform:translateX(-50%) translateY(-60px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
-        @media(max-width:767px){
-            body{overflow:auto}
-            #mobile-nav{display:flex}
-            #main-app>div:first-child{display:none!important}
-            #main-app header{padding:0 16px}
-            #main-app header h2{font-size:16px}
-            #main-app header .btn span{display:none}
-            #main-content-area{padding-bottom:68px}
-            #tab-0,#tab-1,#tab-2,#tab-3,#tab-4,#tab-5,#tab-6{padding:16px!important}
-            #tab-0 .grid.grid-cols-4{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
-            #engineers-grid-view{grid-template-columns:1fr!important}
-            #tab-3 .max-w-2xl{max-width:100%!important}
-            #tab-3 .grid.grid-cols-2{grid-template-columns:1fr!important}
-        }
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}} .syncing .sync-dot{animation:pulse .8s ease-in-out infinite}
+        .readme-viewer{max-height:70vh;overflow:auto!important;padding:20px;background:#fefefe;border:1px solid #e5e7eb;border-radius:16px;line-height:1.8}
+        .log-viewer{max-height:500px;overflow-y:auto!important;background:#1a1a2e;color:#00ff88;padding:15px;border-radius:12px}
+        /* mobile styles */
+        #mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #e5e7eb;z-index:50;padding:4px 0 env(safe-area-inset-bottom,4px)}
+        .mob-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;font-size:10px;color:#6b7280;background:none;border:none;cursor:pointer;min-height:44px}
+        .mob-nav-item.active{color:#1e40af} .mob-nav-item i{font-size:20px}
+        @media(max-width:767px){body{overflow:auto}#mobile-nav{display:flex}#main-app>div:first-child{display:none!important}#main-content-area{padding-bottom:68px}}
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
-    <!-- Idle Warning Toast -->
-    <div id="idle-warning-toast"><i class="fa-solid fa-clock mr-2"></i><span id="idle-warning-text"></span></div>
-
     <!-- Login Screen -->
     <div id="login-screen" class="fixed inset-0 bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center z-[100]">
         <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md m-4">
-            <div class="text-center mb-8"><i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-4"></i><h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1><p class="text-gray-500 mt-2">Service Tools Manager v1.25</p></div>
+            <div class="text-center mb-8"><i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-4"></i><h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1><p class="text-gray-500 mt-2">Service Tools Manager v1.26</p></div>
             <div class="space-y-5">
                 <div><label class="block text-sm font-medium text-gray-700 mb-2">Select Engineer</label><select id="login-user-select" class="w-full p-4 border border-gray-300 rounded-2xl"><option value="">-- Select Your Name --</option></select></div>
                 <div><label class="block text-sm font-medium text-gray-700 mb-2">Password</label><input id="login-password" type="password" placeholder="Enter password" class="w-full p-4 border border-gray-300 rounded-2xl" onkeypress="if(event.key==='Enter')performLogin()"></div>
@@ -130,9 +69,10 @@
             <header class="h-16 bg-white border-b flex items-center justify-between px-8 flex-shrink-0">
                 <h2 class="text-xl font-semibold" id="page-title">Dashboard</h2>
                 <div class="flex items-center gap-4">
-                    <button class="sync-refresh-btn" onclick="manualSync()" title="Sync data"><i class="fa-solid fa-rotate"></i></button>
+                    <button class="sync-refresh-btn" onclick="manualSync()" title="Sync now"><i class="fa-solid fa-rotate"></i></button>
                     <div class="sync-status-badge offline" onclick="manualSync()"><div class="sync-dot"></div><span class="sync-label">Offline</span></div>
                     <button onclick="showSettingsPanel()" class="btn btn-outline px-4 py-2 text-sm"><i class="fa-solid fa-gear"></i></button>
+                    <button onclick="openReadmeViewer()" class="btn btn-outline px-4 py-2 text-sm"><i class="fa-solid fa-book-open"></i> Help</button>
                 </div>
             </header>
             <div class="flex-1 overflow-auto" id="main-content-area">
@@ -148,7 +88,7 @@
                 <!-- Tools Tab -->
                 <div id="tab-1" class="p-8 hidden">
                     <div class="flex justify-between mb-6"><h3 class="text-2xl font-semibold">Service Tools</h3><button onclick="showAddToolModal()" class="btn btn-primary px-4 py-2 text-sm"><i class="fa-solid fa-plus"></i> Add Tool</button></div>
-                    <div class="bg-white rounded-3xl overflow-x-auto"><table class="w-full min-w-[1000px]"><thead class="bg-gray-50"><tr><th class="py-4 px-4 text-left text-xs">DESC</th><th class="py-4 px-4 text-left text-xs">MODEL</th><th class="py-4 px-4 text-left text-xs">SERIAL</th><th class="py-4 px-4 text-left text-xs">OWNER</th><th class="py-4 px-4 text-left text-xs">CAL DUE</th><th class="py-4 px-4 text-left text-xs">STATUS</th><th class="py-4 px-4 text-left text-xs">LOCATION</th><th class="py-4 px-4 text-right text-xs">ACTIONS</th></tr></thead><tbody id="tools-table" class="divide-y"></tbody></table></div>
+                    <div class="bg-white rounded-3xl overflow-x-auto"><table class="w-full"><thead class="bg-gray-50"><tr><th class="py-4 px-4 text-left text-xs">DESC</th><th class="py-4 px-4 text-left text-xs">MODEL</th><th class="py-4 px-4 text-left text-xs">SERIAL</th><th class="py-4 px-4 text-left text-xs">OWNER</th><th class="py-4 px-4 text-left text-xs">CAL DUE</th><th class="py-4 px-4 text-left text-xs">STATUS</th><th class="py-4 px-4 text-left text-xs">LOCATION</th><th class="py-4 px-4 text-right text-xs">ACTIONS</th></tr></thead><tbody id="tools-table" class="divide-y"></tbody></table></div>
                 </div>
                 <!-- Engineers Tab -->
                 <div id="tab-2" class="p-8 hidden">
@@ -158,690 +98,564 @@
                 <!-- Borrow/Return Tab -->
                 <div id="tab-3" class="p-8 hidden">
                     <div class="max-w-2xl mx-auto"><div class="bg-white rounded-3xl p-8 shadow-sm"><h3 class="text-xl font-semibold mb-6">Record Transaction</h3>
-                    <div class="space-y-5">
-                        <div><label class="block text-sm mb-2">Select Tool</label><select id="borrow-tool-select" class="w-full p-4 border rounded-2xl"></select></div>
-                        <div><label class="block text-sm mb-2">Engineer</label><select id="borrow-engineer-select" class="w-full p-4 border rounded-2xl"></select></div>
-                        <div><label class="block text-sm mb-2">Location</label><input id="borrow-location" class="w-full p-4 border rounded-2xl" placeholder="e.g., Mubarak Hospital"></div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm mb-2">Taken Out</label><input type="date" id="taken-date" class="w-full p-4 border rounded-2xl bg-gray-100" readonly></div>
-                            <div><label class="block text-sm mb-2">Expected Return</label><input type="date" id="return-date" class="w-full p-4 border rounded-2xl"></div>
-                        </div>
-                        <button onclick="borrowTool()" class="w-full py-4 btn btn-success">Borrow Tool</button>
-                    </div></div>
-                    <div class="mt-12"><h4 class="font-semibold mb-4 text-xl">Currently Borrowed</h4><div id="currently-borrowed" class="space-y-3"></div></div></div>
+                        <div class="space-y-5">
+                            <div><label class="block text-sm mb-2">Select Tool</label><select id="borrow-tool-select" class="w-full p-4 border rounded-2xl"></select></div>
+                            <div><label class="block text-sm mb-2">Engineer</label><select id="borrow-engineer-select" class="w-full p-4 border rounded-2xl"></select></div>
+                            <div><label class="block text-sm mb-2">Location</label><input id="borrow-location" class="w-full p-4 border rounded-2xl" placeholder="e.g., Mubarak Hospital"></div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label class="block text-sm mb-2">Taken Out</label><input type="date" id="taken-date" class="w-full p-4 border rounded-2xl bg-gray-100" readonly></div>
+                                <div><label class="block text-sm mb-2">Expected Return</label><input type="date" id="return-date" class="w-full p-4 border rounded-2xl"></div>
+                            </div>
+                            <button onclick="borrowTool()" class="w-full py-4 btn btn-success">Borrow Tool</button>
+                        </div></div>
+                        <div class="mt-12"><h4 class="font-semibold mb-4 text-xl">Currently Borrowed</h4><div id="currently-borrowed" class="space-y-3"></div></div>
+                    </div>
                 </div>
                 <!-- History Tab -->
                 <div id="tab-5" class="p-8 hidden">
                     <div class="flex justify-between mb-6"><h3 class="text-2xl font-semibold">Transaction History</h3><select id="history-filter" onchange="renderHistory()" class="p-3 border rounded-xl text-sm"><option value="all">All Records</option><option value="active">Active</option><option value="returned">Returned</option></select></div>
-                    <div class="bg-white rounded-3xl overflow-x-auto"><table class="w-full min-w-[1000px]"><thead class="bg-gray-50"><tr><th class="py-4 px-4 text-left text-xs">DATE</th><th class="py-4 px-4 text-left text-xs">TOOL</th><th class="py-4 px-4 text-left text-xs">SERIAL</th><th class="py-4 px-4 text-left text-xs">BORROWER</th><th class="py-4 px-4 text-left text-xs">TAKEN</th><th class="py-4 px-4 text-left text-xs">EXPECTED</th><th class="py-4 px-4 text-left text-xs">RETURNED</th><th class="py-4 px-4 text-left text-xs">STATUS</th></tr></thead><tbody id="history-table" class="divide-y"></tbody></table></div>
+                    <div class="bg-white rounded-3xl overflow-x-auto"><table class="w-full"><thead class="bg-gray-50"><tr><th class="py-4 px-4 text-left text-xs">DATE</th><th class="py-4 px-4 text-left text-xs">TOOL</th><th class="py-4 px-4 text-left text-xs">SERIAL</th><th class="py-4 px-4 text-left text-xs">BORROWER</th><th class="py-4 px-4 text-left text-xs">TAKEN</th><th class="py-4 px-4 text-left text-xs">EXPECTED</th><th class="py-4 px-4 text-left text-xs">RETURNED</th><th class="py-4 px-4 text-left text-xs">STATUS</th></tr></thead><tbody id="history-table" class="divide-y"></tbody></table></div>
+                </div>
+                <!-- Logs Tab -->
+                <div id="tab-6" class="p-8 hidden">
+                    <div class="flex justify-between mb-6"><h3 class="text-2xl font-semibold">System Logs</h3></div>
+                    <div class="log-viewer" id="log-viewer-content">Loading...</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Add Tool Modal -->
-    <div id="add-tool-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
-        <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Add Tool</h3>
-            <div class="space-y-5">
-                <input id="tool-desc" placeholder="Description" class="w-full p-4 border rounded-2xl">
-                <input id="tool-model" placeholder="Model" class="w-full p-4 border rounded-2xl">
-                <input id="tool-serial" placeholder="Serial" class="w-full p-4 border rounded-2xl">
-                <input id="tool-location" placeholder="Location" class="w-full p-4 border rounded-2xl">
-                <input id="tool-cal-date" type="date" class="w-full p-4 border rounded-2xl">
-            </div>
-            <div class="flex gap-3 mt-6"><button onclick="hideAddToolModal()" class="flex-1 py-4 btn btn-outline">Cancel</button><button onclick="addNewTool()" class="flex-1 py-4 btn btn-primary">Save</button></div>
-        </div>
-    </div>
+    <!-- Modals: Add Tool, Add Engineer, Settings, Help -->
+    <div id="add-tool-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Add Tool</h3><div class="space-y-5"><input id="tool-desc" placeholder="Description" class="w-full p-4 border rounded-2xl"><input id="tool-model" placeholder="Model" class="w-full p-4 border rounded-2xl"><input id="tool-serial" placeholder="Serial" class="w-full p-4 border rounded-2xl"><input id="tool-location" placeholder="Location" class="w-full p-4 border rounded-2xl"><input id="tool-cal-date" type="date" class="w-full p-4 border rounded-2xl"></div><div class="flex gap-3 mt-6"><button onclick="hideAddToolModal()" class="flex-1 py-4 btn btn-outline">Cancel</button><button onclick="addNewTool()" class="flex-1 py-4 btn btn-primary">Save</button></div></div></div>
+    <div id="add-engineer-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Add Engineer</h3><div class="space-y-5"><input id="eng-name" placeholder="Full Name" class="w-full p-4 border rounded-2xl"><input id="eng-phone" placeholder="Phone" class="w-full p-4 border rounded-2xl"><input id="eng-email" placeholder="Email" class="w-full p-4 border rounded-2xl"><input id="eng-department" placeholder="Department" class="w-full p-4 border rounded-2xl"></div><div class="flex gap-3 mt-6"><button onclick="hideAddEngineerModal()" class="flex-1 py-4 btn btn-outline">Cancel</button><button onclick="addNewEngineer()" class="flex-1 py-4 btn btn-primary">Save</button></div></div></div>
+    <div id="settings-panel-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Settings</h3><div class="space-y-4"><div id="idle-timeout-section" class="bg-amber-50 rounded-2xl p-4 border border-amber-200 hidden"><h4 class="font-semibold text-amber-800 mb-3">Auto-Logout Timer (Donan only)</h4><div class="flex items-center gap-3"><label class="text-sm">Idle timeout (min):</label><input type="number" id="idle-timeout-input" min="1" max="120" value="10" class="w-20 p-2 border rounded-xl text-center" onchange="updateIdleTimeoutConfig()"></div><p class="text-xs text-amber-500 mt-2" id="idle-timeout-status"></p></div><button onclick="clearAllData()" class="w-full p-3 bg-red-50 rounded-xl text-red-700 btn">Clear All Data</button></div><button onclick="hideSettingsPanel()" class="mt-6 w-full py-4 btn btn-outline">Close</button></div></div>
+    <div id="readme-viewer-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50"><div class="bg-white rounded-3xl w-full max-w-4xl m-4 flex flex-col" style="max-height:85vh"><div class="p-6 border-b flex justify-between items-center"><h3 class="text-xl font-semibold">Help File</h3><button onclick="hideReadmeViewer()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button></div><div class="flex-1 overflow-auto p-6"><div class="readme-viewer" id="readme-content"></div></div></div></div>
 
-    <!-- Add Engineer Modal -->
-    <div id="add-engineer-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
-        <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Add Engineer</h3>
-            <div class="space-y-5">
-                <input id="eng-name" placeholder="Full Name" class="w-full p-4 border rounded-2xl">
-                <input id="eng-phone" placeholder="Phone" class="w-full p-4 border rounded-2xl">
-                <input id="eng-email" placeholder="Email" class="w-full p-4 border rounded-2xl">
-                <input id="eng-department" placeholder="Department" class="w-full p-4 border rounded-2xl">
-            </div>
-            <div class="flex gap-3 mt-6"><button onclick="hideAddEngineerModal()" class="flex-1 py-4 btn btn-outline">Cancel</button><button onclick="addNewEngineer()" class="flex-1 py-4 btn btn-primary">Save</button></div>
-        </div>
-    </div>
+    <script>
+        // ★★★ CONFIGURATION – replace with your token ★★★
+        const GITHUB_TOKEN = 'ghp_xxxxxxxxxxxxxxxxxxxx'; // <-- PUT YOUR TOKEN HERE
+        const REPO_OWNER = 'setechtool';
+        const REPO_NAME = 'ToolTrack';
+        const BRANCH = 'main';
+        const DATA_PATH = 'data/';   // folder in repo where JSON files are stored
 
-    <!-- Settings Modal -->
-    <div id="settings-panel-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
-        <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-8"><h3 class="text-xl font-semibold mb-6">Settings</h3>
-            <div class="space-y-4">
-                <div id="idle-timeout-section" class="bg-amber-50 rounded-2xl p-4 border border-amber-200 hidden">
-                    <h4 class="font-semibold text-amber-800 mb-3">Auto-Logout Timer (Donan only)</h4>
-                    <div class="flex items-center gap-3"><label class="text-sm">Idle timeout (min):</label><input type="number" id="idle-timeout-input" min="1" max="120" value="10" class="w-20 p-2 border rounded-xl text-center" onchange="updateIdleTimeoutConfig()"></div>
-                    <p class="text-xs text-amber-500 mt-2" id="idle-timeout-status"></p>
-                </div>
-                <button onclick="clearAllData()" class="w-full p-3 bg-red-50 rounded-xl text-red-700 btn">Clear All Data</button>
-            </div>
-            <button onclick="hideSettingsPanel()" class="mt-6 w-full py-4 btn btn-outline">Close</button>
-        </div>
-    </div>
+        // ========== DATA STORE ==========
+        let tools = JSON.parse(localStorage.getItem('tools')) || [];
+        let engineers = JSON.parse(localStorage.getItem('engineers')) || [];
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+        let returnRequests = JSON.parse(localStorage.getItem('returnRequests')) || [];
+        let roy = JSON.parse(localStorage.getItem('royContact')) || { phone: "+965 97421668", email: "royston.dcosta@sultanunited.com" };
 
-<script>
-// ==================== GITHUB CONFIGURATION ====================
-const GITHUB_CONFIG = {
-    repo: 'setechtool/ToolTrack',
-    branch: 'main',
-    token: 'YOUR_GITHUB_TOKEN_HERE', // ← REPLACE WITH YOUR TOKEN
-    dataPath: 'data/'
-};
-
-// ==================== DATA STORE ====================
-let tools = JSON.parse(localStorage.getItem('tools')) || [];
-let engineers = JSON.parse(localStorage.getItem('engineers')) || [];
-let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-let returnRequests = JSON.parse(localStorage.getItem('returnRequests')) || [];
-
-// ==================== AUTH MANAGER ====================
-class AuthManager {
-    constructor() {
-        this.users = {};
-        this.currentUser = null;
-        this.loadUsers();
-    }
-    loadUsers() {
-        try {
-            const d = localStorage.getItem('tooltrack_users');
-            if (d) this.users = JSON.parse(d);
-        } catch(e) { this.users = {}; }
-        // Ensure default users exist
-        const defaults = ['Royston Dcosta', 'Donan Arciaga', 'Ahmed Al-Sabah', 'Fatima Al-Mutairi'];
-        defaults.forEach(n => {
-            if (!this.users[n]) this.users[n] = { password: '123', role: 'Engineer' };
-        });
-        this.users['Royston Dcosta'].role = 'Administrator';
-        this.users['Donan Arciaga'].role = 'Administrator';
-        this.save();
-    }
-    save() { localStorage.setItem('tooltrack_users', JSON.stringify(this.users)); }
-    login(u, p) {
-        if (this.users[u] && this.users[u].password === p) {
-            this.currentUser = { name: u, role: this.users[u].role, isAdmin: this.users[u].role === 'Administrator' };
-            return true;
-        }
-        return false;
-    }
-    logout() { this.currentUser = null; }
-    getCurrentUser() { return this.currentUser; }
-    getAllUsers() { return Object.keys(this.users).sort(); }
-    addUser(n, p = '123') {
-        if (!this.users[n]) { this.users[n] = { password: p, role: 'Engineer' }; this.save(); return true; }
-        return false;
-    }
-}
-const authManager = new AuthManager();
-
-// ==================== SAVE DATA ====================
-function saveData() {
-    localStorage.setItem('tools', JSON.stringify(tools));
-    localStorage.setItem('engineers', JSON.stringify(engineers));
-    localStorage.setItem('transactions', JSON.stringify(transactions));
-    localStorage.setItem('returnRequests', JSON.stringify(returnRequests));
-    GitHubSync.schedulePush();
-}
-
-function refreshAllPanels() {
-    renderDashboard();
-    renderTools();
-    renderEngineers();
-    renderBorrowTab();
-    renderHistory();
-}
-
-// ==================== GITHUB SYNC ENGINE ====================
-const GitHubSync = {
-    _pushTimer: null,
-    _pollTimer: null,
-    _pendingPush: false,
-
-    setStatus(state, label) {
-        document.querySelectorAll('.sync-status-badge').forEach(el => {
-            el.className = 'sync-status-badge ' + state;
-            const lb = el.querySelector('.sync-label');
-            if (lb) lb.textContent = label;
-        });
-    },
-
-    async pull() {
-        if (!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'YOUR_GITHUB_TOKEN_HERE') return false;
-        try {
-            this.setStatus('syncing', 'Loading...');
-            const baseUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.dataPath}`;
-            const files = ['tools.json', 'engineers.json', 'transactions.json', 'returnRequests.json', 'tooltrack_users.json'];
-            let loadedAny = false;
-            for (const file of files) {
-                try {
-                    const resp = await fetch(`${baseUrl}${file}?t=${Date.now()}`);
-                    if (!resp.ok) continue;
-                    const data = await resp.text();
-                    if (data && data.trim() && data !== 'null') {
-                        const key = file.replace('.json', '');
-                        localStorage.setItem(key, data);
-                        loadedAny = true;
-                    }
-                } catch (e) {}
+        // ========== AUTH ==========
+        class AuthManager {
+            constructor() {
+                this.users = {};
+                this.currentUser = null;
+                this.loadUsers();
             }
-            if (loadedAny) {
-                _reloadMemoryFromStorage();
-                this.setStatus('synced', 'Synced ✓');
-                return true;
-            }
-            this.setStatus('synced', 'No remote data');
-            return false;
-        } catch (e) {
-            this.setStatus('error', 'Pull failed');
-            return false;
-        }
-    },
-
-    schedulePush(immediate) {
-        this._pendingPush = true;
-        if (this._pushTimer) clearTimeout(this._pushTimer);
-        this._pushTimer = setTimeout(() => this.push(), immediate ? 800 : 4000);
-    },
-
-    async push() {
-        if (!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'YOUR_GITHUB_TOKEN_HERE') return;
-        this._pendingPush = false;
-        try {
-            this.setStatus('syncing', 'Saving...');
-            
-            // Get current ref
-            const refResp = await fetch(
-                `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/ref/heads/${GITHUB_CONFIG.branch}`,
-                { headers: { 'Authorization': 'token ' + GITHUB_CONFIG.token, 'Accept': 'application/vnd.github.v3+json' } }
-            );
-            if (!refResp.ok) throw new Error('Failed to get branch ref');
-            const refData = await refResp.json();
-            
-            // Get current commit
-            const commitResp = await fetch(
-                `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/commits/${refData.object.sha}`,
-                { headers: { 'Authorization': 'token ' + GITHUB_CONFIG.token, 'Accept': 'application/vnd.github.v3+json' } }
-            );
-            if (!commitResp.ok) throw new Error('Failed to get commit');
-            const commitData = await commitResp.json();
-            
-            // Prepare files
-            const treeItems = [];
-            const dataKeys = ['tools', 'engineers', 'transactions', 'returnRequests', 'tooltrack_users'];
-            
-            for (const key of dataKeys) {
-                const value = localStorage.getItem(key);
-                if (!value) continue;
-                
-                // Create blob
-                const blobResp = await fetch(
-                    `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/blobs`,
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': 'token ' + GITHUB_CONFIG.token,
-                            'Accept': 'application/vnd.github.v3+json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ content: value, encoding: 'utf-8' })
-                    }
-                );
-                if (!blobResp.ok) continue;
-                const blobData = await blobResp.json();
-                
-                treeItems.push({
-                    path: GITHUB_CONFIG.dataPath + key + '.json',
-                    mode: '100644',
-                    type: 'blob',
-                    sha: blobData.sha
+            loadUsers() {
+                try { const d = localStorage.getItem('tooltrack_users'); if (d) this.users = JSON.parse(d); } catch(e) {}
+                ['Royston Dcosta','Donan Arciaga','Ahmed Al-Sabah','Fatima Al-Mutairi'].forEach(n => {
+                    if (!this.users[n]) this.users[n] = { password: '123', role: 'Engineer' };
                 });
+                this.users['Royston Dcosta'].role = 'Administrator';
+                this.users['Donan Arciaga'].role = 'Administrator';
+                this.save();
             }
-            
-            if (treeItems.length === 0) throw new Error('No files to save');
-            
-            // Create tree
-            const treeResp = await fetch(
-                `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/trees`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'token ' + GITHUB_CONFIG.token,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ base_tree: commitData.tree.sha, tree: treeItems })
+            save() { localStorage.setItem('tooltrack_users', JSON.stringify(this.users)); }
+            login(u, p) {
+                if (this.users[u] && this.users[u].password === p) {
+                    this.currentUser = { name: u, role: this.users[u].role, isAdmin: this.users[u].role === 'Administrator' };
+                    return true;
                 }
-            );
-            if (!treeResp.ok) throw new Error('Failed to create tree');
-            const treeData = await treeResp.json();
-            
-            // Create commit
-            const newCommitResp = await fetch(
-                `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/commits`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'token ' + GITHUB_CONFIG.token,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: 'ToolTrack auto-save - ' + new Date().toLocaleString(),
-                        tree: treeData.sha,
-                        parents: [refData.object.sha]
-                    })
-                }
-            );
-            if (!newCommitResp.ok) throw new Error('Failed to create commit');
-            const newCommitData = await newCommitResp.json();
-            
-            // Update ref
-            const updateResp = await fetch(
-                `https://api.github.com/repos/${GITHUB_CONFIG.repo}/git/refs/heads/${GITHUB_CONFIG.branch}`,
-                {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': 'token ' + GITHUB_CONFIG.token,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ sha: newCommitData.sha, force: false })
-                }
-            );
-            if (!updateResp.ok) throw new Error('Failed to update ref');
-            
-            this.setStatus('synced', 'Saved ✓');
-            console.log('✅ Data saved to GitHub');
-        } catch (e) {
-            console.error('Push failed:', e.message);
-            this.setStatus('error', 'Save failed');
+                return false;
+            }
+            logout() { this.currentUser = null; }
+            getCurrentUser() { return this.currentUser; }
+            getAllUsers() { return Object.keys(this.users).sort(); }
+            addUser(n, p='123') {
+                if (!this.users[n]) { this.users[n] = { password: p, role: 'Engineer' }; this.save(); return true; }
+                return false;
+            }
         }
-    },
+        const auth = new AuthManager();
 
-    startPolling() {
-        this.stopPolling();
-        if (!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'YOUR_GITHUB_TOKEN_HERE') return;
-        this._pollTimer = setInterval(async () => {
-            if (document.hidden) return;
-            await this.pull();
-            refreshAllPanels();
-            populateLoginDropdown();
-        }, 30000);
-    },
-
-    stopPolling() {
-        if (this._pollTimer) { clearInterval(this._pollTimer); this._pollTimer = null; }
-    }
-};
-
-function _reloadMemoryFromStorage() {
-    try { tools = JSON.parse(localStorage.getItem('tools') || '[]'); } catch(e) { tools = []; }
-    try { engineers = JSON.parse(localStorage.getItem('engineers') || '[]'); } catch(e) { engineers = []; }
-    try { transactions = JSON.parse(localStorage.getItem('transactions') || '[]'); } catch(e) { transactions = []; }
-    try { returnRequests = JSON.parse(localStorage.getItem('returnRequests') || '[]'); } catch(e) { returnRequests = []; }
-}
-
-async function manualSync() {
-    if (!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'YOUR_GITHUB_TOKEN_HERE') {
-        alert('GitHub token not configured. Add your token in GITHUB_CONFIG.');
-        return;
-    }
-    await GitHubSync.pull();
-    refreshAllPanels();
-    populateLoginDropdown();
-    await GitHubSync.push();
-}
-
-// ==================== LOGIN ====================
-function populateLoginDropdown() {
-    const sel = document.getElementById('login-user-select');
-    if (!sel) return;
-    sel.innerHTML = '<option value="">-- Select Your Name --</option>' + 
-        authManager.getAllUsers().map(u => `<option value="${u}">${u}</option>`).join('');
-}
-
-async function performLogin() {
-    const u = document.getElementById('login-user-select').value;
-    const p = document.getElementById('login-password').value;
-    if (!u) { alert('Select your name.'); return; }
-    if (authManager.login(u, p)) {
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('main-app').classList.remove('hidden');
-        document.getElementById('logged-user-name').textContent = u;
-        document.getElementById('logged-user-role').textContent = authManager.getCurrentUser().role;
-        buildSidebar();
-        IdleManager.start();
-        
-        if (GITHUB_CONFIG.token && GITHUB_CONFIG.token !== 'YOUR_GITHUB_TOKEN_HERE') {
-            GitHubSync.setStatus('syncing', 'Loading...');
-            await GitHubSync.pull();
-            refreshAllPanels();
-            populateLoginDropdown();
-            GitHubSync.startPolling();
+        // ========== PERSISTENCE & SYNC ==========
+        function saveData() {
+            localStorage.setItem('tools', JSON.stringify(tools));
+            localStorage.setItem('engineers', JSON.stringify(engineers));
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            localStorage.setItem('returnRequests', JSON.stringify(returnRequests));
+            localStorage.setItem('royContact', JSON.stringify(roy));
+            RepoSync.schedulePush();
         }
-        
-        switchTab(0);
-    } else {
-        alert('Invalid password.');
-    }
-}
 
-async function logout() {
-    IdleManager.stop();
-    authManager.logout();
-    GitHubSync.stopPolling();
-    document.getElementById('main-app').classList.add('hidden');
-    document.getElementById('login-screen').classList.remove('hidden');
-    document.getElementById('login-password').value = '';
-}
+        function refreshAllPanels() {
+            renderDashboard(); renderTools(); renderEngineers(); renderBorrowTab(); renderHistory();
+            try { refreshLogViewer(); } catch(e) {}
+        }
 
-// ==================== IDLE TIMEOUT ====================
-const IdleManager = {
-    _timeoutMinutes: parseInt(localStorage.getItem('idle_timeout_minutes')) || 10,
-    _idleSeconds: 0,
-    _checkInterval: null,
-    _warningShown: false,
-    getTimeoutMinutes() { return this._timeoutMinutes; },
-    setTimeoutMinutes(min) { this._timeoutMinutes = Math.max(1, Math.min(120, min)); localStorage.setItem('idle_timeout_minutes', this._timeoutMinutes); },
-    reset() { this._idleSeconds = 0; this._warningShown = false; },
-    start() {
-        this.stop();
-        this.reset();
-        this._checkInterval = setInterval(() => {
-            this._idleSeconds++;
-            if (this._idleSeconds >= this._timeoutMinutes * 60) {
+        // ========== GITHUB REPO SYNC ENGINE ==========
+        const RepoSync = {
+            _pushTimer: null,
+            _pollTimer: null,
+            _pendingPush: false,
+
+            setStatus(state, label) {
+                document.querySelectorAll('.sync-status-badge').forEach(el => {
+                    el.className = 'sync-status-badge ' + state;
+                    const lb = el.querySelector('.sync-label');
+                    if (lb) lb.textContent = label;
+                });
+            },
+
+            async _api(method, path, body) {
+                const res = await fetch(`https://api.github.com${path}`, {
+                    method,
+                    headers: {
+                        'Authorization': 'token ' + GITHUB_TOKEN,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': body ? 'application/json' : undefined
+                    },
+                    body: body ? JSON.stringify(body) : undefined
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({ message: res.statusText }));
+                    throw new Error(err.message || res.statusText);
+                }
+                return res.json();
+            },
+
+            async pull() {
+                if (GITHUB_TOKEN === 'ghp_xxxxxxxxxxxxxxxxxxxx') return false;
+                try {
+                    this.setStatus('syncing', 'Loading...');
+                    const files = ['tools.json','engineers.json','transactions.json','returnRequests.json','tooltrack_users.json','royContact.json'];
+                    let any = false;
+                    for (const f of files) {
+                        try {
+                            const data = await this._api('GET', `/repos/${REPO_OWNER}/${REPO_NAME}/contents/${DATA_PATH}${f}?ref=${BRANCH}`);
+                            if (data.content) {
+                                const content = atob(data.content.replace(/\n/g, ''));
+                                localStorage.setItem(f.replace('.json',''), content);
+                                any = true;
+                            }
+                        } catch(e) {}
+                    }
+                    if (any) {
+                        _reloadMemory();
+                        this.setStatus('synced', 'Synced ✓');
+                        return true;
+                    }
+                    this.setStatus('synced', 'No remote data');
+                    return false;
+                } catch(e) {
+                    this.setStatus('error', 'Pull failed');
+                    return false;
+                }
+            },
+
+            schedulePush(immediate) {
+                this._pendingPush = true;
+                if (this._pushTimer) clearTimeout(this._pushTimer);
+                this._pushTimer = setTimeout(() => this.push(), immediate ? 800 : 3000);
+            },
+
+            async push() {
+                if (GITHUB_TOKEN === 'ghp_xxxxxxxxxxxxxxxxxxxx') return;
+                this._pendingPush = false;
+                try {
+                    this.setStatus('syncing', 'Saving...');
+                    const keys = ['tools','engineers','transactions','returnRequests','tooltrack_users','royContact'];
+                    for (const key of keys) {
+                        const value = localStorage.getItem(key);
+                        if (!value) continue;
+                        const path = `${DATA_PATH}${key}.json`;
+                        // get current SHA if file exists
+                        let sha = null;
+                        try {
+                            const existing = await this._api('GET', `/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}?ref=${BRANCH}`);
+                            sha = existing.sha;
+                        } catch(e) {}
+                        const body = {
+                            message: `Update ${key} [auto]`,
+                            content: btoa(unescape(encodeURIComponent(value))),
+                            branch: BRANCH
+                        };
+                        if (sha) body.sha = sha;
+                        await this._api('PUT', `/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, body);
+                    }
+                    this.setStatus('synced', 'Saved ✓');
+                } catch(e) {
+                    console.error('Push error:', e);
+                    this.setStatus('error', 'Save failed');
+                }
+            },
+
+            startPolling() {
+                this.stopPolling();
+                if (GITHUB_TOKEN === 'ghp_xxxxxxxxxxxxxxxxxxxx') return;
+                this._pollTimer = setInterval(async () => {
+                    if (document.hidden) return;
+                    const pulled = await this.pull();
+                    if (pulled) { refreshAllPanels(); populateLoginDropdown(); }
+                }, 30000);
+            },
+
+            stopPolling() {
+                if (this._pollTimer) { clearInterval(this._pollTimer); this._pollTimer = null; }
+            }
+        };
+
+        function _reloadMemory() {
+            try { tools = JSON.parse(localStorage.getItem('tools')||'[]'); } catch(e) { tools = []; }
+            try { engineers = JSON.parse(localStorage.getItem('engineers')||'[]'); } catch(e) { engineers = []; }
+            try { transactions = JSON.parse(localStorage.getItem('transactions')||'[]'); } catch(e) { transactions = []; }
+            try { returnRequests = JSON.parse(localStorage.getItem('returnRequests')||'[]'); } catch(e) { returnRequests = []; }
+            try { roy = JSON.parse(localStorage.getItem('royContact')||'{}'); } catch(e) {}
+            try { auth.users = JSON.parse(localStorage.getItem('tooltrack_users')||'{}'); } catch(e) {}
+        }
+
+        async function manualSync() {
+            if (GITHUB_TOKEN === 'ghp_xxxxxxxxxxxxxxxxxxxx') {
+                alert('GitHub token not configured. Please add your token in the code.');
+                return;
+            }
+            await RepoSync.pull();
+            refreshAllPanels(); populateLoginDropdown();
+            await RepoSync.push();
+        }
+
+        // ========== IDLE TIMEOUT ==========
+        const IdleManager = {
+            _timeoutMinutes: parseInt(localStorage.getItem('idle_timeout_minutes')) || 10,
+            _idleSeconds: 0,
+            _interval: null,
+            _warningShown: false,
+            getTimeout() { return this._timeoutMinutes; },
+            setTimeout(min) { this._timeoutMinutes = Math.max(1, Math.min(120, min)); localStorage.setItem('idle_timeout_minutes', this._timeoutMinutes); },
+            reset() { this._idleSeconds = 0; this._warningShown = false; },
+            start() {
                 this.stop();
-                logout();
+                this.reset();
+                this._interval = setInterval(() => {
+                    this._idleSeconds++;
+                    if (this._idleSeconds >= this._timeoutMinutes * 60) {
+                        this.stop();
+                        logout();
+                    }
+                }, 1000);
+                ['mousemove','keydown','click','scroll','touchstart'].forEach(e => document.addEventListener(e, () => this.reset(), {passive:true}));
+            },
+            stop() { if (this._interval) { clearInterval(this._interval); this._interval = null; } }
+        };
+
+        function updateIdleTimeoutConfig() {
+            const val = parseInt(document.getElementById('idle-timeout-input').value) || 10;
+            IdleManager.setTimeout(val);
+            document.getElementById('idle-timeout-status').textContent = 'Set to ' + val + ' min.';
+        }
+
+        // ========== UI HELPERS ==========
+        function populateLoginDropdown() {
+            const sel = document.getElementById('login-user-select');
+            if (sel) sel.innerHTML = '<option value="">-- Select Your Name --</option>' + auth.getAllUsers().map(u => `<option value="${u}">${u}</option>`).join('');
+        }
+
+        function showLoginError(m) {
+            const d = document.getElementById('login-error-msg');
+            d.querySelector('#login-error-text').textContent = m;
+            d.classList.remove('hidden');
+            setTimeout(() => d.classList.add('hidden'), 4000);
+        }
+
+        async function performLogin() {
+            const u = document.getElementById('login-user-select').value;
+            const p = document.getElementById('login-password').value;
+            if (!u) { showLoginError('Select your name.'); return; }
+            if (auth.login(u, p)) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                document.getElementById('logged-user-name').textContent = u;
+                document.getElementById('logged-user-role').textContent = auth.getCurrentUser().role;
+                buildSidebar();
+                IdleManager.start();
+                // Sync with GitHub
+                if (GITHUB_TOKEN !== 'ghp_xxxxxxxxxxxxxxxxxxxx') {
+                    RepoSync.setStatus('syncing', 'Loading data...');
+                    await RepoSync.pull();
+                    refreshAllPanels();
+                    populateLoginDropdown();
+                    RepoSync.startPolling();
+                }
+                switchTab(0);
+            } else {
+                showLoginError('Invalid password.');
             }
-        }, 1000);
-        ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(evt => {
-            document.addEventListener(evt, () => this.reset(), { passive: true });
-        });
-    },
-    stop() { if (this._checkInterval) { clearInterval(this._checkInterval); this._checkInterval = null; } }
-};
+        }
 
-function updateIdleTimeoutConfig() {
-    const val = parseInt(document.getElementById('idle-timeout-input').value) || 10;
-    IdleManager.setTimeoutMinutes(val);
-    document.getElementById('idle-timeout-status').textContent = 'Set to ' + val + ' minute(s).';
-}
+        async function logout() {
+            IdleManager.stop();
+            auth.logout();
+            RepoSync.stopPolling();
+            document.getElementById('main-app').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('login-password').value = '';
+        }
 
-// ==================== NAVIGATION ====================
-function buildSidebar() {
-    const nav = document.getElementById('sidebar-nav');
-    nav.innerHTML = `
-        <a href="#" onclick="switchTab(0)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg active" id="nav-0"><i class="fa-solid fa-gauge-high w-5"></i>Dashboard</a>
-        <a href="#" onclick="switchTab(1)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg" id="nav-1"><i class="fa-solid fa-list-check w-5"></i>Tools</a>
-        <a href="#" onclick="switchTab(2)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg" id="nav-2"><i class="fa-solid fa-users w-5"></i>Engineers</a>
-        <a href="#" onclick="switchTab(3)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg" id="nav-3"><i class="fa-solid fa-arrow-right-arrow-left w-5"></i>Borrow/Return</a>
-        <a href="#" onclick="switchTab(5)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg" id="nav-5"><i class="fa-solid fa-clock-rotate-left w-5"></i>History</a>
-    `;
-}
+        function buildSidebar() {
+            const nav = document.getElementById('sidebar-nav');
+            nav.innerHTML = `
+                <a href="#" onclick="switchTab(0)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg active" id="nav-0"><i class="fa-solid fa-gauge-high w-5"></i>Dashboard</a>
+                <a href="#" onclick="switchTab(1)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg" id="nav-1"><i class="fa-solid fa-list-check w-5"></i>Tools</a>
+                <a href="#" onclick="switchTab(2)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg" id="nav-2"><i class="fa-solid fa-users w-5"></i>Engineers</a>
+                <a href="#" onclick="switchTab(3)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg" id="nav-3"><i class="fa-solid fa-arrow-right-arrow-left w-5"></i>Borrow/Return</a>
+                <a href="#" onclick="switchTab(5)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg" id="nav-5"><i class="fa-solid fa-clock-rotate-left w-5"></i>History</a>
+                <a href="#" onclick="switchTab(6)" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg" id="nav-6"><i class="fa-solid fa-file-lines w-5"></i>System Logs</a>
+            `;
+        }
 
-function switchTab(n) {
-    for (let i = 0; i <= 5; i++) {
-        const tab = document.getElementById('tab-' + i);
-        const nav = document.getElementById('nav-' + i);
-        if (tab) tab.classList.add('hidden');
-        if (nav) nav.classList.remove('active');
-    }
-    document.getElementById('tab-' + n).classList.remove('hidden');
-    document.getElementById('nav-' + n).classList.add('active');
-    document.getElementById('page-title').textContent = ['Dashboard', 'Service Tools', 'Engineers', 'Borrow / Return', 'Analytics', 'History'][n];
-    if (n === 0) renderDashboard();
-    else if (n === 1) renderTools();
-    else if (n === 2) renderEngineers();
-    else if (n === 3) renderBorrowTab();
-    else if (n === 5) renderHistory();
-}
+        function switchTab(n) {
+            for (let i=0; i<=6; i++) {
+                const tab = document.getElementById('tab-'+i);
+                const nav = document.getElementById('nav-'+i);
+                if (tab) tab.classList.add('hidden');
+                if (nav) nav.classList.remove('active');
+            }
+            document.getElementById('tab-'+n).classList.remove('hidden');
+            document.getElementById('nav-'+n).classList.add('active');
+            document.getElementById('page-title').textContent = ['Dashboard','Service Tools','Engineers','Borrow / Return','Analytics','History','System Logs'][n];
+            if (n===0) renderDashboard(); else if (n===1) renderTools(); else if (n===2) renderEngineers(); else if (n===3) renderBorrowTab(); else if (n===5) renderHistory(); else if (n===6) refreshLogViewer();
+        }
 
-// ==================== DASHBOARD ====================
-function renderDashboard() {
-    document.getElementById('total-tools').textContent = tools.length;
-    const borrowed = transactions.filter(t => !t.returned);
-    document.getElementById('borrowed-count').textContent = borrowed.length;
-    document.getElementById('util-rate').textContent = tools.length === 0 ? '0%' : Math.round((borrowed.length / tools.length) * 100) + '%';
-    document.getElementById('calibration-due').textContent = tools.filter(t => {
-        return t.calDue && Math.ceil((new Date(t.calDue) - new Date()) / 86400000) <= 30;
-    }).length;
-}
+        // ========== DASHBOARD ==========
+        function renderDashboard() {
+            document.getElementById('total-tools').textContent = tools.length;
+            const borrowed = transactions.filter(t => !t.returned);
+            document.getElementById('borrowed-count').textContent = borrowed.length;
+            document.getElementById('util-rate').textContent = tools.length === 0 ? '0%' : Math.round((borrowed.length / tools.length)*100) + '%';
+            document.getElementById('calibration-due').textContent = tools.filter(t => t.calDue && new Date(t.calDue) < new Date(Date.now() + 30*86400000)).length;
+        }
 
-// ==================== TOOLS ====================
-function renderTools() {
-    document.getElementById('tools-table').innerHTML = tools.map(t => {
-        const isBorrowed = transactions.some(tr => tr.toolId === t.id && !tr.returned);
-        return `
-            <tr>
-                <td class="px-4 py-4 font-medium">${t.desc}</td>
-                <td class="px-4 py-4 text-sm">${t.model || 'N/A'}</td>
-                <td class="px-4 py-4 text-sm">${t.serial || 'N/A'}</td>
-                <td class="px-4 py-4 text-sm">${t.owner || authManager.getCurrentUser()?.name || 'N/A'}</td>
-                <td class="px-4 py-4 text-sm">${t.calDue || 'N/A'}</td>
-                <td class="px-4 py-4">${isBorrowed ? '<span class="px-3 py-1 rounded-full text-xs bg-amber-100 text-amber-700">BORROWED</span>' : '<span class="px-3 py-1 rounded-full text-xs bg-emerald-100 text-emerald-700">AVAILABLE</span>'}</td>
-                <td class="px-4 py-4 text-sm">${t.location || '-'}</td>
-                <td class="px-4 py-4 text-right">
-                    <button onclick="initiateReturn(${t.id})" class="text-emerald-500 p-2 btn"><i class="fa-solid fa-rotate-left"></i></button>
-                    <button onclick="deleteTool(${t.id})" class="text-red-500 p-2 btn"><i class="fa-solid fa-trash"></i></button>
-                </td>
-            </tr>
-        `;
-    }).join('') || '<tr><td colspan="8" class="text-center py-8">No tools found</td></tr>';
-}
+        // ========== TOOLS ==========
+        function renderTools() {
+            document.getElementById('tools-table').innerHTML = tools.map(t => {
+                const isBorrowed = transactions.some(tr => tr.toolId === t.id && !tr.returned);
+                return `<tr>
+                    <td class="px-4 py-4 font-medium">${t.desc}</td>
+                    <td class="px-4 py-4 text-sm">${t.model||'N/A'}</td>
+                    <td class="px-4 py-4 text-sm">${t.serial||'N/A'}</td>
+                    <td class="px-4 py-4 text-sm">${t.owner||auth.getCurrentUser()?.name||'N/A'}</td>
+                    <td class="px-4 py-4 text-sm">${t.calDue||'N/A'}</td>
+                    <td class="px-4 py-4">${isBorrowed ? '<span class="px-3 py-1 rounded-full text-xs bg-amber-100 text-amber-700">BORROWED</span>' : '<span class="px-3 py-1 rounded-full text-xs bg-emerald-100 text-emerald-700">AVAILABLE</span>'}</td>
+                    <td class="px-4 py-4 text-sm">${t.location||'-'}</td>
+                    <td class="px-4 py-4 text-right">
+                        <button onclick="initiateReturn(${t.id})" class="text-emerald-500 p-2 btn"><i class="fa-solid fa-rotate-left"></i></button>
+                        <button onclick="deleteTool(${t.id})" class="text-red-500 p-2 btn"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            }).join('') || '<tr><td colspan="8" class="text-center py-8">No tools found</td></tr>';
+        }
 
-function showAddToolModal() {
-    document.getElementById('tool-desc').value = '';
-    document.getElementById('tool-model').value = '';
-    document.getElementById('tool-serial').value = '';
-    document.getElementById('tool-location').value = '';
-    document.getElementById('tool-cal-date').value = new Date(Date.now() + 365 * 86400000).toISOString().split('T')[0];
-    document.getElementById('add-tool-modal').classList.remove('hidden');
-}
+        function showAddToolModal() {
+            document.getElementById('tool-desc').value = '';
+            document.getElementById('tool-model').value = '';
+            document.getElementById('tool-serial').value = '';
+            document.getElementById('tool-location').value = '';
+            document.getElementById('tool-cal-date').value = new Date(Date.now() + 365*86400000).toISOString().split('T')[0];
+            document.getElementById('add-tool-modal').classList.remove('hidden');
+        }
+        function hideAddToolModal() { document.getElementById('add-tool-modal').classList.add('hidden'); }
+        function addNewTool() {
+            const desc = document.getElementById('tool-desc').value.trim();
+            if (!desc) { alert('Enter description.'); return; }
+            tools.push({
+                id: Date.now(),
+                desc,
+                model: document.getElementById('tool-model').value || 'N/A',
+                serial: document.getElementById('tool-serial').value || 'N/A',
+                owner: auth.getCurrentUser()?.name || 'Unknown',
+                calDue: document.getElementById('tool-cal-date').value,
+                status: 'Available',
+                location: document.getElementById('tool-location').value || ''
+            });
+            saveData();
+            hideAddToolModal();
+            refreshAllPanels();
+        }
+        function deleteTool(id) {
+            if (confirm('Delete this tool?')) {
+                tools = tools.filter(t => t.id !== id);
+                saveData();
+                refreshAllPanels();
+            }
+        }
 
-function hideAddToolModal() { document.getElementById('add-tool-modal').classList.add('hidden'); }
+        // ========== ENGINEERS ==========
+        function renderEngineers() {
+            document.getElementById('engineers-table-body').innerHTML = engineers.map(e => `<tr>
+                <td class="px-6 py-5 font-semibold">${e.name}</td>
+                <td class="px-6 py-5">${e.department||'N/A'}</td>
+                <td class="px-6 py-5">${e.phone||'N/A'}</td>
+                <td class="px-6 py-5">${e.email||'N/A'}</td>
+                <td class="px-6 py-5 text-right"><button onclick="deleteEngineer(${e.id})" class="text-red-500 p-2 btn"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>`).join('') || '<tr><td colspan="5" class="text-center py-8">No engineers</td></tr>';
+        }
+        function showAddEngineerModal() {
+            document.getElementById('eng-name').value = '';
+            document.getElementById('eng-phone').value = '';
+            document.getElementById('eng-email').value = '';
+            document.getElementById('eng-department').value = '';
+            document.getElementById('add-engineer-modal').classList.remove('hidden');
+        }
+        function hideAddEngineerModal() { document.getElementById('add-engineer-modal').classList.add('hidden'); }
+        function addNewEngineer() {
+            const name = document.getElementById('eng-name').value.trim();
+            if (!name) { alert('Enter name.'); return; }
+            engineers.push({
+                id: Date.now(),
+                name,
+                phone: document.getElementById('eng-phone').value || 'N/A',
+                email: document.getElementById('eng-email').value || name.toLowerCase().replace(/\s+/g,'.')+'@sultanunited.com',
+                department: document.getElementById('eng-department').value || 'N/A'
+            });
+            auth.addUser(name);
+            saveData();
+            hideAddEngineerModal();
+            refreshAllPanels();
+            populateLoginDropdown();
+        }
+        function deleteEngineer(id) {
+            if (confirm('Delete this engineer?')) {
+                const e = engineers.find(x => x.id === id);
+                if (e) {
+                    engineers = engineers.filter(x => x.id !== id);
+                    saveData();
+                    refreshAllPanels();
+                    populateLoginDropdown();
+                }
+            }
+        }
 
-function addNewTool() {
-    const desc = document.getElementById('tool-desc').value.trim();
-    if (!desc) { alert('Enter description.'); return; }
-    tools.push({
-        id: Date.now(),
-        desc: desc,
-        model: document.getElementById('tool-model').value || 'N/A',
-        serial: document.getElementById('tool-serial').value || 'N/A',
-        owner: authManager.getCurrentUser()?.name || 'Unknown',
-        calDue: document.getElementById('tool-cal-date').value,
-        status: 'Available',
-        location: document.getElementById('tool-location').value || ''
-    });
-    saveData();
-    hideAddToolModal();
-    refreshAllPanels();
-}
+        // ========== BORROW / RETURN ==========
+        function renderBorrowTab() {
+            const available = tools.filter(t => !transactions.some(tr => tr.toolId === t.id && !tr.returned));
+            document.getElementById('borrow-tool-select').innerHTML = available.length ?
+                available.map(t => `<option value="${t.id}">${t.desc} (${t.serial||'N/A'})</option>`).join('') :
+                '<option disabled>No tools available</option>';
+            document.getElementById('borrow-engineer-select').innerHTML = engineers.length ?
+                engineers.map(e => `<option value="${e.id}">${e.name}</option>`).join('') :
+                '<option disabled>No engineers</option>';
+            document.getElementById('taken-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('return-date').value = new Date(Date.now()+7*86400000).toISOString().split('T')[0];
+            document.getElementById('borrow-location').value = '';
 
-function deleteTool(id) {
-    if (confirm('Delete this tool?')) {
-        tools = tools.filter(t => t.id !== id);
-        saveData();
-        refreshAllPanels();
-    }
-}
+            const active = transactions.filter(t => !t.returned);
+            document.getElementById('currently-borrowed').innerHTML = active.length ? active.map(t => {
+                const tl = tools.find(x => x.id === t.toolId);
+                const eng = engineers.find(x => x.id === t.engineerId);
+                return `<div class="bg-white border rounded-2xl p-5 flex justify-between items-center">
+                    <div><div class="font-semibold">${tl?.desc||'Deleted'} (${tl?.serial||'N/A'})</div><div class="text-sm">${eng?.name||'Unknown'} | ${t.location||'N/A'}</div><div class="text-xs">Expected: ${t.expectedReturn}</div></div>
+                    <button onclick="initiateReturn(${t.id})" class="btn btn-success px-4 py-2 text-sm">Return</button>
+                </div>`;
+            }).join('') : '<p class="text-gray-500 p-6 text-center">No tools borrowed</p>';
+        }
 
-// ==================== ENGINEERS ====================
-function renderEngineers() {
-    document.getElementById('engineers-table-body').innerHTML = engineers.map(e => `
-        <tr>
-            <td class="px-6 py-5 font-semibold">${e.name}</td>
-            <td class="px-6 py-5">${e.department || 'N/A'}</td>
-            <td class="px-6 py-5">${e.phone || 'N/A'}</td>
-            <td class="px-6 py-5">${e.email || 'N/A'}</td>
-            <td class="px-6 py-5 text-right">
-                <button onclick="deleteEngineer(${e.id})" class="text-red-500 p-2 btn"><i class="fa-solid fa-trash"></i></button>
-            </td>
-        </tr>
-    `).join('') || '<tr><td colspan="5" class="text-center py-8">No engineers found</td></tr>';
-}
-
-function showAddEngineerModal() {
-    document.getElementById('eng-name').value = '';
-    document.getElementById('eng-phone').value = '';
-    document.getElementById('eng-email').value = '';
-    document.getElementById('eng-department').value = '';
-    document.getElementById('add-engineer-modal').classList.remove('hidden');
-}
-
-function hideAddEngineerModal() { document.getElementById('add-engineer-modal').classList.add('hidden'); }
-
-function addNewEngineer() {
-    const name = document.getElementById('eng-name').value.trim();
-    if (!name) { alert('Enter name.'); return; }
-    engineers.push({
-        id: Date.now(),
-        name: name,
-        phone: document.getElementById('eng-phone').value || 'N/A',
-        email: document.getElementById('eng-email').value || name.toLowerCase().replace(/\s+/g, '.') + '@sultanunited.com',
-        department: document.getElementById('eng-department').value || 'N/A'
-    });
-    authManager.addUser(name);
-    saveData();
-    hideAddEngineerModal();
-    refreshAllPanels();
-    populateLoginDropdown();
-}
-
-function deleteEngineer(id) {
-    if (confirm('Delete this engineer?')) {
-        const e = engineers.find(x => x.id === id);
-        if (e) {
-            engineers = engineers.filter(x => x.id !== id);
+        function borrowTool() {
+            const toolId = parseInt(document.getElementById('borrow-tool-select').value);
+            const engineerId = parseInt(document.getElementById('borrow-engineer-select').value);
+            if (!toolId || !engineerId) { alert('Select tool and engineer.'); return; }
+            transactions.push({
+                id: Date.now(),
+                toolId,
+                engineerId,
+                takenDate: document.getElementById('taken-date').value,
+                expectedReturn: document.getElementById('return-date').value,
+                returned: false,
+                location: document.getElementById('borrow-location').value || 'N/A',
+                transDate: new Date().toISOString()
+            });
             saveData();
             refreshAllPanels();
-            populateLoginDropdown();
         }
-    }
-}
 
-// ==================== BORROW/RETURN ====================
-function renderBorrowTab() {
-    const available = tools.filter(t => !transactions.some(tr => tr.toolId === t.id && !tr.returned));
-    document.getElementById('borrow-tool-select').innerHTML = available.length ? 
-        available.map(t => `<option value="${t.id}">${t.desc} (${t.serial || 'N/A'})</option>`).join('') :
-        '<option disabled>No tools available</option>';
-    document.getElementById('borrow-engineer-select').innerHTML = engineers.length ?
-        engineers.map(e => `<option value="${e.id}">${e.name}</option>`).join('') :
-        '<option disabled>No engineers</option>';
-    document.getElementById('taken-date').value = new Date().toISOString().split('T')[0];
-    document.getElementById('return-date').value = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
-    document.getElementById('borrow-location').value = '';
-    
-    const active = transactions.filter(t => !t.returned);
-    document.getElementById('currently-borrowed').innerHTML = active.length ? active.map(t => {
-        const tl = tools.find(x => x.id === t.toolId);
-        const eng = engineers.find(x => x.id === t.engineerId);
-        return `
-            <div class="bg-white border rounded-2xl p-5 flex justify-between items-center">
-                <div>
-                    <div class="font-semibold">${tl?.desc || 'Deleted'} (${tl?.serial || 'N/A'})</div>
-                    <div class="text-sm">${eng?.name || 'Unknown'} | ${t.location || 'N/A'}</div>
-                    <div class="text-xs">Expected: ${t.expectedReturn}</div>
-                </div>
-                <button onclick="initiateReturn(${t.id})" class="btn btn-success px-4 py-2 text-sm">Return</button>
-            </div>
-        `;
-    }).join('') : '<p class="text-gray-500 p-6 text-center">No tools borrowed</p>';
-}
+        function initiateReturn(id) {
+            const t = transactions.find(x => x.id === id);
+            if (t && confirm('Mark as returned?')) {
+                t.returned = true;
+                t.actualReturnDate = new Date().toISOString().split('T')[0];
+                saveData();
+                refreshAllPanels();
+            }
+        }
 
-function borrowTool() {
-    const toolId = parseInt(document.getElementById('borrow-tool-select').value);
-    const engineerId = parseInt(document.getElementById('borrow-engineer-select').value);
-    if (!toolId || !engineerId) { alert('Select tool and engineer.'); return; }
-    
-    transactions.push({
-        id: Date.now(),
-        toolId: toolId,
-        engineerId: engineerId,
-        takenDate: document.getElementById('taken-date').value,
-        expectedReturn: document.getElementById('return-date').value,
-        returned: false,
-        location: document.getElementById('borrow-location').value || 'N/A',
-        transDate: new Date().toISOString()
-    });
-    saveData();
-    refreshAllPanels();
-    alert('Tool borrowed!');
-}
+        // ========== HISTORY ==========
+        function renderHistory() {
+            const filter = document.getElementById('history-filter')?.value || 'all';
+            let all = [...transactions];
+            if (filter === 'active') all = transactions.filter(t => !t.returned);
+            else if (filter === 'returned') all = transactions.filter(t => t.returned);
+            document.getElementById('history-table').innerHTML = all.sort((a,b) => b.id - a.id).map(t => {
+                const tl = tools.find(x => x.id === t.toolId);
+                const eng = engineers.find(x => x.id === t.engineerId);
+                return `<tr>
+                    <td class="px-4 py-4 text-sm">${new Date(t.transDate||t.takenDate).toLocaleDateString()}</td>
+                    <td class="px-4 py-4 font-medium">${tl?.desc||'Deleted'}</td>
+                    <td class="px-4 py-4 text-sm">${tl?.serial||'N/A'}</td>
+                    <td class="px-4 py-4 text-sm">${eng?.name||'Unknown'}</td>
+                    <td class="px-4 py-4 text-sm">${t.takenDate}</td>
+                    <td class="px-4 py-4 text-sm">${t.expectedReturn}</td>
+                    <td class="px-4 py-4 text-sm">${t.actualReturnDate||'Pending'}</td>
+                    <td class="px-4 py-4">${t.returned ? '<span class="px-2 py-1 rounded-full text-xs bg-emerald-100 text-emerald-700">Returned</span>' : '<span class="px-2 py-1 rounded-full text-xs bg-amber-100 text-amber-700">Active</span>'}</td>
+                </tr>`;
+            }).join('') || '<tr><td colspan="8" class="text-center py-8">No records</td></tr>';
+        }
 
-function initiateReturn(id) {
-    const t = transactions.find(x => x.id === id);
-    if (t && confirm('Mark as returned?')) {
-        t.returned = true;
-        t.actualReturnDate = new Date().toISOString().split('T')[0];
-        saveData();
-        refreshAllPanels();
-    }
-}
+        // ========== LOGS ==========
+        function refreshLogViewer() {
+            document.getElementById('log-viewer-content').innerHTML = '<div class="log-entry">ToolTrack v1.26 – Logging active</div>';
+        }
 
-// ==================== HISTORY ====================
-function renderHistory() {
-    const filter = document.getElementById('history-filter')?.value || 'all';
-    let all = [...transactions];
-    if (filter === 'active') all = transactions.filter(t => !t.returned);
-    else if (filter === 'returned') all = transactions.filter(t => t.returned);
-    
-    document.getElementById('history-table').innerHTML = all.sort((a,b) => b.id - a.id).map(t => {
-        const tl = tools.find(x => x.id === t.toolId);
-        const eng = engineers.find(x => x.id === t.engineerId);
-        return `
-            <tr>
-                <td class="px-4 py-4 text-sm">${new Date(t.transDate || t.takenDate).toLocaleDateString()}</td>
-                <td class="px-4 py-4 font-medium">${tl?.desc || 'Deleted'}</td>
-                <td class="px-4 py-4 text-sm">${tl?.serial || 'N/A'}</td>
-                <td class="px-4 py-4 text-sm">${eng?.name || 'Unknown'}</td>
-                <td class="px-4 py-4 text-sm">${t.takenDate}</td>
-                <td class="px-4 py-4 text-sm">${t.expectedReturn}</td>
-                <td class="px-4 py-4 text-sm">${t.actualReturnDate || 'Pending'}</td>
-                <td class="px-4 py-4">${t.returned ? '<span class="px-2 py-1 rounded-full text-xs bg-emerald-100 text-emerald-700">Returned</span>' : '<span class="px-2 py-1 rounded-full text-xs bg-amber-100 text-amber-700">Active</span>'}</td>
-            </tr>
-        `;
-    }).join('') || '<tr><td colspan="8" class="text-center py-8">No records</td></tr>';
-}
+        // ========== SETTINGS ==========
+        function showSettingsPanel() {
+            const cu = auth.getCurrentUser();
+            const idleSection = document.getElementById('idle-timeout-section');
+            if (idleSection && cu && cu.name === 'Donan Arciaga') {
+                idleSection.classList.remove('hidden');
+                document.getElementById('idle-timeout-input').value = IdleManager.getTimeout();
+            } else if (idleSection) {
+                idleSection.classList.add('hidden');
+            }
+            document.getElementById('settings-panel-modal').classList.remove('hidden');
+        }
+        function hideSettingsPanel() { document.getElementById('settings-panel-modal').classList.add('hidden'); }
+        function clearAllData() {
+            if (confirm('Delete all data? This cannot be undone.')) {
+                tools = []; engineers = []; transactions = []; returnRequests = [];
+                saveData();
+                refreshAllPanels();
+            }
+        }
 
-// ==================== SETTINGS ====================
-function showSettingsPanel() {
-    const cu = authManager.getCurrentUser();
-    const idleSection = document.getElementById('idle-timeout-section');
-    if (idleSection && cu && cu.name === 'Donan Arciaga') {
-        idleSection.classList.remove('hidden');
-        document.getElementById('idle-timeout-input').value = IdleManager.getTimeoutMinutes();
-    } else if (idleSection) {
-        idleSection.classList.add('hidden');
-    }
-    document.getElementById('settings-panel-modal').classList.remove('hidden');
-}
+        // ========== HELP ==========
+        function openReadmeViewer() {
+            document.getElementById('readme-content').innerHTML = `<h1>ToolTrack v1.26 Help</h1>
+            <p><strong>GitHub Sync:</strong> Uses a shared token embedded in the code. All users sync automatically – no token prompts.</p>
+            <p><strong>Idle Logout:</strong> After 10 minutes of inactivity (configurable by Donan in Settings).</p>
+            <p><strong>Forms:</strong> All Add dialogs clear previous entries.</p>
+            <p>Default password: <code>123</code>. Administrators: Royston Dcosta, Donan Arciaga.</p>`;
+            document.getElementById('readme-viewer-modal').classList.remove('hidden');
+        }
+        function hideReadmeViewer() { document.getElementById('readme-viewer-modal').classList.add('hidden'); }
 
-function hideSettingsPanel() { document.getElementById('settings-panel-modal').classList.add('hidden'); }
-
-function clearAllData() {
-    if (confirm('Delete all data? This cannot be undone.')) {
-        tools = [];
-        engineers = [];
-        transactions = [];
-        returnRequests = [];
-        saveData();
-        refreshAllPanels();
-        alert('All data cleared.');
-    }
-}
-
-// ==================== INIT ====================
-window.onload = async function() {
-    document.getElementById('taken-date').value = new Date().toISOString().split('T')[0];
-    document.getElementById('return-date').value = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
-    populateLoginDropdown();
-    document.getElementById('login-screen').classList.remove('hidden');
-    document.getElementById('main-app').classList.add('hidden');
-    console.log('ToolTrack v1.25 ready');
-};
-</script>
+        // ========== INIT ==========
+        window.onload = async function() {
+            document.getElementById('taken-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('return-date').value = new Date(Date.now()+7*86400000).toISOString().split('T')[0];
+            populateLoginDropdown();
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('main-app').classList.add('hidden');
+        };
+    </script>
 </body>
 </html>
