@@ -168,7 +168,7 @@
         // ═══════════════════════════════════════════
         // CONFIGURATION – REPLACE WITH YOUR TOKEN
         // ═══════════════════════════════════════════
-        const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN_HERE';   // ← PUT YOUR TOKEN HERE
+        const GITHUB_TOKEN = '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';   // ← PUT YOUR TOKEN HERE
         const REPO_OWNER = 'setechtool';
         const REPO_NAME = 'ToolTrack';
         const BRANCH = 'main';
@@ -265,7 +265,7 @@
         function populateLoginDropdown(){document.getElementById('login-user-select').innerHTML='<option value="">-- Select Your Name --</option>'+authManager.getAllUsers().map(u=>`<option value="${u}">${u}</option>`).join('');}
         function showLoginError(m){const d=document.getElementById('login-error-msg');d.querySelector('#login-error-text').textContent=m;d.classList.remove('hidden');setTimeout(()=>d.classList.add('hidden'),5000);}
         async function performLogin(){const u=document.getElementById('login-user-select').value,p=document.getElementById('login-password').value;if(!u){showLoginError('Select name.');return;}if(authManager.login(u,p)){document.getElementById('login-screen').classList.add('hidden');document.getElementById('main-app').classList.remove('hidden');document.getElementById('logged-user-name').textContent=u;document.getElementById('logged-user-role').textContent=authManager.getCurrentUser().role;buildSidebarNavigation();buildMobileNav();IdleManager.start();await logManager.logAuth(u,'Successful login');
-            if(GITHUB_TOKEN!=='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'){
+            if(GITHUB_TOKEN!=='YOUR_GITHUB_TOKEN_HERE'){
                 RepoSync.setStatus('syncing','Syncing...');
                 await RepoSync.pull();
                 refreshAllPanels();
