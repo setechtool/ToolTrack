@@ -250,7 +250,7 @@
             _hideWarningToast(){const toast=document.getElementById('idle-warning-toast');if(toast)toast.style.display='none';if(this._warningToastTimeout)clearTimeout(this._warningToastTimeout);},
             start(){this.stop();this.reset();this._checkInterval=setInterval(()=>{this._idleSeconds++;const timeoutSecs=this._timeoutMinutes*60;if(this._idleSeconds>=timeoutSecs-30&&!this._warningShown&&timeoutSecs>30){this._warningShown=true;this._showWarningToast('⚠️ You will be logged out in 30 seconds due to inactivity.');}if(this._idleSeconds>=timeoutSecs){this._triggerLogout();}},1000);this._attachActivityListeners();},
             stop(){if(this._checkInterval){clearInterval(this._checkInterval);this._checkInterval=null;}this._removeActivityListeners();this._hideWarningToast();},
-            async _triggerLogout(){this.stop();if(GITHUB_TOKEN!=='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'){RepoSync.setStatus('syncing','Auto-syncing...');try{await RepoSync.push();}catch(e){}}RepoSync.stopPolling();RepoSync.setStatus('offline','Offline');authManager.logout();document.getElementById('main-app').classList.add('hidden');document.getElementById('login-screen').classList.remove('hidden');document.getElementById('login-password').value='';closeMobileMoreDrawer();logManager.log('SYSTEM','Auto-logout due to inactivity ('+this._timeoutMinutes+' min)');this._hideWarningToast();},
+            async _triggerLogout(){this.stop();if(GITHUB_TOKEN!=='YOUR_GITHUB_TOKEN_HERE'){RepoSync.setStatus('syncing','Auto-syncing...');try{await RepoSync.push();}catch(e){}}RepoSync.stopPolling();RepoSync.setStatus('offline','Offline');authManager.logout();document.getElementById('main-app').classList.add('hidden');document.getElementById('login-screen').classList.remove('hidden');document.getElementById('login-password').value='';closeMobileMoreDrawer();logManager.log('SYSTEM','Auto-logout due to inactivity ('+this._timeoutMinutes+' min)');this._hideWarningToast();},
             _onActivity(){this.reset();},
             _attachActivityListeners(){['mousemove','keydown','click','scroll','touchstart','touchend'].forEach(evt=>{document.addEventListener(evt,this._onActivity,{passive:true});});},
             _removeActivityListeners(){['mousemove','keydown','click','scroll','touchstart','touchend'].forEach(evt=>{document.removeEventListener(evt,this._onActivity);});}
@@ -265,7 +265,7 @@
         function populateLoginDropdown(){document.getElementById('login-user-select').innerHTML='<option value="">-- Select Your Name --</option>'+authManager.getAllUsers().map(u=>`<option value="${u}">${u}</option>`).join('');}
         function showLoginError(m){const d=document.getElementById('login-error-msg');d.querySelector('#login-error-text').textContent=m;d.classList.remove('hidden');setTimeout(()=>d.classList.add('hidden'),5000);}
         async function performLogin(){const u=document.getElementById('login-user-select').value,p=document.getElementById('login-password').value;if(!u){showLoginError('Select name.');return;}if(authManager.login(u,p)){document.getElementById('login-screen').classList.add('hidden');document.getElementById('main-app').classList.remove('hidden');document.getElementById('logged-user-name').textContent=u;document.getElementById('logged-user-role').textContent=authManager.getCurrentUser().role;buildSidebarNavigation();buildMobileNav();IdleManager.start();await logManager.logAuth(u,'Successful login');
-            if(GITHUB_TOKEN!=='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'){
+            if(GITHUB_TOKEN!=='YOUR_GITHUB_TOKEN_HERE'){
                 RepoSync.setStatus('syncing','Syncing...');
                 await RepoSync.pull();
                 refreshAllPanels();
@@ -308,7 +308,7 @@
                 return res.json();
             },
             async pull(){
-                if(GITHUB_TOKEN==='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') return false;
+                if(GITHUB_TOKEN==='YOUR_GITHUB_TOKEN_HERE') return false;
                 try{
                     this.setStatus('syncing','Loading...');
                     const files = ['tools.json','engineers.json','transactions.json','returnRequests.json','tooltrack_users.json','royContact.json','deletionRecords.json','logConfig.json'];
@@ -341,7 +341,7 @@
                 this._pushTimer = setTimeout(() => this.push(), immediate ? 800 : 4000);
             },
             async push(){
-                if(GITHUB_TOKEN==='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') return;
+                if(GITHUB_TOKEN==='YOUR_GITHUB_TOKEN_HERE') return;
                 this._pendingPush = false;
                 try{
                     this.setStatus('syncing','Saving...');
@@ -372,7 +372,7 @@
             },
             startPolling(){
                 this.stopPolling();
-                if(GITHUB_TOKEN==='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') return;
+                if(GITHUB_TOKEN==='YOUR_GITHUB_TOKEN_HERE') return;
                 this._pollTimer = setInterval(async()=>{
                     if(document.hidden) return;
                     const pulled = await this.pull();
@@ -395,7 +395,7 @@
         }
 
         async function manualSync(){
-            if(GITHUB_TOKEN==='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'){
+            if(GITHUB_TOKEN==='YOUR_GITHUB_TOKEN_HERE'){
                 alert('⚠️ GitHub token not configured.\n\nAdd your Personal Access Token at the top of the code (GITHUB_TOKEN).\nScope needed: repo (private) or public_repo (public).');
                 return;
             }
@@ -559,7 +559,7 @@
             document.getElementById('main-app').classList.add('hidden');
             currentEngineerView='table';
             logManager.log('SYSTEM','ToolTrack v1.26 initialized');
-            if(GITHUB_TOKEN!=='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'){
+            if(GITHUB_TOKEN!=='YOUR_GITHUB_TOKEN_HERE'){
                 RepoSync.setStatus('syncing','Loading...');
                 await RepoSync.pull();
                 populateLoginDropdown();
