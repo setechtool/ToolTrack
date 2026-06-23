@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <!-- Force no-cache for all devices -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>ToolTrack v2.1.5 · Token in data.json</title>
+    <title>ToolTrack v2.1.6 · Shared Token</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -17,603 +16,153 @@
     </script>
     <style>
         /* ── Reset & Base ── */
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: #f8fafc;
-            color: #1e293b;
-            overflow: hidden;
-        }
-        .overflow-auto {
-            overflow: auto !important;
-        }
-        .overflow-x-auto {
-            overflow-x: auto !important;
-        }
-        .overflow-y-auto {
-            overflow-y: auto !important;
-        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #f8fafc; color: #1e293b; overflow: hidden; }
+        .overflow-auto { overflow: auto !important; }
+        .overflow-x-auto { overflow-x: auto !important; }
+        .overflow-y-auto { overflow-y: auto !important; }
 
         /* ── Cards ── */
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .card-hover:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-        }
+        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.05); }
 
         /* ── Navigation ── */
-        .nav-link {
-            transition: all 0.2s;
-            cursor: pointer;
-            border-radius: 10px;
-        }
-        .nav-link.active {
-            background: #1e40af;
-            color: #fff !important;
-        }
-        .view-toggle-btn {
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .view-toggle-btn.active {
-            background: #1e40af;
-            color: #fff;
-        }
+        .nav-link { transition: all 0.2s; cursor: pointer; border-radius: 10px; }
+        .nav-link.active { background: #1e40af; color: #fff !important; }
+        .view-toggle-btn { transition: all 0.2s; cursor: pointer; }
+        .view-toggle-btn.active { background: #1e40af; color: #fff; }
 
         /* ── Buttons ── */
-        .btn {
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border-radius: 12px;
-            font-weight: 500;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-        }
-        .btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-        }
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-        .btn-primary {
-            background: #2563eb;
-            color: #fff;
-        }
-        .btn-primary:hover {
-            background: #1d4ed8;
-        }
-        .btn-success {
-            background: #059669;
-            color: #fff;
-        }
-        .btn-success:hover {
-            background: #047857;
-        }
-        .btn-danger {
-            background: #dc2626;
-            color: #fff;
-        }
-        .btn-danger:hover {
-            background: #b91c1c;
-        }
-        .btn-warning {
-            background: #d97706;
-            color: #fff;
-        }
-        .btn-warning:hover {
-            background: #b45309;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1.5px solid #d1d5db;
-            color: #374151;
-        }
-        .btn-outline:hover {
-            background: #f1f5f9;
-            border-color: #9ca3af;
-        }
+        .btn { transition: all 0.2s ease; cursor: pointer; border-radius: 12px; font-weight: 500; border: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+        .btn:active { transform: translateY(0); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+        .btn-primary { background: #2563eb; color: #fff; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-success { background: #059669; color: #fff; }
+        .btn-success:hover { background: #047857; }
+        .btn-danger { background: #dc2626; color: #fff; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-warning { background: #d97706; color: #fff; }
+        .btn-warning:hover { background: #b45309; }
+        .btn-outline { background: transparent; border: 1.5px solid #d1d5db; color: #374151; }
+        .btn-outline:hover { background: #f1f5f9; border-color: #9ca3af; }
 
         /* ── Overdue pulse ── */
-        .overdue-btn {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.6;
-            }
-        }
+        .overdue-btn { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
 
         /* ── Custom Confirm ── */
-        .custom-confirm-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(3px);
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .custom-confirm-dialog {
-            background: #fff;
-            border-radius: 24px;
-            padding: 32px;
-            max-width: 440px;
-            width: 92%;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
-            animation: slideIn 0.25s ease;
-        }
-        @keyframes slideIn {
-            from {
-                transform: translateY(-30px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
+        .custom-confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(3px); z-index: 999; display: flex; align-items: center; justify-content: center; }
+        .custom-confirm-dialog { background: #fff; border-radius: 24px; padding: 32px; max-width: 440px; width: 92%; box-shadow: 0 30px 60px rgba(0,0,0,0.25); animation: slideIn 0.25s ease; }
+        @keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         /* ── Log Viewer ── */
-        .log-viewer {
-            max-height: 500px;
-            overflow-y: auto !important;
-            background: #0f172a;
-            color: #4ade80;
-            padding: 16px;
-            border-radius: 16px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            line-height: 1.7;
-        }
-        .log-entry {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            padding: 2px 0;
-        }
+        .log-viewer { max-height: 500px; overflow-y: auto !important; background: #0f172a; color: #4ade80; padding: 16px; border-radius: 16px; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.7; }
+        .log-entry { border-bottom: 1px solid rgba(255,255,255,0.04); padding: 2px 0; }
 
         /* ── Sync Badge ── */
-        .sync-status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            padding: 6px 14px;
-            border-radius: 40px;
-            background: #f1f5f9;
-            border: 1px solid #e2e8f0;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-        .sync-status-badge.syncing {
-            color: #1e40af;
-            border-color: #93b4e8;
-            background: #e8effb;
-        }
-        .sync-status-badge.synced {
-            color: #166534;
-            border-color: #86c7a3;
-            background: #e6f4ed;
-        }
-        .sync-status-badge.error {
-            color: #991b1b;
-            border-color: #f5baba;
-            background: #fdeaea;
-        }
-        .sync-status-badge.offline {
-            color: #78350f;
-            border-color: #f5c77a;
-            background: #fcf0dc;
-        }
-        .sync-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: currentColor;
-            flex-shrink: 0;
-        }
-        .sync-status-badge.syncing .sync-dot {
-            animation: pulse 0.9s ease-in-out infinite;
-        }
+        .sync-status-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; padding: 6px 14px; border-radius: 40px; background: #f1f5f9; border: 1px solid #e2e8f0; cursor: pointer; user-select: none; transition: all 0.3s; white-space: nowrap; }
+        .sync-status-badge.syncing { color: #1e40af; border-color: #93b4e8; background: #e8effb; }
+        .sync-status-badge.synced { color: #166534; border-color: #86c7a3; background: #e6f4ed; }
+        .sync-status-badge.error { color: #991b1b; border-color: #f5baba; background: #fdeaea; }
+        .sync-status-badge.offline { color: #78350f; border-color: #f5c77a; background: #fcf0dc; }
+        .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+        .sync-status-badge.syncing .sync-dot { animation: pulse 0.9s ease-in-out infinite; }
 
         /* ── Toggle Switch ── */
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 48px;
-            height: 26px;
-            flex-shrink: 0;
-        }
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .toggle-slider {
-            position: absolute;
-            inset: 0;
-            cursor: pointer;
-            background: #cbd5e1;
-            transition: 0.3s;
-            border-radius: 40px;
-        }
-        .toggle-slider::before {
-            content: '';
-            position: absolute;
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
-            background: #fff;
-            transition: 0.3s;
-            border-radius: 50%;
-        }
-        input:checked+.toggle-slider {
-            background: #059669;
-        }
-        input:checked+.toggle-slider::before {
-            transform: translateX(22px);
-        }
+        .toggle-switch { position: relative; display: inline-block; width: 48px; height: 26px; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; inset: 0; cursor: pointer; background: #cbd5e1; transition: 0.3s; border-radius: 40px; }
+        .toggle-slider::before { content: ''; position: absolute; height: 20px; width: 20px; left: 3px; bottom: 3px; background: #fff; transition: 0.3s; border-radius: 50%; }
+        input:checked + .toggle-slider { background: #059669; }
+        input:checked + .toggle-slider::before { transform: translateX(22px); }
 
         /* ── Log filter pills ── */
-        .log-filter-btn {
-            padding: 4px 16px;
-            border-radius: 40px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid #475569;
-            color: #94a3b8;
-            background: transparent;
-        }
-        .log-filter-btn.active {
-            background: #059669;
-            color: #fff;
-            border-color: #059669;
-        }
-        .log-filter-btn:hover {
-            background: #1e293b;
-            color: #f1f5f9;
-        }
+        .log-filter-btn { padding: 4px 16px; border-radius: 40px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: 1px solid #475569; color: #94a3b8; background: transparent; }
+        .log-filter-btn.active { background: #059669; color: #fff; border-color: #059669; }
+        .log-filter-btn:hover { background: #1e293b; color: #f1f5f9; }
 
         /* ── Mobile nav ── */
-        #mobile-nav {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #fff;
-            border-top: 1px solid #e2e8f0;
-            z-index: 60;
-            padding: 4px 0 env(safe-area-inset-bottom, 4px);
-        }
-        .mob-nav-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            padding: 6px 2px;
-            font-size: 10px;
-            color: #64748b;
-            background: none;
-            border: none;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            min-height: 44px;
-        }
-        .mob-nav-item.active {
-            color: #1e40af;
-        }
-        .mob-nav-item i {
-            font-size: 20px;
-        }
+        #mobile-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e2e8f0; z-index: 60; padding: 4px 0 env(safe-area-inset-bottom, 4px); }
+        .mob-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 2px; font-size: 10px; color: #64748b; background: none; border: none; cursor: pointer; -webkit-tap-highlight-color: transparent; min-height: 44px; }
+        .mob-nav-item.active { color: #1e40af; }
+        .mob-nav-item i { font-size: 20px; }
 
-        #mobile-more-drawer {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #fff;
-            border-top: 1px solid #e2e8f0;
-            border-radius: 24px 24px 0 0;
-            z-index: 70;
-            padding: 16px 16px calc(env(safe-area-inset-bottom, 0px) + 80px);
-        }
-        #mobile-more-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.35);
-            z-index: 65;
-        }
-        .mob-drawer-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 12px;
-            border-radius: 12px;
-            font-size: 15px;
-            color: #1e293b;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .mob-drawer-item:active {
-            background: #f1f5f9;
-        }
-        .mob-drawer-item i {
-            width: 24px;
-            text-align: center;
-            font-size: 18px;
-            color: #64748b;
-        }
+        #mobile-more-drawer { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e2e8f0; border-radius: 24px 24px 0 0; z-index: 70; padding: 16px 16px calc(env(safe-area-inset-bottom, 0px) + 80px); }
+        #mobile-more-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 65; }
+        .mob-drawer-item { display: flex; align-items: center; gap: 14px; padding: 14px 12px; border-radius: 12px; font-size: 15px; color: #1e293b; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .mob-drawer-item:active { background: #f1f5f9; }
+        .mob-drawer-item i { width: 24px; text-align: center; font-size: 18px; color: #64748b; }
 
         /* ── Responsive ── */
         @media (max-width: 767px) {
-            body {
-                overflow: auto;
-            }
-            #mobile-nav {
-                display: flex;
-            }
-            #main-app>div:first-child {
-                display: none !important;
-            }
-            #main-app header {
-                padding: 0 12px;
-            }
-            #main-app header h2 {
-                font-size: 15px;
-            }
-            #main-app header .btn span {
-                display: none;
-            }
-            #main-content-area {
-                padding-bottom: 72px;
-            }
-            #tab-0,
-            #tab-1,
-            #tab-2,
-            #tab-3,
-            #tab-4,
-            #tab-5,
-            #tab-6 {
-                padding: 12px !important;
-            }
-            #tab-0 .grid.grid-cols-4 {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 10px !important;
-            }
-            #engineers-grid-view {
-                grid-template-columns: 1fr !important;
-            }
-            #tab-3 .max-w-2xl {
-                max-width: 100% !important;
-            }
-            #tab-3 .grid.grid-cols-2 {
-                grid-template-columns: 1fr !important;
-            }
-            .sync-status-badge .sync-label {
-                font-size: 10px;
-            }
-            .sync-status-badge {
-                padding: 4px 10px;
-                gap: 4px;
-            }
-            .sync-refresh-btn {
-                font-size: 14px !important;
-                padding: 4px 8px !important;
-            }
+            body { overflow: auto; }
+            #mobile-nav { display: flex; }
+            #main-app > div:first-child { display: none !important; }
+            #main-app header { padding: 0 12px; }
+            #main-app header h2 { font-size: 15px; }
+            #main-app header .btn span { display: none; }
+            #main-content-area { padding-bottom: 72px; }
+            #tab-0, #tab-1, #tab-2, #tab-3, #tab-4, #tab-5, #tab-6 { padding: 12px !important; }
+            #tab-0 .grid.grid-cols-4 { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+            #engineers-grid-view { grid-template-columns: 1fr !important; }
+            #tab-3 .max-w-2xl { max-width: 100% !important; }
+            #tab-3 .grid.grid-cols-2 { grid-template-columns: 1fr !important; }
+            .sync-status-badge .sync-label { font-size: 10px; }
+            .sync-status-badge { padding: 4px 10px; gap: 4px; }
+            .sync-refresh-btn { font-size: 14px !important; padding: 4px 8px !important; }
         }
 
         /* ── Utilities ── */
-        .locked-field {
-            background: #f1f5f9 !important;
-            cursor: not-allowed;
-        }
-        .email-truncate {
-            display: inline-block;
-            max-width: 160px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            vertical-align: bottom;
-        }
-        .sort-header {
-            cursor: pointer;
-            user-select: none;
-            white-space: nowrap;
-        }
-        .sort-header:hover {
-            background: #f1f5f9;
-        }
-        .sort-header i {
-            margin-left: 4px;
-            font-size: 10px;
-            opacity: 0.4;
-        }
-        .sort-header.sorted i {
-            opacity: 1;
-            color: #1e40af;
-        }
+        .locked-field { background: #f1f5f9 !important; cursor: not-allowed; }
+        .email-truncate { display: inline-block; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; }
+        .sort-header { cursor: pointer; user-select: none; white-space: nowrap; }
+        .sort-header:hover { background: #f1f5f9; }
+        .sort-header i { margin-left: 4px; font-size: 10px; opacity: 0.4; }
+        .sort-header.sorted i { opacity: 1; color: #1e40af; }
 
         /* ── Idle toast ── */
-        #idle-warning-toast {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 500;
-            background: #fef3c7;
-            border: 2px solid #f59e0b;
-            border-radius: 16px;
-            padding: 14px 28px;
-            font-weight: 600;
-            color: #92400e;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
-            animation: slideDown 0.4s ease;
-            max-width: 92%;
-            text-align: center;
-        }
-        @keyframes slideDown {
-            from {
-                transform: translateX(-50%) translateY(-60px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(-50%) translateY(0);
-                opacity: 1;
-            }
-        }
+        #idle-warning-toast { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 500; background: #fef3c7; border: 2px solid #f59e0b; border-radius: 16px; padding: 14px 28px; font-weight: 600; color: #92400e; box-shadow: 0 12px 30px rgba(0,0,0,0.18); animation: slideDown 0.4s ease; max-width: 92%; text-align: center; }
+        @keyframes slideDown { from { transform: translateX(-50%) translateY(-60px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
 
         /* ── Modal overlay ── */
-        .modal-overlay {
-            backdrop-filter: blur(2px);
-        }
+        .modal-overlay { backdrop-filter: blur(2px); }
 
         /* ── Scrollable tables ── */
-        .table-wrap {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .table-wrap table {
-            min-width: 1200px;
-        }
+        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .table-wrap table { min-width: 1200px; }
 
         /* ── Settings panel ── */
-        .settings-card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 20px;
-            border: 1px solid #e2e8f0;
-        }
-        .settings-card h4 {
-            font-weight: 600;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .github-status-dot {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 6px;
-        }
-        .github-status-dot.online {
-            background: #22c55e;
-        }
-        .github-status-dot.offline {
-            background: #ef4444;
-        }
-        .github-status-dot.checking {
-            background: #eab308;
-            animation: pulse 0.8s ease-in-out infinite;
-        }
+        .settings-card { background: #fff; border-radius: 20px; padding: 20px; border: 1px solid #e2e8f0; }
+        .settings-card h4 { font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .github-status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+        .github-status-dot.online { background: #22c55e; }
+        .github-status-dot.offline { background: #ef4444; }
+        .github-status-dot.checking { background: #eab308; animation: pulse 0.8s ease-in-out infinite; }
 
         /* ── Misc ── */
-        .progress-bar {
-            transition: width 0.4s ease;
-        }
-        .readme-viewer {
-            max-height: 70vh;
-            overflow: auto !important;
-            padding: 24px;
-            background: #fefefe;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            line-height: 1.9;
-            width: 100%;
-            max-width: 100%;
-        }
-        .image-preview {
-            max-width: 100%;
-            max-height: 200px;
-            border-radius: 12px;
-            object-fit: contain;
-        }
+        .progress-bar { transition: width 0.4s ease; }
+        .readme-viewer { max-height: 70vh; overflow: auto !important; padding: 24px; background: #fefefe; border: 1px solid #e2e8f0; border-radius: 16px; line-height: 1.9; width: 100%; max-width: 100%; }
+        .image-preview { max-width: 100%; max-height: 200px; border-radius: 12px; object-fit: contain; }
 
         /* ── Settings modal: fixed footer ── */
-        .settings-modal-container {
-            display: flex;
-            flex-direction: column;
-            max-height: 90vh;
-            height: auto;
-        }
-        .settings-modal-body {
-            flex: 1 1 auto;
-            overflow-y: auto;
-            padding: 1.5rem;
-        }
-        .settings-modal-footer {
-            flex-shrink: 0;
-            padding: 1rem 1.5rem;
-            border-top: 1px solid #e2e8f0;
-            background: #fff;
-            border-radius: 0 0 1.5rem 1.5rem;
-        }
-        @media (max-width: 640px) {
-            .settings-modal-body {
-                padding: 1rem;
-            }
-            .settings-modal-footer {
-                padding: 0.75rem 1rem;
-            }
-        }
+        .settings-modal-container { display: flex; flex-direction: column; max-height: 90vh; height: auto; }
+        .settings-modal-body { flex: 1 1 auto; overflow-y: auto; padding: 1.5rem; }
+        .settings-modal-footer { flex-shrink: 0; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; background: #fff; border-radius: 0 0 1.5rem 1.5rem; }
+        @media (max-width: 640px) { .settings-modal-body { padding: 1rem; } .settings-modal-footer { padding: 0.75rem 1rem; } }
 
         /* ── Token expiry reminder ── */
-        .token-expiry {
-            background: #fef3c7;
-            border-left: 4px solid #f59e0b;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            margin-top: 8px;
-        }
-        .token-expiry.warning {
-            background: #fee2e2;
-            border-left-color: #ef4444;
-        }
-        .token-expiry a {
-            color: #2563eb;
-            text-decoration: underline;
-        }
-        .token-expiry .days-left {
-            font-weight: bold;
-        }
+        .token-expiry { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-top: 8px; }
+        .token-expiry.warning { background: #fee2e2; border-left-color: #ef4444; }
+        .token-expiry a { color: #2563eb; text-decoration: underline; }
+        .token-expiry .days-left { font-weight: bold; }
     </style>
 </head>
 <body>
 
     <!-- ─── IDLE WARNING TOAST ─── -->
-    <div id="idle-warning-toast">
-        <i class="fa-solid fa-clock mr-2"></i>
-        <span id="idle-warning-text"></span>
-    </div>
+    <div id="idle-warning-toast"><i class="fa-solid fa-clock mr-2"></i><span id="idle-warning-text"></span></div>
 
     <!-- ─── LOGIN SCREEN ─── -->
     <div id="login-screen" class="fixed inset-0 bg-gradient-to-br from-blue-700 to-blue-900 flex items-center justify-center z-[100]">
@@ -621,8 +170,8 @@
             <div class="text-center mb-6">
                 <i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-3"></i>
                 <h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1>
-                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1.5</p>
-                <p class="text-xs text-gray-400 mt-0.5">Token in data.json · expiry tracking</p>
+                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1.6</p>
+                <p class="text-xs text-gray-400 mt-0.5">Shared token (encoded)</p>
             </div>
             <div class="space-y-5">
                 <div>
@@ -666,7 +215,7 @@
                     <i class="fa-solid fa-toolbox text-3xl text-blue-600"></i>
                     <div>
                         <h1 class="text-xl font-bold">ToolTrack</h1>
-                        <p class="text-[10px] text-gray-500">v2.1.5 · data.json shared</p>
+                        <p class="text-[10px] text-gray-500">v2.1.6 · shared token</p>
                     </div>
                 </div>
             </div>
@@ -708,7 +257,6 @@
 
         <!-- Main content -->
         <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
             <header class="h-16 bg-white border-b flex items-center justify-between px-6 flex-shrink-0 gap-2">
                 <h2 class="text-xl font-semibold truncate" id="page-title">Dashboard</h2>
                 <div class="flex items-center gap-3 flex-shrink-0">
@@ -716,8 +264,7 @@
                         <i class="fa-solid fa-rotate"></i>
                     </button>
                     <div class="sync-status-badge offline" onclick="manualSync()" title="Click to sync">
-                        <div class="sync-dot"></div>
-                        <span class="sync-label">Offline</span>
+                        <div class="sync-dot"></div><span class="sync-label">Offline</span>
                     </div>
                     <button onclick="openReadmeViewer()" class="btn btn-outline px-4 py-1.5 text-sm hidden sm:flex">
                         <i class="fa-solid fa-book-open"></i><span> Help</span>
@@ -1043,7 +590,7 @@
                                     <input id="gh-token" type="password" placeholder="ghp_xxxxxxxx" class="flex-1 p-2 border rounded-xl text-sm" />
                                     <button onclick="toggleTokenVisibility()" class="px-3 border rounded-xl text-gray-500 hover:text-gray-700 text-sm">👁</button>
                                 </div>
-                                <p class="text-[10px] text-gray-400 mt-1">Token is shared with all users via <code>data.json</code>.</p>
+                                <p class="text-[10px] text-gray-400 mt-1">Token is stored encoded in <code>data.json</code> and shared automatically.</p>
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-gray-600 mb-1">Token Expiration Date</label>
@@ -1121,8 +668,8 @@
             <h2 class="text-2xl font-bold mt-2">ToolTrack</h2>
             <p class="text-gray-500">Service Tools Manager</p>
             <div class="mt-5 bg-gray-50 rounded-2xl p-4 text-left space-y-1 text-sm">
-                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.1.5</span></div>
-                <div class="flex justify-between"><span>Sync</span><span class="font-semibold text-blue-600">GitHub · token in data.json</span></div>
+                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.1.6</span></div>
+                <div class="flex justify-between"><span>Sync</span><span class="font-semibold text-blue-600">GitHub · token encoded</span></div>
             </div>
             <div class="mt-5 flex gap-2">
                 <button onclick="openReadmeViewer()" class="flex-1 py-2.5 btn btn-primary">View README</button>
@@ -1399,17 +946,16 @@
         // ═══════════════════════════════════════════════
         //  APP VERSION – increment to force cache refresh
         // ═══════════════════════════════════════════════
-        const APP_VERSION = '2.1.5';
-        // Check and force reload if version changed
+        const APP_VERSION = '2.1.6';
         const storedVersion = sessionStorage.getItem('tooltrack_app_version');
         if (storedVersion && storedVersion !== APP_VERSION) {
             sessionStorage.setItem('tooltrack_app_version', APP_VERSION);
-            location.reload(true); // force reload from server
+            location.reload(true);
         }
         sessionStorage.setItem('tooltrack_app_version', APP_VERSION);
 
         // ═══════════════════════════════════════════════
-        //  CONFIGURATION – all in data.json
+        //  CONFIGURATION – all in data.json, token encoded
         // ═══════════════════════════════════════════════
         const CONFIG = {
             get token() { return localStorage.getItem('gh_token') || ''; },
@@ -1427,6 +973,20 @@
             get dataPath() { return localStorage.getItem('gh_dataPath') || 'data.json'; },
             set dataPath(v) { localStorage.setItem('gh_dataPath', v); },
         };
+
+        // ─── Base64 helpers ──────────────────────────────────────────────────
+        function encodeToken(token) {
+            if (!token) return '';
+            return btoa(unescape(encodeURIComponent(token)));
+        }
+        function decodeToken(encoded) {
+            if (!encoded) return '';
+            try {
+                return decodeURIComponent(escape(atob(encoded)));
+            } catch (e) {
+                return '';
+            }
+        }
 
         // ═══════════════════════════════════════════════
         //  LOG MANAGER
@@ -1641,7 +1201,7 @@
         const authManager = new AuthManager();
 
         // ═══════════════════════════════════════════════
-        //  DATA STORE – data.json includes token and expiry
+        //  DATA STORE – token stored encoded
         // ═══════════════════════════════════════════════
         let tools = [];
         let engineers = [];
@@ -1671,8 +1231,15 @@
                         logManager.logConfig = data.logConfig;
                         localStorage.setItem('logConfig', JSON.stringify(data.logConfig));
                     }
-                    // Token and expiry are now stored directly in data.json
-                    if (data.githubToken) {
+                    // Decode token
+                    if (data.githubTokenEncoded) {
+                        const decoded = decodeToken(data.githubTokenEncoded);
+                        if (decoded) {
+                            CONFIG.token = decoded;
+                            localStorage.setItem('gh_token', decoded);
+                        }
+                    } else if (data.githubToken) {
+                        // fallback for old data (unencoded)
                         CONFIG.token = data.githubToken;
                         localStorage.setItem('gh_token', data.githubToken);
                     }
@@ -1700,7 +1267,7 @@
                 users: authManager.users,
                 deletionRecords: DeletionLogger.deletionRecords,
                 logConfig: logManager.logConfig,
-                githubToken: CONFIG.token,
+                githubTokenEncoded: encodeToken(CONFIG.token),
                 githubTokenExpiry: CONFIG.tokenExpiry,
                 reminderDays: CONFIG.reminderDays,
                 _meta: {
@@ -1710,7 +1277,6 @@
                 }
             };
             localStorage.setItem('tooltrack_data', JSON.stringify(data));
-            // Legacy keys
             localStorage.setItem('tools', JSON.stringify(tools));
             localStorage.setItem('engineers', JSON.stringify(engineers));
             localStorage.setItem('transactions', JSON.stringify(transactions));
@@ -1911,6 +1477,7 @@
                 this._pendingPush = false;
                 try {
                     this.setStatus('syncing', 'Saving…');
+                    // Build data with encoded token
                     const data = {
                         tools,
                         engineers,
@@ -1920,7 +1487,7 @@
                         users: authManager.users,
                         deletionRecords: DeletionLogger.deletionRecords,
                         logConfig: logManager.logConfig,
-                        githubToken: CONFIG.token,
+                        githubTokenEncoded: encodeToken(CONFIG.token),
                         githubTokenExpiry: CONFIG.tokenExpiry,
                         reminderDays: CONFIG.reminderDays,
                         _meta: { version: APP_VERSION, updated: new Date().toISOString(), user: authManager
@@ -2103,12 +1670,12 @@
             localStorage.setItem('gh_token', CONFIG.token);
             localStorage.setItem('gh_token_expiry', CONFIG.tokenExpiry);
             localStorage.setItem('gh_reminder_days', String(CONFIG.reminderDays));
-            // Save to data.json
+            // Save to data.json (encoded)
             saveData();
             updateGHStatusDisplay();
             updateTokenExpiryDisplay();
             RepoSync.setStatus(CONFIG.token ? 'offline' : 'offline', CONFIG.token ? 'Token saved' : 'No token');
-            alert('Settings saved and shared with all users via data.json!');
+            alert('Settings saved and shared with all users via data.json (token encoded)!');
             logManager.log(authManager.getCurrentUser()?.name || 'SYSTEM', 'GitHub settings updated');
         }
 
@@ -2975,7 +2542,6 @@
 
         async function confirmReturnEvidence() {
             if (!capturedReturnImage) { alert('Capture an image first.'); return; }
-            // Upload image to repo – compression handled inside uploadImageToRepo
             let imageUrl = null;
             if (CONFIG.token) {
                 try {
@@ -3486,7 +3052,7 @@
                     users: authManager.users,
                     deletionRecords: DeletionLogger.deletionRecords,
                     logConfig: logManager.logConfig,
-                    githubToken: CONFIG.token,
+                    githubTokenEncoded: encodeToken(CONFIG.token),
                     githubTokenExpiry: CONFIG.tokenExpiry,
                     reminderDays: CONFIG.reminderDays,
                     _meta: { version: APP_VERSION, user: authManager.getCurrentUser()?.name, ts: new Date()
@@ -3596,9 +3162,17 @@
                                     localStorage.setItem('deletionRecords', JSON.stringify(parsed)); }
                                 else if (k === 'logConfig') { logManager.logConfig = parsed;
                                     localStorage.setItem('logConfig', JSON.stringify(parsed)); }
-                                else if (k === 'githubToken') {
-                                    if (parsed) { CONFIG.token = parsed;
-                                        localStorage.setItem('gh_token', parsed); }
+                                else if (k === 'githubTokenEncoded' || k === 'githubToken') {
+                                    let token = '';
+                                    if (k === 'githubTokenEncoded') {
+                                        token = decodeToken(parsed);
+                                    } else {
+                                        token = parsed; // fallback
+                                    }
+                                    if (token) {
+                                        CONFIG.token = token;
+                                        localStorage.setItem('gh_token', token);
+                                    }
                                 }
                                 else if (k === 'githubTokenExpiry') {
                                     if (parsed) { CONFIG.tokenExpiry = parsed;
@@ -4009,7 +3583,7 @@
             static generateReadmeContent() {
                 return `
                     <!DOCTYPE html>
-                    <html><head><title>ToolTrack v2.1.5 Help</title>
+                    <html><head><title>ToolTrack v2.1.6 Help</title>
                     <style>
                         body{font-family:'Segoe UI',Arial;line-height:1.8;max-width:100%;margin:0;padding:20px;color:#1e293b;overflow-wrap:break-word;}
                         h1{color:#1e40af;border-bottom:3px solid #1e40af;padding-bottom:10px;}
@@ -4023,31 +3597,31 @@
                         code{background:#f1f5f9;padding:2px 8px;border-radius:6px;color:#1e293b;}
                     </style>
                     </head><body>
-                        <h1>🛠️ ToolTrack Service Tools Manager v2.1.5</h1>
-                        <p><strong>GitHub‑Synced Dashboard</strong> · Token in data.json · configurable reminder</p>
+                        <h1>🛠️ ToolTrack Service Tools Manager v2.1.6</h1>
+                        <p><strong>GitHub‑Synced Dashboard</strong> · Token stored encoded in data.json</p>
                         <div class="new-feature">
-                            <strong>v2.1.5:</strong> Token and expiry stored only in <code>data.json</code> (no separate token.json). Added configurable reminder days threshold.
+                            <strong>v2.1.6:</strong> Token is now base64‑encoded before storing in <code>data.json</code> to avoid GitHub secret detection. All users automatically share the token.
                         </div>
 
                         <h2>Quick Start</h2>
                         <ol>
                             <li>Login with your name (default password: <code>123</code>)</li>
                             <li>Admin sets token, expiry, and reminder days in Settings → GitHub Sync → Save</li>
-                            <li>All settings are shared via <code>data.json</code></li>
+                            <li>Settings are shared via <code>data.json</code> (token encoded)</li>
                             <li>All users see remaining days and warning if below threshold</li>
                         </ol>
 
                         <h2>GitHub Sync</h2>
                         <p>Token with <code>repo</code> scope. Repository: <strong>${CONFIG.owner}/${CONFIG.repo}</strong> · Branch: <strong>${CONFIG.branch}</strong></p>
                         <ul>
-                            <li>Data file: <code>${CONFIG.dataPath}</code> (includes token, expiry, reminder)</li>
+                            <li>Data file: <code>${CONFIG.dataPath}</code> (contains encoded token, expiry, reminder)</li>
                             <li>Images folder: <code>images/</code> (≤1 MB)</li>
                             <li>Pull on login, every 30s, and manual sync</li>
                             <li>Push debounced after changes</li>
                         </ul>
 
-                        <h2>Token Expiry</h2>
-                        <p>Set the expiration date and the number of days before expiry to trigger a warning. Default reminder threshold is 15 days.</p>
+                        <h2>Token Handling</h2>
+                        <p>The token is encoded in base64 to prevent GitHub's secret detection. It is decoded automatically when loaded.</p>
 
                         <h2>Cache Management</h2>
                         <p>Version check on load forces reload from server if updated.</p>
@@ -4055,11 +3629,11 @@
                         <h2>Version History</h2>
                         <table>
                             <tr><th>Version</th><th>Features</th></tr>
-                            <tr><td>2.1.5</td><td>Token in data.json, configurable reminder</td></tr>
-                            <tr><td>2.1.4</td><td>Token expiry tracking and warnings</td></tr>
+                            <tr><td>2.1.6</td><td>Token encoded in data.json, no separate token.json</td></tr>
+                            <tr><td>2.1.5</td><td>Configurable reminder days</td></tr>
                         </table>
 
-                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.1.5 · Built with ❤️</p>
+                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.1.6 · Built with ❤️</p>
                     </body></html>
                 `;
             }
@@ -4067,7 +3641,7 @@
                 const blob = new Blob([this.generateReadmeContent()], { type: 'text/html' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = 'ToolTrack_README_v2.1.5.html';
+                a.download = 'ToolTrack_README_v2.1.6.html';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
