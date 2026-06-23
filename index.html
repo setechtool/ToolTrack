@@ -7,7 +7,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>ToolTrack v2.1.2 · Shared Token</title>
+    <title>ToolTrack v2.1.3 · Shared Token</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -584,6 +584,20 @@
                 padding: 0.75rem 1rem;
             }
         }
+
+        /* ── Token expiry reminder ── */
+        .token-expiry {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+        .token-expiry a {
+            color: #2563eb;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -600,7 +614,7 @@
             <div class="text-center mb-6">
                 <i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-3"></i>
                 <h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1>
-                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1.2</p>
+                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1.3</p>
                 <p class="text-xs text-gray-400 mt-0.5">Shared token · ≤1 MB images</p>
             </div>
             <div class="space-y-5">
@@ -645,7 +659,7 @@
                     <i class="fa-solid fa-toolbox text-3xl text-blue-600"></i>
                     <div>
                         <h1 class="text-xl font-bold">ToolTrack</h1>
-                        <p class="text-[10px] text-gray-500">v2.1.2 · Shared token</p>
+                        <p class="text-[10px] text-gray-500">v2.1.3 · Shared token</p>
                     </div>
                 </div>
             </div>
@@ -1030,6 +1044,16 @@
                                 <span id="gh-connection-status" class="text-sm self-center ml-1"></span>
                             </div>
                             <div id="gh-status-detail" class="text-xs text-gray-500 mt-1"></div>
+                            <!-- Token Expiry Reminder -->
+                            <div class="token-expiry">
+                                <i class="fa-solid fa-clock mr-1"></i>
+                                <strong>Token Expiry Reminder:</strong> 
+                                Check your token's expiration date on 
+                                <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">
+                                    GitHub Token Settings
+                                </a>
+                                . If your token expires, workflows will fail. Generate a new token with the same permissions and update it here.
+                            </div>
                             <div class="text-xs text-amber-600 bg-amber-50 p-2 rounded-xl">
                                 <i class="fa-solid fa-image mr-1"></i> Images are stored in the <code>images/</code> folder and compressed to ≤1 MB.
                             </div>
@@ -1089,7 +1113,7 @@
             <h2 class="text-2xl font-bold mt-2">ToolTrack</h2>
             <p class="text-gray-500">Service Tools Manager</p>
             <div class="mt-5 bg-gray-50 rounded-2xl p-4 text-left space-y-1 text-sm">
-                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.1.2</span></div>
+                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.1.3</span></div>
                 <div class="flex justify-between"><span>Sync</span><span class="font-semibold text-blue-600">GitHub · shared token.json</span></div>
             </div>
             <div class="mt-5 flex gap-2">
@@ -1367,7 +1391,7 @@
         // ═══════════════════════════════════════════════
         //  APP VERSION – increment to force cache refresh
         // ═══════════════════════════════════════════════
-        const APP_VERSION = '2.1.2';
+        const APP_VERSION = '2.1.3';
         // Check and force reload if version changed
         const storedVersion = sessionStorage.getItem('tooltrack_app_version');
         if (storedVersion && storedVersion !== APP_VERSION) {
@@ -1703,16 +1727,20 @@
 
         // ─── Token handling ─────────────────────────────────────────────────
         async function saveTokenToRepo() {
-            if (!CONFIG.token) return;
+            if (!CONFIG.token) {
+                console.warn('No token to save to token.json');
+                return;
+            }
             try {
-                const content = JSON.stringify({ token: CONFIG.token });
-                const encoded = btoa(unescape(encodeURIComponent(content)));
                 const cfg = {
                     token: CONFIG.token,
                     owner: CONFIG.owner,
                     repo: CONFIG.repo,
                     branch: CONFIG.branch,
                 };
+                // Use the RepoSync._api which already has authentication
+                const content = JSON.stringify({ token: CONFIG.token });
+                const encoded = btoa(unescape(encodeURIComponent(content)));
                 const url =
                     `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/token.json?ref=${cfg.branch}`;
                 let sha = null;
@@ -1727,8 +1755,10 @@
                 };
                 if (sha) body.sha = sha;
                 await RepoSync._api('PUT', url, body);
+                console.log('token.json saved successfully');
             } catch (e) {
-                console.warn('Could not save token.json:', e);
+                console.error('Failed to save token.json:', e);
+                // Don't alert, just log
             }
         }
 
@@ -1740,6 +1770,16 @@
                     repo: CONFIG.repo,
                     branch: CONFIG.branch,
                 };
+                // If we have no token, we can't make authenticated request for token.json.
+                // But we may already have a token in CONFIG from localStorage.
+                if (!cfg.token) {
+                    // Try loading from localStorage first
+                    if (localStorage.getItem('gh_token')) {
+                        CONFIG.token = localStorage.getItem('gh_token');
+                        return true;
+                    }
+                    return false;
+                }
                 const url =
                     `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/token.json?ref=${cfg.branch}`;
                 const data = await RepoSync._api('GET', url);
@@ -2102,8 +2142,8 @@
             localStorage.setItem('gh_branch', CONFIG.branch);
             localStorage.setItem('gh_token', CONFIG.token);
             // Save to data.json and token.json
-            saveData();
-            // Also explicitly save token.json
+            saveData(); // this calls saveTokenToRepo internally
+            // Also explicitly call saveTokenToRepo to ensure it's uploaded now
             saveTokenToRepo().then(() => {
                 updateGHStatusDisplay();
                 RepoSync.setStatus(CONFIG.token ? 'offline' : 'offline', CONFIG.token ? 'Token saved' : 'No token');
@@ -4000,7 +4040,7 @@
             static generateReadmeContent() {
                 return `
                     <!DOCTYPE html>
-                    <html><head><title>ToolTrack v2.1.2 Help</title>
+                    <html><head><title>ToolTrack v2.1.3 Help</title>
                     <style>
                         body{font-family:'Segoe UI',Arial;line-height:1.8;max-width:100%;margin:0;padding:20px;color:#1e293b;overflow-wrap:break-word;}
                         h1{color:#1e40af;border-bottom:3px solid #1e40af;padding-bottom:10px;}
@@ -4014,10 +4054,10 @@
                         code{background:#f1f5f9;padding:2px 8px;border-radius:6px;color:#1e293b;}
                     </style>
                     </head><body>
-                        <h1>🛠️ ToolTrack Service Tools Manager v2.1.2</h1>
+                        <h1>🛠️ ToolTrack Service Tools Manager v2.1.3</h1>
                         <p><strong>GitHub‑Synced Dashboard</strong> · Shared token via <code>token.json</code></p>
                         <div class="new-feature">
-                            <strong>v2.1.2:</strong> Token is now stored in a separate <code>token.json</code> file, shared across all users.
+                            <strong>v2.1.3:</strong> Fixed token.json save issue. Added token expiry reminder in Settings.
                             Cache‑busting version check ensures iPhone and other devices always load the latest version.
                         </div>
 
@@ -4040,11 +4080,8 @@
                             <li><strong>Conflict handling:</strong> auto‑pull + merge on 409</li>
                         </ul>
 
-                        <h2>Image Handling</h2>
-                        <ul>
-                            <li>Images compressed to ≤1 MB before upload</li>
-                            <li>Max dimension: 1600px</li>
-                        </ul>
+                        <h2>Token Expiry</h2>
+                        <p>Check your token's expiration on <a href="https://github.com/settings/tokens" target="_blank">GitHub Token Settings</a>. If it expires, generate a new one and update it in Settings.</p>
 
                         <h2>Cache Management</h2>
                         <p>Version is checked on load; if changed, the page reloads from server (bypassing cache).</p>
@@ -4052,11 +4089,11 @@
                         <h2>Version History</h2>
                         <table>
                             <tr><th>Version</th><th>Features</th></tr>
+                            <tr><td>2.1.3</td><td>Fixed token.json, expiry reminder</td></tr>
                             <tr><td>2.1.2</td><td>Shared token.json · cache‑busting</td></tr>
-                            <tr><td>2.1.1</td><td>1MB limit, clear data warning, settings footer fixed</td></tr>
                         </table>
 
-                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.1.2 · Built with ❤️</p>
+                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.1.3 · Built with ❤️</p>
                     </body></html>
                 `;
             }
@@ -4064,7 +4101,7 @@
                 const blob = new Blob([this.generateReadmeContent()], { type: 'text/html' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = 'ToolTrack_README_v2.1.2.html';
+                a.download = 'ToolTrack_README_v2.1.3.html';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -4106,7 +4143,6 @@
                 RepoSync.startPolling();
             } else {
                 // Try to load token from token.json via pull (if token not set, pull will fail but we can still try)
-                // Attempt to pull without token? We need to ask user to set token.
                 RepoSync.setStatus('offline', 'No token');
                 // Show settings panel if admin? We'll let user decide.
             }
