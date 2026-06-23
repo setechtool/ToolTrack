@@ -2,11 +2,11 @@
   "tools": [
     {
       "id": 1782235171067,
-      "desc": "Multimeter",
-      "model": "Fluke 177",
-      "serial": "123",
+      "desc": "Digital Multimeter",
+      "model": "FLUKE 177 TRUE RMS MULTIMETER",
+      "serial": "26310065",
       "owner": "Donan Arciaga",
-      "calDue": "2027-06-23",
+      "calDue": "2027-05-23",
       "status": "Available",
       "location": "Donan",
       "calCert": null,
@@ -118,7 +118,7 @@
   },
   "_meta": {
     "version": "2.0",
-    "updated": "2026-06-23T17:31:52.720Z",
+    "updated": "2026-06-23T17:33:39.076Z",
     "user": "Donan Arciaga"
   }
 }
