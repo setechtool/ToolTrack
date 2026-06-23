@@ -20,6 +20,13 @@
       "phone": "9747 2834",
       "email": "donan.arciaga@sultanunited.com",
       "department": "X-ray Department"
+    },
+    {
+      "id": 1782235800193,
+      "name": "Royston DCosta",
+      "phone": "6694 4704",
+      "email": "royston.dcosta@sultanunited.com",
+      "department": "Tech Support Department"
     }
   ],
   "transactions": [],
@@ -52,6 +59,10 @@
     "Sara Al-Otaibi": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Royston DCosta": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -63,7 +74,7 @@
   },
   "_meta": {
     "version": "2.0",
-    "updated": "2026-06-23T17:19:35.075Z",
+    "updated": "2026-06-23T17:30:04.200Z",
     "user": "Donan Arciaga"
   }
 }
