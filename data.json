@@ -1,0 +1,56 @@
+{
+  "tools": [],
+  "engineers": [
+    {
+      "id": 1782235138098,
+      "name": "Donan Arciaga",
+      "phone": "9747 2834",
+      "email": "donan.arciaga@sultanunited.com",
+      "department": "X-ray Department"
+    }
+  ],
+  "transactions": [],
+  "returnRequests": [],
+  "roy": {
+    "phone": "+965 97421668",
+    "email": "royston.dcosta@sultanunited.com"
+  },
+  "users": {
+    "Royston Dcosta": {
+      "password": "123",
+      "role": "Administrator"
+    },
+    "Donan Arciaga": {
+      "password": "123",
+      "role": "Administrator"
+    },
+    "Ahmed Al-Sabah": {
+      "password": "123",
+      "role": "Engineer"
+    },
+    "Fatima Al-Mutairi": {
+      "password": "123",
+      "role": "Engineer"
+    },
+    "Mohammed Al-Rashid": {
+      "password": "123",
+      "role": "Engineer"
+    },
+    "Sara Al-Otaibi": {
+      "password": "123",
+      "role": "Engineer"
+    }
+  },
+  "deletionRecords": [],
+  "logConfig": {
+    "enabled": true,
+    "level": "all",
+    "retentionDays": 30,
+    "autoDelete": false
+  },
+  "_meta": {
+    "version": "2.0",
+    "updated": "2026-06-23T17:19:02.104Z",
+    "user": "Donan Arciaga"
+  }
+}
