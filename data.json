@@ -23,6 +23,18 @@
       "location": "Abdullah Safak",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1782236091833,
+      "desc": "Digital Multimeter",
+      "model": "FLUKE 177 TRUE RMS MULTIMETER",
+      "serial": "58240690",
+      "owner": "Donan Arciaga",
+      "calDue": "2027-06-23",
+      "status": "Available",
+      "location": "Roy",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -130,7 +142,7 @@
   },
   "_meta": {
     "version": "2.0",
-    "updated": "2026-06-23T17:34:22.916Z",
+    "updated": "2026-06-23T17:34:55.841Z",
     "user": "Donan Arciaga"
   }
 }
