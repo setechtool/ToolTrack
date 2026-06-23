@@ -99,6 +99,24 @@
       "approvalStatus": "",
       "incidentRemarks": "",
       "confirmedBy": ""
+    },
+    {
+      "id": 1782237776582,
+      "toolId": 1782236058913,
+      "engineerId": 1782235138098,
+      "takenDate": "2026-06-23",
+      "expectedReturn": "2026-06-30",
+      "returned": false,
+      "location": "N/A",
+      "extensionNotes": "",
+      "newExpectedReturn": "",
+      "actualReturnDate": "",
+      "returnConfirmedBy": "",
+      "confirmationNotes": "",
+      "transDate": "2026-06-23T18:02:56.582Z",
+      "approvalStatus": "",
+      "incidentRemarks": "",
+      "confirmedBy": ""
     }
   ],
   "returnRequests": [],
@@ -161,7 +179,7 @@
   },
   "_meta": {
     "version": "2.0",
-    "updated": "2026-06-23T18:02:43.171Z",
+    "updated": "2026-06-23T18:03:06.464Z",
     "user": "Donan Arciaga"
   }
 }
