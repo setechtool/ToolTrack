@@ -88,15 +88,15 @@
       "engineerId": 1782235138098,
       "takenDate": "2026-06-23",
       "expectedReturn": "2026-06-30",
-      "returned": false,
+      "returned": true,
       "location": "Farwaniya Hospital",
       "extensionNotes": "",
       "newExpectedReturn": "",
-      "actualReturnDate": "",
-      "returnConfirmedBy": "",
+      "actualReturnDate": "2026-06-23T18:17:54.666Z",
+      "returnConfirmedBy": "Donan Arciaga",
       "confirmationNotes": "",
-      "transDate": "2026-06-23T18:17:54.666Z",
-      "approvalStatus": "",
+      "transDate": "2026-06-23T18:21:36.877Z",
+      "approvalStatus": "Approved",
       "incidentRemarks": "",
       "confirmedBy": ""
     },
@@ -127,7 +127,7 @@
       "engineerId": 1782235138098,
       "returnDate": "2026-06-23T18:17:54.666Z",
       "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1782238671323_dsuaoa.png",
-      "status": "pending",
+      "status": "approved",
       "requestedBy": "Donan Arciaga"
     }
   ],
@@ -190,7 +190,7 @@
   },
   "_meta": {
     "version": "2.1",
-    "updated": "2026-06-23T18:17:58.670Z",
+    "updated": "2026-06-23T18:21:40.880Z",
     "user": "Donan Arciaga"
   }
 }
