@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>ToolTrack v2.0 · GitHub Sync</title>
+    <title>ToolTrack v2.1 · GitHub Sync</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -549,6 +549,12 @@
             width: 100%;
             max-width: 100%;
         }
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 12px;
+            object-fit: contain;
+        }
     </style>
 </head>
 <body>
@@ -565,8 +571,8 @@
             <div class="text-center mb-6">
                 <i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-3"></i>
                 <h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1>
-                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.0</p>
-                <p class="text-xs text-gray-400 mt-0.5">GitHub Sync · Shared Data</p>
+                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1</p>
+                <p class="text-xs text-gray-400 mt-0.5">GitHub Sync · Images stored in repo</p>
             </div>
             <div class="space-y-5">
                 <div>
@@ -610,7 +616,7 @@
                     <i class="fa-solid fa-toolbox text-3xl text-blue-600"></i>
                     <div>
                         <h1 class="text-xl font-bold">ToolTrack</h1>
-                        <p class="text-[10px] text-gray-500">v2.0 · GitHub Sync</p>
+                        <p class="text-[10px] text-gray-500">v2.1 · Images in repo</p>
                     </div>
                 </div>
             </div>
@@ -991,6 +997,9 @@
                             <span id="gh-connection-status" class="text-sm self-center ml-1"></span>
                         </div>
                         <div id="gh-status-detail" class="text-xs text-gray-500 mt-1"></div>
+                        <div class="text-xs text-amber-600 bg-amber-50 p-2 rounded-xl">
+                            <i class="fa-solid fa-image mr-1"></i> Images are stored in the <code>images/</code> folder of your repo.
+                        </div>
                     </div>
                 </div>
 
@@ -1044,8 +1053,8 @@
             <h2 class="text-2xl font-bold mt-2">ToolTrack</h2>
             <p class="text-gray-500">Service Tools Manager</p>
             <div class="mt-5 bg-gray-50 rounded-2xl p-4 text-left space-y-1 text-sm">
-                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.0</span></div>
-                <div class="flex justify-between"><span>Sync</span><span class="font-semibold text-blue-600">GitHub · data.json</span></div>
+                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.1</span></div>
+                <div class="flex justify-between"><span>Sync</span><span class="font-semibold text-blue-600">GitHub · data.json + images</span></div>
             </div>
             <div class="mt-5 flex gap-2">
                 <button onclick="openReadmeViewer()" class="flex-1 py-2.5 btn btn-primary">View README</button>
@@ -1566,7 +1575,6 @@
                     transactions = data.transactions || [];
                     returnRequests = data.returnRequests || [];
                     roy = data.roy || { phone: '+965 97421668', email: 'royston.dcosta@sultanunited.com' };
-                    // also load users if present
                     if (data.users) {
                         authManager.users = data.users;
                         authManager.save();
@@ -1596,23 +1604,21 @@
                 deletionRecords: DeletionLogger.deletionRecords,
                 logConfig: logManager.logConfig,
                 _meta: {
-                    version: '2.0',
+                    version: '2.1',
                     updated: new Date().toISOString(),
                     user: authManager.getCurrentUser()?.name || 'system'
                 }
             };
             localStorage.setItem('tooltrack_data', JSON.stringify(data));
-            // Also keep individual keys for compatibility with existing features
+            // Legacy keys
             localStorage.setItem('tools', JSON.stringify(tools));
             localStorage.setItem('engineers', JSON.stringify(engineers));
             localStorage.setItem('transactions', JSON.stringify(transactions));
             localStorage.setItem('returnRequests', JSON.stringify(returnRequests));
             localStorage.setItem('royContact', JSON.stringify(roy));
-            // schedule GitHub push
             RepoSync.schedulePush();
         }
 
-        // Legacy load for backward compatibility
         function loadLegacyData() {
             try {
                 tools = JSON.parse(localStorage.getItem('tools') || '[]');
@@ -1632,7 +1638,7 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  GITHUB REPO SYNC – single data.json
+        //  GITHUB REPO SYNC – single data.json + images
         // ═══════════════════════════════════════════════
         const RepoSync = {
             _pushTimer: null,
@@ -1685,27 +1691,13 @@
                 }
                 try {
                     this.setStatus('syncing', 'Loading…');
+                    // Pull data.json
                     const url =
                         `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${cfg.branch}`;
                     const data = await this._api('GET', url);
                     if (data.content) {
                         const content = atob(data.content.replace(/\n/g, ''));
                         localStorage.setItem('tooltrack_data', content);
-                        // also extract individual keys for compatibility
-                        try {
-                            const parsed = JSON.parse(content);
-                            if (parsed.tools) localStorage.setItem('tools', JSON.stringify(parsed.tools));
-                            if (parsed.engineers) localStorage.setItem('engineers', JSON.stringify(parsed.engineers));
-                            if (parsed.transactions) localStorage.setItem('transactions', JSON.stringify(parsed
-                            .transactions));
-                            if (parsed.returnRequests) localStorage.setItem('returnRequests', JSON.stringify(parsed
-                                .returnRequests));
-                            if (parsed.roy) localStorage.setItem('royContact', JSON.stringify(parsed.roy));
-                            if (parsed.users) localStorage.setItem('tooltrack_users', JSON.stringify(parsed.users));
-                            if (parsed.deletionRecords) localStorage.setItem('deletionRecords', JSON.stringify(parsed
-                                .deletionRecords));
-                            if (parsed.logConfig) localStorage.setItem('logConfig', JSON.stringify(parsed.logConfig));
-                        } catch (e) { /* ignore */ }
                         loadDataFromStorage();
                         this.setStatus('synced', 'Synced ✓');
                         return true;
@@ -1734,7 +1726,6 @@
                 this._pendingPush = false;
                 try {
                     this.setStatus('syncing', 'Saving…');
-                    // Build full data object
                     const data = {
                         tools,
                         engineers,
@@ -1744,30 +1735,24 @@
                         users: authManager.users,
                         deletionRecords: DeletionLogger.deletionRecords,
                         logConfig: logManager.logConfig,
-                        _meta: {
-                            version: '2.0',
-                            updated: new Date().toISOString(),
-                            user: authManager.getCurrentUser()?.name || 'system'
-                        }
+                        _meta: { version: '2.1', updated: new Date().toISOString(), user: authManager.getCurrentUser()
+                                ?.name || 'system' }
                     };
                     const content = JSON.stringify(data, null, 2);
                     const encoded = btoa(unescape(encodeURIComponent(content)));
-
                     const url =
                         `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${cfg.branch}`;
                     let sha = null;
                     try {
                         const existing = await this._api('GET', url);
                         sha = existing.sha;
-                    } catch (e) { /* file doesn't exist yet */ }
-
+                    } catch (e) { /* file doesn't exist */ }
                     const body = {
                         message: `Update data.json [auto] ${new Date().toISOString()}`,
                         content: encoded,
                         branch: cfg.branch
                     };
                     if (sha) body.sha = sha;
-
                     await this._api('PUT', url, body);
                     this.setStatus('synced', 'Saved ✓');
                     setTimeout(() => {
@@ -1777,6 +1762,27 @@
                     console.error('Push error:', e);
                     this.setStatus('error', 'Save failed');
                 }
+            },
+
+            // ─── Upload a single file (image) ───
+            async uploadFile(filePath, base64Content, message) {
+                const cfg = this._getConfig();
+                if (!cfg.token) throw new Error('Token not set');
+                const url =
+                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${filePath}?ref=${cfg.branch}`;
+                let sha = null;
+                try {
+                    const existing = await this._api('GET', url);
+                    sha = existing.sha;
+                } catch (e) { /* new file */ }
+                const body = {
+                    message: message || `Upload ${filePath}`,
+                    content: base64Content,
+                    branch: cfg.branch
+                };
+                if (sha) body.sha = sha;
+                const result = await this._api('PUT', url, body);
+                return result.content.download_url || `https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/${cfg.branch}/${filePath}`;
             },
 
             startPolling() {
@@ -1819,6 +1825,29 @@
             }
         };
 
+        // ─── Image upload helper ────────────────────────────────────────────
+        async function uploadImageToRepo(dataUrl, folder = 'images') {
+            // dataUrl: "data:image/png;base64,xxxx"
+            if (!CONFIG.token) {
+                console.warn('No token, cannot upload image.');
+                return null;
+            }
+            try {
+                const matches = dataUrl.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+                if (!matches || matches.length !== 3) throw new Error('Invalid data URL');
+                const mimeType = matches[1];
+                const ext = mimeType.split('/')[1] || 'png';
+                const base64Data = matches[2];
+                const filename = `${folder}/${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
+                const url = await RepoSync.uploadFile(filename, base64Data, `Upload image ${filename}`);
+                return url; // raw URL
+            } catch (e) {
+                console.error('Image upload error:', e);
+                return null;
+            }
+        }
+
+        // ─── Manual sync ──────────────────────────────────────────────────────
         async function manualSync() {
             if (!CONFIG.token) {
                 alert('⚠️ GitHub token not configured.\n\nGo to Settings → GitHub Sync and set your Personal Access Token.');
@@ -2217,6 +2246,9 @@
                 pending.map(r => {
                     const tool = tools.find(t => t.id === r.toolId);
                     const eng = engineers.find(e => e.id === r.engineerId);
+                    const imgHtml = r.evidenceImage ?
+                        `<img src="${r.evidenceImage}" class="w-12 h-12 object-cover rounded-xl cursor-pointer border" onclick="expandEvidence('${r.id}')" />` :
+                        '';
                     return `
                         <div class="border rounded-2xl p-4">
                             <div class="flex justify-between items-start gap-3 flex-wrap">
@@ -2230,7 +2262,7 @@
                                     <div class="text-xs text-gray-400">Submitted: ${new Date(r.returnDate).toLocaleString()}</div>
                                 </div>
                                 <div class="flex items-center gap-2 flex-wrap">
-                                    ${r.evidenceImage ? `<img src="${r.evidenceImage}" class="w-12 h-12 object-cover rounded-xl cursor-pointer border" onclick="expandEvidence('${r.id}')" />` : ''}
+                                    ${imgHtml}
                                     <button onclick="confirmReturn('${r.id}')" class="btn btn-success px-4 py-1.5 text-sm">Confirmed</button>
                                     <button onclick="incidentReport('${r.id}')" class="btn btn-danger px-4 py-1.5 text-sm">Incident</button>
                                 </div>
@@ -2298,6 +2330,9 @@
                             '<span class="px-3 py-1 rounded-full text-xs bg-amber-100 text-amber-700">BORROWED</span>' :
                             '<span class="px-3 py-1 rounded-full text-xs bg-emerald-100 text-emerald-700">AVAILABLE</span>'
                             ));
+                const certHtml = t.calCert ?
+                    `<a href="${t.calCert}" target="_blank" class="text-blue-500 btn text-sm"><i class="fa-solid fa-certificate"></i></a>` :
+                    `<button onclick="showCalCertModal(${t.id})" class="text-blue-500 btn text-sm"><i class="fa-solid fa-upload"></i></button>`;
                 return `
                     <tr>
                         <td class="px-4 py-4 font-medium">${t.desc}</td>
@@ -2309,7 +2344,7 @@
                         <td class="px-4 py-4">${isCalSoon(t.calDue) && !isBorrowed ? '<span class="text-xs text-orange-600">Prepare Cal</span>' : '-'}</td>
                         <td class="px-4 py-4 text-sm">${borrower ? borrower.firstName : '-'}</td>
                         <td class="px-4 py-4 text-sm">${borrower ? borrower.location : (t.location || '-')}</td>
-                        <td class="px-4 py-4 text-center"><button onclick="showCalCertModal(${t.id})" class="text-blue-500 btn text-sm"><i class="fa-solid fa-certificate"></i></button></td>
+                        <td class="px-4 py-4 text-center">${certHtml}</td>
                         <td class="px-4 py-4 text-right">
                             ${canEdit ? `
                                 <button onclick="showEditToolModal(${t.id})" class="text-blue-500 p-1.5 btn text-sm"><i class="fa-solid fa-edit"></i></button>
@@ -2713,6 +2748,26 @@
 
         async function confirmReturnEvidence() {
             if (!capturedReturnImage) { alert('Capture an image first.'); return; }
+            // Upload image to repo
+            let imageUrl = null;
+            if (CONFIG.token) {
+                try {
+                    imageUrl = await uploadImageToRepo(capturedReturnImage, 'images');
+                    if (imageUrl) {
+                        logManager.log(authManager.getCurrentUser().name, 'Return evidence uploaded: ' + imageUrl);
+                    } else {
+                        alert('Image upload failed. Please check your token and try again.');
+                        return;
+                    }
+                } catch (e) {
+                    alert('Image upload error: ' + e.message);
+                    return;
+                }
+            } else {
+                alert('GitHub token not set. Please configure in Settings.');
+                return;
+            }
+
             const trans = transactions.find(t => t.id === pendingReturnTransId);
             if (!trans) return;
             const tool = tools.find(t => t.id === trans.toolId);
@@ -2723,7 +2778,7 @@
                 toolId: trans.toolId,
                 engineerId: trans.engineerId,
                 returnDate,
-                evidenceImage: capturedReturnImage,
+                evidenceImage: imageUrl, // store the raw URL
                 status: 'pending',
                 requestedBy: authManager.getCurrentUser().name
             });
@@ -3191,7 +3246,6 @@
                 await delay(200);
 
                 const snapshot = {};
-                // Collect all relevant data
                 const data = {
                     tools,
                     engineers,
@@ -3201,10 +3255,9 @@
                     users: authManager.users,
                     deletionRecords: DeletionLogger.deletionRecords,
                     logConfig: logManager.logConfig,
-                    _meta: { version: '2.0', user: authManager.getCurrentUser()?.name, ts: new Date().toISOString() }
+                    _meta: { version: '2.1', user: authManager.getCurrentUser()?.name, ts: new Date().toISOString() }
                 };
                 snapshot['tooltrack_data'] = JSON.stringify(data);
-                // Also collect individual keys for compatibility
                 const keys = ['tools', 'engineers', 'transactions', 'returnRequests', 'tooltrack_users', 'royContact',
                     'deletionRecords', 'logConfig'
                 ];
@@ -3284,14 +3337,11 @@
                     bar.style.width = '70%';
                     percent.textContent = '70%';
 
-                    // Restore all keys
                     Object.keys(snapshot).forEach(k => {
                         try { localStorage.setItem(k, snapshot[k]); } catch (e) { /* ignore */ }
                     });
 
-                    // Reload data
                     loadDataFromStorage();
-                    // Also reload individual keys
                     const keys = ['tools', 'engineers', 'transactions', 'returnRequests', 'tooltrack_users',
                         'royContact', 'deletionRecords', 'logConfig'
                     ];
@@ -3572,25 +3622,47 @@
             const t = tools.find(x => x.id === id);
             if (!t) return;
             currentCalCertToolId = id;
-            document.getElementById('cal-cert-content').innerHTML = t.calCert ?
-                `<img src="${t.calCert}" class="max-w-full rounded-2xl max-h-64 mx-auto" />` :
-                '<p class="text-center py-8 text-gray-400">No certificate.</p>';
+            const content = document.getElementById('cal-cert-content');
+            if (t.calCert) {
+                content.innerHTML =
+                    `<a href="${t.calCert}" target="_blank"><img src="${t.calCert}" class="max-w-full rounded-2xl max-h-64 mx-auto" /></a>`;
+            } else {
+                content.innerHTML = '<p class="text-center py-8 text-gray-400">No certificate.</p>';
+            }
             document.getElementById('cal-cert-modal').classList.remove('hidden');
         }
 
         function hideCalCertModal() { document.getElementById('cal-cert-modal').classList.add('hidden'); }
 
-        function handleCertFileSelect(input) {
+        async function handleCertFileSelect(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = async function(e) {
+                    const dataUrl = e.target.result;
+                    let imageUrl = null;
+                    if (CONFIG.token) {
+                        try {
+                            imageUrl = await uploadImageToRepo(dataUrl, 'images');
+                            if (!imageUrl) {
+                                alert('Upload failed. Please check token.');
+                                return;
+                            }
+                        } catch (err) {
+                            alert('Upload error: ' + err.message);
+                            return;
+                        }
+                    } else {
+                        alert('GitHub token not set. Please configure in Settings.');
+                        return;
+                    }
                     const t = tools.find(x => x.id === currentCalCertToolId);
                     if (t) {
-                        t.calCert = e.target.result;
+                        t.calCert = imageUrl;
                         t.calCertDate = new Date().toISOString().split('T')[0];
                         saveData();
                         showCalCertModal(currentCalCertToolId);
                         renderTools();
+                        logManager.log(authManager.getCurrentUser().name, 'Uploaded cert for tool ' + t.desc);
                     }
                 };
                 reader.readAsDataURL(input.files[0]);
@@ -3690,7 +3762,7 @@
             static generateReadmeContent() {
                 return `
                     <!DOCTYPE html>
-                    <html><head><title>ToolTrack v2.0 Help</title>
+                    <html><head><title>ToolTrack v2.1 Help</title>
                     <style>
                         body{font-family:'Segoe UI',Arial;line-height:1.8;max-width:100%;margin:0;padding:20px;color:#1e293b;overflow-wrap:break-word;}
                         h1{color:#1e40af;border-bottom:3px solid #1e40af;padding-bottom:10px;}
@@ -3701,15 +3773,14 @@
                         th{background:#f1f5f9;color:#1e40af;}
                         .version-tag{background:#1e40af;color:#fff;padding:2px 10px;border-radius:20px;font-size:11px;}
                         .new-feature{background:#d1fae5;border-left:4px solid #10b981;padding:12px 16px;margin:12px 0;border-radius:0 12px 12px 0;}
-                        code{background:#f1f5f9;padding:2px 8px;border-radius:6px;font-size:12px;color:#1e293b;}
-                        .highlight{background:#fef3c7;padding:2px 8px;border-radius:6px;}
+                        code{background:#f1f5f9;padding:2px 8px;border-radius:6px;color:#1e293b;}
                     </style>
                     </head><body>
-                        <h1>🛠️ ToolTrack Service Tools Manager v2.0</h1>
-                        <p><strong>GitHub‑Synced Dashboard</strong> · Single <code>data.json</code> file</p>
+                        <h1>🛠️ ToolTrack Service Tools Manager v2.1</h1>
+                        <p><strong>GitHub‑Synced Dashboard</strong> · Images stored in repo</p>
                         <div class="new-feature">
-                            <strong>v2.0:</strong> All data (tools, engineers, transactions, etc.) stored in a single <code>data.json</code> file.
-                            Configure GitHub token in Settings → Test Connection. Works on PC &amp; smartphone.
+                            <strong>v2.1:</strong> Return evidence and calibration certificates are now uploaded to the <code>images/</code> folder in your repository.
+                            All users see the same pictures.
                         </div>
 
                         <h2>Quick Start</h2>
@@ -3717,46 +3788,34 @@
                             <li>Login with your name (default password: <code>123</code>)</li>
                             <li>Go to <strong>Settings → GitHub Sync</strong> and set your token</li>
                             <li>Click <strong>Test Connection</strong> to verify</li>
-                            <li>All data automatically syncs to <code>data.json</code> in your repo</li>
+                            <li>All data syncs via <code>data.json</code>; images go to <code>images/</code></li>
                         </ol>
 
                         <h2>GitHub Sync</h2>
-                        <p>Uses a Personal Access Token (classic) with <code>repo</code> or <code>public_repo</code> scope.<br />
-                        Repository: <strong>${CONFIG.owner}/${CONFIG.repo}</strong> · Branch: <strong>${CONFIG.branch}</strong> · File: <strong>${CONFIG.dataPath}</strong></p>
+                        <p>Token with <code>repo</code> scope. Repository: <strong>${CONFIG.owner}/${CONFIG.repo}</strong> · Branch: <strong>${CONFIG.branch}</strong></p>
                         <ul>
-                            <li><strong>Pull:</strong> On login, every 30s, and on manual sync</li>
-                            <li><strong>Push:</strong> Debounced after every change</li>
-                            <li><strong>Offline:</strong> Works with localStorage, syncs when online</li>
+                            <li>Data file: <code>${CONFIG.dataPath}</code></li>
+                            <li>Images folder: <code>images/</code> (auto‑created)</li>
+                            <li>Pull on login, every 30s, and manual sync</li>
+                            <li>Push debounced after changes</li>
                         </ul>
 
-                        <h2>Data Structure</h2>
-                        <p>All data is stored in <code>data.json</code> with the following keys:</p>
+                        <h2>Image Handling</h2>
                         <ul>
-                            <li><code>tools</code> — Service tools inventory</li>
-                            <li><code>engineers</code> — Engineer records</li>
-                            <li><code>transactions</code> — Borrow/return history</li>
-                            <li><code>returnRequests</code> — Pending return approvals</li>
-                            <li><code>users</code> — Login credentials</li>
-                            <li><code>roy</code> — Roy's contact info</li>
-                            <li><code>deletionRecords</code> — Audit trail</li>
-                            <li><code>logConfig</code> — Log settings</li>
-                            <li><code>_meta</code> — Version &amp; timestamp</li>
+                            <li>Return evidence and certs are uploaded as separate files</li>
+                            <li>URLs are stored in <code>data.json</code></li>
+                            <li>All users see the same images</li>
+                            <li>If upload fails, you'll be prompted to check your token</li>
                         </ul>
-
-                        <h2>Idle Timeout</h2>
-                        <p>Auto‑logout after 10 minutes of inactivity (configurable by Donan in Settings). Auto‑syncs before logout.</p>
-
-                        <h2>Mobile Friendly</h2>
-                        <p>Responsive design with bottom navigation bar. All features accessible on smartphone.</p>
 
                         <h2>Version History</h2>
                         <table>
                             <tr><th>Version</th><th>Features</th></tr>
-                            <tr><td>2.0</td><td>Single <code>data.json</code> · Token settings UI · Test connection · Full mobile support</td></tr>
-                            <tr><td>1.26</td><td>Multi‑file GitHub sync · All core features</td></tr>
+                            <tr><td>2.1</td><td>Images stored in repo · Shared across users</td></tr>
+                            <tr><td>2.0</td><td>Single <code>data.json</code> · Token UI</td></tr>
                         </table>
 
-                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.0 · Built with ❤️</p>
+                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.1 · Built with ❤️</p>
                     </body></html>
                 `;
             }
@@ -3764,7 +3823,7 @@
                 const blob = new Blob([this.generateReadmeContent()], { type: 'text/html' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = 'ToolTrack_README_v2.0.html';
+                a.download = 'ToolTrack_README_v2.1.html';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -3775,7 +3834,7 @@
         //  INITIALIZATION
         // ═══════════════════════════════════════════════
         window.onload = async function() {
-            const APP_VERSION = '2.0';
+            const APP_VERSION = '2.1';
             const storedVersion = sessionStorage.getItem('tooltrack_app_version');
             if (storedVersion && storedVersion !== APP_VERSION) {
                 sessionStorage.setItem('tooltrack_app_version', APP_VERSION);
@@ -3784,16 +3843,12 @@
             }
             sessionStorage.setItem('tooltrack_app_version', APP_VERSION);
 
-            // Try loading from localStorage first
             const hasData = loadDataFromStorage();
             if (!hasData) {
-                // Fallback: load from individual keys
                 loadLegacyData();
-                // Migrate to single data.json
                 saveDataToStorage();
             }
 
-            // Populate UI
             document.getElementById('taken-date').value = new Date().toISOString().split('T')[0];
             document.getElementById('return-date').value = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
             populateLoginDropdown();
@@ -3804,7 +3859,7 @@
             document.getElementById('main-app').classList.add('hidden');
             currentEngineerView = 'table';
 
-            logManager.log('SYSTEM', 'ToolTrack v2.0 initialized');
+            logManager.log('SYSTEM', 'ToolTrack v2.1 initialized');
 
             if (CONFIG.token) {
                 RepoSync.setStatus('syncing', 'Loading…');
