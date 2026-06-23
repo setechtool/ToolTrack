@@ -41,6 +41,13 @@
       "phone": "9606 0597",
       "email": "ashraf.al.anati@sultanunited.com",
       "department": "MRI Department"
+    },
+    {
+      "id": 1782235874369,
+      "name": "Mina Matta",
+      "phone": "6968 9304",
+      "email": "mina.matta@sultanunited.com",
+      "department": "Angio Department"
     }
   ],
   "transactions": [],
@@ -85,6 +92,10 @@
     "Ashraf Al Anati": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Mina Matta": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -96,7 +107,7 @@
   },
   "_meta": {
     "version": "2.0",
-    "updated": "2026-06-23T17:30:43.493Z",
+    "updated": "2026-06-23T17:31:18.377Z",
     "user": "Donan Arciaga"
   }
 }
