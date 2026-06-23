@@ -81,7 +81,26 @@
       "department": "Angio Department"
     }
   ],
-  "transactions": [],
+  "transactions": [
+    {
+      "id": 1782236502371,
+      "toolId": 1782235171067,
+      "engineerId": 1782235138098,
+      "takenDate": "2026-06-23",
+      "expectedReturn": "2026-06-30",
+      "returned": false,
+      "location": "Farwaniya Hospital",
+      "extensionNotes": "",
+      "newExpectedReturn": "",
+      "actualReturnDate": "",
+      "returnConfirmedBy": "",
+      "confirmationNotes": "",
+      "transDate": "2026-06-23T17:41:42.371Z",
+      "approvalStatus": "",
+      "incidentRemarks": "",
+      "confirmedBy": ""
+    }
+  ],
   "returnRequests": [],
   "roy": {
     "phone": "+965 97421668",
@@ -142,7 +161,7 @@
   },
   "_meta": {
     "version": "2.0",
-    "updated": "2026-06-23T17:34:55.841Z",
+    "updated": "2026-06-23T17:41:53.934Z",
     "user": "Donan Arciaga"
   }
 }
