@@ -7,7 +7,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>ToolTrack v2.1.3 · Shared Token</title>
+    <title>ToolTrack v2.1.4 · Token Expiry</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -594,9 +594,16 @@
             font-size: 13px;
             margin-top: 8px;
         }
+        .token-expiry.warning {
+            background: #fee2e2;
+            border-left-color: #ef4444;
+        }
         .token-expiry a {
             color: #2563eb;
             text-decoration: underline;
+        }
+        .token-expiry .days-left {
+            font-weight: bold;
         }
     </style>
 </head>
@@ -614,8 +621,8 @@
             <div class="text-center mb-6">
                 <i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-3"></i>
                 <h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1>
-                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1.3</p>
-                <p class="text-xs text-gray-400 mt-0.5">Shared token · ≤1 MB images</p>
+                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1.4</p>
+                <p class="text-xs text-gray-400 mt-0.5">Token expiry tracking</p>
             </div>
             <div class="space-y-5">
                 <div>
@@ -659,7 +666,7 @@
                     <i class="fa-solid fa-toolbox text-3xl text-blue-600"></i>
                     <div>
                         <h1 class="text-xl font-bold">ToolTrack</h1>
-                        <p class="text-[10px] text-gray-500">v2.1.3 · Shared token</p>
+                        <p class="text-[10px] text-gray-500">v2.1.4 · Token expiry</p>
                     </div>
                 </div>
             </div>
@@ -1038,22 +1045,18 @@
                                 </div>
                                 <p class="text-[10px] text-gray-400 mt-1">Token is shared with all users via <code>token.json</code>.</p>
                             </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Token Expiration Date</label>
+                                <input type="date" id="gh-token-expiry" class="w-full p-2 border rounded-xl text-sm" />
+                                <p class="text-[10px] text-gray-400 mt-1">Set the expiration date of your token to track remaining days.</p>
+                            </div>
+                            <div id="token-expiry-status" class="text-sm mt-1"></div>
                             <div class="flex flex-wrap gap-2">
                                 <button onclick="saveGitHubSettings()" class="btn btn-primary px-4 py-1.5 text-sm"><i class="fa-solid fa-floppy-disk"></i> Save</button>
                                 <button onclick="testGitHubConnection()" class="btn btn-outline px-4 py-1.5 text-sm"><i class="fa-solid fa-plug"></i> Test Connection</button>
                                 <span id="gh-connection-status" class="text-sm self-center ml-1"></span>
                             </div>
                             <div id="gh-status-detail" class="text-xs text-gray-500 mt-1"></div>
-                            <!-- Token Expiry Reminder -->
-                            <div class="token-expiry">
-                                <i class="fa-solid fa-clock mr-1"></i>
-                                <strong>Token Expiry Reminder:</strong> 
-                                Check your token's expiration date on 
-                                <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">
-                                    GitHub Token Settings
-                                </a>
-                                . If your token expires, workflows will fail. Generate a new token with the same permissions and update it here.
-                            </div>
                             <div class="text-xs text-amber-600 bg-amber-50 p-2 rounded-xl">
                                 <i class="fa-solid fa-image mr-1"></i> Images are stored in the <code>images/</code> folder and compressed to ≤1 MB.
                             </div>
@@ -1113,8 +1116,8 @@
             <h2 class="text-2xl font-bold mt-2">ToolTrack</h2>
             <p class="text-gray-500">Service Tools Manager</p>
             <div class="mt-5 bg-gray-50 rounded-2xl p-4 text-left space-y-1 text-sm">
-                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.1.3</span></div>
-                <div class="flex justify-between"><span>Sync</span><span class="font-semibold text-blue-600">GitHub · shared token.json</span></div>
+                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.1.4</span></div>
+                <div class="flex justify-between"><span>Sync</span><span class="font-semibold text-blue-600">GitHub · token expiry tracked</span></div>
             </div>
             <div class="mt-5 flex gap-2">
                 <button onclick="openReadmeViewer()" class="flex-1 py-2.5 btn btn-primary">View README</button>
@@ -1391,7 +1394,7 @@
         // ═══════════════════════════════════════════════
         //  APP VERSION – increment to force cache refresh
         // ═══════════════════════════════════════════════
-        const APP_VERSION = '2.1.3';
+        const APP_VERSION = '2.1.4';
         // Check and force reload if version changed
         const storedVersion = sessionStorage.getItem('tooltrack_app_version');
         if (storedVersion && storedVersion !== APP_VERSION) {
@@ -1406,6 +1409,8 @@
         const CONFIG = {
             get token() { return localStorage.getItem('gh_token') || ''; },
             set token(v) { localStorage.setItem('gh_token', v); },
+            get tokenExpiry() { return localStorage.getItem('gh_token_expiry') || ''; },
+            set tokenExpiry(v) { localStorage.setItem('gh_token_expiry', v); },
             get owner() { return localStorage.getItem('gh_owner') || 'setechtool'; },
             set owner(v) { localStorage.setItem('gh_owner', v); },
             get repo() { return localStorage.getItem('gh_repo') || 'ToolTrack'; },
@@ -1630,7 +1635,7 @@
         const authManager = new AuthManager();
 
         // ═══════════════════════════════════════════════
-        //  DATA STORE – data.json + token.json
+        //  DATA STORE – data.json + token.json (includes expiry)
         // ═══════════════════════════════════════════════
         let tools = [];
         let engineers = [];
@@ -1660,12 +1665,17 @@
                         logManager.logConfig = data.logConfig;
                         localStorage.setItem('logConfig', JSON.stringify(data.logConfig));
                     }
-                    // Token might be inside data.json as backup, but we prioritize token.json
+                    // Token and expiry might be inside data.json as backup
                     if (data.githubToken) {
-                        // If we don't have a token from token.json, use this
                         if (!CONFIG.token) {
                             CONFIG.token = data.githubToken;
                             localStorage.setItem('gh_token', data.githubToken);
+                        }
+                    }
+                    if (data.githubTokenExpiry) {
+                        if (!CONFIG.tokenExpiry) {
+                            CONFIG.tokenExpiry = data.githubTokenExpiry;
+                            localStorage.setItem('gh_token_expiry', data.githubTokenExpiry);
                         }
                     }
                     return true;
@@ -1684,7 +1694,8 @@
                 users: authManager.users,
                 deletionRecords: DeletionLogger.deletionRecords,
                 logConfig: logManager.logConfig,
-                githubToken: CONFIG.token, // include token as backup
+                githubToken: CONFIG.token,
+                githubTokenExpiry: CONFIG.tokenExpiry,
                 _meta: {
                     version: APP_VERSION,
                     updated: new Date().toISOString(),
@@ -1711,9 +1722,11 @@
                 authManager.users = JSON.parse(localStorage.getItem('tooltrack_users') || '{}');
                 DeletionLogger.deletionRecords = JSON.parse(localStorage.getItem('deletionRecords') || '[]');
                 logManager.logConfig = JSON.parse(localStorage.getItem('logConfig') || '{"enabled":true,"level":"all","retentionDays":30,"autoDelete":false}');
-                // Token from localStorage
                 if (localStorage.getItem('gh_token')) {
                     CONFIG.token = localStorage.getItem('gh_token');
+                }
+                if (localStorage.getItem('gh_token_expiry')) {
+                    CONFIG.tokenExpiry = localStorage.getItem('gh_token_expiry');
                 }
                 return true;
             } catch (e) { return false; }
@@ -1721,7 +1734,6 @@
 
         function saveData() {
             saveDataToStorage();
-            // Also save token to token.json separately
             saveTokenToRepo();
         }
 
@@ -1734,15 +1746,12 @@
             try {
                 const cfg = {
                     token: CONFIG.token,
-                    owner: CONFIG.owner,
-                    repo: CONFIG.repo,
-                    branch: CONFIG.branch,
+                    expires: CONFIG.tokenExpiry || '',
                 };
-                // Use the RepoSync._api which already has authentication
-                const content = JSON.stringify({ token: CONFIG.token });
+                const content = JSON.stringify(cfg);
                 const encoded = btoa(unescape(encodeURIComponent(content)));
                 const url =
-                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/token.json?ref=${cfg.branch}`;
+                    `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/token.json?ref=${CONFIG.branch}`;
                 let sha = null;
                 try {
                     const existing = await RepoSync._api('GET', url);
@@ -1751,14 +1760,13 @@
                 const body = {
                     message: `Update token.json [auto] ${new Date().toISOString()}`,
                     content: encoded,
-                    branch: cfg.branch
+                    branch: CONFIG.branch
                 };
                 if (sha) body.sha = sha;
                 await RepoSync._api('PUT', url, body);
                 console.log('token.json saved successfully');
             } catch (e) {
                 console.error('Failed to save token.json:', e);
-                // Don't alert, just log
             }
         }
 
@@ -1770,18 +1778,18 @@
                     repo: CONFIG.repo,
                     branch: CONFIG.branch,
                 };
-                // If we have no token, we can't make authenticated request for token.json.
-                // But we may already have a token in CONFIG from localStorage.
                 if (!cfg.token) {
-                    // Try loading from localStorage first
+                    // Try localStorage first
                     if (localStorage.getItem('gh_token')) {
                         CONFIG.token = localStorage.getItem('gh_token');
-                        return true;
                     }
-                    return false;
+                    if (localStorage.getItem('gh_token_expiry')) {
+                        CONFIG.tokenExpiry = localStorage.getItem('gh_token_expiry');
+                    }
+                    return !!CONFIG.token;
                 }
                 const url =
-                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/token.json?ref=${cfg.branch}`;
+                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/token.json?ref=${cfg.branch}`;
                 const data = await RepoSync._api('GET', url);
                 if (data.content) {
                     const content = atob(data.content.replace(/\n/g, ''));
@@ -1789,14 +1797,44 @@
                     if (parsed.token) {
                         CONFIG.token = parsed.token;
                         localStorage.setItem('gh_token', parsed.token);
-                        return true;
                     }
+                    if (parsed.expires) {
+                        CONFIG.tokenExpiry = parsed.expires;
+                        localStorage.setItem('gh_token_expiry', parsed.expires);
+                    }
+                    return true;
                 }
             } catch (e) {
-                // token.json may not exist yet
                 console.log('token.json not found, using local token');
             }
             return false;
+        }
+
+        // ─── Token expiry display ────────────────────────────────────────────
+        function updateTokenExpiryDisplay() {
+            const expiryEl = document.getElementById('token-expiry-status');
+            const expiryDate = CONFIG.tokenExpiry;
+            if (!expiryDate) {
+                expiryEl.innerHTML = '<span class="text-gray-500">No expiration date set.</span>';
+                return;
+            }
+            const now = new Date();
+            const exp = new Date(expiryDate + 'T00:00:00');
+            const diffDays = Math.ceil((exp - now) / (1000 * 60 * 60 * 24));
+            let statusClass = '';
+            let message = '';
+            if (diffDays < 0) {
+                statusClass = 'text-red-600 font-bold';
+                message = `Expired ${Math.abs(diffDays)} days ago. Please create a new token.`;
+            } else if (diffDays <= 15) {
+                statusClass = 'text-red-600 font-bold';
+                message = `Expires in ${diffDays} day${diffDays !== 1 ? 's' : ''}. ⚠️ Please renew soon.`;
+            } else {
+                statusClass = 'text-green-600';
+                message = `Expires in ${diffDays} day${diffDays !== 1 ? 's' : ''}.`;
+            }
+            expiryEl.innerHTML = `<span class="${statusClass}"><i class="fa-solid fa-clock mr-1"></i>${message}</span>`;
+            // Also add a persistent warning on the badge? For now only in settings.
         }
 
         // ═══════════════════════════════════════════════
@@ -1905,7 +1943,7 @@
                     this.setStatus('syncing', 'Loading…');
                     // Pull data.json
                     const urlData =
-                        `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/${cfg.path}?ref=${cfg.branch}`;
+                        `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${cfg.branch}`;
                     const data = await this._api('GET', urlData);
                     if (data.content) {
                         const content = atob(data.content.replace(/\n/g, ''));
@@ -1916,10 +1954,8 @@
                     try {
                         const tokenLoaded = await loadTokenFromRepo();
                         if (tokenLoaded) {
-                            // token is set, update UI
                             updateGHStatusDisplay();
-                            // re-sync data because token might have changed
-                            // we already loaded data, so just update UI
+                            updateTokenExpiryDisplay();
                             refreshAllPanels();
                             populateLoginDropdown();
                             updateAllUI();
@@ -1964,13 +2000,14 @@
                         deletionRecords: DeletionLogger.deletionRecords,
                         logConfig: logManager.logConfig,
                         githubToken: CONFIG.token,
+                        githubTokenExpiry: CONFIG.tokenExpiry,
                         _meta: { version: APP_VERSION, updated: new Date().toISOString(), user: authManager
                                 .getCurrentUser()?.name || 'system' }
                     };
                     const content = JSON.stringify(data, null, 2);
                     const encoded = btoa(unescape(encodeURIComponent(content)));
                     const url =
-                        `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/${cfg.path}?ref=${cfg.branch}`;
+                        `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${cfg.branch}`;
                     let sha = null;
                     try {
                         const existing = await this._api('GET', url);
@@ -2018,7 +2055,7 @@
                 const cfg = this._getConfig();
                 if (!cfg.token) throw new Error('Token not set');
                 const url =
-                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/${filePath}?ref=${cfg.branch}`;
+                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${filePath}?ref=${cfg.branch}`;
                 let sha = null;
                 try {
                     const existing = await this._api('GET', url);
@@ -2128,7 +2165,9 @@
             document.getElementById('gh-repo').value = CONFIG.repo;
             document.getElementById('gh-branch').value = CONFIG.branch;
             document.getElementById('gh-token').value = CONFIG.token;
+            document.getElementById('gh-token-expiry').value = CONFIG.tokenExpiry;
             updateGHStatusDisplay();
+            updateTokenExpiryDisplay();
         }
 
         function saveGitHubSettings() {
@@ -2136,16 +2175,19 @@
             CONFIG.repo = document.getElementById('gh-repo').value.trim() || 'ToolTrack';
             CONFIG.branch = document.getElementById('gh-branch').value.trim() || 'main';
             CONFIG.token = document.getElementById('gh-token').value.trim();
+            CONFIG.tokenExpiry = document.getElementById('gh-token-expiry').value;
             CONFIG.dataPath = 'data.json';
             localStorage.setItem('gh_owner', CONFIG.owner);
             localStorage.setItem('gh_repo', CONFIG.repo);
             localStorage.setItem('gh_branch', CONFIG.branch);
             localStorage.setItem('gh_token', CONFIG.token);
+            localStorage.setItem('gh_token_expiry', CONFIG.tokenExpiry);
             // Save to data.json and token.json
             saveData(); // this calls saveTokenToRepo internally
             // Also explicitly call saveTokenToRepo to ensure it's uploaded now
             saveTokenToRepo().then(() => {
                 updateGHStatusDisplay();
+                updateTokenExpiryDisplay();
                 RepoSync.setStatus(CONFIG.token ? 'offline' : 'offline', CONFIG.token ? 'Token saved' : 'No token');
                 alert('Settings saved and shared with all users via token.json!');
                 logManager.log(authManager.getCurrentUser()?.name || 'SYSTEM', 'GitHub settings updated');
@@ -2471,6 +2513,7 @@
             }
             updateRoyUI();
             loadGitHubSettingsUI();
+            updateTokenExpiryDisplay();
         }
 
         function updateRoyUI() {
@@ -3528,6 +3571,7 @@
                     deletionRecords: DeletionLogger.deletionRecords,
                     logConfig: logManager.logConfig,
                     githubToken: CONFIG.token,
+                    githubTokenExpiry: CONFIG.tokenExpiry,
                     _meta: { version: APP_VERSION, user: authManager.getCurrentUser()?.name, ts: new Date()
                             .toISOString() }
                 };
@@ -3638,6 +3682,10 @@
                                 else if (k === 'githubToken') {
                                     if (parsed) { CONFIG.token = parsed;
                                         localStorage.setItem('gh_token', parsed); }
+                                }
+                                else if (k === 'githubTokenExpiry') {
+                                    if (parsed) { CONFIG.tokenExpiry = parsed;
+                                        localStorage.setItem('gh_token_expiry', parsed); }
                                 }
                             } catch (e) { /* ignore */ }
                         }
@@ -4040,7 +4088,7 @@
             static generateReadmeContent() {
                 return `
                     <!DOCTYPE html>
-                    <html><head><title>ToolTrack v2.1.3 Help</title>
+                    <html><head><title>ToolTrack v2.1.4 Help</title>
                     <style>
                         body{font-family:'Segoe UI',Arial;line-height:1.8;max-width:100%;margin:0;padding:20px;color:#1e293b;overflow-wrap:break-word;}
                         h1{color:#1e40af;border-bottom:3px solid #1e40af;padding-bottom:10px;}
@@ -4054,46 +4102,45 @@
                         code{background:#f1f5f9;padding:2px 8px;border-radius:6px;color:#1e293b;}
                     </style>
                     </head><body>
-                        <h1>🛠️ ToolTrack Service Tools Manager v2.1.3</h1>
-                        <p><strong>GitHub‑Synced Dashboard</strong> · Shared token via <code>token.json</code></p>
+                        <h1>🛠️ ToolTrack Service Tools Manager v2.1.4</h1>
+                        <p><strong>GitHub‑Synced Dashboard</strong> · Token expiry tracking</p>
                         <div class="new-feature">
-                            <strong>v2.1.3:</strong> Fixed token.json save issue. Added token expiry reminder in Settings.
-                            Cache‑busting version check ensures iPhone and other devices always load the latest version.
+                            <strong>v2.1.4:</strong> Added token expiration date input. Remaining days are calculated and a warning appears when ≤15 days left.
+                            Shared via <code>token.json</code>.
                         </div>
 
                         <h2>Quick Start</h2>
                         <ol>
                             <li>Login with your name (default password: <code>123</code>)</li>
-                            <li>Admin sets token in Settings → GitHub Sync → Save</li>
-                            <li>Token is automatically shared via <code>token.json</code></li>
-                            <li>All users sync with the same token</li>
+                            <li>Admin sets token and expiry in Settings → GitHub Sync → Save</li>
+                            <li>Token and expiry are shared via <code>token.json</code></li>
+                            <li>All users see remaining days and warnings</li>
                         </ol>
 
                         <h2>GitHub Sync</h2>
                         <p>Token with <code>repo</code> scope. Repository: <strong>${CONFIG.owner}/${CONFIG.repo}</strong> · Branch: <strong>${CONFIG.branch}</strong></p>
                         <ul>
                             <li>Data file: <code>${CONFIG.dataPath}</code></li>
-                            <li>Token file: <code>token.json</code></li>
+                            <li>Token file: <code>token.json</code> (includes expiry)</li>
                             <li>Images folder: <code>images/</code> (≤1 MB)</li>
                             <li>Pull on login, every 30s, and manual sync</li>
                             <li>Push debounced after changes</li>
-                            <li><strong>Conflict handling:</strong> auto‑pull + merge on 409</li>
                         </ul>
 
                         <h2>Token Expiry</h2>
-                        <p>Check your token's expiration on <a href="https://github.com/settings/tokens" target="_blank">GitHub Token Settings</a>. If it expires, generate a new one and update it in Settings.</p>
+                        <p>Enter the expiration date (e.g., 2026-07-23). The system calculates days left and shows a warning when ≤15 days remain.</p>
 
                         <h2>Cache Management</h2>
-                        <p>Version is checked on load; if changed, the page reloads from server (bypassing cache).</p>
+                        <p>Version check on load forces reload from server if updated.</p>
 
                         <h2>Version History</h2>
                         <table>
                             <tr><th>Version</th><th>Features</th></tr>
+                            <tr><td>2.1.4</td><td>Token expiry tracking and warnings</td></tr>
                             <tr><td>2.1.3</td><td>Fixed token.json, expiry reminder</td></tr>
-                            <tr><td>2.1.2</td><td>Shared token.json · cache‑busting</td></tr>
                         </table>
 
-                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.1.3 · Built with ❤️</p>
+                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.1.4 · Built with ❤️</p>
                     </body></html>
                 `;
             }
@@ -4101,7 +4148,7 @@
                 const blob = new Blob([this.generateReadmeContent()], { type: 'text/html' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = 'ToolTrack_README_v2.1.3.html';
+                a.download = 'ToolTrack_README_v2.1.4.html';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -4125,6 +4172,7 @@
             populateLoginDropdown();
             updateRoyUI();
             loadGitHubSettingsUI();
+            updateTokenExpiryDisplay();
 
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('main-app').classList.add('hidden');
@@ -4132,9 +4180,7 @@
 
             logManager.log('SYSTEM', 'ToolTrack v' + APP_VERSION + ' initialized');
 
-            // Try to load token from token.json first
             if (CONFIG.token) {
-                // already have token, try to pull data
                 RepoSync.setStatus('syncing', 'Loading…');
                 await RepoSync.pull();
                 populateLoginDropdown();
@@ -4142,9 +4188,7 @@
                 refreshAllPanels();
                 RepoSync.startPolling();
             } else {
-                // Try to load token from token.json via pull (if token not set, pull will fail but we can still try)
                 RepoSync.setStatus('offline', 'No token');
-                // Show settings panel if admin? We'll let user decide.
             }
         };
     </script>
