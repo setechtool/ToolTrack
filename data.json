@@ -1,18 +1,5 @@
 {
-  "tools": [
-    {
-      "id": 1782235171067,
-      "desc": "Multimeter",
-      "model": "Fluke 177",
-      "serial": "123",
-      "owner": "Donan Arciaga",
-      "calDue": "2027-06-23",
-      "status": "Available",
-      "location": "Donan",
-      "calCert": null,
-      "calCertDate": null
-    }
-  ],
+  "tools": [],
   "engineers": [
     {
       "id": 1782235138098,
@@ -20,20 +7,6 @@
       "phone": "9747 2834",
       "email": "donan.arciaga@sultanunited.com",
       "department": "X-ray Department"
-    },
-    {
-      "id": 1782235800193,
-      "name": "Royston DCosta",
-      "phone": "6694 4704",
-      "email": "royston.dcosta@sultanunited.com",
-      "department": "Tech Support Department"
-    },
-    {
-      "id": 1782235819649,
-      "name": "Jomon Joseph",
-      "phone": "9771 6541",
-      "email": "jomon.joseph@sultanunited.com",
-      "department": "Project Department"
     }
   ],
   "transactions": [],
@@ -66,14 +39,6 @@
     "Sara Al-Otaibi": {
       "password": "123",
       "role": "Engineer"
-    },
-    "Royston DCosta": {
-      "password": "123",
-      "role": "Engineer"
-    },
-    "Jomon Joseph": {
-      "password": "123",
-      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -85,7 +50,7 @@
   },
   "_meta": {
     "version": "2.0",
-    "updated": "2026-06-23T17:30:23.659Z",
+    "updated": "2026-06-23T17:30:24.695Z",
     "user": "Donan Arciaga"
   }
 }
