@@ -1742,7 +1742,7 @@
                 const content = JSON.stringify({ token: CONFIG.token });
                 const encoded = btoa(unescape(encodeURIComponent(content)));
                 const url =
-                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/token.json?ref=${cfg.branch}`;
+                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/token.json?ref=${cfg.branch}`;
                 let sha = null;
                 try {
                     const existing = await RepoSync._api('GET', url);
@@ -1781,7 +1781,7 @@
                     return false;
                 }
                 const url =
-                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/token.json?ref=${cfg.branch}`;
+                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/token.json?ref=${cfg.branch}`;
                 const data = await RepoSync._api('GET', url);
                 if (data.content) {
                     const content = atob(data.content.replace(/\n/g, ''));
@@ -1905,7 +1905,7 @@
                     this.setStatus('syncing', 'Loading…');
                     // Pull data.json
                     const urlData =
-                        `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${cfg.branch}`;
+                        `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/${cfg.path}?ref=${cfg.branch}`;
                     const data = await this._api('GET', urlData);
                     if (data.content) {
                         const content = atob(data.content.replace(/\n/g, ''));
@@ -1970,7 +1970,7 @@
                     const content = JSON.stringify(data, null, 2);
                     const encoded = btoa(unescape(encodeURIComponent(content)));
                     const url =
-                        `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${cfg.branch}`;
+                        `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/${cfg.path}?ref=${cfg.branch}`;
                     let sha = null;
                     try {
                         const existing = await this._api('GET', url);
@@ -2018,7 +2018,7 @@
                 const cfg = this._getConfig();
                 if (!cfg.token) throw new Error('Token not set');
                 const url =
-                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${filePath}?ref=${cfg.branch}`;
+                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/${filePath}?ref=${cfg.branch}`;
                 let sha = null;
                 try {
                     const existing = await this._api('GET', url);
