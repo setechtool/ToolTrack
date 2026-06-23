@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <!-- Force no-cache for all devices -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>ToolTrack v2.1.2 · Shared Token</title>
+    <title>ToolTrack v2.1 · GitHub Sync</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -600,8 +599,8 @@
             <div class="text-center mb-6">
                 <i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-3"></i>
                 <h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1>
-                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1.2</p>
-                <p class="text-xs text-gray-400 mt-0.5">Shared token · ≤1 MB images</p>
+                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1</p>
+                <p class="text-xs text-gray-400 mt-0.5">Images ≤1 MB · Smart sync</p>
             </div>
             <div class="space-y-5">
                 <div>
@@ -645,7 +644,7 @@
                     <i class="fa-solid fa-toolbox text-3xl text-blue-600"></i>
                     <div>
                         <h1 class="text-xl font-bold">ToolTrack</h1>
-                        <p class="text-[10px] text-gray-500">v2.1.2 · Shared token</p>
+                        <p class="text-[10px] text-gray-500">v2.1 · Image resizer</p>
                     </div>
                 </div>
             </div>
@@ -1022,7 +1021,7 @@
                                     <input id="gh-token" type="password" placeholder="ghp_xxxxxxxx" class="flex-1 p-2 border rounded-xl text-sm" />
                                     <button onclick="toggleTokenVisibility()" class="px-3 border rounded-xl text-gray-500 hover:text-gray-700 text-sm">👁</button>
                                 </div>
-                                <p class="text-[10px] text-gray-400 mt-1">Token is shared with all users via <code>token.json</code>.</p>
+                                <p class="text-[10px] text-gray-400 mt-1">Needs <code>repo</code> or <code>public_repo</code> scope.</p>
                             </div>
                             <div class="flex flex-wrap gap-2">
                                 <button onclick="saveGitHubSettings()" class="btn btn-primary px-4 py-1.5 text-sm"><i class="fa-solid fa-floppy-disk"></i> Save</button>
@@ -1089,8 +1088,8 @@
             <h2 class="text-2xl font-bold mt-2">ToolTrack</h2>
             <p class="text-gray-500">Service Tools Manager</p>
             <div class="mt-5 bg-gray-50 rounded-2xl p-4 text-left space-y-1 text-sm">
-                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.1.2</span></div>
-                <div class="flex justify-between"><span>Sync</span><span class="font-semibold text-blue-600">GitHub · shared token.json</span></div>
+                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.1</span></div>
+                <div class="flex justify-between"><span>Sync</span><span class="font-semibold text-blue-600">GitHub · images ≤1MB</span></div>
             </div>
             <div class="mt-5 flex gap-2">
                 <button onclick="openReadmeViewer()" class="flex-1 py-2.5 btn btn-primary">View README</button>
@@ -1365,19 +1364,7 @@
     <!-- ──────────────────── JAVASCRIPT ──────────────────── -->
     <script>
         // ═══════════════════════════════════════════════
-        //  APP VERSION – increment to force cache refresh
-        // ═══════════════════════════════════════════════
-        const APP_VERSION = '2.1.2';
-        // Check and force reload if version changed
-        const storedVersion = sessionStorage.getItem('tooltrack_app_version');
-        if (storedVersion && storedVersion !== APP_VERSION) {
-            sessionStorage.setItem('tooltrack_app_version', APP_VERSION);
-            location.reload(true); // force reload from server
-        }
-        sessionStorage.setItem('tooltrack_app_version', APP_VERSION);
-
-        // ═══════════════════════════════════════════════
-        //  CONFIGURATION – loaded from localStorage + token.json
+        //  CONFIGURATION – loaded from localStorage
         // ═══════════════════════════════════════════════
         const CONFIG = {
             get token() { return localStorage.getItem('gh_token') || ''; },
@@ -1390,7 +1377,6 @@
             set branch(v) { localStorage.setItem('gh_branch', v); },
             get dataPath() { return localStorage.getItem('gh_dataPath') || 'data.json'; },
             set dataPath(v) { localStorage.setItem('gh_dataPath', v); },
-            get tokenPath() { return 'token.json'; }, // separate file for shared token
         };
 
         // ═══════════════════════════════════════════════
@@ -1606,7 +1592,7 @@
         const authManager = new AuthManager();
 
         // ═══════════════════════════════════════════════
-        //  DATA STORE – data.json + token.json
+        //  DATA STORE – single data.json
         // ═══════════════════════════════════════════════
         let tools = [];
         let engineers = [];
@@ -1636,14 +1622,6 @@
                         logManager.logConfig = data.logConfig;
                         localStorage.setItem('logConfig', JSON.stringify(data.logConfig));
                     }
-                    // Token might be inside data.json as backup, but we prioritize token.json
-                    if (data.githubToken) {
-                        // If we don't have a token from token.json, use this
-                        if (!CONFIG.token) {
-                            CONFIG.token = data.githubToken;
-                            localStorage.setItem('gh_token', data.githubToken);
-                        }
-                    }
                     return true;
                 }
             } catch (e) { console.warn('Data load error:', e); }
@@ -1660,9 +1638,8 @@
                 users: authManager.users,
                 deletionRecords: DeletionLogger.deletionRecords,
                 logConfig: logManager.logConfig,
-                githubToken: CONFIG.token, // include token as backup
                 _meta: {
-                    version: APP_VERSION,
+                    version: '2.1',
                     updated: new Date().toISOString(),
                     user: authManager.getCurrentUser()?.name || 'system'
                 }
@@ -1687,76 +1664,12 @@
                 authManager.users = JSON.parse(localStorage.getItem('tooltrack_users') || '{}');
                 DeletionLogger.deletionRecords = JSON.parse(localStorage.getItem('deletionRecords') || '[]');
                 logManager.logConfig = JSON.parse(localStorage.getItem('logConfig') || '{"enabled":true,"level":"all","retentionDays":30,"autoDelete":false}');
-                // Token from localStorage
-                if (localStorage.getItem('gh_token')) {
-                    CONFIG.token = localStorage.getItem('gh_token');
-                }
                 return true;
             } catch (e) { return false; }
         }
 
         function saveData() {
             saveDataToStorage();
-            // Also save token to token.json separately
-            saveTokenToRepo();
-        }
-
-        // ─── Token handling ─────────────────────────────────────────────────
-        async function saveTokenToRepo() {
-            if (!CONFIG.token) return;
-            try {
-                const content = JSON.stringify({ token: CONFIG.token });
-                const encoded = btoa(unescape(encodeURIComponent(content)));
-                const cfg = {
-                    token: CONFIG.token,
-                    owner: CONFIG.owner,
-                    repo: CONFIG.repo,
-                    branch: CONFIG.branch,
-                };
-                const url =
-                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/token.json?ref=${cfg.branch}`;
-                let sha = null;
-                try {
-                    const existing = await RepoSync._api('GET', url);
-                    sha = existing.sha;
-                } catch (e) { /* file doesn't exist */ }
-                const body = {
-                    message: `Update token.json [auto] ${new Date().toISOString()}`,
-                    content: encoded,
-                    branch: cfg.branch
-                };
-                if (sha) body.sha = sha;
-                await RepoSync._api('PUT', url, body);
-            } catch (e) {
-                console.warn('Could not save token.json:', e);
-            }
-        }
-
-        async function loadTokenFromRepo() {
-            try {
-                const cfg = {
-                    token: CONFIG.token,
-                    owner: CONFIG.owner,
-                    repo: CONFIG.repo,
-                    branch: CONFIG.branch,
-                };
-                const url =
-                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/token.json?ref=${cfg.branch}`;
-                const data = await RepoSync._api('GET', url);
-                if (data.content) {
-                    const content = atob(data.content.replace(/\n/g, ''));
-                    const parsed = JSON.parse(content);
-                    if (parsed.token) {
-                        CONFIG.token = parsed.token;
-                        localStorage.setItem('gh_token', parsed.token);
-                        return true;
-                    }
-                }
-            } catch (e) {
-                // token.json may not exist yet
-                console.log('token.json not found, using local token');
-            }
-            return false;
         }
 
         // ═══════════════════════════════════════════════
@@ -1769,6 +1682,7 @@
                     const canvas = document.createElement('canvas');
                     let width = img.width;
                     let height = img.height;
+                    // Scale down if too large (max 1600px on either side)
                     const MAX_DIM = 1600;
                     if (width > MAX_DIM || height > MAX_DIM) {
                         const ratio = Math.min(MAX_DIM / width, MAX_DIM / height);
@@ -1801,6 +1715,7 @@
                     tryCompress();
                 };
                 img.onerror = function() {
+                    // If image fails, return original
                     resolve(dataUrl);
                 };
                 img.src = dataUrl;
@@ -1863,34 +1778,18 @@
                 }
                 try {
                     this.setStatus('syncing', 'Loading…');
-                    // Pull data.json
-                    const urlData =
+                    const url =
                         `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${cfg.branch}`;
-                    const data = await this._api('GET', urlData);
+                    const data = await this._api('GET', url);
                     if (data.content) {
                         const content = atob(data.content.replace(/\n/g, ''));
                         localStorage.setItem('tooltrack_data', content);
                         loadDataFromStorage();
+                        this.setStatus('synced', 'Synced ✓');
+                        return true;
                     }
-                    // Pull token.json if exists
-                    try {
-                        const tokenLoaded = await loadTokenFromRepo();
-                        if (tokenLoaded) {
-                            // token is set, update UI
-                            updateGHStatusDisplay();
-                            // re-sync data because token might have changed
-                            // we already loaded data, so just update UI
-                            refreshAllPanels();
-                            populateLoginDropdown();
-                            updateAllUI();
-                            this.setStatus('synced', 'Synced ✓');
-                            return true;
-                        }
-                    } catch (e) {
-                        // token.json may not exist, ignore
-                    }
-                    this.setStatus('synced', 'Synced ✓');
-                    return true;
+                    this.setStatus('offline', 'No remote data');
+                    return false;
                 } catch (e) {
                     console.warn('Pull error:', e);
                     this.setStatus('error', 'Pull failed');
@@ -1913,7 +1812,6 @@
                 this._pendingPush = false;
                 try {
                     this.setStatus('syncing', 'Saving…');
-                    // Save data.json
                     const data = {
                         tools,
                         engineers,
@@ -1923,9 +1821,8 @@
                         users: authManager.users,
                         deletionRecords: DeletionLogger.deletionRecords,
                         logConfig: logManager.logConfig,
-                        githubToken: CONFIG.token,
-                        _meta: { version: APP_VERSION, updated: new Date().toISOString(), user: authManager
-                                .getCurrentUser()?.name || 'system' }
+                        _meta: { version: '2.1', updated: new Date().toISOString(), user: authManager.getCurrentUser()
+                                ?.name || 'system' }
                     };
                     const content = JSON.stringify(data, null, 2);
                     const encoded = btoa(unescape(encodeURIComponent(content)));
@@ -1943,10 +1840,6 @@
                     };
                     if (sha) body.sha = sha;
                     await this._api('PUT', url, body);
-
-                    // Also save token.json
-                    await saveTokenToRepo();
-
                     this.setStatus('synced', 'Saved ✓');
                     setTimeout(() => {
                         if (!this._pendingPush) this.setStatus('synced', 'Synced ✓');
@@ -2052,6 +1945,7 @@
                 return null;
             }
             try {
+                // Compress image to ≤1MB before upload
                 const compressed = await compressImage(dataUrl, 1);
                 const matches = compressed.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
                 if (!matches || matches.length !== 3) throw new Error('Invalid data URL');
@@ -2101,17 +1995,10 @@
             localStorage.setItem('gh_repo', CONFIG.repo);
             localStorage.setItem('gh_branch', CONFIG.branch);
             localStorage.setItem('gh_token', CONFIG.token);
-            // Save to data.json and token.json
-            saveData();
-            // Also explicitly save token.json
-            saveTokenToRepo().then(() => {
-                updateGHStatusDisplay();
-                RepoSync.setStatus(CONFIG.token ? 'offline' : 'offline', CONFIG.token ? 'Token saved' : 'No token');
-                alert('Settings saved and shared with all users via token.json!');
-                logManager.log(authManager.getCurrentUser()?.name || 'SYSTEM', 'GitHub settings updated');
-            }).catch(err => {
-                alert('Token saved locally but could not upload token.json: ' + err.message);
-            });
+            updateGHStatusDisplay();
+            RepoSync.setStatus(CONFIG.token ? 'offline' : 'offline', CONFIG.token ? 'Token saved' : 'No token');
+            alert('Settings saved!');
+            logManager.log(authManager.getCurrentUser()?.name || 'SYSTEM', 'GitHub settings updated');
         }
 
         function updateGHStatusDisplay() {
@@ -3448,6 +3335,7 @@
             if (ok) {
                 tools = [];
                 engineers = [];
+                // Clear transactions and return requests as well
                 transactions = [];
                 returnRequests = [];
                 saveData();
@@ -3487,9 +3375,7 @@
                     users: authManager.users,
                     deletionRecords: DeletionLogger.deletionRecords,
                     logConfig: logManager.logConfig,
-                    githubToken: CONFIG.token,
-                    _meta: { version: APP_VERSION, user: authManager.getCurrentUser()?.name, ts: new Date()
-                            .toISOString() }
+                    _meta: { version: '2.1', user: authManager.getCurrentUser()?.name, ts: new Date().toISOString() }
                 };
                 snapshot['tooltrack_data'] = JSON.stringify(data);
                 const keys = ['tools', 'engineers', 'transactions', 'returnRequests', 'tooltrack_users', 'royContact',
@@ -3595,10 +3481,6 @@
                                     localStorage.setItem('deletionRecords', JSON.stringify(parsed)); }
                                 else if (k === 'logConfig') { logManager.logConfig = parsed;
                                     localStorage.setItem('logConfig', JSON.stringify(parsed)); }
-                                else if (k === 'githubToken') {
-                                    if (parsed) { CONFIG.token = parsed;
-                                        localStorage.setItem('gh_token', parsed); }
-                                }
                             } catch (e) { /* ignore */ }
                         }
                     });
@@ -4000,7 +3882,7 @@
             static generateReadmeContent() {
                 return `
                     <!DOCTYPE html>
-                    <html><head><title>ToolTrack v2.1.2 Help</title>
+                    <html><head><title>ToolTrack v2.1 Help</title>
                     <style>
                         body{font-family:'Segoe UI',Arial;line-height:1.8;max-width:100%;margin:0;padding:20px;color:#1e293b;overflow-wrap:break-word;}
                         h1{color:#1e40af;border-bottom:3px solid #1e40af;padding-bottom:10px;}
@@ -4014,27 +3896,26 @@
                         code{background:#f1f5f9;padding:2px 8px;border-radius:6px;color:#1e293b;}
                     </style>
                     </head><body>
-                        <h1>🛠️ ToolTrack Service Tools Manager v2.1.2</h1>
-                        <p><strong>GitHub‑Synced Dashboard</strong> · Shared token via <code>token.json</code></p>
+                        <h1>🛠️ ToolTrack Service Tools Manager v2.1</h1>
+                        <p><strong>GitHub‑Synced Dashboard</strong> · Images ≤1 MB · Clear data warning</p>
                         <div class="new-feature">
-                            <strong>v2.1.2:</strong> Token is now stored in a separate <code>token.json</code> file, shared across all users.
-                            Cache‑busting version check ensures iPhone and other devices always load the latest version.
+                            <strong>v2.1:</strong> Return evidence and calibration certificates are compressed to ≤1 MB.
+                            Clear Data now shows a strong warning before deletion. Settings panel has a fixed footer for better mobile use.
                         </div>
 
                         <h2>Quick Start</h2>
                         <ol>
                             <li>Login with your name (default password: <code>123</code>)</li>
-                            <li>Admin sets token in Settings → GitHub Sync → Save</li>
-                            <li>Token is automatically shared via <code>token.json</code></li>
-                            <li>All users sync with the same token</li>
+                            <li>Go to <strong>Settings → GitHub Sync</strong> and set your token</li>
+                            <li>Click <strong>Test Connection</strong> to verify</li>
+                            <li>All data syncs via <code>data.json</code>; images go to <code>images/</code></li>
                         </ol>
 
                         <h2>GitHub Sync</h2>
                         <p>Token with <code>repo</code> scope. Repository: <strong>${CONFIG.owner}/${CONFIG.repo}</strong> · Branch: <strong>${CONFIG.branch}</strong></p>
                         <ul>
                             <li>Data file: <code>${CONFIG.dataPath}</code></li>
-                            <li>Token file: <code>token.json</code></li>
-                            <li>Images folder: <code>images/</code> (≤1 MB)</li>
+                            <li>Images folder: <code>images/</code> (auto‑created)</li>
                             <li>Pull on login, every 30s, and manual sync</li>
                             <li>Push debounced after changes</li>
                             <li><strong>Conflict handling:</strong> auto‑pull + merge on 409</li>
@@ -4044,19 +3925,19 @@
                         <ul>
                             <li>Images compressed to ≤1 MB before upload</li>
                             <li>Max dimension: 1600px</li>
+                            <li>All users see the same images</li>
                         </ul>
 
-                        <h2>Cache Management</h2>
-                        <p>Version is checked on load; if changed, the page reloads from server (bypassing cache).</p>
+                        <h2>Clear Data</h2>
+                        <p>Now shows a clear warning: <em>"This will permanently delete ALL tools, engineers, transactions, and return requests. Data cannot be recovered unless you have a backup."</em></p>
 
                         <h2>Version History</h2>
                         <table>
                             <tr><th>Version</th><th>Features</th></tr>
-                            <tr><td>2.1.2</td><td>Shared token.json · cache‑busting</td></tr>
-                            <tr><td>2.1.1</td><td>1MB limit, clear data warning, settings footer fixed</td></tr>
+                            <tr><td>2.1</td><td>1MB limit, clear data warning, settings footer fixed</td></tr>
                         </table>
 
-                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.1.2 · Built with ❤️</p>
+                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.1 · Built with ❤️</p>
                     </body></html>
                 `;
             }
@@ -4064,7 +3945,7 @@
                 const blob = new Blob([this.generateReadmeContent()], { type: 'text/html' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = 'ToolTrack_README_v2.1.2.html';
+                a.download = 'ToolTrack_README_v2.1.html';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -4074,9 +3955,16 @@
         // ═══════════════════════════════════════════════
         //  INITIALIZATION
         // ═══════════════════════════════════════════════
-        // Version check already done at top
-
         window.onload = async function() {
+            const APP_VERSION = '2.1';
+            const storedVersion = sessionStorage.getItem('tooltrack_app_version');
+            if (storedVersion && storedVersion !== APP_VERSION) {
+                sessionStorage.setItem('tooltrack_app_version', APP_VERSION);
+                location.reload(true);
+                return;
+            }
+            sessionStorage.setItem('tooltrack_app_version', APP_VERSION);
+
             const hasData = loadDataFromStorage();
             if (!hasData) {
                 loadLegacyData();
@@ -4093,11 +3981,9 @@
             document.getElementById('main-app').classList.add('hidden');
             currentEngineerView = 'table';
 
-            logManager.log('SYSTEM', 'ToolTrack v' + APP_VERSION + ' initialized');
+            logManager.log('SYSTEM', 'ToolTrack v2.1 initialized');
 
-            // Try to load token from token.json first
             if (CONFIG.token) {
-                // already have token, try to pull data
                 RepoSync.setStatus('syncing', 'Loading…');
                 await RepoSync.pull();
                 populateLoginDropdown();
@@ -4105,10 +3991,7 @@
                 refreshAllPanels();
                 RepoSync.startPolling();
             } else {
-                // Try to load token from token.json via pull (if token not set, pull will fail but we can still try)
-                // Attempt to pull without token? We need to ask user to set token.
                 RepoSync.setStatus('offline', 'No token');
-                // Show settings panel if admin? We'll let user decide.
             }
         };
     </script>
