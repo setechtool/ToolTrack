@@ -294,7 +294,9 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-06-24T08:32:09.642Z",
-    "user": "Nasr Hagy"
+    "merged": true,
+    "mergedAt": "2026-06-24T08:32:11.658Z",
+    "user": "Nasr Hagy",
+    "updated": "2026-06-24T08:32:09.642Z"
   }
 }
