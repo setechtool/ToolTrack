@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>ToolTrack v2.1.6 · Shared Token</title>
+    <title>ToolTrack v2.1.7 · Shared Token</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -157,6 +157,9 @@
         .token-expiry.warning { background: #fee2e2; border-left-color: #ef4444; }
         .token-expiry a { color: #2563eb; text-decoration: underline; }
         .token-expiry .days-left { font-weight: bold; }
+
+        /* ── Return evidence deletion notice ── */
+        .evidence-note { background: #fef9c3; border-left: 4px solid #eab308; padding: 8px 12px; border-radius: 6px; font-size: 12px; margin: 6px 0; }
     </style>
 </head>
 <body>
@@ -170,8 +173,8 @@
             <div class="text-center mb-6">
                 <i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-3"></i>
                 <h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1>
-                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1.6</p>
-                <p class="text-xs text-gray-400 mt-0.5">Shared token (encoded)</p>
+                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1.7</p>
+                <p class="text-xs text-gray-400 mt-0.5">Shared token (manual entry)</p>
             </div>
             <div class="space-y-5">
                 <div>
@@ -215,7 +218,7 @@
                     <i class="fa-solid fa-toolbox text-3xl text-blue-600"></i>
                     <div>
                         <h1 class="text-xl font-bold">ToolTrack</h1>
-                        <p class="text-[10px] text-gray-500">v2.1.6 · shared token</p>
+                        <p class="text-[10px] text-gray-500">v2.1.7 · manual token</p>
                     </div>
                 </div>
             </div>
@@ -562,60 +565,44 @@
                 <button onclick="hideSettingsPanel()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
             </div>
             <div class="settings-modal-body">
-                <div id="settings-restricted" class="hidden text-center py-8">
-                    <i class="fa-solid fa-lock text-4xl text-gray-300"></i>
-                    <p class="text-gray-500 mt-2">Accessible only to administrators.</p>
-                </div>
-                <div id="settings-content" class="space-y-4">
-
-                    <!-- GitHub Sync -->
-                    <div class="settings-card">
-                        <h4><i class="fa-brands fa-github text-blue-600"></i> GitHub Sync</h4>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">Repository</label>
-                                <div class="flex gap-2">
-                                    <input id="gh-owner" placeholder="owner" class="flex-1 p-2 border rounded-xl text-sm" />
-                                    <span class="text-gray-400 self-center">/</span>
-                                    <input id="gh-repo" placeholder="repo" class="flex-1 p-2 border rounded-xl text-sm" />
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">Branch</label>
-                                <input id="gh-branch" placeholder="main" class="w-full p-2 border rounded-xl text-sm" />
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">Personal Access Token</label>
-                                <div class="flex gap-2">
-                                    <input id="gh-token" type="password" placeholder="ghp_xxxxxxxx" class="flex-1 p-2 border rounded-xl text-sm" />
-                                    <button onclick="toggleTokenVisibility()" class="px-3 border rounded-xl text-gray-500 hover:text-gray-700 text-sm">👁</button>
-                                </div>
-                                <p class="text-[10px] text-gray-400 mt-1">Token is stored encoded in <code>data.json</code> and shared automatically.</p>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">Token Expiration Date</label>
-                                <input type="date" id="gh-token-expiry" class="w-full p-2 border rounded-xl text-sm" />
-                                <p class="text-[10px] text-gray-400 mt-1">Set the expiration date of your token to track remaining days.</p>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">Reminder Days (warning threshold)</label>
-                                <input type="number" id="gh-reminder-days" min="1" max="90" value="15" class="w-full p-2 border rounded-xl text-sm" />
-                                <p class="text-[10px] text-gray-400 mt-1">When remaining days are below this number, a warning will appear.</p>
-                            </div>
-                            <div id="token-expiry-status" class="text-sm mt-1"></div>
-                            <div class="flex flex-wrap gap-2">
-                                <button onclick="saveGitHubSettings()" class="btn btn-primary px-4 py-1.5 text-sm"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-                                <button onclick="testGitHubConnection()" class="btn btn-outline px-4 py-1.5 text-sm"><i class="fa-solid fa-plug"></i> Test Connection</button>
-                                <span id="gh-connection-status" class="text-sm self-center ml-1"></span>
-                            </div>
-                            <div id="gh-status-detail" class="text-xs text-gray-500 mt-1"></div>
-                            <div class="text-xs text-amber-600 bg-amber-50 p-2 rounded-xl">
-                                <i class="fa-solid fa-image mr-1"></i> Images are stored in the <code>images/</code> folder and compressed to ≤1 MB.
+                <!-- Always show GitHub sync for everyone -->
+                <div class="settings-card">
+                    <h4><i class="fa-brands fa-github text-blue-600"></i> GitHub Sync</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Repository</label>
+                            <div class="flex gap-2">
+                                <input id="gh-owner" placeholder="owner" class="flex-1 p-2 border rounded-xl text-sm" />
+                                <span class="text-gray-400 self-center">/</span>
+                                <input id="gh-repo" placeholder="repo" class="flex-1 p-2 border rounded-xl text-sm" />
                             </div>
                         </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Branch</label>
+                            <input id="gh-branch" placeholder="main" class="w-full p-2 border rounded-xl text-sm" />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Personal Access Token</label>
+                            <div class="flex gap-2">
+                                <input id="gh-token" type="password" placeholder="ghp_xxxxxxxx" class="flex-1 p-2 border rounded-xl text-sm" />
+                                <button onclick="toggleTokenVisibility()" class="px-3 border rounded-xl text-gray-500 hover:text-gray-700 text-sm">👁</button>
+                            </div>
+                            <p class="text-[10px] text-gray-400 mt-1">Enter the token provided by the administrator.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="saveGitHubSettings()" class="btn btn-primary px-4 py-1.5 text-sm"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+                            <button onclick="testGitHubConnection()" class="btn btn-outline px-4 py-1.5 text-sm"><i class="fa-solid fa-plug"></i> Test Connection</button>
+                            <span id="gh-connection-status" class="text-sm self-center ml-1"></span>
+                        </div>
+                        <div id="gh-status-detail" class="text-xs text-gray-500 mt-1"></div>
+                        <div class="text-xs text-amber-600 bg-amber-50 p-2 rounded-xl">
+                            <i class="fa-solid fa-image mr-1"></i> Images are stored in the <code>images/</code> folder and compressed to ≤1 MB.
+                        </div>
                     </div>
+                </div>
 
-                    <!-- Backup & Restore -->
+                <!-- Admin-only sections -->
+                <div id="admin-settings-section" style="display:none;">
                     <div class="settings-card bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
                         <h4 class="text-blue-800"><i class="fa-solid fa-database mr-2"></i>Backup &amp; Restore</h4>
                         <div class="flex flex-wrap gap-2">
@@ -624,8 +611,7 @@
                         </div>
                     </div>
 
-                    <!-- Idle Timeout -->
-                    <div id="idle-timeout-section" class="settings-card bg-amber-50 border-amber-200 hidden">
+                    <div id="idle-timeout-section" class="settings-card bg-amber-50 border-amber-200">
                         <h4 class="text-amber-800"><i class="fa-solid fa-clock mr-2"></i>Auto-Logout Timer</h4>
                         <div class="flex items-center gap-3 flex-wrap">
                             <label class="text-sm font-medium text-amber-700">Idle (minutes):</label>
@@ -635,7 +621,6 @@
                         <p class="text-xs text-amber-500 mt-1" id="idle-timeout-status"></p>
                     </div>
 
-                    <!-- Maintenance -->
                     <div class="settings-card">
                         <h4 class="text-gray-700"><i class="fa-solid fa-wrench mr-2"></i>Maintenance</h4>
                         <div class="flex flex-wrap gap-2">
@@ -668,8 +653,8 @@
             <h2 class="text-2xl font-bold mt-2">ToolTrack</h2>
             <p class="text-gray-500">Service Tools Manager</p>
             <div class="mt-5 bg-gray-50 rounded-2xl p-4 text-left space-y-1 text-sm">
-                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.1.6</span></div>
-                <div class="flex justify-between"><span>Sync</span><span class="font-semibold text-blue-600">GitHub · token encoded</span></div>
+                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.1.7</span></div>
+                <div class="flex justify-between"><span>Sync</span><span class="font-semibold text-blue-600">GitHub · manual token</span></div>
             </div>
             <div class="mt-5 flex gap-2">
                 <button onclick="openReadmeViewer()" class="flex-1 py-2.5 btn btn-primary">View README</button>
@@ -946,7 +931,7 @@
         // ═══════════════════════════════════════════════
         //  APP VERSION – increment to force cache refresh
         // ═══════════════════════════════════════════════
-        const APP_VERSION = '2.1.6';
+        const APP_VERSION = '2.1.7';
         const storedVersion = sessionStorage.getItem('tooltrack_app_version');
         if (storedVersion && storedVersion !== APP_VERSION) {
             sessionStorage.setItem('tooltrack_app_version', APP_VERSION);
@@ -955,15 +940,11 @@
         sessionStorage.setItem('tooltrack_app_version', APP_VERSION);
 
         // ═══════════════════════════════════════════════
-        //  CONFIGURATION – all in data.json, token encoded
+        //  CONFIGURATION – token stored locally only
         // ═══════════════════════════════════════════════
         const CONFIG = {
             get token() { return localStorage.getItem('gh_token') || ''; },
             set token(v) { localStorage.setItem('gh_token', v); },
-            get tokenExpiry() { return localStorage.getItem('gh_token_expiry') || ''; },
-            set tokenExpiry(v) { localStorage.setItem('gh_token_expiry', v); },
-            get reminderDays() { return parseInt(localStorage.getItem('gh_reminder_days')) || 15; },
-            set reminderDays(v) { localStorage.setItem('gh_reminder_days', String(v)); },
             get owner() { return localStorage.getItem('gh_owner') || 'setechtool'; },
             set owner(v) { localStorage.setItem('gh_owner', v); },
             get repo() { return localStorage.getItem('gh_repo') || 'ToolTrack'; },
@@ -973,20 +954,6 @@
             get dataPath() { return localStorage.getItem('gh_dataPath') || 'data.json'; },
             set dataPath(v) { localStorage.setItem('gh_dataPath', v); },
         };
-
-        // ─── Base64 helpers ──────────────────────────────────────────────────
-        function encodeToken(token) {
-            if (!token) return '';
-            return btoa(unescape(encodeURIComponent(token)));
-        }
-        function decodeToken(encoded) {
-            if (!encoded) return '';
-            try {
-                return decodeURIComponent(escape(atob(encoded)));
-            } catch (e) {
-                return '';
-            }
-        }
 
         // ═══════════════════════════════════════════════
         //  LOG MANAGER
@@ -1201,7 +1168,7 @@
         const authManager = new AuthManager();
 
         // ═══════════════════════════════════════════════
-        //  DATA STORE – token stored encoded
+        //  DATA STORE – no token in data.json, only local
         // ═══════════════════════════════════════════════
         let tools = [];
         let engineers = [];
@@ -1231,26 +1198,7 @@
                         logManager.logConfig = data.logConfig;
                         localStorage.setItem('logConfig', JSON.stringify(data.logConfig));
                     }
-                    // Decode token
-                    if (data.githubTokenEncoded) {
-                        const decoded = decodeToken(data.githubTokenEncoded);
-                        if (decoded) {
-                            CONFIG.token = decoded;
-                            localStorage.setItem('gh_token', decoded);
-                        }
-                    } else if (data.githubToken) {
-                        // fallback for old data (unencoded)
-                        CONFIG.token = data.githubToken;
-                        localStorage.setItem('gh_token', data.githubToken);
-                    }
-                    if (data.githubTokenExpiry) {
-                        CONFIG.tokenExpiry = data.githubTokenExpiry;
-                        localStorage.setItem('gh_token_expiry', data.githubTokenExpiry);
-                    }
-                    if (data.reminderDays) {
-                        CONFIG.reminderDays = data.reminderDays;
-                        localStorage.setItem('gh_reminder_days', data.reminderDays);
-                    }
+                    // Token is NOT stored in data.json – only local storage
                     return true;
                 }
             } catch (e) { console.warn('Data load error:', e); }
@@ -1267,9 +1215,7 @@
                 users: authManager.users,
                 deletionRecords: DeletionLogger.deletionRecords,
                 logConfig: logManager.logConfig,
-                githubTokenEncoded: encodeToken(CONFIG.token),
-                githubTokenExpiry: CONFIG.tokenExpiry,
-                reminderDays: CONFIG.reminderDays,
+                // No token fields
                 _meta: {
                     version: APP_VERSION,
                     updated: new Date().toISOString(),
@@ -1295,14 +1241,9 @@
                 authManager.users = JSON.parse(localStorage.getItem('tooltrack_users') || '{}');
                 DeletionLogger.deletionRecords = JSON.parse(localStorage.getItem('deletionRecords') || '[]');
                 logManager.logConfig = JSON.parse(localStorage.getItem('logConfig') || '{"enabled":true,"level":"all","retentionDays":30,"autoDelete":false}');
+                // Load token from localStorage if exists
                 if (localStorage.getItem('gh_token')) {
                     CONFIG.token = localStorage.getItem('gh_token');
-                }
-                if (localStorage.getItem('gh_token_expiry')) {
-                    CONFIG.tokenExpiry = localStorage.getItem('gh_token_expiry');
-                }
-                if (localStorage.getItem('gh_reminder_days')) {
-                    CONFIG.reminderDays = parseInt(localStorage.getItem('gh_reminder_days')) || 15;
                 }
                 return true;
             } catch (e) { return false; }
@@ -1310,33 +1251,6 @@
 
         function saveData() {
             saveDataToStorage();
-        }
-
-        // ─── Token expiry display ────────────────────────────────────────────
-        function updateTokenExpiryDisplay() {
-            const expiryEl = document.getElementById('token-expiry-status');
-            const expiryDate = CONFIG.tokenExpiry;
-            const reminder = CONFIG.reminderDays || 15;
-            if (!expiryDate) {
-                expiryEl.innerHTML = '<span class="text-gray-500">No expiration date set.</span>';
-                return;
-            }
-            const now = new Date();
-            const exp = new Date(expiryDate + 'T00:00:00');
-            const diffDays = Math.ceil((exp - now) / (1000 * 60 * 60 * 24));
-            let statusClass = '';
-            let message = '';
-            if (diffDays < 0) {
-                statusClass = 'text-red-600 font-bold';
-                message = `Expired ${Math.abs(diffDays)} days ago. Please create a new token.`;
-            } else if (diffDays <= reminder) {
-                statusClass = 'text-red-600 font-bold';
-                message = `Expires in ${diffDays} day${diffDays !== 1 ? 's' : ''}. ⚠️ Please renew soon (threshold: ${reminder} days).`;
-            } else {
-                statusClass = 'text-green-600';
-                message = `Expires in ${diffDays} day${diffDays !== 1 ? 's' : ''}.`;
-            }
-            expiryEl.innerHTML = `<span class="${statusClass}"><i class="fa-solid fa-clock mr-1"></i>${message}</span>`;
         }
 
         // ═══════════════════════════════════════════════
@@ -1477,7 +1391,7 @@
                 this._pendingPush = false;
                 try {
                     this.setStatus('syncing', 'Saving…');
-                    // Build data with encoded token
+                    // Build data without token
                     const data = {
                         tools,
                         engineers,
@@ -1487,9 +1401,7 @@
                         users: authManager.users,
                         deletionRecords: DeletionLogger.deletionRecords,
                         logConfig: logManager.logConfig,
-                        githubTokenEncoded: encodeToken(CONFIG.token),
-                        githubTokenExpiry: CONFIG.tokenExpiry,
-                        reminderDays: CONFIG.reminderDays,
+                        // No token fields
                         _meta: { version: APP_VERSION, updated: new Date().toISOString(), user: authManager
                                 .getCurrentUser()?.name || 'system' }
                     };
@@ -1633,7 +1545,7 @@
         // ─── Manual sync ──────────────────────────────────────────────────────
         async function manualSync() {
             if (!CONFIG.token) {
-                alert('⚠️ GitHub token not configured.\n\nGo to Settings → GitHub Sync and set your Personal Access Token.');
+                alert('⚠️ GitHub token not configured.\n\nGo to Settings → GitHub Sync and enter your token.');
                 showSettingsPanel();
                 return;
             }
@@ -1650,10 +1562,7 @@
             document.getElementById('gh-repo').value = CONFIG.repo;
             document.getElementById('gh-branch').value = CONFIG.branch;
             document.getElementById('gh-token').value = CONFIG.token;
-            document.getElementById('gh-token-expiry').value = CONFIG.tokenExpiry;
-            document.getElementById('gh-reminder-days').value = CONFIG.reminderDays || 15;
             updateGHStatusDisplay();
-            updateTokenExpiryDisplay();
         }
 
         function saveGitHubSettings() {
@@ -1661,22 +1570,15 @@
             CONFIG.repo = document.getElementById('gh-repo').value.trim() || 'ToolTrack';
             CONFIG.branch = document.getElementById('gh-branch').value.trim() || 'main';
             CONFIG.token = document.getElementById('gh-token').value.trim();
-            CONFIG.tokenExpiry = document.getElementById('gh-token-expiry').value;
-            CONFIG.reminderDays = parseInt(document.getElementById('gh-reminder-days').value) || 15;
             CONFIG.dataPath = 'data.json';
             localStorage.setItem('gh_owner', CONFIG.owner);
             localStorage.setItem('gh_repo', CONFIG.repo);
             localStorage.setItem('gh_branch', CONFIG.branch);
             localStorage.setItem('gh_token', CONFIG.token);
-            localStorage.setItem('gh_token_expiry', CONFIG.tokenExpiry);
-            localStorage.setItem('gh_reminder_days', String(CONFIG.reminderDays));
-            // Save to data.json (encoded)
-            saveData();
             updateGHStatusDisplay();
-            updateTokenExpiryDisplay();
             RepoSync.setStatus(CONFIG.token ? 'offline' : 'offline', CONFIG.token ? 'Token saved' : 'No token');
-            alert('Settings saved and shared with all users via data.json (token encoded)!');
-            logManager.log(authManager.getCurrentUser()?.name || 'SYSTEM', 'GitHub settings updated');
+            alert('Token saved locally. This is only for your device.');
+            logManager.log(authManager.getCurrentUser()?.name || 'SYSTEM', 'GitHub token updated locally');
         }
 
         function updateGHStatusDisplay() {
@@ -1713,6 +1615,31 @@
         function toggleTokenVisibility() {
             const inp = document.getElementById('gh-token');
             inp.type = inp.type === 'password' ? 'text' : 'password';
+        }
+
+        // ═══════════════════════════════════════════════
+        //  SETTINGS VISIBILITY (admin vs non-admin)
+        // ═══════════════════════════════════════════════
+        function updateSettingsVisibility() {
+            const user = authManager.getCurrentUser();
+            const adminSection = document.getElementById('admin-settings-section');
+            if (user && (user.isDonan || user.isRoy)) {
+                adminSection.style.display = 'block';
+            } else {
+                adminSection.style.display = 'none';
+            }
+            // Also show/hide idle timeout if needed
+            const idleSection = document.getElementById('idle-timeout-section');
+            if (idleSection) {
+                if (user && user.isDonan) {
+                    idleSection.style.display = 'block';
+                    document.getElementById('idle-timeout-input').value = IdleManager.getTimeoutMinutes();
+                    document.getElementById('idle-timeout-status').textContent = 'Current: ' + IdleManager
+                        .getTimeoutMinutes() + ' minute(s).';
+                } else {
+                    idleSection.style.display = 'none';
+                }
+            }
         }
 
         // ═══════════════════════════════════════════════
@@ -1996,7 +1923,7 @@
             }
             updateRoyUI();
             loadGitHubSettingsUI();
-            updateTokenExpiryDisplay();
+            updateSettingsVisibility();
         }
 
         function updateRoyUI() {
@@ -2057,6 +1984,10 @@
                                 </div>
                                 <div class="flex items-center gap-2 flex-wrap">
                                     ${imgHtml}
+                                    <div class="evidence-note">
+                                        <i class="fa-solid fa-info-circle mr-1"></i> Image will be auto-deleted after 10 days.
+                                        ${user.isAdmin ? `<button onclick="backupEvidenceImage('${r.id}')" class="btn btn-primary text-xs px-2 py-1 ml-2">Backup Image</button>` : ''}
+                                    </div>
                                     <button onclick="confirmReturn('${r.id}')" class="btn btn-success px-4 py-1.5 text-sm">Confirmed</button>
                                     <button onclick="incidentReport('${r.id}')" class="btn btn-danger px-4 py-1.5 text-sm">Incident</button>
                                 </div>
@@ -2065,6 +1996,23 @@
                     `;
                 }).join('') :
                 '<p class="text-gray-400 text-center py-4">No pending requests.</p>';
+        }
+
+        // ─── Backup evidence image ──────────────────────────────────────────
+        function backupEvidenceImage(requestId) {
+            const req = returnRequests.find(r => r.id === requestId);
+            if (req && req.evidenceImage) {
+                // Download the image
+                const link = document.createElement('a');
+                link.href = req.evidenceImage;
+                link.download = `evidence_${requestId}.jpg`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                logManager.log(authManager.getCurrentUser().name, 'Backed up evidence image for request ' + requestId);
+            } else {
+                alert('No image to backup.');
+            }
         }
 
         function expandEvidence(id) {
@@ -2542,6 +2490,7 @@
 
         async function confirmReturnEvidence() {
             if (!capturedReturnImage) { alert('Capture an image first.'); return; }
+            // Upload image to repo
             let imageUrl = null;
             if (CONFIG.token) {
                 try {
@@ -2579,6 +2528,8 @@
             saveData();
             hideReturnEvidenceModal();
             refreshAllPanels();
+
+            // Set WhatsApp and email messages
             const msg =
                 `Dear Roy,\n\nGreetings!\n\nTool ${tool?.desc || 'Unknown'} (${tool?.serial || 'N/A'}) returned on ${new Date(returnDate).toLocaleString()}.\nPlease review the image in Dashboard.\n\nRegards,\n${authManager.getCurrentUser().name}`;
             document.getElementById('return-whatsapp-msg').value = msg;
@@ -2968,18 +2919,7 @@
             }
             document.getElementById('settings-panel-modal').classList.remove('hidden');
             loadGitHubSettingsUI();
-
-            const idleSection = document.getElementById('idle-timeout-section');
-            if (idleSection) {
-                if (user && user.isDonan) {
-                    idleSection.classList.remove('hidden');
-                    document.getElementById('idle-timeout-input').value = IdleManager.getTimeoutMinutes();
-                    document.getElementById('idle-timeout-status').textContent = 'Current: ' + IdleManager
-                        .getTimeoutMinutes() + ' minute(s).';
-                } else {
-                    idleSection.classList.add('hidden');
-                }
-            }
+            updateSettingsVisibility();
         }
 
         function hideSettingsPanel() { document.getElementById('settings-panel-modal').classList.add('hidden'); }
@@ -3052,9 +2992,6 @@
                     users: authManager.users,
                     deletionRecords: DeletionLogger.deletionRecords,
                     logConfig: logManager.logConfig,
-                    githubTokenEncoded: encodeToken(CONFIG.token),
-                    githubTokenExpiry: CONFIG.tokenExpiry,
-                    reminderDays: CONFIG.reminderDays,
                     _meta: { version: APP_VERSION, user: authManager.getCurrentUser()?.name, ts: new Date()
                             .toISOString() }
                 };
@@ -3162,26 +3099,6 @@
                                     localStorage.setItem('deletionRecords', JSON.stringify(parsed)); }
                                 else if (k === 'logConfig') { logManager.logConfig = parsed;
                                     localStorage.setItem('logConfig', JSON.stringify(parsed)); }
-                                else if (k === 'githubTokenEncoded' || k === 'githubToken') {
-                                    let token = '';
-                                    if (k === 'githubTokenEncoded') {
-                                        token = decodeToken(parsed);
-                                    } else {
-                                        token = parsed; // fallback
-                                    }
-                                    if (token) {
-                                        CONFIG.token = token;
-                                        localStorage.setItem('gh_token', token);
-                                    }
-                                }
-                                else if (k === 'githubTokenExpiry') {
-                                    if (parsed) { CONFIG.tokenExpiry = parsed;
-                                        localStorage.setItem('gh_token_expiry', parsed); }
-                                }
-                                else if (k === 'reminderDays') {
-                                    if (parsed) { CONFIG.reminderDays = parseInt(parsed) || 15;
-                                        localStorage.setItem('gh_reminder_days', String(CONFIG.reminderDays)); }
-                                }
                             } catch (e) { /* ignore */ }
                         }
                     });
@@ -3583,7 +3500,7 @@
             static generateReadmeContent() {
                 return `
                     <!DOCTYPE html>
-                    <html><head><title>ToolTrack v2.1.6 Help</title>
+                    <html><head><title>ToolTrack v2.1.7 Help</title>
                     <style>
                         body{font-family:'Segoe UI',Arial;line-height:1.8;max-width:100%;margin:0;padding:20px;color:#1e293b;overflow-wrap:break-word;}
                         h1{color:#1e40af;border-bottom:3px solid #1e40af;padding-bottom:10px;}
@@ -3597,31 +3514,34 @@
                         code{background:#f1f5f9;padding:2px 8px;border-radius:6px;color:#1e293b;}
                     </style>
                     </head><body>
-                        <h1>🛠️ ToolTrack Service Tools Manager v2.1.6</h1>
-                        <p><strong>GitHub‑Synced Dashboard</strong> · Token stored encoded in data.json</p>
+                        <h1>🛠️ ToolTrack Service Tools Manager v2.1.7</h1>
+                        <p><strong>GitHub‑Synced Dashboard</strong> · Token manually entered per device</p>
                         <div class="new-feature">
-                            <strong>v2.1.6:</strong> Token is now base64‑encoded before storing in <code>data.json</code> to avoid GitHub secret detection. All users automatically share the token.
+                            <strong>v2.1.7:</strong> Token is no longer stored in data.json (to avoid secret detection). Each user enters the token manually in Settings. Non‑admin users see only GitHub Sync. Return evidence includes a 10‑day deletion notice and a backup button for admins.
                         </div>
 
                         <h2>Quick Start</h2>
                         <ol>
                             <li>Login with your name (default password: <code>123</code>)</li>
-                            <li>Admin sets token, expiry, and reminder days in Settings → GitHub Sync → Save</li>
-                            <li>Settings are shared via <code>data.json</code> (token encoded)</li>
-                            <li>All users see remaining days and warning if below threshold</li>
+                            <li>Admin sets token in Settings → GitHub Sync → Save</li>
+                            <li>Token is stored locally on your device only (not shared)</li>
+                            <li>All other users must enter the same token manually</li>
                         </ol>
 
                         <h2>GitHub Sync</h2>
                         <p>Token with <code>repo</code> scope. Repository: <strong>${CONFIG.owner}/${CONFIG.repo}</strong> · Branch: <strong>${CONFIG.branch}</strong></p>
                         <ul>
-                            <li>Data file: <code>${CONFIG.dataPath}</code> (contains encoded token, expiry, reminder)</li>
+                            <li>Data file: <code>${CONFIG.dataPath}</code> (no token inside)</li>
                             <li>Images folder: <code>images/</code> (≤1 MB)</li>
                             <li>Pull on login, every 30s, and manual sync</li>
                             <li>Push debounced after changes</li>
                         </ul>
 
-                        <h2>Token Handling</h2>
-                        <p>The token is encoded in base64 to prevent GitHub's secret detection. It is decoded automatically when loaded.</p>
+                        <h2>Return Evidence</h2>
+                        <ul>
+                            <li>Admin sees a note: "Image will be auto‑deleted after 10 days."</li>
+                            <li>Admin can click "Backup Image" to download the image locally.</li>
+                        </ul>
 
                         <h2>Cache Management</h2>
                         <p>Version check on load forces reload from server if updated.</p>
@@ -3629,11 +3549,11 @@
                         <h2>Version History</h2>
                         <table>
                             <tr><th>Version</th><th>Features</th></tr>
-                            <tr><td>2.1.6</td><td>Token encoded in data.json, no separate token.json</td></tr>
-                            <tr><td>2.1.5</td><td>Configurable reminder days</td></tr>
+                            <tr><td>2.1.7</td><td>Manual token entry, restricted settings for non‑admin, evidence backup</td></tr>
+                            <tr><td>2.1.6</td><td>Token encoded in data.json (reverted)</td></tr>
                         </table>
 
-                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.1.6 · Built with ❤️</p>
+                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.1.7 · Built with ❤️</p>
                     </body></html>
                 `;
             }
@@ -3641,7 +3561,7 @@
                 const blob = new Blob([this.generateReadmeContent()], { type: 'text/html' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = 'ToolTrack_README_v2.1.6.html';
+                a.download = 'ToolTrack_README_v2.1.7.html';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -3665,7 +3585,7 @@
             populateLoginDropdown();
             updateRoyUI();
             loadGitHubSettingsUI();
-            updateTokenExpiryDisplay();
+            updateSettingsVisibility();
 
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('main-app').classList.add('hidden');
