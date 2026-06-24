@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <!-- Force no-cache for all devices -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>ToolTrack v2.1.7 · Shared Token</title>
+    <title>ToolTrack v2.1.8 · Settings for all</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -152,13 +153,6 @@
         .settings-modal-footer { flex-shrink: 0; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; background: #fff; border-radius: 0 0 1.5rem 1.5rem; }
         @media (max-width: 640px) { .settings-modal-body { padding: 1rem; } .settings-modal-footer { padding: 0.75rem 1rem; } }
 
-        /* ── Token expiry reminder ── */
-        .token-expiry { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-top: 8px; }
-        .token-expiry.warning { background: #fee2e2; border-left-color: #ef4444; }
-        .token-expiry a { color: #2563eb; text-decoration: underline; }
-        .token-expiry .days-left { font-weight: bold; }
-
-        /* ── Return evidence deletion notice ── */
         .evidence-note { background: #fef9c3; border-left: 4px solid #eab308; padding: 8px 12px; border-radius: 6px; font-size: 12px; margin: 6px 0; }
     </style>
 </head>
@@ -173,8 +167,8 @@
             <div class="text-center mb-6">
                 <i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-3"></i>
                 <h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1>
-                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1.7</p>
-                <p class="text-xs text-gray-400 mt-0.5">Shared token (manual entry)</p>
+                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1.8</p>
+                <p class="text-xs text-gray-400 mt-0.5">Settings for all · reliable sync</p>
             </div>
             <div class="space-y-5">
                 <div>
@@ -218,7 +212,7 @@
                     <i class="fa-solid fa-toolbox text-3xl text-blue-600"></i>
                     <div>
                         <h1 class="text-xl font-bold">ToolTrack</h1>
-                        <p class="text-[10px] text-gray-500">v2.1.7 · manual token</p>
+                        <p class="text-[10px] text-gray-500">v2.1.8 · settings for all</p>
                     </div>
                 </div>
             </div>
@@ -280,23 +274,10 @@
                 <!-- Tab 0: Dashboard -->
                 <div id="tab-0" class="p-6">
                     <div class="grid grid-cols-4 gap-5 mb-6">
-                        <div class="bg-white rounded-2xl p-5 card-hover border">
-                            <p class="text-gray-500 text-sm">Total Tools</p>
-                            <p class="text-3xl font-bold mt-1" id="total-tools">0</p>
-                        </div>
-                        <div class="bg-white rounded-2xl p-5 card-hover border">
-                            <p class="text-gray-500 text-sm">Borrowed</p>
-                            <p class="text-3xl font-bold mt-1 text-amber-600" id="borrowed-count">0</p>
-                            <p class="text-xs mt-1">Overdue: <span class="text-red-600" id="overdue-count">0</span></p>
-                        </div>
-                        <div class="bg-white rounded-2xl p-5 card-hover border">
-                            <p class="text-gray-500 text-sm">Cal Due</p>
-                            <p class="text-3xl font-bold mt-1 text-orange-600" id="calibration-due">0</p>
-                        </div>
-                        <div class="bg-white rounded-2xl p-5 card-hover border">
-                            <p class="text-gray-500 text-sm">Utilization</p>
-                            <p class="text-3xl font-bold mt-1" id="util-rate">0%</p>
-                        </div>
+                        <div class="bg-white rounded-2xl p-5 card-hover border"><p class="text-gray-500 text-sm">Total Tools</p><p class="text-3xl font-bold mt-1" id="total-tools">0</p></div>
+                        <div class="bg-white rounded-2xl p-5 card-hover border"><p class="text-gray-500 text-sm">Borrowed</p><p class="text-3xl font-bold mt-1 text-amber-600" id="borrowed-count">0</p><p class="text-xs mt-1">Overdue: <span class="text-red-600" id="overdue-count">0</span></p></div>
+                        <div class="bg-white rounded-2xl p-5 card-hover border"><p class="text-gray-500 text-sm">Cal Due</p><p class="text-3xl font-bold mt-1 text-orange-600" id="calibration-due">0</p></div>
+                        <div class="bg-white rounded-2xl p-5 card-hover border"><p class="text-gray-500 text-sm">Utilization</p><p class="text-3xl font-bold mt-1" id="util-rate">0%</p></div>
                     </div>
                     <div id="approval-panel" class="hidden mb-6 bg-white rounded-2xl p-5 border">
                         <h3 class="font-semibold text-lg mb-4">Return Confirmation Requests</h3>
@@ -317,21 +298,7 @@
                     </div>
                     <div class="bg-white rounded-2xl border table-wrap">
                         <table class="w-full">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold">DESC</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold">MODEL</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold">SERIAL</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold">OWNER</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold">CAL DUE</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold">STATUS</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold">REC</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold">BORROWED BY</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold">LOCATION</th>
-                                    <th class="py-3 px-4 text-center text-xs font-semibold">CERT</th>
-                                    <th class="py-3 px-4 text-right text-xs font-semibold">ACTIONS</th>
-                                </tr>
-                            </thead>
+                            <thead class="bg-gray-50"><tr><th class="py-3 px-4 text-left text-xs font-semibold">DESC</th><th class="py-3 px-4 text-left text-xs font-semibold">MODEL</th><th class="py-3 px-4 text-left text-xs font-semibold">SERIAL</th><th class="py-3 px-4 text-left text-xs font-semibold">OWNER</th><th class="py-3 px-4 text-left text-xs font-semibold">CAL DUE</th><th class="py-3 px-4 text-left text-xs font-semibold">STATUS</th><th class="py-3 px-4 text-left text-xs font-semibold">REC</th><th class="py-3 px-4 text-left text-xs font-semibold">BORROWED BY</th><th class="py-3 px-4 text-left text-xs font-semibold">LOCATION</th><th class="py-3 px-4 text-center text-xs font-semibold">CERT</th><th class="py-3 px-4 text-right text-xs font-semibold">ACTIONS</th></tr></thead>
                             <tbody id="tools-table" class="divide-y divide-gray-100"></tbody>
                         </table>
                     </div>
@@ -356,15 +323,7 @@
                     <div id="engineers-grid-view" class="hidden grid grid-cols-3 gap-5"></div>
                     <div id="engineers-table-view" class="bg-white rounded-2xl border table-wrap">
                         <table class="w-full">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="py-3 px-5 text-left text-xs font-semibold">NAME</th>
-                                    <th class="py-3 px-5 text-left text-xs font-semibold">DEPT</th>
-                                    <th class="py-3 px-5 text-left text-xs font-semibold">PHONE</th>
-                                    <th class="py-3 px-5 text-left text-xs font-semibold">EMAIL</th>
-                                    <th class="py-3 px-5 text-right text-xs font-semibold">ACTIONS</th>
-                                </tr>
-                            </thead>
+                            <thead class="bg-gray-50"><tr><th class="py-3 px-5 text-left text-xs font-semibold">NAME</th><th class="py-3 px-5 text-left text-xs font-semibold">DEPT</th><th class="py-3 px-5 text-left text-xs font-semibold">PHONE</th><th class="py-3 px-5 text-left text-xs font-semibold">EMAIL</th><th class="py-3 px-5 text-right text-xs font-semibold">ACTIONS</th></tr></thead>
                             <tbody id="engineers-table-body" class="divide-y divide-gray-100"></tbody>
                         </table>
                     </div>
@@ -376,32 +335,14 @@
                         <div class="bg-white rounded-2xl p-6 border">
                             <h3 class="text-xl font-semibold mb-5">Record Transaction</h3>
                             <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm mb-1.5">Select Tool</label>
-                                    <select id="borrow-tool-select" class="w-full p-3 border rounded-xl"></select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm mb-1.5">Engineer</label>
-                                    <select id="borrow-engineer-select" class="w-full p-3 border rounded-xl"></select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm mb-1.5">Location</label>
-                                    <input id="borrow-location" class="w-full p-3 border rounded-xl" placeholder="e.g., Mubarak Hospital" />
-                                </div>
+                                <div><label class="block text-sm mb-1.5">Select Tool</label><select id="borrow-tool-select" class="w-full p-3 border rounded-xl"></select></div>
+                                <div><label class="block text-sm mb-1.5">Engineer</label><select id="borrow-engineer-select" class="w-full p-3 border rounded-xl"></select></div>
+                                <div><label class="block text-sm mb-1.5">Location</label><input id="borrow-location" class="w-full p-3 border rounded-xl" placeholder="e.g., Mubarak Hospital" /></div>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm mb-1.5">Taken Out <span class="text-xs text-gray-400">(Locked)</span></label>
-                                        <input type="date" id="taken-date" class="w-full p-3 border rounded-xl locked-field bg-gray-100" readonly />
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm mb-1.5">Expected Return <span class="text-red-500">*</span></label>
-                                        <input type="date" id="return-date" class="w-full p-3 border rounded-xl" />
-                                    </div>
+                                    <div><label class="block text-sm mb-1.5">Taken Out <span class="text-xs text-gray-400">(Locked)</span></label><input type="date" id="taken-date" class="w-full p-3 border rounded-xl locked-field bg-gray-100" readonly /></div>
+                                    <div><label class="block text-sm mb-1.5">Expected Return <span class="text-red-500">*</span></label><input type="date" id="return-date" class="w-full p-3 border rounded-xl" /></div>
                                 </div>
-                                <div id="extension-note-container" class="hidden">
-                                    <label class="block text-sm mb-1.5">Notes</label>
-                                    <textarea id="extension-notes" rows="2" class="w-full p-3 border rounded-xl"></textarea>
-                                </div>
+                                <div id="extension-note-container" class="hidden"><label class="block text-sm mb-1.5">Notes</label><textarea id="extension-notes" rows="2" class="w-full p-3 border rounded-xl"></textarea></div>
                                 <div class="flex flex-wrap gap-3">
                                     <button onclick="borrowTool()" id="borrow-btn" class="flex-1 py-3 btn btn-success min-w-[120px]">Borrow Tool</button>
                                     <button onclick="updateReturnDate()" id="update-return-btn" class="hidden flex-1 py-3 btn btn-primary min-w-[120px]">Update Return</button>
@@ -433,22 +374,7 @@
                     </div>
                     <div class="bg-white rounded-2xl border table-wrap">
                         <table class="w-full">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('transDate')">Date <i class="fa-solid fa-sort"></i></th>
-                                    <th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('toolDesc')">Tool <i class="fa-solid fa-sort"></i></th>
-                                    <th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('serial')">Serial <i class="fa-solid fa-sort"></i></th>
-                                    <th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('borrower')">Borrower <i class="fa-solid fa-sort"></i></th>
-                                    <th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('dept')">Dept <i class="fa-solid fa-sort"></i></th>
-                                    <th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('takenOut')">Taken <i class="fa-solid fa-sort"></i></th>
-                                    <th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('expectedReturn')">Exp Return <i class="fa-solid fa-sort"></i></th>
-                                    <th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('actualReturn')">Act Return <i class="fa-solid fa-sort"></i></th>
-                                    <th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('status')">Status <i class="fa-solid fa-sort"></i></th>
-                                    <th class="py-3 px-3 text-left text-xs">Approval</th>
-                                    <th class="py-3 px-3 text-left text-xs">Incident</th>
-                                    <th class="py-3 px-3 text-left text-xs">Notes</th>
-                                </tr>
-                            </thead>
+                            <thead class="bg-gray-50"><tr><th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('transDate')">Date <i class="fa-solid fa-sort"></i></th><th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('toolDesc')">Tool <i class="fa-solid fa-sort"></i></th><th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('serial')">Serial <i class="fa-solid fa-sort"></i></th><th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('borrower')">Borrower <i class="fa-solid fa-sort"></i></th><th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('dept')">Dept <i class="fa-solid fa-sort"></i></th><th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('takenOut')">Taken <i class="fa-solid fa-sort"></i></th><th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('expectedReturn')">Exp Return <i class="fa-solid fa-sort"></i></th><th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('actualReturn')">Act Return <i class="fa-solid fa-sort"></i></th><th class="py-3 px-3 text-left text-xs sort-header" onclick="sortHistory('status')">Status <i class="fa-solid fa-sort"></i></th><th class="py-3 px-3 text-left text-xs">Approval</th><th class="py-3 px-3 text-left text-xs">Incident</th><th class="py-3 px-3 text-left text-xs">Notes</th></tr></thead>
                             <tbody id="history-table" class="divide-y divide-gray-100"></tbody>
                         </table>
                     </div>
@@ -457,23 +383,14 @@
                 <!-- Tab 4: Analytics -->
                 <div id="tab-4" class="p-6 hidden">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-2xl p-5 border">
-                            <h3 class="font-semibold mb-3">Utilization</h3>
-                            <div class="h-64"><canvas id="utilizationChart"></canvas></div>
-                        </div>
-                        <div class="bg-white rounded-2xl p-5 border">
-                            <h3 class="font-semibold mb-3">Borrows by Engineer</h3>
-                            <div class="h-64"><canvas id="engineerChart"></canvas></div>
-                        </div>
+                        <div class="bg-white rounded-2xl p-5 border"><h3 class="font-semibold mb-3">Utilization</h3><div class="h-64"><canvas id="utilizationChart"></canvas></div></div>
+                        <div class="bg-white rounded-2xl p-5 border"><h3 class="font-semibold mb-3">Borrows by Engineer</h3><div class="h-64"><canvas id="engineerChart"></canvas></div></div>
                     </div>
                 </div>
 
                 <!-- Tab 6: Logs -->
                 <div id="tab-6" class="p-6 hidden">
-                    <div id="logs-restricted" class="hidden text-center py-20">
-                        <i class="fa-solid fa-lock text-6xl text-gray-300"></i>
-                        <h3 class="text-2xl text-gray-500">Access Restricted</h3>
-                    </div>
+                    <div id="logs-restricted" class="hidden text-center py-20"><i class="fa-solid fa-lock text-6xl text-gray-300"></i><h3 class="text-2xl text-gray-500">Access Restricted</h3></div>
                     <div id="logs-content">
                         <div class="flex justify-between items-start flex-wrap gap-3 mb-4">
                             <h3 class="text-xl font-semibold">System Logs</h3>
@@ -509,9 +426,7 @@
                     <button onclick="hideReadmeViewer()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
                 </div>
             </div>
-            <div class="flex-1 overflow-auto p-5" id="readme-content-container">
-                <div class="readme-viewer" id="readme-content"></div>
-            </div>
+            <div class="flex-1 overflow-auto p-5" id="readme-content-container"><div class="readme-viewer" id="readme-content"></div></div>
         </div>
     </div>
 
@@ -520,44 +435,17 @@
         <div class="bg-white rounded-3xl w-full max-w-md m-4 p-6">
             <h3 class="text-xl font-semibold mb-5"><i class="fa-solid fa-gear mr-2"></i>Log Settings</h3>
             <div class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <span class="text-sm font-medium">Enable Logging</span>
-                    <label class="toggle-switch"><input type="checkbox" id="log-enabled" onchange="updateLogConfig()" /><span class="toggle-slider"></span></label>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1.5">Log Level</label>
-                    <select id="log-level" onchange="updateLogConfig()" class="w-full p-2.5 border rounded-xl text-sm">
-                        <option value="info">Information</option>
-                        <option value="warning">Warning</option>
-                        <option value="error">Error</option>
-                        <option value="debug">Debug</option>
-                        <option value="all">All</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1.5">Retention (Days)</label>
-                    <select id="log-retention" onchange="updateLogConfig()" class="w-full p-2.5 border rounded-xl text-sm">
-                        <option value="7">7 Days</option>
-                        <option value="14">14 Days</option>
-                        <option value="30">30 Days</option>
-                        <option value="60">60 Days</option>
-                        <option value="90">90 Days</option>
-                    </select>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="text-sm font-medium">Auto-Delete Old Logs</span>
-                    <label class="toggle-switch"><input type="checkbox" id="log-autodelete" onchange="updateLogConfig()" /><span class="toggle-slider"></span></label>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="saveLogConfig()" class="flex-1 py-2.5 btn btn-primary text-sm">Save</button>
-                    <button onclick="resetLogConfig()" class="flex-1 py-2.5 btn btn-outline text-sm">Defaults</button>
-                </div>
+                <div class="flex items-center justify-between"><span class="text-sm font-medium">Enable Logging</span><label class="toggle-switch"><input type="checkbox" id="log-enabled" onchange="updateLogConfig()" /><span class="toggle-slider"></span></label></div>
+                <div><label class="block text-sm font-medium mb-1.5">Log Level</label><select id="log-level" onchange="updateLogConfig()" class="w-full p-2.5 border rounded-xl text-sm"><option value="info">Information</option><option value="warning">Warning</option><option value="error">Error</option><option value="debug">Debug</option><option value="all">All</option></select></div>
+                <div><label class="block text-sm font-medium mb-1.5">Retention (Days)</label><select id="log-retention" onchange="updateLogConfig()" class="w-full p-2.5 border rounded-xl text-sm"><option value="7">7 Days</option><option value="14">14 Days</option><option value="30">30 Days</option><option value="60">60 Days</option><option value="90">90 Days</option></select></div>
+                <div class="flex items-center justify-between"><span class="text-sm font-medium">Auto-Delete Old Logs</span><label class="toggle-switch"><input type="checkbox" id="log-autodelete" onchange="updateLogConfig()" /><span class="toggle-slider"></span></label></div>
+                <div class="flex gap-2"><button onclick="saveLogConfig()" class="flex-1 py-2.5 btn btn-primary text-sm">Save</button><button onclick="resetLogConfig()" class="flex-1 py-2.5 btn btn-outline text-sm">Defaults</button></div>
             </div>
             <button onclick="hideLogSettings()" class="mt-4 w-full py-3 btn btn-outline">Close</button>
         </div>
     </div>
 
-    <!-- Settings Panel – with fixed footer -->
+    <!-- Settings Panel – visible to ALL users -->
     <div id="settings-panel-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 settings-modal-container">
             <div class="p-5 border-b flex items-center justify-between">
@@ -565,7 +453,7 @@
                 <button onclick="hideSettingsPanel()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
             </div>
             <div class="settings-modal-body">
-                <!-- Always show GitHub sync for everyone -->
+                <!-- GitHub sync – visible to EVERYONE -->
                 <div class="settings-card">
                     <h4><i class="fa-brands fa-github text-blue-600"></i> GitHub Sync</h4>
                     <div class="space-y-3">
@@ -653,7 +541,7 @@
             <h2 class="text-2xl font-bold mt-2">ToolTrack</h2>
             <p class="text-gray-500">Service Tools Manager</p>
             <div class="mt-5 bg-gray-50 rounded-2xl p-4 text-left space-y-1 text-sm">
-                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.1.7</span></div>
+                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.1.8</span></div>
                 <div class="flex justify-between"><span>Sync</span><span class="font-semibold text-blue-600">GitHub · manual token</span></div>
             </div>
             <div class="mt-5 flex gap-2">
@@ -667,9 +555,7 @@
     <div id="return-evidence-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Tool Return Evidence</h3>
-            <div id="captured-image-container" class="hidden text-center">
-                <img id="captured-image" class="max-w-full rounded-2xl max-h-64 mx-auto" />
-            </div>
+            <div id="captured-image-container" class="hidden text-center"><img id="captured-image" class="max-w-full rounded-2xl max-h-64 mx-auto" /></div>
             <div class="flex flex-wrap gap-2 mt-4">
                 <button onclick="captureReturnImage()" id="capture-btn" class="flex-1 py-3 btn btn-outline min-w-[80px]"><i class="fa-solid fa-camera"></i> Capture</button>
                 <button id="retake-btn" onclick="captureReturnImage()" class="hidden flex-1 py-3 btn btn-warning min-w-[80px]"><i class="fa-solid fa-rotate-right"></i> Retake</button>
@@ -689,8 +575,7 @@
                 <button onclick="sendReturnWA()" class="flex-1 py-4 btn btn-success text-base flex flex-col items-center gap-1"><i class="fa-brands fa-whatsapp text-2xl"></i> WhatsApp</button>
                 <button onclick="sendReturnEmail()" class="flex-1 py-4 btn btn-primary text-base flex flex-col items-center gap-1"><i class="fa-solid fa-envelope text-2xl"></i> Email</button>
             </div>
-            <details class="mb-3">
-                <summary class="text-xs text-gray-400 cursor-pointer">Preview message</summary>
+            <details class="mb-3"><summary class="text-xs text-gray-400 cursor-pointer">Preview message</summary>
                 <div class="mt-2 space-y-2">
                     <textarea id="return-whatsapp-msg" rows="3" class="w-full p-2 border rounded-xl bg-gray-50 text-xs" readonly></textarea>
                     <textarea id="return-email-msg" rows="3" class="w-full p-2 border rounded-xl bg-gray-50 text-xs" readonly></textarea>
@@ -705,24 +590,15 @@
         <div class="bg-white rounded-3xl w-full max-w-md m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Select Reason</h3>
             <select id="deletion-reason-select" class="w-full p-3 border rounded-xl mb-4"></select>
-            <div class="flex gap-2">
-                <button onclick="cancelDeletion()" class="flex-1 py-3 btn btn-outline">Cancel</button>
-                <button onclick="confirmDeletion()" class="flex-1 py-3 btn btn-danger">Confirm</button>
-            </div>
+            <div class="flex gap-2"><button onclick="cancelDeletion()" class="flex-1 py-3 btn btn-outline">Cancel</button><button onclick="confirmDeletion()" class="flex-1 py-3 btn btn-danger">Confirm</button></div>
         </div>
     </div>
 
     <!-- Overdue -->
     <div id="overdue-tool-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl w-full max-w-3xl m-4 max-h-[90vh] overflow-y-auto p-6">
-            <div class="flex justify-between mb-4">
-                <h3 class="text-xl font-semibold text-red-600">Overdue Alert</h3>
-                <button onclick="hideOverdueModal()" class="text-gray-400 text-2xl">&times;</button>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-gray-50 rounded-2xl p-4 text-sm" id="overdue-tool-info"></div>
-                <div class="bg-gray-50 rounded-2xl p-4 text-sm" id="overdue-borrower-info"></div>
-            </div>
+            <div class="flex justify-between mb-4"><h3 class="text-xl font-semibold text-red-600">Overdue Alert</h3><button onclick="hideOverdueModal()" class="text-gray-400 text-2xl">&times;</button></div>
+            <div class="grid grid-cols-2 gap-4"><div class="bg-gray-50 rounded-2xl p-4 text-sm" id="overdue-tool-info"></div><div class="bg-gray-50 rounded-2xl p-4 text-sm" id="overdue-borrower-info"></div></div>
             <textarea id="whatsapp-message" rows="3" class="w-full p-3 border rounded-xl bg-gray-50 mt-4 text-sm" readonly></textarea>
             <button onclick="sendOverdueWA()" class="mt-2 btn btn-success px-5 py-2 text-sm"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
         </div>
@@ -733,10 +609,7 @@
         <div class="bg-white rounded-3xl w-full max-w-md m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Roy's Authorization</h3>
             <input id="roy-password-input" type="password" placeholder="Password" class="w-full p-3 border rounded-xl mb-4" />
-            <div class="flex gap-2">
-                <button onclick="verifyRoyPassword()" class="flex-1 py-3 btn btn-primary">Confirm</button>
-                <button onclick="hideRoyPasswordModal()" class="flex-1 py-3 btn btn-outline">Cancel</button>
-            </div>
+            <div class="flex gap-2"><button onclick="verifyRoyPassword()" class="flex-1 py-3 btn btn-primary">Confirm</button><button onclick="hideRoyPasswordModal()" class="flex-1 py-3 btn btn-outline">Cancel</button></div>
         </div>
     </div>
 
@@ -744,18 +617,8 @@
     <div id="add-tool-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Add Tool</h3>
-            <div class="space-y-3">
-                <input id="tool-desc" placeholder="Description *" class="w-full p-3 border rounded-xl" />
-                <input id="tool-model" placeholder="Model" class="w-full p-3 border rounded-xl" />
-                <input id="tool-serial" placeholder="Serial" class="w-full p-3 border rounded-xl" />
-                <input id="tool-owner" placeholder="Owner" class="w-full p-3 border rounded-xl" />
-                <input id="tool-cal-date" type="date" class="w-full p-3 border rounded-xl" />
-                <input id="tool-location" placeholder="Location" class="w-full p-3 border rounded-xl" />
-            </div>
-            <div class="flex gap-2 mt-4">
-                <button onclick="hideAddToolModal()" class="flex-1 py-3 btn btn-outline">Cancel</button>
-                <button onclick="addNewTool()" class="flex-1 py-3 btn btn-primary">Save</button>
-            </div>
+            <div class="space-y-3"><input id="tool-desc" placeholder="Description *" class="w-full p-3 border rounded-xl" /><input id="tool-model" placeholder="Model" class="w-full p-3 border rounded-xl" /><input id="tool-serial" placeholder="Serial" class="w-full p-3 border rounded-xl" /><input id="tool-owner" placeholder="Owner" class="w-full p-3 border rounded-xl" /><input id="tool-cal-date" type="date" class="w-full p-3 border rounded-xl" /><input id="tool-location" placeholder="Location" class="w-full p-3 border rounded-xl" /></div>
+            <div class="flex gap-2 mt-4"><button onclick="hideAddToolModal()" class="flex-1 py-3 btn btn-outline">Cancel</button><button onclick="addNewTool()" class="flex-1 py-3 btn btn-primary">Save</button></div>
         </div>
     </div>
 
@@ -763,19 +626,8 @@
     <div id="edit-tool-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Edit Tool</h3>
-            <div class="space-y-3">
-                <input id="edit-tool-id" type="hidden" />
-                <input id="edit-tool-desc" class="w-full p-3 border rounded-xl" />
-                <input id="edit-tool-model" class="w-full p-3 border rounded-xl" />
-                <input id="edit-tool-serial" class="w-full p-3 border rounded-xl" />
-                <input id="edit-tool-owner" class="w-full p-3 border rounded-xl" />
-                <input id="edit-tool-cal-date" type="date" class="w-full p-3 border rounded-xl" />
-                <input id="edit-tool-location" class="w-full p-3 border rounded-xl" />
-            </div>
-            <div class="flex gap-2 mt-4">
-                <button onclick="hideEditToolModal()" class="flex-1 py-3 btn btn-outline">Cancel</button>
-                <button onclick="updateTool()" class="flex-1 py-3 btn btn-primary">Update</button>
-            </div>
+            <div class="space-y-3"><input id="edit-tool-id" type="hidden" /><input id="edit-tool-desc" class="w-full p-3 border rounded-xl" /><input id="edit-tool-model" class="w-full p-3 border rounded-xl" /><input id="edit-tool-serial" class="w-full p-3 border rounded-xl" /><input id="edit-tool-owner" class="w-full p-3 border rounded-xl" /><input id="edit-tool-cal-date" type="date" class="w-full p-3 border rounded-xl" /><input id="edit-tool-location" class="w-full p-3 border rounded-xl" /></div>
+            <div class="flex gap-2 mt-4"><button onclick="hideEditToolModal()" class="flex-1 py-3 btn btn-outline">Cancel</button><button onclick="updateTool()" class="flex-1 py-3 btn btn-primary">Update</button></div>
         </div>
     </div>
 
@@ -783,19 +635,8 @@
     <div id="add-engineer-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Add Engineer</h3>
-            <div class="space-y-3">
-                <input id="eng-name" placeholder="Full Name *" class="w-full p-3 border rounded-xl" oninput="autoGenerateEmail()" />
-                <div class="relative">
-                    <span class="absolute left-3 top-3 text-sm text-gray-500">(+965)</span>
-                    <input id="eng-phone" class="w-full p-3 pl-16 border rounded-xl" oninput="formatPhoneNumber(this)" maxlength="9" />
-                </div>
-                <input id="eng-email" placeholder="Email" class="w-full p-3 border rounded-xl" />
-                <input id="eng-department" placeholder="Department" class="w-full p-3 border rounded-xl" onblur="formatDepartment(this)" />
-            </div>
-            <div class="flex gap-2 mt-4">
-                <button onclick="hideAddEngineerModal()" class="flex-1 py-3 btn btn-outline">Cancel</button>
-                <button onclick="addNewEngineer()" class="flex-1 py-3 btn btn-primary">Save</button>
-            </div>
+            <div class="space-y-3"><input id="eng-name" placeholder="Full Name *" class="w-full p-3 border rounded-xl" oninput="autoGenerateEmail()" /><div class="relative"><span class="absolute left-3 top-3 text-sm text-gray-500">(+965)</span><input id="eng-phone" class="w-full p-3 pl-16 border rounded-xl" oninput="formatPhoneNumber(this)" maxlength="9" /></div><input id="eng-email" placeholder="Email" class="w-full p-3 border rounded-xl" /><input id="eng-department" placeholder="Department" class="w-full p-3 border rounded-xl" onblur="formatDepartment(this)" /></div>
+            <div class="flex gap-2 mt-4"><button onclick="hideAddEngineerModal()" class="flex-1 py-3 btn btn-outline">Cancel</button><button onclick="addNewEngineer()" class="flex-1 py-3 btn btn-primary">Save</button></div>
         </div>
     </div>
 
@@ -803,20 +644,8 @@
     <div id="edit-engineer-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Edit Engineer</h3>
-            <div class="space-y-3">
-                <input id="edit-eng-id" type="hidden" />
-                <input id="edit-eng-name" class="w-full p-3 border rounded-xl" oninput="autoGenerateEditEmail()" />
-                <div class="relative">
-                    <span class="absolute left-3 top-3 text-sm text-gray-500">(+965)</span>
-                    <input id="edit-eng-phone" class="w-full p-3 pl-16 border rounded-xl" oninput="formatPhoneNumber(this)" maxlength="9" />
-                </div>
-                <input id="edit-eng-email" class="w-full p-3 border rounded-xl" />
-                <input id="edit-eng-department" class="w-full p-3 border rounded-xl" onblur="formatEditDepartment()" />
-            </div>
-            <div class="flex gap-2 mt-4">
-                <button onclick="hideEditEngineerModal()" class="flex-1 py-3 btn btn-outline">Cancel</button>
-                <button onclick="updateEngineer()" class="flex-1 py-3 btn btn-primary">Update</button>
-            </div>
+            <div class="space-y-3"><input id="edit-eng-id" type="hidden" /><input id="edit-eng-name" class="w-full p-3 border rounded-xl" oninput="autoGenerateEditEmail()" /><div class="relative"><span class="absolute left-3 top-3 text-sm text-gray-500">(+965)</span><input id="edit-eng-phone" class="w-full p-3 pl-16 border rounded-xl" oninput="formatPhoneNumber(this)" maxlength="9" /></div><input id="edit-eng-email" class="w-full p-3 border rounded-xl" /><input id="edit-eng-department" class="w-full p-3 border rounded-xl" onblur="formatEditDepartment()" /></div>
+            <div class="flex gap-2 mt-4"><button onclick="hideEditEngineerModal()" class="flex-1 py-3 btn btn-outline">Cancel</button><button onclick="updateEngineer()" class="flex-1 py-3 btn btn-primary">Update</button></div>
         </div>
     </div>
 
@@ -825,10 +654,7 @@
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Calibration Certificate</h3>
             <div id="cal-cert-content" class="text-center"></div>
-            <div class="flex flex-wrap gap-2 mt-4">
-                <label class="flex-1 min-w-[100px]"><input type="file" accept="image/*,.pdf" onchange="handleCertFileSelect(this)" class="hidden" /><span class="flex items-center justify-center gap-2 py-3 bg-gray-100 rounded-xl cursor-pointer text-sm btn">Upload</span></label>
-                <button onclick="useCameraForCert()" class="flex-1 min-w-[100px] py-3 bg-gray-100 rounded-xl text-sm btn">Camera</button>
-            </div>
+            <div class="flex flex-wrap gap-2 mt-4"><label class="flex-1 min-w-[100px]"><input type="file" accept="image/*,.pdf" onchange="handleCertFileSelect(this)" class="hidden" /><span class="flex items-center justify-center gap-2 py-3 bg-gray-100 rounded-xl cursor-pointer text-sm btn">Upload</span></label><button onclick="useCameraForCert()" class="flex-1 min-w-[100px] py-3 bg-gray-100 rounded-xl text-sm btn">Camera</button></div>
             <button onclick="hideCalCertModal()" class="mt-3 w-full py-3 btn btn-outline">Close</button>
         </div>
     </div>
@@ -837,22 +663,9 @@
     <div id="password-recovery-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-[200]">
         <div class="bg-white rounded-3xl w-full max-w-md m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Password Recovery</h3>
-            <div id="rec-step-1">
-                <select id="recovery-user-select" class="w-full p-3 border rounded-xl mb-3"></select>
-                <div class="flex gap-2">
-                    <button onclick="sendRecoveryWA()" class="flex-1 py-3 btn btn-success">WhatsApp</button>
-                    <button onclick="sendRecoveryEmail()" class="flex-1 py-3 btn btn-primary">Email</button>
-                </div>
-            </div>
-            <div id="rec-step-2" class="hidden">
-                <input id="recovery-code" placeholder="123456" maxlength="6" class="w-full p-3 border rounded-xl text-center text-2xl mb-3" />
-                <button onclick="verifyRecoveryCode()" class="w-full py-3 btn btn-primary">Verify</button>
-            </div>
-            <div id="rec-step-3" class="hidden">
-                <input id="rec-new-pass" type="password" placeholder="New password" class="w-full p-3 border rounded-xl mb-2" />
-                <input id="rec-conf-pass" type="password" placeholder="Confirm" class="w-full p-3 border rounded-xl mb-3" />
-                <button onclick="resetPassword()" class="w-full py-3 btn btn-primary">Reset</button>
-            </div>
+            <div id="rec-step-1"><select id="recovery-user-select" class="w-full p-3 border rounded-xl mb-3"></select><div class="flex gap-2"><button onclick="sendRecoveryWA()" class="flex-1 py-3 btn btn-success">WhatsApp</button><button onclick="sendRecoveryEmail()" class="flex-1 py-3 btn btn-primary">Email</button></div></div>
+            <div id="rec-step-2" class="hidden"><input id="recovery-code" placeholder="123456" maxlength="6" class="w-full p-3 border rounded-xl text-center text-2xl mb-3" /><button onclick="verifyRecoveryCode()" class="w-full py-3 btn btn-primary">Verify</button></div>
+            <div id="rec-step-3" class="hidden"><input id="rec-new-pass" type="password" placeholder="New password" class="w-full p-3 border rounded-xl mb-2" /><input id="rec-conf-pass" type="password" placeholder="Confirm" class="w-full p-3 border rounded-xl mb-3" /><button onclick="resetPassword()" class="w-full py-3 btn btn-primary">Reset</button></div>
             <button onclick="hidePasswordRecoveryModal()" class="mt-3 w-full py-2 text-gray-500 text-sm">Back</button>
         </div>
     </div>
@@ -864,10 +677,7 @@
             <input id="current-password" type="password" placeholder="Current" class="w-full p-3 border rounded-xl mb-2" />
             <input id="new-password" type="password" placeholder="New" class="w-full p-3 border rounded-xl mb-2" />
             <input id="confirm-new-password" type="password" placeholder="Confirm" class="w-full p-3 border rounded-xl mb-3" />
-            <div class="flex gap-2">
-                <button onclick="hideChangePasswordModal()" class="flex-1 py-3 btn btn-outline">Cancel</button>
-                <button onclick="changePassword()" class="flex-1 py-3 btn btn-primary">Update</button>
-            </div>
+            <div class="flex gap-2"><button onclick="hideChangePasswordModal()" class="flex-1 py-3 btn btn-outline">Cancel</button><button onclick="changePassword()" class="flex-1 py-3 btn btn-primary">Update</button></div>
         </div>
     </div>
 
@@ -931,7 +741,7 @@
         // ═══════════════════════════════════════════════
         //  APP VERSION – increment to force cache refresh
         // ═══════════════════════════════════════════════
-        const APP_VERSION = '2.1.7';
+        const APP_VERSION = '2.1.8';
         const storedVersion = sessionStorage.getItem('tooltrack_app_version');
         if (storedVersion && storedVersion !== APP_VERSION) {
             sessionStorage.setItem('tooltrack_app_version', APP_VERSION);
@@ -1065,16 +875,9 @@
         class DeletionLogger {
             static deletionRecords = JSON.parse(localStorage.getItem('deletionRecords') || '[]');
             static logDeletion(type, name, details, deletedBy, reason) {
-                const rec = {
-                    id: 'DEL_' + Date.now(),
-                    type,
-                    itemName: name,
-                    itemDetails: details,
-                    deletedBy,
-                    reason,
-                    dateTime: new Date().toISOString(),
-                    actionType: type === 'engineer' ? 'Engineer Record Deleted' : 'Tool Record Deleted'
-                };
+                const rec = { id: 'DEL_' + Date.now(), type, itemName: name, itemDetails: details, deletedBy, reason,
+                    dateTime: new Date().toISOString(), actionType: type === 'engineer' ? 'Engineer Record Deleted' :
+                        'Tool Record Deleted' };
                 this.deletionRecords.push(rec);
                 localStorage.setItem('deletionRecords', JSON.stringify(this.deletionRecords));
                 return rec;
@@ -1097,10 +900,8 @@
                 this.loadAndInit();
             }
             loadAndInit() {
-                try {
-                    const raw = localStorage.getItem('tooltrack_users');
-                    if (raw) this.users = JSON.parse(raw);
-                } catch (e) { this.users = {}; }
+                try { const raw = localStorage.getItem('tooltrack_users'); if (raw) this.users = JSON.parse(raw); } catch (
+                    e) { this.users = {}; }
                 const defaults = ['Royston Dcosta', 'Donan Arciaga', 'Ahmed Al-Sabah', 'Fatima Al-Mutairi', 'Mohammed Al-Rashid',
                     'Sara Al-Otaibi'
                 ];
@@ -1113,24 +914,16 @@
             save() { localStorage.setItem('tooltrack_users', JSON.stringify(this.users)); }
             login(name, pass) {
                 if (this.users[name] && this.users[name].password === pass) {
-                    this.currentUser = {
-                        name,
-                        role: this.users[name].role,
-                        isAdmin: this.adminUsers.includes(name),
-                        isDonan: this.fullAccessUsers.includes(name),
-                        isRoy: this.royAccessUsers.includes(name)
-                    };
+                    this.currentUser = { name, role: this.users[name].role, isAdmin: this.adminUsers.includes(name),
+                        isDonan: this.fullAccessUsers.includes(name), isRoy: this.royAccessUsers.includes(name) };
                     return true;
                 }
                 return false;
             }
             logout() { this.currentUser = null; }
             changePassword(name, current, newPass) {
-                if (this.users[name] && this.users[name].password === current) {
-                    this.users[name].password = newPass;
-                    this.save();
-                    return true;
-                }
+                if (this.users[name] && this.users[name].password === current) { this.users[name].password = newPass;
+                    this.save(); return true; }
                 return false;
             }
             resetPassword(name, newPass) {
@@ -1168,13 +961,37 @@
         const authManager = new AuthManager();
 
         // ═══════════════════════════════════════════════
-        //  DATA STORE – no token in data.json, only local
+        //  DATA STORE – no token in data.json
         // ═══════════════════════════════════════════════
         let tools = [];
         let engineers = [];
         let transactions = [];
         let returnRequests = [];
         let roy = { phone: '+965 97421668', email: 'royston.dcosta@sultanunited.com' };
+
+        // ─── Seed default engineers if none exist ──────────────────────────
+        function seedDefaultEngineers() {
+            if (engineers.length === 0) {
+                const defaultNames = ['Royston Dcosta', 'Donan Arciaga', 'Ahmed Al-Sabah', 'Fatima Al-Mutairi', 'Mohammed Al-Rashid', 'Sara Al-Otaibi'];
+                defaultNames.forEach((name, index) => {
+                    const email = name.toLowerCase().replace(/\s+/g, '.') + '@sultanunited.com';
+                    const phone = '9747 ' + (1000 + index);
+                    engineers.push({
+                        id: Date.now() + index,
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        department: (index % 2 === 0) ? 'X-ray Department' : 'MRI Department'
+                    });
+                    // Ensure user exists with default password
+                    if (!authManager.users[name]) {
+                        authManager.addUser(name, '123');
+                    }
+                });
+                saveData();
+                logManager.log('SYSTEM', 'Seeded default engineers');
+            }
+        }
 
         function loadDataFromStorage() {
             try {
@@ -1186,19 +1003,16 @@
                     transactions = data.transactions || [];
                     returnRequests = data.returnRequests || [];
                     roy = data.roy || { phone: '+965 97421668', email: 'royston.dcosta@sultanunited.com' };
-                    if (data.users) {
-                        authManager.users = data.users;
-                        authManager.save();
-                    }
+                    if (data.users) { authManager.users = data.users;
+                        authManager.save(); }
                     if (data.deletionRecords) {
                         DeletionLogger.deletionRecords = data.deletionRecords;
                         localStorage.setItem('deletionRecords', JSON.stringify(data.deletionRecords));
                     }
-                    if (data.logConfig) {
-                        logManager.logConfig = data.logConfig;
-                        localStorage.setItem('logConfig', JSON.stringify(data.logConfig));
-                    }
-                    // Token is NOT stored in data.json – only local storage
+                    if (data.logConfig) { logManager.logConfig = data.logConfig;
+                        localStorage.setItem('logConfig', JSON.stringify(data.logConfig)); }
+                    // Seed if empty
+                    seedDefaultEngineers();
                     return true;
                 }
             } catch (e) { console.warn('Data load error:', e); }
@@ -1215,12 +1029,8 @@
                 users: authManager.users,
                 deletionRecords: DeletionLogger.deletionRecords,
                 logConfig: logManager.logConfig,
-                // No token fields
-                _meta: {
-                    version: APP_VERSION,
-                    updated: new Date().toISOString(),
-                    user: authManager.getCurrentUser()?.name || 'system'
-                }
+                _meta: { version: APP_VERSION, updated: new Date().toISOString(), user: authManager.getCurrentUser()
+                        ?.name || 'system' }
             };
             localStorage.setItem('tooltrack_data', JSON.stringify(data));
             localStorage.setItem('tools', JSON.stringify(tools));
@@ -1241,17 +1051,13 @@
                 authManager.users = JSON.parse(localStorage.getItem('tooltrack_users') || '{}');
                 DeletionLogger.deletionRecords = JSON.parse(localStorage.getItem('deletionRecords') || '[]');
                 logManager.logConfig = JSON.parse(localStorage.getItem('logConfig') || '{"enabled":true,"level":"all","retentionDays":30,"autoDelete":false}');
-                // Load token from localStorage if exists
-                if (localStorage.getItem('gh_token')) {
-                    CONFIG.token = localStorage.getItem('gh_token');
-                }
+                if (localStorage.getItem('gh_token')) CONFIG.token = localStorage.getItem('gh_token');
+                seedDefaultEngineers();
                 return true;
             } catch (e) { return false; }
         }
 
-        function saveData() {
-            saveDataToStorage();
-        }
+        function saveData() { saveDataToStorage(); }
 
         // ═══════════════════════════════════════════════
         //  IMAGE COMPRESSION UTILITY – max 1MB
@@ -1261,21 +1067,18 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    let width = img.width;
-                    let height = img.height;
+                    let width = img.width,
+                        height = img.height;
                     const MAX_DIM = 1600;
-                    if (width > MAX_DIM || height > MAX_DIM) {
-                        const ratio = Math.min(MAX_DIM / width, MAX_DIM / height);
+                    if (width > MAX_DIM || height > MAX_DIM) { const ratio = Math.min(MAX_DIM / width, MAX_DIM / height);
                         width = Math.round(width * ratio);
-                        height = Math.round(height * ratio);
-                    }
+                        height = Math.round(height * ratio); }
                     canvas.width = width;
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-
-                    let quality = 0.92;
-                    let attempt = 0;
+                    let quality = 0.92,
+                        attempt = 0;
                     const MAX_ATTEMPTS = 10;
                     let result = dataUrl;
                     const targetBytes = maxSizeMB * 1024 * 1024;
@@ -1284,9 +1087,7 @@
                         result = canvas.toDataURL('image/jpeg', quality);
                         const byteString = atob(result.split(',')[1]);
                         const size = byteString.length;
-                        if (size <= targetBytes || quality <= 0.1 || attempt >= MAX_ATTEMPTS) {
-                            resolve(result);
-                        } else {
+                        if (size <= targetBytes || quality <= 0.1 || attempt >= MAX_ATTEMPTS) { resolve(result); } else {
                             quality *= 0.85;
                             attempt++;
                             tryCompress();
@@ -1294,15 +1095,13 @@
                     }
                     tryCompress();
                 };
-                img.onerror = function() {
-                    resolve(dataUrl);
-                };
+                img.onerror = function() { resolve(dataUrl); };
                 img.src = dataUrl;
             });
         }
 
         // ═══════════════════════════════════════════════
-        //  GITHUB REPO SYNC – with conflict handling
+        //  GITHUB REPO SYNC – with smart conflict resolution
         // ═══════════════════════════════════════════════
         const RepoSync = {
             _pushTimer: null,
@@ -1319,13 +1118,8 @@
             },
 
             _getConfig() {
-                return {
-                    token: CONFIG.token,
-                    owner: CONFIG.owner,
-                    repo: CONFIG.repo,
-                    branch: CONFIG.branch,
-                    path: CONFIG.dataPath
-                };
+                return { token: CONFIG.token, owner: CONFIG.owner, repo: CONFIG.repo, branch: CONFIG.branch,
+                    path: CONFIG.dataPath };
             },
 
             async _api(method, url, body) {
@@ -1351,10 +1145,7 @@
 
             async pull() {
                 const cfg = this._getConfig();
-                if (!cfg.token) {
-                    this.setStatus('offline', 'No token');
-                    return false;
-                }
+                if (!cfg.token) { this.setStatus('offline', 'No token'); return false; }
                 try {
                     this.setStatus('syncing', 'Loading…');
                     const url =
@@ -1384,15 +1175,14 @@
 
             async push(retry = false) {
                 const cfg = this._getConfig();
-                if (!cfg.token) {
-                    this.setStatus('offline', 'No token');
-                    return;
-                }
+                if (!cfg.token) { this.setStatus('offline', 'No token'); return; }
                 this._pendingPush = false;
+                const url =
+                    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${cfg.branch}`;
+
                 try {
                     this.setStatus('syncing', 'Saving…');
-                    // Build data without token
-                    const data = {
+                    const localData = {
                         tools,
                         engineers,
                         transactions,
@@ -1401,19 +1191,18 @@
                         users: authManager.users,
                         deletionRecords: DeletionLogger.deletionRecords,
                         logConfig: logManager.logConfig,
-                        // No token fields
                         _meta: { version: APP_VERSION, updated: new Date().toISOString(), user: authManager
                                 .getCurrentUser()?.name || 'system' }
                     };
-                    const content = JSON.stringify(data, null, 2);
+                    const content = JSON.stringify(localData, null, 2);
                     const encoded = btoa(unescape(encodeURIComponent(content)));
-                    const url =
-                        `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${cfg.branch}`;
+
                     let sha = null;
                     try {
                         const existing = await this._api('GET', url);
                         sha = existing.sha;
                     } catch (e) { /* file doesn't exist */ }
+
                     const body = {
                         message: `Update data.json [auto] ${new Date().toISOString()}`,
                         content: encoded,
@@ -1422,27 +1211,85 @@
                     if (sha) body.sha = sha;
                     await this._api('PUT', url, body);
                     this.setStatus('synced', 'Saved ✓');
-                    setTimeout(() => {
-                        if (!this._pendingPush) this.setStatus('synced', 'Synced ✓');
-                    }, 3000);
+                    setTimeout(() => { if (!this._pendingPush) this.setStatus('synced', 'Synced ✓'); }, 3000);
                 } catch (e) {
                     console.error('Push error:', e);
                     if (!retry && e.status === 409) {
-                        this.setStatus('syncing', 'Conflict, pulling latest…');
+                        this.setStatus('syncing', 'Conflict, merging…');
                         try {
-                            await this.pull();
-                            loadDataFromStorage();
-                            this.setStatus('syncing', 'Retrying…');
+                            const remoteResponse = await fetch(url, {
+                                headers: {
+                                    'Authorization': 'token ' + cfg.token,
+                                    'Accept': 'application/vnd.github.v3+json'
+                                }
+                            });
+                            if (remoteResponse.ok) {
+                                const remoteData = await remoteResponse.json();
+                                const remoteSha = remoteData.sha;
+                                const remoteContent = JSON.parse(atob(remoteData.content.replace(/\n/g, '')));
+
+                                const merged = {
+                                    tools: tools.length ? tools : remoteContent.tools || [],
+                                    engineers: engineers.length ? engineers : remoteContent.engineers || [],
+                                    transactions: transactions.length ? transactions : remoteContent.transactions || [],
+                                    returnRequests: returnRequests.length ? returnRequests : remoteContent
+                                    .returnRequests || [],
+                                    roy: roy || remoteContent.roy || { phone: '+965 97421668',
+                                        email: 'royston.dcosta@sultanunited.com' },
+                                    users: authManager.users || remoteContent.users || {},
+                                    deletionRecords: DeletionLogger.deletionRecords || remoteContent
+                                        .deletionRecords || [],
+                                    logConfig: logManager.logConfig || remoteContent.logConfig || {},
+                                    _meta: {
+                                        version: APP_VERSION,
+                                        merged: true,
+                                        mergedAt: new Date().toISOString(),
+                                        user: authManager.getCurrentUser()?.name || 'system',
+                                        ...remoteContent._meta
+                                    }
+                                };
+
+                                if (!merged.tools.length && remoteContent.tools) merged.tools = remoteContent.tools;
+                                if (!merged.engineers.length && remoteContent.engineers) merged.engineers = remoteContent
+                                    .engineers;
+                                if (!merged.transactions.length && remoteContent.transactions) merged.transactions =
+                                    remoteContent.transactions;
+                                if (!merged.returnRequests.length && remoteContent.returnRequests) merged
+                                    .returnRequests = remoteContent.returnRequests;
+
+                                localStorage.setItem('tooltrack_data', JSON.stringify(merged));
+                                loadDataFromStorage();
+
+                                this.setStatus('syncing', 'Retrying after merge…');
+                                const mergedEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(merged, null,
+                                2))));
+                                const retryBody = {
+                                    message: `Update data.json [merged] ${new Date().toISOString()}`,
+                                    content: mergedEncoded,
+                                    branch: cfg.branch,
+                                    sha: remoteSha
+                                };
+                                await this._api('PUT', url, retryBody);
+                                this.setStatus('synced', 'Saved ✓ (merged)');
+                                refreshAllPanels();
+                                return;
+                            } else {
+                                await this.pull();
+                                loadDataFromStorage();
+                                await this.push(true);
+                            }
+                        } catch (mergeError) {
+                            console.error('Merge error:', mergeError);
+                            try { await this.pull();
+                                loadDataFromStorage(); } catch (pullErr) {}
                             await this.push(true);
-                        } catch (retryError) {
-                            console.error('Retry error:', retryError);
-                            this.setStatus('error', 'Retry failed');
-                            alert('Sync conflict: Could not resolve automatically. Please try again later.');
                         }
                     } else {
                         this.setStatus('error', 'Save failed');
                         if (!retry) {
-                            alert('Sync error: ' + (e.message || 'Unknown error'));
+                            if (e.status !== 409) {
+                                alert('Sync error: ' + (e.message || 'Unknown error'));
+                            }
                         }
                     }
                 }
@@ -1454,15 +1301,9 @@
                 const url =
                     `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${filePath}?ref=${cfg.branch}`;
                 let sha = null;
-                try {
-                    const existing = await this._api('GET', url);
-                    sha = existing.sha;
-                } catch (e) { /* new file */ }
-                const body = {
-                    message: message || `Upload ${filePath}`,
-                    content: base64Content,
-                    branch: cfg.branch
-                };
+                try { const existing = await this._api('GET', url);
+                    sha = existing.sha; } catch (e) { /* new file */ }
+                const body = { message: message || `Upload ${filePath}`, content: base64Content, branch: cfg.branch };
                 if (sha) body.sha = sha;
                 try {
                     const result = await this._api('PUT', url, body);
@@ -1485,11 +1326,9 @@
                 this._pollTimer = setInterval(async () => {
                     if (document.hidden) return;
                     const pulled = await this.pull();
-                    if (pulled) {
-                        refreshAllPanels();
+                    if (pulled) { refreshAllPanels();
                         populateLoginDropdown();
-                        updateAllUI();
-                    }
+                        updateAllUI(); }
                 }, this.POLL_INTERVAL);
             },
 
@@ -1503,28 +1342,18 @@
                 if (!cfg.token) return { ok: false, msg: 'Token not set' };
                 try {
                     const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}`;
-                    const res = await fetch(url, {
-                        headers: { 'Authorization': 'token ' + cfg.token, 'Accept': 'application/vnd.github.v3+json' }
-                    });
-                    if (res.ok) {
-                        const data = await res.json();
-                        return { ok: true, msg: 'Connected to ' + data.full_name };
-                    } else {
-                        const err = await res.json().catch(() => ({ message: res.statusText }));
-                        return { ok: false, msg: err.message || res.statusText };
-                    }
-                } catch (e) {
-                    return { ok: false, msg: e.message };
-                }
+                    const res = await fetch(url, { headers: { 'Authorization': 'token ' + cfg.token,
+                            'Accept': 'application/vnd.github.v3+json' } });
+                    if (res.ok) { const data = await res.json(); return { ok: true, msg: 'Connected to ' + data
+                                .full_name }; } else { const err = await res.json().catch(() => ({ message: res
+                                .statusText })); return { ok: false, msg: err.message || res.statusText }; }
+                } catch (e) { return { ok: false, msg: e.message }; }
             }
         };
 
-        // ─── Image upload helper with compression ──────────────────────────
+        // ─── Image upload helper ─────────────────────────────────────────────
         async function uploadImageToRepo(dataUrl, folder = 'images') {
-            if (!CONFIG.token) {
-                console.warn('No token, cannot upload image.');
-                return null;
-            }
+            if (!CONFIG.token) { console.warn('No token, cannot upload image.'); return null; }
             try {
                 const compressed = await compressImage(dataUrl, 1);
                 const matches = compressed.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
@@ -1628,7 +1457,6 @@
             } else {
                 adminSection.style.display = 'none';
             }
-            // Also show/hide idle timeout if needed
             const idleSection = document.getElementById('idle-timeout-section');
             if (idleSection) {
                 if (user && user.isDonan) {
@@ -1663,12 +1491,10 @@
                 this._hideWarningToast(); },
             _showWarningToast(msg) {
                 const toast = document.getElementById('idle-warning-toast');
-                if (toast) {
-                    document.getElementById('idle-warning-text').textContent = msg;
-                    toast.style.display = 'block';
-                    if (this._warningToastTimeout) clearTimeout(this._warningToastTimeout);
-                    this._warningToastTimeout = setTimeout(() => { toast.style.display = 'none'; }, 8000);
-                }
+                if (toast) { document.getElementById('idle-warning-text').textContent = msg;
+                    toast.style.display = 'block'; if (this._warningToastTimeout) clearTimeout(this
+                        ._warningToastTimeout);
+                    this._warningToastTimeout = setTimeout(() => { toast.style.display = 'none'; }, 8000); }
             },
             _hideWarningToast() {
                 const toast = document.getElementById('idle-warning-toast');
@@ -1697,10 +1523,8 @@
             },
             async _triggerLogout() {
                 this.stop();
-                if (CONFIG.token) {
-                    RepoSync.setStatus('syncing', 'Auto-sync…');
-                    try { await RepoSync.push(); } catch (e) {}
-                }
+                if (CONFIG.token) { RepoSync.setStatus('syncing', 'Auto-sync…'); try { await RepoSync.push(); } catch (
+                    e) {} }
                 RepoSync.stopPolling();
                 RepoSync.setStatus('offline', 'Offline');
                 authManager.logout();
@@ -1740,8 +1564,9 @@
         // ═══════════════════════════════════════════════
         function populateLoginDropdown() {
             const sel = document.getElementById('login-user-select');
+            const users = authManager.getAllUsers();
             sel.innerHTML = '<option value="">— Select Your Name —</option>' +
-                authManager.getAllUsers().map(u => `<option value="${u}">${u}</option>`).join('');
+                users.map(u => `<option value="${u}">${u}</option>`).join('');
         }
 
         function showLoginError(msg) {
@@ -1832,7 +1657,7 @@
             }
             nav.innerHTML = html;
             const gc = document.getElementById('settings-gear-container');
-            if (gc) gc.style.display = (user.isDonan || user.isRoy) ? 'flex' : 'none';
+            if (gc) gc.style.display = 'flex';
             const umc = document.getElementById('user-mgmt-container');
             if (umc) umc.style.display = user.isDonan ? 'block' : 'none';
         }
@@ -1924,6 +1749,7 @@
             updateRoyUI();
             loadGitHubSettingsUI();
             updateSettingsVisibility();
+            populateLoginDropdown(); // ensure dropdown is up-to-date
         }
 
         function updateRoyUI() {
@@ -1998,11 +1824,9 @@
                 '<p class="text-gray-400 text-center py-4">No pending requests.</p>';
         }
 
-        // ─── Backup evidence image ──────────────────────────────────────────
         function backupEvidenceImage(requestId) {
             const req = returnRequests.find(r => r.id === requestId);
             if (req && req.evidenceImage) {
-                // Download the image
                 const link = document.createElement('a');
                 link.href = req.evidenceImage;
                 link.download = `evidence_${requestId}.jpg`;
@@ -2010,9 +1834,7 @@
                 link.click();
                 document.body.removeChild(link);
                 logManager.log(authManager.getCurrentUser().name, 'Backed up evidence image for request ' + requestId);
-            } else {
-                alert('No image to backup.');
-            }
+            } else { alert('No image to backup.'); }
         }
 
         function expandEvidence(id) {
@@ -2037,6 +1859,7 @@
             }
             saveData();
             refreshAllPanels();
+            renderBorrowTab();
         }
 
         function incidentReport(reqId) {
@@ -2187,7 +2010,6 @@
 
         function renderEngineers() {
             const user = authManager.getCurrentUser();
-            // Grid
             document.getElementById('engineers-grid-view').innerHTML = engineers.length ?
                 engineers.map(e => `
                     <div class="bg-white rounded-2xl p-5 card-hover border">
@@ -2201,7 +2023,6 @@
                 `).join('') :
                 '<div class="col-span-full text-center py-8 text-gray-400">No engineers</div>';
 
-            // Table
             document.getElementById('engineers-table-body').innerHTML = engineers.length ?
                 engineers.map(e => `
                     <tr>
@@ -2490,7 +2311,6 @@
 
         async function confirmReturnEvidence() {
             if (!capturedReturnImage) { alert('Capture an image first.'); return; }
-            // Upload image to repo
             let imageUrl = null;
             if (CONFIG.token) {
                 try {
@@ -2529,7 +2349,6 @@
             hideReturnEvidenceModal();
             refreshAllPanels();
 
-            // Set WhatsApp and email messages
             const msg =
                 `Dear Roy,\n\nGreetings!\n\nTool ${tool?.desc || 'Unknown'} (${tool?.serial || 'N/A'}) returned on ${new Date(returnDate).toLocaleString()}.\nPlease review the image in Dashboard.\n\nRegards,\n${authManager.getCurrentUser().name}`;
             document.getElementById('return-whatsapp-msg').value = msg;
@@ -2558,9 +2377,7 @@
                 hideReturnEvidenceModal();
                 refreshAllPanels();
                 alert('Return approved in person!');
-            } else {
-                alert('Invalid password.');
-            }
+            } else { alert('Invalid password.'); }
         }
 
         function hideSendReturnModal() { document.getElementById('send-return-modal').classList.add('hidden'); }
@@ -2684,7 +2501,6 @@
                 });
             }
 
-            // Sort
             all.sort((a, b) => {
                 let va, vb;
                 switch (historySortCol) {
@@ -2794,10 +2610,8 @@
             if (ctx1) {
                 utilizationChart = new Chart(ctx1, {
                     type: 'doughnut',
-                    data: {
-                        labels: ['Available', 'Borrowed'],
-                        datasets: [{ data: [available, borrowed], backgroundColor: ['#10b981', '#f59e0b'] }]
-                    },
+                    data: { labels: ['Available', 'Borrowed'], datasets: [{ data: [available, borrowed],
+                            backgroundColor: ['#10b981', '#f59e0b'] }] },
                     options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
                 });
             }
@@ -2909,14 +2723,6 @@
         //  SETTINGS / MAINTENANCE
         // ═══════════════════════════════════════════════
         function showSettingsPanel() {
-            const user = authManager.getCurrentUser();
-            if (!user || (!user.isDonan && !user.isRoy)) {
-                document.getElementById('settings-restricted').classList.remove('hidden');
-                document.getElementById('settings-content').classList.add('hidden');
-            } else {
-                document.getElementById('settings-restricted').classList.add('hidden');
-                document.getElementById('settings-content').classList.remove('hidden');
-            }
             document.getElementById('settings-panel-modal').classList.remove('hidden');
             loadGitHubSettingsUI();
             updateSettingsVisibility();
@@ -2999,10 +2805,7 @@
                 const keys = ['tools', 'engineers', 'transactions', 'returnRequests', 'tooltrack_users', 'royContact',
                     'deletionRecords', 'logConfig'
                 ];
-                keys.forEach(k => {
-                    const val = localStorage.getItem(k);
-                    if (val) snapshot[k] = val;
-                });
+                keys.forEach(k => { const val = localStorage.getItem(k); if (val) snapshot[k] = val; });
 
                 bar.style.width = '40%';
                 percent.textContent = '40%';
@@ -3075,9 +2878,7 @@
                     bar.style.width = '70%';
                     percent.textContent = '70%';
 
-                    Object.keys(snapshot).forEach(k => {
-                        try { localStorage.setItem(k, snapshot[k]); } catch (e) { /* ignore */ }
-                    });
+                    Object.keys(snapshot).forEach(k => { try { localStorage.setItem(k, snapshot[k]); } catch (e) { /* ignore */ } });
 
                     loadDataFromStorage();
                     const keys = ['tools', 'engineers', 'transactions', 'returnRequests', 'tooltrack_users',
@@ -3348,9 +3149,7 @@
                 alert('Password updated!');
                 hideChangePasswordModal();
                 logManager.logAuth(user.name, 'Password changed');
-            } else {
-                alert('Current password is incorrect.');
-            }
+            } else { alert('Current password is incorrect.'); }
         }
 
         // ─── Cal Cert ────────────────────────────────────────────────────────
@@ -3381,18 +3180,9 @@
                     if (CONFIG.token) {
                         try {
                             imageUrl = await uploadImageToRepo(dataUrl, 'images');
-                            if (!imageUrl) {
-                                alert('Upload failed. Please check token.');
-                                return;
-                            }
-                        } catch (err) {
-                            alert('Upload error: ' + err.message);
-                            return;
-                        }
-                    } else {
-                        alert('GitHub token not set. Please configure in Settings.');
-                        return;
-                    }
+                            if (!imageUrl) { alert('Upload failed. Please check token.'); return; }
+                        } catch (err) { alert('Upload error: ' + err.message); return; }
+                    } else { alert('GitHub token not set. Please configure in Settings.'); return; }
                     const t = tools.find(x => x.id === currentCalCertToolId);
                     if (t) {
                         t.calCert = imageUrl;
@@ -3454,9 +3244,7 @@
             if (document.getElementById('recovery-code').value === '123456') {
                 document.getElementById('rec-step-2').classList.add('hidden');
                 document.getElementById('rec-step-3').classList.remove('hidden');
-            } else {
-                alert('Invalid code. Use 123456.');
-            }
+            } else { alert('Invalid code. Use 123456.'); }
         }
 
         function resetPassword() {
@@ -3500,7 +3288,7 @@
             static generateReadmeContent() {
                 return `
                     <!DOCTYPE html>
-                    <html><head><title>ToolTrack v2.1.7 Help</title>
+                    <html><head><title>ToolTrack v2.1.8 Help</title>
                     <style>
                         body{font-family:'Segoe UI',Arial;line-height:1.8;max-width:100%;margin:0;padding:20px;color:#1e293b;overflow-wrap:break-word;}
                         h1{color:#1e40af;border-bottom:3px solid #1e40af;padding-bottom:10px;}
@@ -3514,46 +3302,43 @@
                         code{background:#f1f5f9;padding:2px 8px;border-radius:6px;color:#1e293b;}
                     </style>
                     </head><body>
-                        <h1>🛠️ ToolTrack Service Tools Manager v2.1.7</h1>
-                        <p><strong>GitHub‑Synced Dashboard</strong> · Token manually entered per device</p>
+                        <h1>🛠️ ToolTrack Service Tools Manager v2.1.8</h1>
+                        <p><strong>GitHub‑Synced Dashboard</strong> · Settings for all users</p>
                         <div class="new-feature">
-                            <strong>v2.1.7:</strong> Token is no longer stored in data.json (to avoid secret detection). Each user enters the token manually in Settings. Non‑admin users see only GitHub Sync. Return evidence includes a 10‑day deletion notice and a backup button for admins.
+                            <strong>v2.1.8:</strong> Fixed login dropdown missing engineers. Default engineers are now seeded automatically on first run. Settings gear visible to all users. Non‑admins see only GitHub Sync. Improved conflict handling with smart merge prevents "Save failed" errors. Return confirmation now reliably removes borrowed tools from the list.
                         </div>
 
                         <h2>Quick Start</h2>
                         <ol>
-                            <li>Login with your name (default password: <code>123</code>)</li>
-                            <li>Admin sets token in Settings → GitHub Sync → Save</li>
-                            <li>Token is stored locally on your device only (not shared)</li>
-                            <li>All other users must enter the same token manually</li>
+                            <li>Login with your name (default password: <code>123</code>) – engineers are pre‑loaded.</li>
+                            <li>Click the Settings gear (⚙️) – visible to everyone.</li>
+                            <li>Enter the token provided by the administrator.</li>
+                            <li>Click Save – the token is stored on your device only.</li>
                         </ol>
 
-                        <h2>GitHub Sync</h2>
-                        <p>Token with <code>repo</code> scope. Repository: <strong>${CONFIG.owner}/${CONFIG.repo}</strong> · Branch: <strong>${CONFIG.branch}</strong></p>
+                        <h2>Settings Access</h2>
                         <ul>
-                            <li>Data file: <code>${CONFIG.dataPath}</code> (no token inside)</li>
-                            <li>Images folder: <code>images/</code> (≤1 MB)</li>
-                            <li>Pull on login, every 30s, and manual sync</li>
-                            <li>Push debounced after changes</li>
+                            <li><strong>All users:</strong> See GitHub Sync (enter token, repo, branch, test connection).</li>
+                            <li><strong>Admins only:</strong> See Backup/Restore, Auto-Logout, and Maintenance.</li>
                         </ul>
+
+                        <h2>Conflict Resolution</h2>
+                        <p>When a push conflict occurs (409), the system now merges remote and local data instead of overwriting, preventing loss of your confirmation actions.</p>
 
                         <h2>Return Evidence</h2>
                         <ul>
-                            <li>Admin sees a note: "Image will be auto‑deleted after 10 days."</li>
+                            <li>Admin sees: "Image will be auto‑deleted after 10 days."</li>
                             <li>Admin can click "Backup Image" to download the image locally.</li>
                         </ul>
-
-                        <h2>Cache Management</h2>
-                        <p>Version check on load forces reload from server if updated.</p>
 
                         <h2>Version History</h2>
                         <table>
                             <tr><th>Version</th><th>Features</th></tr>
-                            <tr><td>2.1.7</td><td>Manual token entry, restricted settings for non‑admin, evidence backup</td></tr>
-                            <tr><td>2.1.6</td><td>Token encoded in data.json (reverted)</td></tr>
+                            <tr><td>2.1.8</td><td>Fixed login dropdown, settings for all, smart merge</td></tr>
+                            <tr><td>2.1.7</td><td>Manual token entry, restricted settings</td></tr>
                         </table>
 
-                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.1.7 · Built with ❤️</p>
+                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.1.8 · Built with ❤️</p>
                     </body></html>
                 `;
             }
@@ -3561,7 +3346,7 @@
                 const blob = new Blob([this.generateReadmeContent()], { type: 'text/html' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = 'ToolTrack_README_v2.1.7.html';
+                a.download = 'ToolTrack_README_v2.1.8.html';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -3571,14 +3356,10 @@
         // ═══════════════════════════════════════════════
         //  INITIALIZATION
         // ═══════════════════════════════════════════════
-        // Version check already done at top
-
         window.onload = async function() {
             const hasData = loadDataFromStorage();
-            if (!hasData) {
-                loadLegacyData();
-                saveDataToStorage();
-            }
+            if (!hasData) { loadLegacyData();
+                saveDataToStorage(); }
 
             document.getElementById('taken-date').value = new Date().toISOString().split('T')[0];
             document.getElementById('return-date').value = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
