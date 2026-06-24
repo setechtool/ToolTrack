@@ -124,15 +124,15 @@
       "engineerId": 1782235819649,
       "takenDate": "2026-06-24",
       "expectedReturn": "2026-07-01",
-      "returned": false,
+      "returned": true,
       "location": "N/A",
       "extensionNotes": "",
       "newExpectedReturn": "",
-      "actualReturnDate": "",
-      "returnConfirmedBy": "",
+      "actualReturnDate": "2026-06-24T03:22:43.386Z",
+      "returnConfirmedBy": "Donan Arciaga",
       "confirmationNotes": "",
-      "transDate": "2026-06-24T03:22:43.386Z",
-      "approvalStatus": "",
+      "transDate": "2026-06-24T03:55:25.377Z",
+      "approvalStatus": "Approved",
       "incidentRemarks": "",
       "confirmedBy": ""
     }
@@ -185,7 +185,7 @@
       "engineerId": 1782235819649,
       "returnDate": "2026-06-24T03:22:43.386Z",
       "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1782271361657_c1h1x4.jpeg",
-      "status": "pending",
+      "status": "approved",
       "requestedBy": "Donan Arciaga"
     }
   ],
@@ -247,8 +247,8 @@
     "autoDelete": false
   },
   "_meta": {
-    "version": "2.1.7",
-    "updated": "2026-06-24T03:26:10.637Z",
+    "version": "2.1.8",
+    "updated": "2026-06-24T03:55:29.380Z",
     "user": "Donan Arciaga"
   }
 }
