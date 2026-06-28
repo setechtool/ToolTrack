@@ -79,6 +79,13 @@
       "phone": "9971 7084",
       "email": "ossama.bob@sultanunited.com",
       "department": "Angio Department"
+    },
+    {
+      "id": 1782649208722,
+      "name": "Ratheesh Kumar",
+      "phone": "9718 6410",
+      "email": "ratheesh.kumar@sultanunited.com",
+      "department": "X-Ray Department"
     }
   ],
   "transactions": [
@@ -357,6 +364,10 @@
     "Ossama Bob": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Ratheesh Kumar": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -368,7 +379,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-06-28T12:15:06.846Z",
+    "updated": "2026-06-28T12:20:12.735Z",
     "user": "Donan Arciaga"
   }
 }
