@@ -246,15 +246,15 @@
       "engineerId": 1782235138098,
       "takenDate": "2026-06-29",
       "expectedReturn": "2026-07-06",
-      "returned": false,
+      "returned": true,
       "location": "Mubarak Hospital ",
       "extensionNotes": "",
       "newExpectedReturn": "",
-      "actualReturnDate": "",
-      "returnConfirmedBy": "",
+      "actualReturnDate": "2026-06-29T13:06:27.165Z",
+      "returnConfirmedBy": "Donan Arciaga",
       "confirmationNotes": "",
-      "transDate": "2026-06-29T13:06:27.165Z",
-      "approvalStatus": "Incident",
+      "transDate": "2026-06-29T13:06:58.964Z",
+      "approvalStatus": "Approved",
       "incidentRemarks": "Incident",
       "confirmedBy": ""
     }
@@ -357,7 +357,7 @@
       "engineerId": 1782235138098,
       "returnDate": "2026-06-29T13:06:27.165Z",
       "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1782738382060_f3gh96.jpeg",
-      "status": "pending",
+      "status": "approved",
       "requestedBy": "Donan Arciaga"
     }
   ],
@@ -428,7 +428,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-06-29T13:06:31.168Z",
+    "updated": "2026-06-29T13:07:02.968Z",
     "user": "Donan Arciaga"
   }
 }
