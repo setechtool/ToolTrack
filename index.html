@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <!-- Force no-cache for all devices -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -154,12 +153,24 @@
         @media (max-width: 640px) { .settings-modal-body { padding: 1rem; } .settings-modal-footer { padding: 0.75rem 1rem; } }
 
         .evidence-note { background: #fef9c3; border-left: 4px solid #eab308; padding: 8px 12px; border-radius: 6px; font-size: 12px; margin: 6px 0; }
+
+        /* Loading overlay for return confirmation */
+        .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; flex-direction: column; gap: 20px; }
+        .loading-spinner { border: 6px solid rgba(255,255,255,0.2); border-top: 6px solid #2563eb; border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading-text { color: #fff; font-size: 18px; font-weight: 500; letter-spacing: 0.5px; }
     </style>
 </head>
 <body>
 
     <!-- ─── IDLE WARNING TOAST ─── -->
     <div id="idle-warning-toast"><i class="fa-solid fa-clock mr-2"></i><span id="idle-warning-text"></span></div>
+
+    <!-- ─── LOADING OVERLAY (hidden by default) ─── -->
+    <div id="loading-overlay" class="loading-overlay" style="display:none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Generating message...</div>
+    </div>
 
     <!-- ─── LOGIN SCREEN ─── -->
     <div id="login-screen" class="fixed inset-0 bg-gradient-to-br from-blue-700 to-blue-900 flex items-center justify-center z-[100]">
@@ -559,7 +570,7 @@
             <div class="flex flex-wrap gap-2 mt-4">
                 <button onclick="captureReturnImage()" id="capture-btn" class="flex-1 py-3 btn btn-outline min-w-[80px]"><i class="fa-solid fa-camera"></i> Capture</button>
                 <button id="retake-btn" onclick="captureReturnImage()" class="hidden flex-1 py-3 btn btn-warning min-w-[80px]"><i class="fa-solid fa-rotate-right"></i> Retake</button>
-                <button id="confirm-evidence-btn" onclick="confirmReturnEvidence()" class="hidden flex-1 py-3 btn btn-primary min-w-[80px]"><i class="fa-solid fa-check"></i> Confirm</button>
+                <button id="confirm-evidence-btn" onclick="confirmReturnEvidence()" class="hidden flex-1 py-3 btn btn-primary min-w-[80px]"><i class="fa-solid fa-check"></i> Confirmed</button>
                 <button onclick="notRequiredReturn()" class="flex-1 py-3 btn btn-warning min-w-[80px]">Not Required</button>
                 <button onclick="hideReturnEvidenceModal()" class="flex-1 py-3 btn btn-outline min-w-[80px]">Cancel</button>
             </div>
@@ -582,6 +593,25 @@
                 </div>
             </details>
             <button onclick="hideSendReturnModal()" class="w-full py-3 btn btn-outline">Close</button>
+        </div>
+    </div>
+
+    <!-- Incident Selection Modal (NEW) -->
+    <div id="incident-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-[90]">
+        <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
+            <h3 class="text-xl font-semibold mb-4">Incident Report</h3>
+            <p class="text-sm text-gray-500 mb-4">Select the reason for the incident:</p>
+            <div id="incident-options" class="space-y-2 max-h-60 overflow-y-auto">
+                <!-- Radio buttons will be populated here -->
+            </div>
+            <div id="incident-others-container" style="display:none;" class="mt-3">
+                <label class="block text-sm font-medium mb-1">Please provide more information:</label>
+                <textarea id="incident-others-text" rows="2" class="w-full p-2 border rounded-xl"></textarea>
+            </div>
+            <div class="flex gap-2 mt-4">
+                <button onclick="cancelIncident()" class="flex-1 py-3 btn btn-outline">Cancel</button>
+                <button onclick="sendIncidentReport()" class="flex-1 py-3 btn btn-danger">Send Report</button>
+            </div>
         </div>
     </div>
 
@@ -1749,7 +1779,7 @@
             updateRoyUI();
             loadGitHubSettingsUI();
             updateSettingsVisibility();
-            populateLoginDropdown(); // ensure dropdown is up-to-date
+            populateLoginDropdown();
         }
 
         function updateRoyUI() {
@@ -1783,6 +1813,86 @@
             renderApprovalPanel();
         }
 
+        // ─── Incident Modal Functions (NEW) ─────────────────────────────────
+        let currentIncidentRequestId = null;
+
+        function showIncidentModal(requestId) {
+            currentIncidentRequestId = requestId;
+            const container = document.getElementById('incident-options');
+            // Define the options (a-f)
+            const options = [
+                { value: 'a', label: 'Return tool cannot be located in the assigned storage or return location — The system indicates the tool has been returned, but it is not physically found in the expected location.' },
+                { value: 'b', label: 'Returned tool requires inspection or clarification from returnee due to reported issue — The tool shows signs of a potential problem that needs further validation or confirmation from the person who returned it.' },
+                { value: 'c', label: 'Returned tool is incomplete (missing accessories or components) — Essential items such as cables, probes, adapters, manuals, batteries, or other parts are not included with the returned tool.' },
+                { value: 'd', label: 'Tool condition does not match return declaration (damaged or malfunctioning) — The tool was marked as operational upon return, but inspection reveals damage, defects, or performance issues.' },
+                { value: 'e', label: 'Serial number or asset tag mismatch detected — The returned tool does not match the recorded serial number or asset identification in the system, affecting traceability and inventory accuracy.' },
+                { value: 'f', label: 'Others (Please provide more information)' }
+            ];
+            container.innerHTML = options.map(opt =>
+                `<div class="flex items-start"><input type="radio" name="incident-option" value="${opt.value}" id="inc-${opt.value}" class="mt-1 mr-2"><label for="inc-${opt.value}" class="text-sm text-gray-700">${opt.label}</label></div>`
+            ).join('');
+
+            // Show/hide others textarea based on selection
+            container.querySelectorAll('input[name="incident-option"]').forEach(el => {
+                el.addEventListener('change', function() {
+                    document.getElementById('incident-others-container').style.display = (this.value === 'f') ?
+                        'block' : 'none';
+                });
+            });
+
+            document.getElementById('incident-modal').classList.remove('hidden');
+        }
+
+        function cancelIncident() {
+            document.getElementById('incident-modal').classList.add('hidden');
+            currentIncidentRequestId = null;
+        }
+
+        function sendIncidentReport() {
+            const selected = document.querySelector('input[name="incident-option"]:checked');
+            if (!selected) { alert('Please select a reason.'); return; }
+            let reason = selected.value;
+            let message = '';
+            const req = returnRequests.find(r => r.id === currentIncidentRequestId);
+            if (!req) { alert('Request not found.'); return; }
+            const trans = transactions.find(t => t.id === req.transId);
+            if (!trans) { alert('Transaction not found.'); return; }
+            const tool = tools.find(t => t.id === trans.toolId);
+            const eng = engineers.find(e => e.id === trans.engineerId);
+            if (!eng) { alert('Engineer not found.'); return; }
+
+            const selectedLabel = document.querySelector(`label[for="inc-${selected.value}"]`)?.textContent || '';
+            if (selected.value === 'f') {
+                const othersText = document.getElementById('incident-others-text').value.trim();
+                if (!othersText) { alert('Please provide more information for "Others".'); return; }
+                message = `Incident Report for Tool Return\n\nTool: ${tool?.desc || 'Unknown'} (${tool?.serial || 'N/A'})\nReason: ${selectedLabel}\nDetails: ${othersText}\n\nRegards,\n${authManager.getCurrentUser().name}`;
+            } else {
+                message =
+                    `Incident Report for Tool Return\n\nTool: ${tool?.desc || 'Unknown'} (${tool?.serial || 'N/A'})\nReason: ${selectedLabel}\n\nRegards,\n${authManager.getCurrentUser().name}`;
+            }
+
+            // Update transaction and request status
+            trans.incidentRemarks = selectedLabel;
+            trans.approvalStatus = 'Incident';
+            req.status = 'incident';
+            trans.transDate = new Date().toISOString();
+            saveData();
+            refreshAllPanels();
+
+            // Send email to engineer (sender is the one who borrowed)
+            const emailSubject = 'Incident Report - Tool Return';
+            const emailBody = encodeURIComponent(message);
+            const mailtoLink = `mailto:${eng.email}?subject=${emailSubject}&body=${emailBody}`;
+            window.open(mailtoLink, '_blank');
+
+            cancelIncident();
+            logManager.log(authManager.getCurrentUser().name, 'Incident report sent to ' + eng.email + ' for tool ' + tool
+                ?.desc);
+            alert('Incident report sent to ' + eng.name + ' (' + eng.email + ').');
+        }
+
+        // ─── End Incident Modal ──────────────────────────────────────────────
+
         function renderApprovalPanel() {
             const user = authManager.getCurrentUser();
             const panel = document.getElementById('approval-panel');
@@ -1815,7 +1925,7 @@
                                         ${user.isAdmin ? `<button onclick="backupEvidenceImage('${r.id}')" class="btn btn-primary text-xs px-2 py-1 ml-2">Backup Image</button>` : ''}
                                     </div>
                                     <button onclick="confirmReturn('${r.id}')" class="btn btn-success px-4 py-1.5 text-sm">Confirmed</button>
-                                    <button onclick="incidentReport('${r.id}')" class="btn btn-danger px-4 py-1.5 text-sm">Incident</button>
+                                    <button onclick="showIncidentModal('${r.id}')" class="btn btn-danger px-4 py-1.5 text-sm">Incident</button>
                                 </div>
                             </div>
                         </div>
@@ -1860,18 +1970,6 @@
             saveData();
             refreshAllPanels();
             renderBorrowTab();
-        }
-
-        function incidentReport(reqId) {
-            const req = returnRequests.find(r => r.id === reqId);
-            if (!req) return;
-            req.status = 'incident';
-            const trans = transactions.find(t => t.id === req.transId);
-            if (trans) { trans.incidentRemarks = 'Incident';
-                trans.approvalStatus = 'Incident';
-                trans.transDate = new Date().toISOString(); }
-            saveData();
-            refreshAllPanels();
         }
 
         // ═══════════════════════════════════════════════
@@ -2309,51 +2407,73 @@
             });
         }
 
+        // ─── Modified confirmReturnEvidence with loading spinner ───────────
         async function confirmReturnEvidence() {
             if (!capturedReturnImage) { alert('Capture an image first.'); return; }
-            let imageUrl = null;
-            if (CONFIG.token) {
-                try {
-                    imageUrl = await uploadImageToRepo(capturedReturnImage, 'images');
-                    if (imageUrl) {
+
+            // Show loading overlay
+            const overlay = document.getElementById('loading-overlay');
+            overlay.style.display = 'flex';
+
+            try {
+                let imageUrl = null;
+                if (CONFIG.token) {
+                    try {
+                        imageUrl = await uploadImageToRepo(capturedReturnImage, 'images');
+                        if (!imageUrl) {
+                            overlay.style.display = 'none';
+                            alert('Image upload failed. Please check your token and try again.');
+                            return;
+                        }
                         logManager.log(authManager.getCurrentUser().name, 'Return evidence uploaded: ' + imageUrl);
-                    } else {
-                        alert('Image upload failed. Please check your token and try again.');
+                    } catch (e) {
+                        overlay.style.display = 'none';
+                        alert('Image upload error: ' + e.message);
                         return;
                     }
-                } catch (e) {
-                    alert('Image upload error: ' + e.message);
+                } else {
+                    overlay.style.display = 'none';
+                    alert('GitHub token not set. Please configure in Settings.');
                     return;
                 }
-            } else {
-                alert('GitHub token not set. Please configure in Settings.');
-                return;
+
+                const trans = transactions.find(t => t.id === pendingReturnTransId);
+                if (!trans) {
+                    overlay.style.display = 'none';
+                    alert('Transaction not found.');
+                    return;
+                }
+                const tool = tools.find(t => t.id === trans.toolId);
+                const returnDate = new Date().toISOString();
+                returnRequests.push({
+                    id: 'RR' + Date.now(),
+                    transId: pendingReturnTransId,
+                    toolId: trans.toolId,
+                    engineerId: trans.engineerId,
+                    returnDate,
+                    evidenceImage: imageUrl,
+                    status: 'pending',
+                    requestedBy: authManager.getCurrentUser().name
+                });
+                trans.transDate = new Date().toISOString();
+                saveData();
+
+                // Hide loading overlay before showing the send modal
+                overlay.style.display = 'none';
+
+                const msg =
+                    `Dear Roy,\n\nGreetings!\n\nTool ${tool?.desc || 'Unknown'} (${tool?.serial || 'N/A'}) returned on ${new Date(returnDate).toLocaleString()}.\nPlease review the image in Dashboard.\n\nRegards,\n${authManager.getCurrentUser().name}`;
+                document.getElementById('return-whatsapp-msg').value = msg;
+                document.getElementById('return-email-msg').value = msg;
+                document.getElementById('send-return-modal').classList.remove('hidden');
+                hideReturnEvidenceModal();
+                refreshAllPanels();
+
+            } catch (err) {
+                // Hide loading overlay on error
+                overlay.style.display = 'none';
+                alert('Error: ' + err.message);
             }
-
-            const trans = transactions.find(t => t.id === pendingReturnTransId);
-            if (!trans) return;
-            const tool = tools.find(t => t.id === trans.toolId);
-            const returnDate = new Date().toISOString();
-            returnRequests.push({
-                id: 'RR' + Date.now(),
-                transId: pendingReturnTransId,
-                toolId: trans.toolId,
-                engineerId: trans.engineerId,
-                returnDate,
-                evidenceImage: imageUrl,
-                status: 'pending',
-                requestedBy: authManager.getCurrentUser().name
-            });
-            trans.transDate = new Date().toISOString();
-            saveData();
-            hideReturnEvidenceModal();
-            refreshAllPanels();
-
-            const msg =
-                `Dear Roy,\n\nGreetings!\n\nTool ${tool?.desc || 'Unknown'} (${tool?.serial || 'N/A'}) returned on ${new Date(returnDate).toLocaleString()}.\nPlease review the image in Dashboard.\n\nRegards,\n${authManager.getCurrentUser().name}`;
-            document.getElementById('return-whatsapp-msg').value = msg;
-            document.getElementById('return-email-msg').value = msg;
-            document.getElementById('send-return-modal').classList.remove('hidden');
         }
 
         function notRequiredReturn() {
