@@ -50,7 +50,7 @@
       "name": "Royston DCosta",
       "phone": "6694 4704",
       "email": "royston.dcosta@sultanunited.com",
-      "department": "TECH SUPPORT DEPARTMENT"
+      "department": "Tech Support Department"
     },
     {
       "id": 1782235819649,
@@ -64,7 +64,7 @@
       "name": "Ashraf Al Anati",
       "phone": "9606 0597",
       "email": "ashraf.al.anati@sultanunited.com",
-      "department": "MRI Department"
+      "department": "MRI"
     },
     {
       "id": 1782235874369,
@@ -484,7 +484,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-02T12:33:21.314Z",
+    "updated": "2026-07-02T12:33:29.520Z",
     "user": "Donan Arciaga"
   }
 }
