@@ -78,7 +78,7 @@
       "name": "Ossama Bob",
       "phone": "9971 7084",
       "email": "ossama.bob@sultanunited.com",
-      "department": "Angio Department"
+      "department": "ANGIO"
     },
     {
       "id": 1782649208722,
@@ -484,7 +484,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-02T12:33:37.324Z",
+    "updated": "2026-07-02T12:33:43.176Z",
     "user": "Donan Arciaga"
   }
 }
