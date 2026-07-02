@@ -520,6 +520,12 @@
                         <p class="text-xs text-amber-500 mt-1" id="idle-timeout-status"></p>
                     </div>
 
+                    <!-- DEPARTMENT MANAGEMENT (NEW) -->
+                    <div class="settings-card">
+                        <h4 class="text-gray-700"><i class="fa-solid fa-building mr-2"></i>Manage Departments</h4>
+                        <button onclick="openDepartmentManager()" class="w-full btn btn-primary py-2 text-sm">Open Department Manager</button>
+                    </div>
+
                     <div class="settings-card">
                         <h4 class="text-gray-700"><i class="fa-solid fa-wrench mr-2"></i>Maintenance</h4>
                         <div class="flex flex-wrap gap-2">
@@ -532,6 +538,18 @@
             </div>
             <div class="settings-modal-footer">
                 <button onclick="hideSettingsPanel()" class="w-full py-3 btn btn-outline">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Department Manager Modal -->
+    <div id="department-manager-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
+        <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
+            <h3 class="text-xl font-semibold mb-4"><i class="fa-solid fa-building mr-2"></i>Manage Departments</h3>
+            <div class="max-h-64 overflow-y-auto space-y-2" id="dept-list-container"></div>
+            <div class="flex gap-2 mt-4">
+                <button onclick="addNewDepartmentViaManager()" class="flex-1 py-2 btn btn-primary text-sm"><i class="fa-solid fa-plus"></i> Add Department</button>
+                <button onclick="closeDepartmentManager()" class="flex-1 py-2 btn btn-outline text-sm">Close</button>
             </div>
         </div>
     </div>
@@ -596,7 +614,7 @@
         </div>
     </div>
 
-    <!-- Incident Selection Modal (NEW) -->
+    <!-- Incident Selection Modal -->
     <div id="incident-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-[90]">
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Incident Report</h3>
@@ -661,21 +679,54 @@
         </div>
     </div>
 
-    <!-- Add Engineer -->
+    <!-- Add Engineer (UPDATED with Department dropdown and "Add New" option) -->
     <div id="add-engineer-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Add Engineer</h3>
-            <div class="space-y-3"><input id="eng-name" placeholder="Full Name *" class="w-full p-3 border rounded-xl" oninput="autoGenerateEmail()" /><div class="relative"><span class="absolute left-3 top-3 text-sm text-gray-500">(+965)</span><input id="eng-phone" class="w-full p-3 pl-16 border rounded-xl" oninput="formatPhoneNumber(this)" maxlength="9" /></div><input id="eng-email" placeholder="Email" class="w-full p-3 border rounded-xl" /><input id="eng-department" placeholder="Department" class="w-full p-3 border rounded-xl" onblur="formatDepartment(this)" /></div>
-            <div class="flex gap-2 mt-4"><button onclick="hideAddEngineerModal()" class="flex-1 py-3 btn btn-outline">Cancel</button><button onclick="addNewEngineer()" class="flex-1 py-3 btn btn-primary">Save</button></div>
+            <div class="space-y-3">
+                <input id="eng-name" placeholder="Full Name *" class="w-full p-3 border rounded-xl" oninput="autoGenerateEmail()" />
+                <div class="relative">
+                    <span class="absolute left-3 top-3 text-sm text-gray-500">(+965)</span>
+                    <input id="eng-phone" class="w-full p-3 pl-16 border rounded-xl" oninput="formatPhoneNumber(this)" maxlength="9" />
+                </div>
+                <input id="eng-email" placeholder="Email" class="w-full p-3 border rounded-xl" />
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                    <select id="eng-department" class="w-full p-3 border rounded-xl">
+                        <!-- populated by JavaScript -->
+                    </select>
+                </div>
+            </div>
+            <div class="flex gap-2 mt-4">
+                <button onclick="hideAddEngineerModal()" class="flex-1 py-3 btn btn-outline">Cancel</button>
+                <button onclick="addNewEngineer()" class="flex-1 py-3 btn btn-primary">Save</button>
+            </div>
         </div>
     </div>
 
-    <!-- Edit Engineer -->
+    <!-- Edit Engineer (UPDATED with Department dropdown and "Add New" option) -->
     <div id="edit-engineer-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Edit Engineer</h3>
-            <div class="space-y-3"><input id="edit-eng-id" type="hidden" /><input id="edit-eng-name" class="w-full p-3 border rounded-xl" oninput="autoGenerateEditEmail()" /><div class="relative"><span class="absolute left-3 top-3 text-sm text-gray-500">(+965)</span><input id="edit-eng-phone" class="w-full p-3 pl-16 border rounded-xl" oninput="formatPhoneNumber(this)" maxlength="9" /></div><input id="edit-eng-email" class="w-full p-3 border rounded-xl" /><input id="edit-eng-department" class="w-full p-3 border rounded-xl" onblur="formatEditDepartment()" /></div>
-            <div class="flex gap-2 mt-4"><button onclick="hideEditEngineerModal()" class="flex-1 py-3 btn btn-outline">Cancel</button><button onclick="updateEngineer()" class="flex-1 py-3 btn btn-primary">Update</button></div>
+            <div class="space-y-3">
+                <input id="edit-eng-id" type="hidden" />
+                <input id="edit-eng-name" class="w-full p-3 border rounded-xl" oninput="autoGenerateEditEmail()" />
+                <div class="relative">
+                    <span class="absolute left-3 top-3 text-sm text-gray-500">(+965)</span>
+                    <input id="edit-eng-phone" class="w-full p-3 pl-16 border rounded-xl" oninput="formatPhoneNumber(this)" maxlength="9" />
+                </div>
+                <input id="edit-eng-email" class="w-full p-3 border rounded-xl" />
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                    <select id="edit-eng-department" class="w-full p-3 border rounded-xl">
+                        <!-- populated by JavaScript -->
+                    </select>
+                </div>
+            </div>
+            <div class="flex gap-2 mt-4">
+                <button onclick="hideEditEngineerModal()" class="flex-1 py-3 btn btn-outline">Cancel</button>
+                <button onclick="updateEngineer()" class="flex-1 py-3 btn btn-primary">Update</button>
+            </div>
         </div>
     </div>
 
@@ -991,6 +1042,184 @@
         const authManager = new AuthManager();
 
         // ═══════════════════════════════════════════════
+        //  DEPARTMENTS MANAGER (NEW)
+        // ═══════════════════════════════════════════════
+        const DEFAULT_DEPARTMENTS = [
+            'ANGIO', 'CT', 'LAB', 'MRI', 'NUCLEAR', 'OTHERS',
+            'PACS', 'RADIOTHERAPY', 'STERIS (STERILIZATION)',
+            'SURGICAL', 'US', 'X-RAY'
+        ];
+
+        function getDepartments() {
+            let depts = localStorage.getItem('tooltrack_departments');
+            if (depts) {
+                try { return JSON.parse(depts); } catch (e) { return [...DEFAULT_DEPARTMENTS]; }
+            } else {
+                // store defaults
+                localStorage.setItem('tooltrack_departments', JSON.stringify(DEFAULT_DEPARTMENTS));
+                return [...DEFAULT_DEPARTMENTS];
+            }
+        }
+
+        function saveDepartments(depts) {
+            localStorage.setItem('tooltrack_departments', JSON.stringify(depts));
+            // Refresh any open dropdowns
+            populateDepartmentDropdowns();
+            renderDepartmentList();
+        }
+
+        function addDepartment(deptName) {
+            let depts = getDepartments();
+            const trimmed = deptName.trim();
+            if (!trimmed) return false;
+            if (depts.includes(trimmed)) return false;
+            depts.push(trimmed);
+            depts.sort((a, b) => a.localeCompare(b));
+            saveDepartments(depts);
+            return true;
+        }
+
+        function removeDepartment(deptName) {
+            let depts = getDepartments();
+            const idx = depts.indexOf(deptName);
+            if (idx === -1) return false;
+            depts.splice(idx, 1);
+            saveDepartments(depts);
+            return true;
+        }
+
+        function editDepartment(oldName, newName) {
+            let depts = getDepartments();
+            const idx = depts.indexOf(oldName);
+            if (idx === -1) return false;
+            const trimmed = newName.trim();
+            if (!trimmed) return false;
+            if (trimmed !== oldName && depts.includes(trimmed)) return false;
+            depts[idx] = trimmed;
+            depts.sort((a, b) => a.localeCompare(b));
+            saveDepartments(depts);
+            return true;
+        }
+
+        function populateDepartmentDropdowns() {
+            const depts = getDepartments();
+            const selects = ['eng-department', 'edit-eng-department'];
+            selects.forEach(id => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                const currentVal = sel.value;
+                sel.innerHTML = '';
+                depts.forEach(d => {
+                    const opt = document.createElement('option');
+                    opt.value = d;
+                    opt.textContent = d;
+                    sel.appendChild(opt);
+                });
+                // Add "Add New Department" option
+                const addOpt = document.createElement('option');
+                addOpt.value = '__ADD_NEW__';
+                addOpt.textContent = '➕ Add New Department';
+                addOpt.style.color = '#2563eb';
+                sel.appendChild(addOpt);
+
+                // Restore selected value if still valid
+                if (currentVal && depts.includes(currentVal)) {
+                    sel.value = currentVal;
+                } else {
+                    sel.value = '';
+                }
+
+                // Handle "Add New" selection
+                sel.onchange = function() {
+                    if (this.value === '__ADD_NEW__') {
+                        const newDept = prompt('Enter new department name:');
+                        if (newDept && newDept.trim()) {
+                            if (addDepartment(newDept.trim())) {
+                                populateDepartmentDropdowns();
+                                // select the newly added
+                                const newDepts = getDepartments();
+                                if (newDepts.includes(newDept.trim())) {
+                                    const sel2 = document.getElementById(id);
+                                    sel2.value = newDept.trim();
+                                }
+                            } else {
+                                alert('Department already exists or invalid.');
+                            }
+                        }
+                        // reset selection to empty
+                        this.value = '';
+                    }
+                };
+            });
+        }
+
+        // ─── Department Manager UI ────────────────────────────────────────
+        function openDepartmentManager() {
+            renderDepartmentList();
+            document.getElementById('department-manager-modal').classList.remove('hidden');
+        }
+
+        function closeDepartmentManager() {
+            document.getElementById('department-manager-modal').classList.add('hidden');
+        }
+
+        function renderDepartmentList() {
+            const container = document.getElementById('dept-list-container');
+            const depts = getDepartments();
+            if (!depts.length) {
+                container.innerHTML = '<p class="text-gray-400 text-center py-4">No departments defined.</p>';
+                return;
+            }
+            container.innerHTML = depts.map(d => `
+                <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-xl">
+                    <span class="text-sm font-medium">${d}</span>
+                    <div class="flex gap-2">
+                        <button onclick="editDepartmentPrompt('${d}')" class="text-blue-500 text-xs px-2 py-1 rounded-lg hover:bg-blue-50"><i class="fa-solid fa-edit"></i></button>
+                        <button onclick="removeDepartmentPrompt('${d}')" class="text-red-500 text-xs px-2 py-1 rounded-lg hover:bg-red-50"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editDepartmentPrompt(oldName) {
+            const newName = prompt('Edit department name:', oldName);
+            if (newName && newName.trim() && newName.trim() !== oldName) {
+                if (editDepartment(oldName, newName.trim())) {
+                    renderDepartmentList();
+                    populateDepartmentDropdowns();
+                    alert('Department updated.');
+                } else {
+                    alert('Failed to update. Name may already exist or be invalid.');
+                }
+            }
+        }
+
+        function removeDepartmentPrompt(deptName) {
+            if (confirm(`Are you sure you want to remove "${deptName}"?`)) {
+                if (removeDepartment(deptName)) {
+                    renderDepartmentList();
+                    populateDepartmentDropdowns();
+                    alert('Department removed.');
+                } else {
+                    alert('Could not remove.');
+                }
+            }
+        }
+
+        function addNewDepartmentViaManager() {
+            const name = prompt('Enter new department name:');
+            if (name && name.trim()) {
+                if (addDepartment(name.trim())) {
+                    renderDepartmentList();
+                    populateDepartmentDropdowns();
+                    alert('Department added.');
+                } else {
+                    alert('Department already exists or invalid.');
+                }
+            }
+        }
+
+        // ═══════════════════════════════════════════════
         //  DATA STORE – no token in data.json
         // ═══════════════════════════════════════════════
         let tools = [];
@@ -1003,6 +1232,7 @@
         function seedDefaultEngineers() {
             if (engineers.length === 0) {
                 const defaultNames = ['Royston Dcosta', 'Donan Arciaga', 'Ahmed Al-Sabah', 'Fatima Al-Mutairi', 'Mohammed Al-Rashid', 'Sara Al-Otaibi'];
+                const depts = getDepartments();
                 defaultNames.forEach((name, index) => {
                     const email = name.toLowerCase().replace(/\s+/g, '.') + '@sultanunited.com';
                     const phone = '9747 ' + (1000 + index);
@@ -1011,9 +1241,8 @@
                         name: name,
                         phone: phone,
                         email: email,
-                        department: (index % 2 === 0) ? 'X-ray Department' : 'MRI Department'
+                        department: depts[index % depts.length] || 'N/A'
                     });
-                    // Ensure user exists with default password
                     if (!authManager.users[name]) {
                         authManager.addUser(name, '123');
                     }
@@ -1041,7 +1270,10 @@
                     }
                     if (data.logConfig) { logManager.logConfig = data.logConfig;
                         localStorage.setItem('logConfig', JSON.stringify(data.logConfig)); }
-                    // Seed if empty
+                    // Ensure departments exist
+                    if (!localStorage.getItem('tooltrack_departments')) {
+                        localStorage.setItem('tooltrack_departments', JSON.stringify(DEFAULT_DEPARTMENTS));
+                    }
                     seedDefaultEngineers();
                     return true;
                 }
@@ -1082,6 +1314,9 @@
                 DeletionLogger.deletionRecords = JSON.parse(localStorage.getItem('deletionRecords') || '[]');
                 logManager.logConfig = JSON.parse(localStorage.getItem('logConfig') || '{"enabled":true,"level":"all","retentionDays":30,"autoDelete":false}');
                 if (localStorage.getItem('gh_token')) CONFIG.token = localStorage.getItem('gh_token');
+                if (!localStorage.getItem('tooltrack_departments')) {
+                    localStorage.setItem('tooltrack_departments', JSON.stringify(DEFAULT_DEPARTMENTS));
+                }
                 seedDefaultEngineers();
                 return true;
             } catch (e) { return false; }
@@ -1780,6 +2015,7 @@
             loadGitHubSettingsUI();
             updateSettingsVisibility();
             populateLoginDropdown();
+            populateDepartmentDropdowns();
         }
 
         function updateRoyUI() {
@@ -1794,6 +2030,7 @@
             renderHistory();
             try { renderAnalytics(); } catch (e) {}
             try { refreshLogViewer(); } catch (e) {}
+            populateDepartmentDropdowns();
         }
 
         // ═══════════════════════════════════════════════
@@ -1813,13 +2050,12 @@
             renderApprovalPanel();
         }
 
-        // ─── Incident Modal Functions (NEW) ─────────────────────────────────
+        // ─── Incident Modal Functions ────────────────────────────────────────
         let currentIncidentRequestId = null;
 
         function showIncidentModal(requestId) {
             currentIncidentRequestId = requestId;
             const container = document.getElementById('incident-options');
-            // Define the options (a-f)
             const options = [
                 { value: 'a', label: 'Return tool cannot be located in the assigned storage or return location — The system indicates the tool has been returned, but it is not physically found in the expected location.' },
                 { value: 'b', label: 'Returned tool requires inspection or clarification from returnee due to reported issue — The tool shows signs of a potential problem that needs further validation or confirmation from the person who returned it.' },
@@ -1832,7 +2068,6 @@
                 `<div class="flex items-start"><input type="radio" name="incident-option" value="${opt.value}" id="inc-${opt.value}" class="mt-1 mr-2"><label for="inc-${opt.value}" class="text-sm text-gray-700">${opt.label}</label></div>`
             ).join('');
 
-            // Show/hide others textarea based on selection
             container.querySelectorAll('input[name="incident-option"]').forEach(el => {
                 el.addEventListener('change', function() {
                     document.getElementById('incident-others-container').style.display = (this.value === 'f') ?
@@ -1871,7 +2106,6 @@
                     `Incident Report for Tool Return\n\nTool: ${tool?.desc || 'Unknown'} (${tool?.serial || 'N/A'})\nReason: ${selectedLabel}\n\nRegards,\n${authManager.getCurrentUser().name}`;
             }
 
-            // Update transaction and request status
             trans.incidentRemarks = selectedLabel;
             trans.approvalStatus = 'Incident';
             req.status = 'incident';
@@ -1879,7 +2113,6 @@
             saveData();
             refreshAllPanels();
 
-            // Send email to engineer (sender is the one who borrowed)
             const emailSubject = 'Incident Report - Tool Return';
             const emailBody = encodeURIComponent(message);
             const mailtoLink = `mailto:${eng.email}?subject=${emailSubject}&body=${emailBody}`;
@@ -1890,8 +2123,6 @@
                 ?.desc);
             alert('Incident report sent to ' + eng.name + ' (' + eng.email + ').');
         }
-
-        // ─── End Incident Modal ──────────────────────────────────────────────
 
         function renderApprovalPanel() {
             const user = authManager.getCurrentUser();
@@ -2091,7 +2322,7 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  ENGINEERS
+        //  ENGINEERS (updated for department dropdown)
         // ═══════════════════════════════════════════════
         let currentEngineerView = 'table';
         let pendingDeletionType = null,
@@ -2138,7 +2369,12 @@
         }
 
         function showAddEngineerModal() {
-            ['eng-name', 'eng-phone', 'eng-email', 'eng-department'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('eng-name').value = '';
+            document.getElementById('eng-phone').value = '';
+            document.getElementById('eng-email').value = '';
+            document.getElementById('eng-department').value = '';
+            // Ensure dropdown is populated
+            populateDepartmentDropdowns();
             document.getElementById('add-engineer-modal').classList.remove('hidden');
         }
 
@@ -2147,15 +2383,15 @@
         async function addNewEngineer() {
             const name = document.getElementById('eng-name').value.trim();
             if (!name) { alert('Name is required.'); return; }
-            let dept = document.getElementById('eng-department').value.trim();
-            if (dept && !dept.toLowerCase().endsWith('department')) dept += ' Department';
+            const dept = document.getElementById('eng-department').value;
+            if (!dept) { alert('Please select a department.'); return; }
             engineers.push({
                 id: Date.now(),
                 name,
                 phone: document.getElementById('eng-phone').value || 'N/A',
                 email: document.getElementById('eng-email').value || name.toLowerCase().replace(/\s+/g, '.') +
                     '@sultanunited.com',
-                department: dept || 'N/A'
+                department: dept
             });
             authManager.addUser(name);
             saveData();
@@ -2172,6 +2408,8 @@
             document.getElementById('edit-eng-name').value = e.name;
             document.getElementById('edit-eng-phone').value = e.phone;
             document.getElementById('edit-eng-email').value = e.email;
+            // Ensure dropdown is populated before setting value
+            populateDepartmentDropdowns();
             document.getElementById('edit-eng-department').value = e.department || '';
             document.getElementById('edit-engineer-modal').classList.remove('hidden');
         }
@@ -2189,12 +2427,12 @@
                 if (userData) { authManager.addUser(newName, userData.password);
                     authManager.removeUser(oldName); }
             }
-            let dept = document.getElementById('edit-eng-department').value.trim();
-            if (dept && !dept.toLowerCase().endsWith('department')) dept += ' Department';
+            const dept = document.getElementById('edit-eng-department').value;
+            if (!dept) { alert('Please select a department.'); return; }
             e.name = newName;
             e.phone = document.getElementById('edit-eng-phone').value || e.phone;
             e.email = document.getElementById('edit-eng-email').value || e.email;
-            e.department = dept || e.department;
+            e.department = dept;
             saveData();
             hideEditEngineerModal();
             refreshAllPanels();
@@ -2407,11 +2645,9 @@
             });
         }
 
-        // ─── Modified confirmReturnEvidence with loading spinner ───────────
         async function confirmReturnEvidence() {
             if (!capturedReturnImage) { alert('Capture an image first.'); return; }
 
-            // Show loading overlay
             const overlay = document.getElementById('loading-overlay');
             overlay.style.display = 'flex';
 
@@ -2458,7 +2694,6 @@
                 trans.transDate = new Date().toISOString();
                 saveData();
 
-                // Hide loading overlay before showing the send modal
                 overlay.style.display = 'none';
 
                 const msg =
@@ -2470,7 +2705,6 @@
                 refreshAllPanels();
 
             } catch (err) {
-                // Hide loading overlay on error
                 overlay.style.display = 'none';
                 alert('Error: ' + err.message);
             }
@@ -3230,19 +3464,6 @@
             input.value = val;
         }
 
-        function formatDepartment(input) {
-            let val = input.value.trim();
-            if (val && !val.toLowerCase().endsWith('department')) input.value = val + ' Department';
-        }
-
-        function formatEditDepartment() {
-            const input = document.getElementById('edit-eng-department');
-            if (input) {
-                let val = input.value.trim();
-                if (val && !val.toLowerCase().endsWith('department')) input.value = val + ' Department';
-            }
-        }
-
         function formatPhoneDisplay(phone) { return '(+965) ' + phone; }
 
         function editRoyInfo() {
@@ -3487,6 +3708,7 @@
             updateRoyUI();
             loadGitHubSettingsUI();
             updateSettingsVisibility();
+            populateDepartmentDropdowns();
 
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('main-app').classList.add('hidden');
