@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>ToolTrack v2.1.8 · Settings for all</title>
+    <title>ToolTrack v2.1.8 · Weather Pro</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -159,6 +159,178 @@
         .loading-spinner { border: 6px solid rgba(255,255,255,0.2); border-top: 6px solid #2563eb; border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .loading-text { color: #fff; font-size: 18px; font-weight: 500; letter-spacing: 0.5px; }
+
+        /* ── Temperature Widget ── */
+        .temp-widget { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; background: #f1f5f9; padding: 4px 14px 4px 10px; border-radius: 40px; border: 1px solid #e2e8f0; color: #1e293b; cursor: pointer; transition: all 0.2s; user-select: none; }
+        .temp-widget:hover { background: #e2e8f0; transform: scale(1.02); }
+        .temp-widget i { font-size: 15px; color: #3b82f6; }
+        .temp-widget .temp-value { font-weight: 600; }
+        .temp-widget .temp-unit { font-size: 11px; color: #64748b; margin-left: -1px; }
+        .temp-widget .temp-location { font-size: 11px; color: #64748b; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .temp-widget.loading { opacity: 0.7; cursor: default; pointer-events: none; }
+        .temp-widget .fa-spinner { animation: spin 1s linear infinite; }
+
+        /* ── Weather Dashboard (Forecast Modal) ── */
+        .weather-dashboard {
+            background: linear-gradient(135deg, #0b2b5c 0%, #1a4a7a 40%, #2d6b9e 100%);
+            color: #fff;
+            border-radius: 24px;
+            padding: 20px;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .weather-dashboard .current-weather {
+            text-align: center;
+            padding: 12px 0 8px;
+        }
+        .weather-dashboard .current-temp {
+            font-size: 4.5rem;
+            font-weight: 300;
+            line-height: 1;
+        }
+        .weather-dashboard .current-condition {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+        .weather-dashboard .current-highlow {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+        .weather-dashboard .current-location {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .weather-dashboard .current-date {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        .weather-dashboard .details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 16px 0 20px;
+        }
+        .weather-dashboard .detail-card {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(4px);
+            border-radius: 16px;
+            padding: 12px 10px;
+            text-align: center;
+        }
+        .weather-dashboard .detail-card .label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+        }
+        .weather-dashboard .detail-card .value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+        .weather-dashboard .detail-card .sub {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+        .weather-dashboard .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 18px 0 10px;
+            opacity: 0.9;
+            letter-spacing: 0.3px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            padding-bottom: 6px;
+        }
+        .weather-dashboard .hourly-scroll {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 8px 2px 12px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.3) transparent;
+        }
+        .weather-dashboard .hourly-scroll::-webkit-scrollbar { height: 4px; }
+        .weather-dashboard .hourly-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
+        .weather-dashboard .hourly-item {
+            flex: 0 0 70px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        .weather-dashboard .hourly-item .hour {
+            opacity: 0.7;
+            font-size: 0.7rem;
+        }
+        .weather-dashboard .hourly-item .icon { font-size: 1.8rem; margin: 2px 0; }
+        .weather-dashboard .hourly-item .temp { font-weight: 600; }
+        .weather-dashboard .daily-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .weather-dashboard .daily-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            transition: background 0.2s;
+        }
+        .weather-dashboard .daily-row:hover { background: rgba(255,255,255,0.15); }
+        .weather-dashboard .daily-row .day { font-weight: 500; width: 60px; }
+        .weather-dashboard .daily-row .icon { font-size: 1.6rem; width: 40px; text-align: center; }
+        .weather-dashboard .daily-row .temps { font-weight: 500; }
+        .weather-dashboard .daily-row .temps .max { color: #fbbf24; }
+        .weather-dashboard .daily-row .temps .min { color: #93c5fd; margin-left: 8px; }
+        .weather-dashboard .daily-row .precip { font-size: 0.7rem; opacity: 0.7; width: 50px; text-align: right; }
+        .weather-dashboard .close-btn {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            display: flex;
+            justify-content: flex-end;
+            padding: 4px 0 8px;
+        }
+        .weather-dashboard .close-btn button {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+            transition: background 0.2s;
+        }
+        .weather-dashboard .close-btn button:hover { background: rgba(255,255,255,0.25); }
+        .weather-dashboard .sunrise-sunset {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+        .weather-dashboard .sunrise-sunset .item { text-align: center; }
+        .weather-dashboard .sunrise-sunset .item .label { font-size: 0.7rem; opacity: 0.7; }
+        .weather-dashboard .sunrise-sunset .item .time { font-weight: 600; font-size: 0.95rem; }
+        .weather-dashboard .loading-text { text-align: center; padding: 40px 0; opacity: 0.8; }
+
+        @media (max-width: 480px) {
+            .weather-dashboard .details-grid { grid-template-columns: repeat(2, 1fr); }
+            .weather-dashboard .current-temp { font-size: 3.5rem; }
+            .weather-dashboard .current-location { font-size: 1.2rem; }
+            .weather-dashboard .hourly-item { flex: 0 0 60px; }
+        }
     </style>
 </head>
 <body>
@@ -166,7 +338,7 @@
     <!-- ─── IDLE WARNING TOAST ─── -->
     <div id="idle-warning-toast"><i class="fa-solid fa-clock mr-2"></i><span id="idle-warning-text"></span></div>
 
-    <!-- ─── LOADING OVERLAY (hidden by default) ─── -->
+    <!-- ─── LOADING OVERLAY ─── -->
     <div id="loading-overlay" class="loading-overlay" style="display:none;">
         <div class="loading-spinner"></div>
         <div class="loading-text">Generating message...</div>
@@ -268,6 +440,13 @@
             <header class="h-16 bg-white border-b flex items-center justify-between px-6 flex-shrink-0 gap-2">
                 <h2 class="text-xl font-semibold truncate" id="page-title">Dashboard</h2>
                 <div class="flex items-center gap-3 flex-shrink-0">
+                    <!-- Temperature Widget -->
+                    <div id="temp-widget" class="temp-widget loading" title="Click for detailed weather">
+                        <i class="fa-solid fa-temperature-high"></i>
+                        <span class="temp-value">--</span><span class="temp-unit">°C</span>
+                        <span class="temp-location">Loading…</span>
+                        <i class="fa-solid fa-spinner fa-fw" style="font-size:12px;"></i>
+                    </div>
                     <button class="sync-refresh-btn text-gray-500 hover:text-gray-700 text-sm p-1" onclick="manualSync()" title="Sync now">
                         <i class="fa-solid fa-rotate"></i>
                     </button>
@@ -334,7 +513,7 @@
                     <div id="engineers-grid-view" class="hidden grid grid-cols-3 gap-5"></div>
                     <div id="engineers-table-view" class="bg-white rounded-2xl border table-wrap">
                         <table class="w-full">
-                            <thead class="bg-gray-50"><tr><th class="py-3 px-5 text-left text-xs font-semibold">NAME</th><th class="py-3 px-5 text-left text-xs font-semibold">DEPT</th><th class="py-3 px-5 text-left text-xs font-semibold">PHONE</th><th class="py-3 px-5 text-left text-xs font-semibold">EMAIL</th><th class="py-3 px-5 text-right text-xs font-semibold">ACTIONS</th></tr></thead>
+                            <thead class="bg-gray-50"><tr><th class="py-3 px-5 text-left text-xs font-semibold">NAME</th><th class="py-3 px-5 text-left text-xs font-semibold">DEPT</th><th class="py-3 px-5 text-left text-xs font-semibold">PHONE</th><th class="py-3 px-5 text-left text-xs font-semibold">EMAIL</th><th class="py-3 px-5 text-left text-xs font-semibold">TEMP</th><th class="py-3 px-5 text-right text-xs font-semibold">ACTIONS</th></tr></thead>
                             <tbody id="engineers-table-body" class="divide-y divide-gray-100"></tbody>
                         </table>
                     </div>
@@ -456,7 +635,7 @@
         </div>
     </div>
 
-    <!-- Settings Panel – visible to ALL users -->
+    <!-- Settings Panel -->
     <div id="settings-panel-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 settings-modal-container">
             <div class="p-5 border-b flex items-center justify-between">
@@ -464,7 +643,7 @@
                 <button onclick="hideSettingsPanel()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
             </div>
             <div class="settings-modal-body">
-                <!-- GitHub sync – visible to EVERYONE -->
+                <!-- GitHub sync -->
                 <div class="settings-card">
                     <h4><i class="fa-brands fa-github text-blue-600"></i> GitHub Sync</h4>
                     <div class="space-y-3">
@@ -520,7 +699,6 @@
                         <p class="text-xs text-amber-500 mt-1" id="idle-timeout-status"></p>
                     </div>
 
-                    <!-- DEPARTMENT MANAGEMENT (NEW) -->
                     <div class="settings-card">
                         <h4 class="text-gray-700"><i class="fa-solid fa-building mr-2"></i>Manage Departments</h4>
                         <button onclick="openDepartmentManager()" class="w-full btn btn-primary py-2 text-sm">Open Department Manager</button>
@@ -620,7 +798,7 @@
             <h3 class="text-xl font-semibold mb-4">Incident Report</h3>
             <p class="text-sm text-gray-500 mb-4">Select the reason for the incident:</p>
             <div id="incident-options" class="space-y-2 max-h-60 overflow-y-auto">
-                <!-- Radio buttons will be populated here -->
+                <!-- Radio buttons populated by JS -->
             </div>
             <div id="incident-others-container" style="display:none;" class="mt-3">
                 <label class="block text-sm font-medium mb-1">Please provide more information:</label>
@@ -679,22 +857,21 @@
         </div>
     </div>
 
-    <!-- Add Engineer (UPDATED with Department dropdown and "Add New" option) -->
+    <!-- Add Engineer -->
     <div id="add-engineer-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Add Engineer</h3>
             <div class="space-y-3">
                 <input id="eng-name" placeholder="Full Name *" class="w-full p-3 border rounded-xl" oninput="autoGenerateEmail()" />
-                <div class="relative">
-                    <span class="absolute left-3 top-3 text-sm text-gray-500">(+965)</span>
-                    <input id="eng-phone" class="w-full p-3 pl-16 border rounded-xl" oninput="formatPhoneNumber(this)" maxlength="9" />
-                </div>
+                <div class="relative"><span class="absolute left-3 top-3 text-sm text-gray-500">(+965)</span><input id="eng-phone" class="w-full p-3 pl-16 border rounded-xl" oninput="formatPhoneNumber(this)" maxlength="9" /></div>
                 <input id="eng-email" placeholder="Email" class="w-full p-3 border rounded-xl" />
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
-                    <select id="eng-department" class="w-full p-3 border rounded-xl">
-                        <!-- populated by JavaScript -->
-                    </select>
+                    <select id="eng-department" class="w-full p-3 border rounded-xl"><option value="">Select Department</option></select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Current Temperature (°C)</label>
+                    <input id="eng-temperature" type="number" step="0.1" placeholder="e.g., 24.5" class="w-full p-3 border rounded-xl" />
                 </div>
             </div>
             <div class="flex gap-2 mt-4">
@@ -704,23 +881,22 @@
         </div>
     </div>
 
-    <!-- Edit Engineer (UPDATED with Department dropdown and "Add New" option) -->
+    <!-- Edit Engineer -->
     <div id="edit-engineer-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Edit Engineer</h3>
             <div class="space-y-3">
                 <input id="edit-eng-id" type="hidden" />
                 <input id="edit-eng-name" class="w-full p-3 border rounded-xl" oninput="autoGenerateEditEmail()" />
-                <div class="relative">
-                    <span class="absolute left-3 top-3 text-sm text-gray-500">(+965)</span>
-                    <input id="edit-eng-phone" class="w-full p-3 pl-16 border rounded-xl" oninput="formatPhoneNumber(this)" maxlength="9" />
-                </div>
+                <div class="relative"><span class="absolute left-3 top-3 text-sm text-gray-500">(+965)</span><input id="edit-eng-phone" class="w-full p-3 pl-16 border rounded-xl" oninput="formatPhoneNumber(this)" maxlength="9" /></div>
                 <input id="edit-eng-email" class="w-full p-3 border rounded-xl" />
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
-                    <select id="edit-eng-department" class="w-full p-3 border rounded-xl">
-                        <!-- populated by JavaScript -->
-                    </select>
+                    <select id="edit-eng-department" class="w-full p-3 border rounded-xl"><option value="">Select Department</option></select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Current Temperature (°C)</label>
+                    <input id="edit-eng-temperature" type="number" step="0.1" placeholder="e.g., 24.5" class="w-full p-3 border rounded-xl" />
                 </div>
             </div>
             <div class="flex gap-2 mt-4">
@@ -759,6 +935,18 @@
             <input id="new-password" type="password" placeholder="New" class="w-full p-3 border rounded-xl mb-2" />
             <input id="confirm-new-password" type="password" placeholder="Confirm" class="w-full p-3 border rounded-xl mb-3" />
             <div class="flex gap-2"><button onclick="hideChangePasswordModal()" class="flex-1 py-3 btn btn-outline">Cancel</button><button onclick="changePassword()" class="flex-1 py-3 btn btn-primary">Update</button></div>
+        </div>
+    </div>
+
+    <!-- Weather Forecast Modal -->
+    <div id="forecast-modal" class="hidden fixed inset-0 bg-black/50 modal-overlay flex items-center justify-center z-[300] p-4">
+        <div id="weather-dashboard-container" class="weather-dashboard" style="max-width: 600px; width: 100%;">
+            <div class="close-btn">
+                <button onclick="hideForecastModal()" aria-label="Close">✕</button>
+            </div>
+            <div id="forecast-content">
+                <div class="loading-text">Loading weather data…</div>
+            </div>
         </div>
     </div>
 
@@ -1042,7 +1230,7 @@
         const authManager = new AuthManager();
 
         // ═══════════════════════════════════════════════
-        //  DEPARTMENTS MANAGER (NEW)
+        //  DEPARTMENTS MANAGER
         // ═══════════════════════════════════════════════
         const DEFAULT_DEPARTMENTS = [
             'ANGIO', 'CT', 'LAB', 'MRI', 'NUCLEAR', 'OTHERS',
@@ -1055,7 +1243,6 @@
             if (depts) {
                 try { return JSON.parse(depts); } catch (e) { return [...DEFAULT_DEPARTMENTS]; }
             } else {
-                // store defaults
                 localStorage.setItem('tooltrack_departments', JSON.stringify(DEFAULT_DEPARTMENTS));
                 return [...DEFAULT_DEPARTMENTS];
             }
@@ -1063,7 +1250,6 @@
 
         function saveDepartments(depts) {
             localStorage.setItem('tooltrack_departments', JSON.stringify(depts));
-            // Refresh any open dropdowns
             populateDepartmentDropdowns();
             renderDepartmentList();
         }
@@ -1108,68 +1294,47 @@
                 const sel = document.getElementById(id);
                 if (!sel) return;
                 const currentVal = sel.value;
-                sel.innerHTML = '';
+                sel.innerHTML = '<option value="">Select Department</option>';
                 depts.forEach(d => {
                     const opt = document.createElement('option');
                     opt.value = d;
                     opt.textContent = d;
                     sel.appendChild(opt);
                 });
-                // Add "Add New Department" option
                 const addOpt = document.createElement('option');
                 addOpt.value = '__ADD_NEW__';
                 addOpt.textContent = '➕ Add New Department';
                 addOpt.style.color = '#2563eb';
                 sel.appendChild(addOpt);
-
-                // Restore selected value if still valid
-                if (currentVal && depts.includes(currentVal)) {
-                    sel.value = currentVal;
-                } else {
-                    sel.value = '';
-                }
-
-                // Handle "Add New" selection
+                if (currentVal && depts.includes(currentVal)) sel.value = currentVal;
+                else sel.value = '';
                 sel.onchange = function() {
                     if (this.value === '__ADD_NEW__') {
                         const newDept = prompt('Enter new department name:');
                         if (newDept && newDept.trim()) {
                             if (addDepartment(newDept.trim())) {
                                 populateDepartmentDropdowns();
-                                // select the newly added
                                 const newDepts = getDepartments();
                                 if (newDepts.includes(newDept.trim())) {
-                                    const sel2 = document.getElementById(id);
-                                    sel2.value = newDept.trim();
+                                    document.getElementById(id).value = newDept.trim();
                                 }
-                            } else {
-                                alert('Department already exists or invalid.');
-                            }
+                            } else alert('Department already exists or invalid.');
                         }
-                        // reset selection to empty
                         this.value = '';
                     }
                 };
             });
         }
 
-        // ─── Department Manager UI ────────────────────────────────────────
-        function openDepartmentManager() {
-            renderDepartmentList();
-            document.getElementById('department-manager-modal').classList.remove('hidden');
-        }
+        function openDepartmentManager() { renderDepartmentList();
+            document.getElementById('department-manager-modal').classList.remove('hidden'); }
 
-        function closeDepartmentManager() {
-            document.getElementById('department-manager-modal').classList.add('hidden');
-        }
+        function closeDepartmentManager() { document.getElementById('department-manager-modal').classList.add('hidden'); }
 
         function renderDepartmentList() {
             const container = document.getElementById('dept-list-container');
             const depts = getDepartments();
-            if (!depts.length) {
-                container.innerHTML = '<p class="text-gray-400 text-center py-4">No departments defined.</p>';
-                return;
-            }
+            if (!depts.length) { container.innerHTML = '<p class="text-gray-400 text-center py-4">No departments defined.</p>'; return; }
             container.innerHTML = depts.map(d => `
                 <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-xl">
                     <span class="text-sm font-medium">${d}</span>
@@ -1184,43 +1349,291 @@
         function editDepartmentPrompt(oldName) {
             const newName = prompt('Edit department name:', oldName);
             if (newName && newName.trim() && newName.trim() !== oldName) {
-                if (editDepartment(oldName, newName.trim())) {
-                    renderDepartmentList();
+                if (editDepartment(oldName, newName.trim())) { renderDepartmentList();
                     populateDepartmentDropdowns();
-                    alert('Department updated.');
-                } else {
-                    alert('Failed to update. Name may already exist or be invalid.');
-                }
+                    alert('Department updated.'); } else alert('Failed to update.');
             }
         }
 
         function removeDepartmentPrompt(deptName) {
-            if (confirm(`Are you sure you want to remove "${deptName}"?`)) {
-                if (removeDepartment(deptName)) {
-                    renderDepartmentList();
+            if (confirm(`Remove "${deptName}"?`)) {
+                if (removeDepartment(deptName)) { renderDepartmentList();
                     populateDepartmentDropdowns();
-                    alert('Department removed.');
-                } else {
-                    alert('Could not remove.');
-                }
+                    alert('Department removed.'); } else alert('Could not remove.');
             }
         }
 
         function addNewDepartmentViaManager() {
             const name = prompt('Enter new department name:');
             if (name && name.trim()) {
-                if (addDepartment(name.trim())) {
-                    renderDepartmentList();
+                if (addDepartment(name.trim())) { renderDepartmentList();
                     populateDepartmentDropdowns();
-                    alert('Department added.');
-                } else {
-                    alert('Department already exists or invalid.');
-                }
+                    alert('Department added.'); } else alert('Already exists or invalid.');
             }
         }
 
         // ═══════════════════════════════════════════════
-        //  DATA STORE – no token in data.json
+        //  WEATHER DASHBOARD (iPhone-style with precise location)
+        // ═══════════════════════════════════════════════
+        let weatherCache = null;
+        let lastLocation = null; // {lat, lon, name}
+
+        const weatherIcons = {
+            0: { icon: '☀️', desc: 'Clear Sky' },
+            1: { icon: '🌤', desc: 'Mainly Clear' },
+            2: { icon: '⛅', desc: 'Partly Cloudy' },
+            3: { icon: '☁️', desc: 'Overcast' },
+            45: { icon: '🌫', desc: 'Fog' },
+            48: { icon: '🌫', desc: 'Rime Fog' },
+            51: { icon: '🌦', desc: 'Light Drizzle' },
+            53: { icon: '🌦', desc: 'Moderate Drizzle' },
+            55: { icon: '🌦', desc: 'Dense Drizzle' },
+            56: { icon: '🌧', desc: 'Light Freezing Drizzle' },
+            57: { icon: '🌧', desc: 'Dense Freezing Drizzle' },
+            61: { icon: '🌧', desc: 'Slight Rain' },
+            63: { icon: '🌧', desc: 'Moderate Rain' },
+            65: { icon: '🌧', desc: 'Heavy Rain' },
+            66: { icon: '🌧', desc: 'Light Freezing Rain' },
+            67: { icon: '🌧', desc: 'Heavy Freezing Rain' },
+            71: { icon: '❄️', desc: 'Slight Snow' },
+            73: { icon: '❄️', desc: 'Moderate Snow' },
+            75: { icon: '❄️', desc: 'Heavy Snow' },
+            77: { icon: '🌨', desc: 'Snow Grains' },
+            80: { icon: '🌦', desc: 'Slight Rain Showers' },
+            81: { icon: '🌦', desc: 'Moderate Rain Showers' },
+            82: { icon: '🌦', desc: 'Violent Rain Showers' },
+            85: { icon: '❄️', desc: 'Slight Snow Showers' },
+            86: { icon: '❄️', desc: 'Heavy Snow Showers' },
+            95: { icon: '⛈', desc: 'Thunderstorm' },
+            96: { icon: '⛈', desc: 'Thunderstorm with Hail' },
+            99: { icon: '⛈', desc: 'Severe Thunderstorm' }
+        };
+
+        function getWeatherInfo(code) { return weatherIcons[code] || { icon: '🌡️', desc: 'Unknown' }; }
+
+        function getWindDirection(deg) {
+            const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+            return dirs[Math.round(deg / 45) % 8];
+        }
+
+        function fetchWeatherData(lat, lon) {
+            const url =
+                `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,windspeed_10m_max&hourly=temperature_2m,weathercode,precipitation_probability,windspeed_10m,winddirection_10m&timezone=auto&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&forecast_days=10`;
+            return fetch(url).then(r => { if (!r.ok) throw new Error('Weather API error'); return r.json(); });
+        }
+
+        // ─── Reverse geocoding: returns "City, Country (lat, lon)" ──────────
+        async function fetchLocationName(lat, lon) {
+            try {
+                const geoUrl =
+                    `https://api.open-meteo.com/v1/geocoding?latitude=${lat}&longitude=${lon}&count=1&language=en`;
+                const res = await fetch(geoUrl);
+                const data = await res.json();
+                let name = `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+                if (data.results && data.results.length > 0) {
+                    const r = data.results[0];
+                    let city = r.name || '';
+                    let country = r.country || '';
+                    if (city) name = city;
+                    if (country) name += `, ${country}`;
+                }
+                // Append coordinates in parentheses
+                name += ` (${lat.toFixed(2)}, ${lon.toFixed(2)})`;
+                return name;
+            } catch (e) {
+                return `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+            }
+        }
+
+        // ─── Update widget ───────────────────────────────────────────────────
+        function updateTempWidget(temp, location) {
+            const widget = document.getElementById('temp-widget');
+            const valueSpan = widget.querySelector('.temp-value');
+            const locSpan = widget.querySelector('.temp-location');
+            const spinner = widget.querySelector('.fa-spinner');
+            if (temp !== undefined && !isNaN(temp)) {
+                valueSpan.textContent = temp.toFixed(1);
+            } else {
+                valueSpan.textContent = '--';
+            }
+            locSpan.textContent = location || 'Unknown';
+            widget.classList.remove('loading');
+            if (spinner) spinner.style.display = 'none';
+            const icon = widget.querySelector('i.fa-temperature-high, i.fa-temperature-low, i.fa-temperature-half');
+            if (icon && temp !== undefined && !isNaN(temp)) {
+                if (temp < 10) icon.className = 'fa-solid fa-temperature-low';
+                else if (temp > 25) icon.className = 'fa-solid fa-temperature-high';
+                else icon.className = 'fa-solid fa-temperature-half';
+            }
+        }
+
+        // ─── Load full weather dashboard ────────────────────────────────────
+        async function loadWeatherDashboard() {
+            const container = document.getElementById('forecast-content');
+            container.innerHTML = '<div class="loading-text">Loading weather data…</div>';
+            if (!lastLocation) {
+                container.innerHTML = '<div class="loading-text">Location not available. Please allow location access.</div>';
+                return;
+            }
+            try {
+                const data = await fetchWeatherData(lastLocation.lat, lastLocation.lon);
+                weatherCache = data;
+                const current = data.current_weather;
+                const currentTemp = current.temperature;
+                const weatherCode = current.weathercode;
+                const weatherInfo = getWeatherInfo(weatherCode);
+                const daily = data.daily;
+                const days = daily.time.length;
+                const now = new Date();
+
+                // Build HTML
+                let html = '';
+                html += `
+                    <div class="current-location">${lastLocation.name}</div>
+                    <div class="current-date">${now.toLocaleDateString('en', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</div>
+                    <div class="current-weather">
+                        <div class="current-temp">${currentTemp.toFixed(0)}°</div>
+                        <div class="current-condition">${weatherInfo.desc} ${weatherInfo.icon}</div>
+                        <div class="current-highlow">
+                            H: ${daily.temperature_2m_max[0].toFixed(0)}° &nbsp; L: ${daily.temperature_2m_min[0].toFixed(0)}°
+                        </div>
+                    </div>
+                `;
+
+                const feelsLike = currentTemp;
+                const humidity = current.humidity !== undefined ? current.humidity : '—';
+                const windSpeed = current.windspeed !== undefined ? current.windspeed : '—';
+                const windDir = current.winddirection !== undefined ? getWindDirection(current.winddirection) : '—';
+                const uv = daily.uv_index_max[0] !== undefined ? daily.uv_index_max[0].toFixed(1) : '—';
+                const precip = daily.precipitation_sum[0] !== undefined ? daily.precipitation_sum[0].toFixed(1) : '0.0';
+                const pressure = current.pressure !== undefined ? current.pressure : '—';
+
+                html += `
+                    <div class="details-grid">
+                        <div class="detail-card"><div class="label">Feels Like</div><div class="value">${feelsLike.toFixed(0)}°</div></div>
+                        <div class="detail-card"><div class="label">Humidity</div><div class="value">${humidity}%</div></div>
+                        <div class="detail-card"><div class="label">Wind</div><div class="value">${windSpeed} km/h</div><div class="sub">${windDir}</div></div>
+                        <div class="detail-card"><div class="label">UV Index</div><div class="value">${uv}</div></div>
+                        <div class="detail-card"><div class="label">Precipitation</div><div class="value">${precip} mm</div></div>
+                        <div class="detail-card"><div class="label">Pressure</div><div class="value">${pressure} hPa</div></div>
+                    </div>
+                `;
+
+                const sunrise = daily.sunrise[0] ? new Date(daily.sunrise[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
+                const sunset = daily.sunset[0] ? new Date(daily.sunset[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
+                html += `
+                    <div class="sunrise-sunset">
+                        <div class="item"><div class="label">🌅 Sunrise</div><div class="time">${sunrise}</div></div>
+                        <div class="item"><div class="label">🌇 Sunset</div><div class="time">${sunset}</div></div>
+                    </div>
+                `;
+
+                // Hourly
+                const hourly = data.hourly;
+                const hourlyTimes = hourly.time.map(t => new Date(t));
+                let startIdx = hourlyTimes.findIndex(t => t >= now);
+                if (startIdx === -1) startIdx = 0;
+                const hourlySlice = hourlyTimes.slice(startIdx, startIdx + 24);
+                const hourlyTemps = hourly.temperature_2m.slice(startIdx, startIdx + 24);
+                const hourlyCodes = hourly.weathercode.slice(startIdx, startIdx + 24);
+
+                html += `<div class="section-title">Hourly Forecast</div><div class="hourly-scroll">`;
+                for (let i = 0; i < hourlySlice.length; i++) {
+                    const h = hourlySlice[i];
+                    const hourLabel = h.getHours() === 0 ? '12 AM' : (h.getHours() < 12 ? h.getHours() + ' AM' : (h.getHours() - 12) + ' PM');
+                    const icon = getWeatherInfo(hourlyCodes[i]).icon;
+                    const temp = hourlyTemps[i].toFixed(0);
+                    html += `<div class="hourly-item"><div class="hour">${hourLabel}</div><div class="icon">${icon}</div><div class="temp">${temp}°</div></div>`;
+                }
+                html += `</div>`;
+
+                // Daily (10 days)
+                html += `<div class="section-title">10‑Day Forecast</div><div class="daily-list">`;
+                for (let i = 0; i < days; i++) {
+                    const date = new Date(daily.time[i]);
+                    const dayName = i === 0 ? 'Today' : date.toLocaleDateString('en', { weekday: 'short' });
+                    const dateStr = date.toLocaleDateString('en', { month: 'short', day: 'numeric' });
+                    const max = daily.temperature_2m_max[i].toFixed(0);
+                    const min = daily.temperature_2m_min[i].toFixed(0);
+                    const icon = getWeatherInfo(daily.weathercode[i]).icon;
+                    const precipChance = daily.precipitation_sum[i] !== undefined ? daily.precipitation_sum[i].toFixed(0) : '0';
+                    html += `
+                        <div class="daily-row">
+                            <div class="day">${dayName} ${dateStr}</div>
+                            <div class="icon">${icon}</div>
+                            <div class="temps"><span class="max">${max}°</span><span class="min">${min}°</span></div>
+                            <div class="precip">${precipChance} mm</div>
+                        </div>
+                    `;
+                }
+                html += `</div>`;
+
+                container.innerHTML = html;
+
+            } catch (err) {
+                console.error('Weather dashboard error:', err);
+                container.innerHTML = `<div class="loading-text" style="color: #f87171;">Failed to load weather. Please try again later.</div>`;
+            }
+        }
+
+        function showForecastModal() {
+            if (!lastLocation) { alert('Location not available. Please allow location access.'); return; }
+            document.getElementById('forecast-modal').classList.remove('hidden');
+            loadWeatherDashboard();
+        }
+
+        function hideForecastModal() {
+            document.getElementById('forecast-modal').classList.add('hidden');
+        }
+
+        // ─── Initialize weather with geolocation ────────────────────────────
+        function initWeather() {
+            const widget = document.getElementById('temp-widget');
+            widget.classList.add('loading');
+
+            if (!navigator.geolocation) {
+                const fallbackLat = 29.3759,
+                    fallbackLon = 47.9774;
+                fetchLocationName(fallbackLat, fallbackLon).then(name => {
+                    lastLocation = { lat: fallbackLat, lon: fallbackLon, name };
+                    updateLocationAndWeather(fallbackLat, fallbackLon, name);
+                });
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                async (pos) => {
+                    const { latitude, longitude } = pos.coords;
+                    const name = await fetchLocationName(latitude, longitude);
+                    lastLocation = { lat: latitude, lon: longitude, name };
+                    updateLocationAndWeather(latitude, longitude, name);
+                },
+                (err) => {
+                    console.warn('Geolocation error:', err);
+                    const fallbackLat = 29.3759,
+                        fallbackLon = 47.9774;
+                    fetchLocationName(fallbackLat, fallbackLon).then(name => {
+                        lastLocation = { lat: fallbackLat, lon: fallbackLon, name };
+                        updateLocationAndWeather(fallbackLat, fallbackLon, name);
+                    });
+                }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 600000 }
+            );
+        }
+
+        function updateLocationAndWeather(lat, lon, name) {
+            lastLocation = { lat, lon, name };
+            fetchWeatherData(lat, lon).then(data => {
+                const temp = data.current_weather.temperature;
+                updateTempWidget(temp, name);
+                weatherCache = data;
+            }).catch(err => {
+                console.warn('Widget update error:', err);
+                updateTempWidget(undefined, name || 'Unknown');
+            });
+        }
+
+        // ═══════════════════════════════════════════════
+        //  DATA STORE
         // ═══════════════════════════════════════════════
         let tools = [];
         let engineers = [];
@@ -1228,7 +1641,6 @@
         let returnRequests = [];
         let roy = { phone: '+965 97421668', email: 'royston.dcosta@sultanunited.com' };
 
-        // ─── Seed default engineers if none exist ──────────────────────────
         function seedDefaultEngineers() {
             if (engineers.length === 0) {
                 const defaultNames = ['Royston Dcosta', 'Donan Arciaga', 'Ahmed Al-Sabah', 'Fatima Al-Mutairi', 'Mohammed Al-Rashid', 'Sara Al-Otaibi'];
@@ -1238,14 +1650,13 @@
                     const phone = '9747 ' + (1000 + index);
                     engineers.push({
                         id: Date.now() + index,
-                        name: name,
-                        phone: phone,
-                        email: email,
-                        department: depts[index % depts.length] || 'N/A'
+                        name,
+                        phone,
+                        email,
+                        department: depts[index % depts.length] || 'N/A',
+                        temperature: (20 + Math.random() * 10).toFixed(1)
                     });
-                    if (!authManager.users[name]) {
-                        authManager.addUser(name, '123');
-                    }
+                    if (!authManager.users[name]) authManager.addUser(name, '123');
                 });
                 saveData();
                 logManager.log('SYSTEM', 'Seeded default engineers');
@@ -1270,7 +1681,6 @@
                     }
                     if (data.logConfig) { logManager.logConfig = data.logConfig;
                         localStorage.setItem('logConfig', JSON.stringify(data.logConfig)); }
-                    // Ensure departments exist
                     if (!localStorage.getItem('tooltrack_departments')) {
                         localStorage.setItem('tooltrack_departments', JSON.stringify(DEFAULT_DEPARTMENTS));
                     }
@@ -1325,10 +1735,10 @@
         function saveData() { saveDataToStorage(); }
 
         // ═══════════════════════════════════════════════
-        //  IMAGE COMPRESSION UTILITY – max 1MB
+        //  IMAGE COMPRESSION
         // ═══════════════════════════════════════════════
         function compressImage(dataUrl, maxSizeMB = 1) {
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
@@ -1366,7 +1776,7 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  GITHUB REPO SYNC – with smart conflict resolution
+        //  GITHUB REPO SYNC
         // ═══════════════════════════════════════════════
         const RepoSync = {
             _pushTimer: null,
@@ -1616,7 +2026,6 @@
             }
         };
 
-        // ─── Image upload helper ─────────────────────────────────────────────
         async function uploadImageToRepo(dataUrl, folder = 'images') {
             if (!CONFIG.token) { console.warn('No token, cannot upload image.'); return null; }
             try {
@@ -1636,7 +2045,6 @@
             }
         }
 
-        // ─── Manual sync ──────────────────────────────────────────────────────
         async function manualSync() {
             if (!CONFIG.token) {
                 alert('⚠️ GitHub token not configured.\n\nGo to Settings → GitHub Sync and enter your token.');
@@ -1712,26 +2120,21 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  SETTINGS VISIBILITY (admin vs non-admin)
+        //  SETTINGS VISIBILITY
         // ═══════════════════════════════════════════════
         function updateSettingsVisibility() {
             const user = authManager.getCurrentUser();
             const adminSection = document.getElementById('admin-settings-section');
-            if (user && (user.isDonan || user.isRoy)) {
-                adminSection.style.display = 'block';
-            } else {
-                adminSection.style.display = 'none';
-            }
+            if (user && (user.isDonan || user.isRoy)) adminSection.style.display = 'block';
+            else adminSection.style.display = 'none';
             const idleSection = document.getElementById('idle-timeout-section');
             if (idleSection) {
                 if (user && user.isDonan) {
                     idleSection.style.display = 'block';
                     document.getElementById('idle-timeout-input').value = IdleManager.getTimeoutMinutes();
                     document.getElementById('idle-timeout-status').textContent = 'Current: ' + IdleManager
-                        .getTimeoutMinutes() + ' minute(s).';
-                } else {
-                    idleSection.style.display = 'none';
-                }
+                    .getTimeoutMinutes() + ' minute(s).';
+                } else idleSection.style.display = 'none';
             }
         }
 
@@ -1868,6 +2271,8 @@
                 const startTab = (authManager.getCurrentUser().isAdmin || authManager.getCurrentUser().isRoy) ? 0 : 1;
                 switchTab(startTab);
                 updateAllUI();
+                initWeather();
+                document.getElementById('temp-widget').onclick = showForecastModal;
             } else {
                 showLoginError('Invalid password.');
                 logManager.logAuth('SYSTEM', 'Failed login: ' + name);
@@ -1902,10 +2307,8 @@
             const user = authManager.getCurrentUser();
             if (!user) return;
             let html = '';
-            if (user.isDonan || user.isRoy) {
-                html +=
-                    `<a href="#" onclick="switchTab(0)" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg" id="nav-0"><i class="fa-solid fa-gauge-high w-5"></i><span>Dashboard</span></a>`;
-            }
+            if (user.isDonan || user.isRoy) html +=
+                `<a href="#" onclick="switchTab(0)" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg" id="nav-0"><i class="fa-solid fa-gauge-high w-5"></i><span>Dashboard</span></a>`;
             html +=
                 `<a href="#" onclick="switchTab(1)" class="nav-link flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg" id="nav-1"><i class="fa-solid fa-list-check w-5"></i><span>Tools</span></a>`;
             html +=
@@ -1940,7 +2343,7 @@
 
         function switchTab(n) {
             const user = authManager.getCurrentUser();
-            if (n === 0 && user && !user.isAdmin && !user.isRoy) { n = 1; }
+            if (n === 0 && user && !user.isAdmin && !user.isRoy) n = 1;
             for (let i = 0; i <= 6; i++) {
                 const tab = document.getElementById('tab-' + i);
                 if (tab) tab.classList.add('hidden');
@@ -2050,7 +2453,6 @@
             renderApprovalPanel();
         }
 
-        // ─── Incident Modal Functions ────────────────────────────────────────
         let currentIncidentRequestId = null;
 
         function showIncidentModal(requestId) {
@@ -2067,14 +2469,12 @@
             container.innerHTML = options.map(opt =>
                 `<div class="flex items-start"><input type="radio" name="incident-option" value="${opt.value}" id="inc-${opt.value}" class="mt-1 mr-2"><label for="inc-${opt.value}" class="text-sm text-gray-700">${opt.label}</label></div>`
             ).join('');
-
             container.querySelectorAll('input[name="incident-option"]').forEach(el => {
                 el.addEventListener('change', function() {
                     document.getElementById('incident-others-container').style.display = (this.value === 'f') ?
                         'block' : 'none';
                 });
             });
-
             document.getElementById('incident-modal').classList.remove('hidden');
         }
 
@@ -2086,8 +2486,6 @@
         function sendIncidentReport() {
             const selected = document.querySelector('input[name="incident-option"]:checked');
             if (!selected) { alert('Please select a reason.'); return; }
-            let reason = selected.value;
-            let message = '';
             const req = returnRequests.find(r => r.id === currentIncidentRequestId);
             if (!req) { alert('Request not found.'); return; }
             const trans = transactions.find(t => t.id === req.transId);
@@ -2095,32 +2493,24 @@
             const tool = tools.find(t => t.id === trans.toolId);
             const eng = engineers.find(e => e.id === trans.engineerId);
             if (!eng) { alert('Engineer not found.'); return; }
-
             const selectedLabel = document.querySelector(`label[for="inc-${selected.value}"]`)?.textContent || '';
+            let message = `Incident Report for Tool Return\n\nTool: ${tool?.desc || 'Unknown'} (${tool?.serial || 'N/A'})\nReason: ${selectedLabel}`;
             if (selected.value === 'f') {
                 const othersText = document.getElementById('incident-others-text').value.trim();
                 if (!othersText) { alert('Please provide more information for "Others".'); return; }
-                message = `Incident Report for Tool Return\n\nTool: ${tool?.desc || 'Unknown'} (${tool?.serial || 'N/A'})\nReason: ${selectedLabel}\nDetails: ${othersText}\n\nRegards,\n${authManager.getCurrentUser().name}`;
-            } else {
-                message =
-                    `Incident Report for Tool Return\n\nTool: ${tool?.desc || 'Unknown'} (${tool?.serial || 'N/A'})\nReason: ${selectedLabel}\n\nRegards,\n${authManager.getCurrentUser().name}`;
+                message += `\nDetails: ${othersText}`;
             }
-
+            message += `\n\nRegards,\n${authManager.getCurrentUser().name}`;
             trans.incidentRemarks = selectedLabel;
             trans.approvalStatus = 'Incident';
             req.status = 'incident';
             trans.transDate = new Date().toISOString();
             saveData();
             refreshAllPanels();
-
-            const emailSubject = 'Incident Report - Tool Return';
-            const emailBody = encodeURIComponent(message);
-            const mailtoLink = `mailto:${eng.email}?subject=${emailSubject}&body=${emailBody}`;
+            const mailtoLink = `mailto:${eng.email}?subject=Incident%20Report%20-%20Tool%20Return&body=${encodeURIComponent(message)}`;
             window.open(mailtoLink, '_blank');
-
             cancelIncident();
-            logManager.log(authManager.getCurrentUser().name, 'Incident report sent to ' + eng.email + ' for tool ' + tool
-                ?.desc);
+            logManager.log(authManager.getCurrentUser().name, 'Incident report sent to ' + eng.email);
             alert('Incident report sent to ' + eng.name + ' (' + eng.email + ').');
         }
 
@@ -2151,8 +2541,7 @@
                                 </div>
                                 <div class="flex items-center gap-2 flex-wrap">
                                     ${imgHtml}
-                                    <div class="evidence-note">
-                                        <i class="fa-solid fa-info-circle mr-1"></i> Image will be auto-deleted after 10 days.
+                                    <div class="evidence-note"><i class="fa-solid fa-info-circle mr-1"></i> Image will be auto-deleted after 10 days.
                                         ${user.isAdmin ? `<button onclick="backupEvidenceImage('${r.id}')" class="btn btn-primary text-xs px-2 py-1 ml-2">Backup Image</button>` : ''}
                                     </div>
                                     <button onclick="confirmReturn('${r.id}')" class="btn btn-success px-4 py-1.5 text-sm">Confirmed</button>
@@ -2175,7 +2564,7 @@
                 link.click();
                 document.body.removeChild(link);
                 logManager.log(authManager.getCurrentUser().name, 'Backed up evidence image for request ' + requestId);
-            } else { alert('No image to backup.'); }
+            } else alert('No image to backup.');
         }
 
         function expandEvidence(id) {
@@ -2322,7 +2711,7 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  ENGINEERS (updated for department dropdown)
+        //  ENGINEERS
         // ═══════════════════════════════════════════════
         let currentEngineerView = 'table';
         let pendingDeletionType = null,
@@ -2343,7 +2732,8 @@
                 engineers.map(e => `
                     <div class="bg-white rounded-2xl p-5 card-hover border">
                         <div><h4 class="font-semibold">${e.name}</h4><p class="text-sm text-blue-600">${e.department || 'N/A'}</p></div>
-                        <div class="mt-3 space-y-1 text-sm"><div>📞 ${formatPhoneDisplay(e.phone)}</div><div>✉️ <span class="email-truncate" title="${e.email}">${e.email}</span></div></div>
+                        <div class="mt-3 space-y-1 text-sm"><div>📞 ${formatPhoneDisplay(e.phone)}</div><div>✉️ <span class="email-truncate" title="${e.email}">${e.email}</span></div>
+                        <div>🌡️ ${e.temperature ? e.temperature + ' °C' : 'N/A'}</div></div>
                         <div class="mt-4 flex gap-2">
                             <button onclick="showEditEngineerModal(${e.id})" class="flex-1 py-2 bg-blue-50 text-blue-600 rounded-xl text-sm btn">Edit</button>
                             ${user?.isAdmin ? `<button onclick="deleteEngineerPrompt(${e.id})" class="flex-1 py-2 bg-red-50 text-red-600 rounded-xl text-sm btn">Delete</button>` : ''}
@@ -2359,13 +2749,14 @@
                         <td class="px-5 py-4">${e.department || 'N/A'}</td>
                         <td class="px-5 py-4">${formatPhoneDisplay(e.phone)}</td>
                         <td class="px-5 py-4"><span class="email-truncate" title="${e.email}">${e.email}</span></td>
+                        <td class="px-5 py-4">${e.temperature ? e.temperature + ' °C' : 'N/A'}</td>
                         <td class="px-5 py-4 text-right">
                             <button onclick="showEditEngineerModal(${e.id})" class="text-blue-500 p-1.5 btn text-sm"><i class="fa-solid fa-edit"></i></button>
                             ${user?.isAdmin ? `<button onclick="deleteEngineerPrompt(${e.id})" class="text-red-500 p-1.5 btn text-sm"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </td>
                     </tr>
                 `).join('') :
-                '<tr><td colspan="5" class="text-center py-8 text-gray-400">No engineers</td></tr>';
+                '<tr><td colspan="6" class="text-center py-8 text-gray-400">No engineers</td></tr>';
         }
 
         function showAddEngineerModal() {
@@ -2373,7 +2764,7 @@
             document.getElementById('eng-phone').value = '';
             document.getElementById('eng-email').value = '';
             document.getElementById('eng-department').value = '';
-            // Ensure dropdown is populated
+            document.getElementById('eng-temperature').value = '';
             populateDepartmentDropdowns();
             document.getElementById('add-engineer-modal').classList.remove('hidden');
         }
@@ -2385,13 +2776,16 @@
             if (!name) { alert('Name is required.'); return; }
             const dept = document.getElementById('eng-department').value;
             if (!dept) { alert('Please select a department.'); return; }
+            const temp = document.getElementById('eng-temperature').value;
+            const tempVal = temp ? parseFloat(temp) : null;
             engineers.push({
                 id: Date.now(),
                 name,
                 phone: document.getElementById('eng-phone').value || 'N/A',
                 email: document.getElementById('eng-email').value || name.toLowerCase().replace(/\s+/g, '.') +
                     '@sultanunited.com',
-                department: dept
+                department: dept,
+                temperature: (tempVal !== null && !isNaN(tempVal)) ? tempVal : null
             });
             authManager.addUser(name);
             saveData();
@@ -2408,9 +2802,9 @@
             document.getElementById('edit-eng-name').value = e.name;
             document.getElementById('edit-eng-phone').value = e.phone;
             document.getElementById('edit-eng-email').value = e.email;
-            // Ensure dropdown is populated before setting value
             populateDepartmentDropdowns();
             document.getElementById('edit-eng-department').value = e.department || '';
+            document.getElementById('edit-eng-temperature').value = e.temperature !== null ? e.temperature : '';
             document.getElementById('edit-engineer-modal').classList.remove('hidden');
         }
 
@@ -2429,10 +2823,13 @@
             }
             const dept = document.getElementById('edit-eng-department').value;
             if (!dept) { alert('Please select a department.'); return; }
+            const temp = document.getElementById('edit-eng-temperature').value;
+            const tempVal = temp ? parseFloat(temp) : null;
             e.name = newName;
             e.phone = document.getElementById('edit-eng-phone').value || e.phone;
             e.email = document.getElementById('edit-eng-email').value || e.email;
             e.department = dept;
+            e.temperature = (tempVal !== null && !isNaN(tempVal)) ? tempVal : null;
             saveData();
             hideEditEngineerModal();
             refreshAllPanels();
@@ -3287,9 +3684,9 @@
         }
 
         function generateEngineersCSV() {
-            let csv = 'ID,Name,Phone,Email,Department\n';
+            let csv = 'ID,Name,Phone,Email,Department,Temperature\n';
             engineers.forEach(e => {
-                csv += `${e.id},"${e.name}","${e.phone}","${e.email}","${e.department||'N/A'}"\n`;
+                csv += `${e.id},"${e.name}","${e.phone}","${e.email}","${e.department||'N/A'}","${e.temperature!==null?e.temperature:''}"\n`;
             });
             return csv;
         }
@@ -3390,7 +3787,8 @@
                                 name: cols[1]?.replace(/^"|"$/g, '') || '',
                                 phone: cols[2]?.replace(/^"|"$/g, '') || '',
                                 email: cols[3]?.replace(/^"|"$/g, '') || '',
-                                department: cols[4]?.replace(/^"|"$/g, '') || ''
+                                department: cols[4]?.replace(/^"|"$/g, '') || '',
+                                temperature: cols[5] ? parseFloat(cols[5]) : null
                             });
                         }
                     }
