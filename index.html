@@ -1907,6 +1907,7 @@
         }
 
         // ─── Show weather modal (loads weather.html in iframe) ─────────────
+        // ✅ FIXED: uses absolute path to avoid 404 in subfolders
         function showWeatherModal() {
             const iframe = document.getElementById('weather-iframe');
             if (!lastLocation) {
@@ -1917,7 +1918,9 @@
                     return;
                 }
             }
-            let url = 'https://github.com/setechtool/ToolTrack/weather.html';
+            // Build the path relative to the current directory (where index.html lives)
+            const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+            let url = basePath + 'weather.html';
             if (lastLocation && lastLocation.lat && lastLocation.lon && lastLocation.name) {
                 url += `?lat=${lastLocation.lat}&lon=${lastLocation.lon}&name=${encodeURIComponent(lastLocation.name)}`;
             }
