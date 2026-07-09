@@ -114,6 +114,14 @@
       "email": "mustafa.shamali@sultanunited.com",
       "department": "ANGIO",
       "temperature": null
+    },
+    {
+      "id": 1783583791033,
+      "name": "Omar Jarrad",
+      "phone": "N/A",
+      "email": "omar.jarrad@sultanunited.com",
+      "department": "MRI",
+      "temperature": null
     }
   ],
   "transactions": [
@@ -502,6 +510,10 @@
     "Mustafa Shamali": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Omar Jarrad": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -513,7 +525,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T07:54:55.574Z",
+    "updated": "2026-07-09T07:56:35.035Z",
     "user": "Donan Arciaga"
   }
 }
