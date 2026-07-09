@@ -162,6 +162,14 @@
       "email": "samir.benali@sultanunited.com",
       "department": "RADIOTHERAPY",
       "temperature": null
+    },
+    {
+      "id": 1783584520466,
+      "name": "Yousef Abdel Latif",
+      "phone": "N/A",
+      "email": "yousef.abdelatif@sultanunited.com",
+      "department": "LAB",
+      "temperature": null
     }
   ],
   "transactions": [
@@ -574,6 +582,10 @@
     "Samir Benali": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Yousef Abdel Latif": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -585,7 +597,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T08:06:53.648Z",
+    "updated": "2026-07-09T08:08:44.482Z",
     "user": "Donan Arciaga"
   }
 }
