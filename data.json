@@ -178,6 +178,13 @@
       "email": "omar.alomar@sultanunited.com",
       "department": "US",
       "temperature": null
+    },
+    {
+      "id": 1783589817037,
+      "name": "Yara Hindiyeh",
+      "phone": "Missing phone number",
+      "email": "yara.hindiyeh@sultanunited.com",
+      "department": "US"
     }
   ],
   "transactions": [
@@ -598,6 +605,10 @@
     "Omar Alomar": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Yara Hindiyeh": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -609,7 +620,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T08:11:14.732Z",
+    "updated": "2026-07-09T09:37:01.054Z",
     "user": "Donan Arciaga"
   }
 }
