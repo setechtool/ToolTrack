@@ -154,6 +154,14 @@
       "email": "saleh.almasri@sultanunited.com",
       "department": "X-RAY",
       "temperature": null
+    },
+    {
+      "id": 1783584328920,
+      "name": "Samir Benali",
+      "phone": "N/A",
+      "email": "samir.benali@sultanunited.com",
+      "department": "RADIOTHERAPY",
+      "temperature": null
     }
   ],
   "transactions": [
@@ -562,6 +570,10 @@
     "Saleh AlMasri": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Samir Benali": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -573,7 +585,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T08:05:01.878Z",
+    "updated": "2026-07-09T08:05:32.922Z",
     "user": "Donan Arciaga"
   }
 }
