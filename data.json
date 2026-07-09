@@ -122,6 +122,14 @@
       "email": "omar.jarrad@sultanunited.com",
       "department": "MRI",
       "temperature": null
+    },
+    {
+      "id": 1783583871376,
+      "name": "Prasad Veligandla",
+      "phone": "N/A",
+      "email": "prasad.veligandla@sultanunited.com",
+      "department": "PACS",
+      "temperature": null
     }
   ],
   "transactions": [
@@ -514,6 +522,10 @@
     "Omar Jarrad": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Prasad Veligandla": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -525,7 +537,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T07:56:35.035Z",
+    "updated": "2026-07-09T07:57:55.379Z",
     "user": "Donan Arciaga"
   }
 }
