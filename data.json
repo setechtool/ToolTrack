@@ -138,6 +138,14 @@
       "email": "rajasimhan.kabali@sultanunited.com",
       "department": "RADIOTHERAPY",
       "temperature": null
+    },
+    {
+      "id": 1783584045613,
+      "name": "Sadeq Alawneh",
+      "phone": "N/A",
+      "email": "sadeq.alawneh@sultanunited.com",
+      "department": "CT",
+      "temperature": null
     }
   ],
   "transactions": [
@@ -538,6 +546,10 @@
     "Rajasimhan Kabali": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Sadeq Alawneh": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -549,7 +561,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T08:00:10.108Z",
+    "updated": "2026-07-09T08:00:49.628Z",
     "user": "Donan Arciaga"
   }
 }
