@@ -130,6 +130,14 @@
       "email": "prasad.veligandla@sultanunited.com",
       "department": "PACS",
       "temperature": null
+    },
+    {
+      "id": 1783584006107,
+      "name": "Rajasimhan Kabali",
+      "phone": "N/A",
+      "email": "rajasimhan.kabali@sultanunited.com",
+      "department": "RADIOTHERAPY",
+      "temperature": null
     }
   ],
   "transactions": [
@@ -526,6 +534,10 @@
     "Prasad Veligandla": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Rajasimhan Kabali": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -537,7 +549,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T07:57:55.379Z",
+    "updated": "2026-07-09T08:00:10.108Z",
     "user": "Donan Arciaga"
   }
 }
