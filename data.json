@@ -142,7 +142,7 @@
     {
       "id": 1783584045613,
       "name": "Sadeq Alawneh",
-      "phone": "Missing phone number",
+      "phone": "N/A",
       "email": "sadeq.alawneh@sultanunited.com",
       "department": "CT",
       "temperature": null
@@ -150,7 +150,7 @@
     {
       "id": 1783584297865,
       "name": "Saleh AlMasri",
-      "phone": "N/A",
+      "phone": "Missing phone number",
       "email": "saleh.almasri@sultanunited.com",
       "department": "X-RAY",
       "temperature": null
@@ -620,7 +620,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T09:40:22.798Z",
+    "updated": "2026-07-09T09:40:29.812Z",
     "user": "Donan Arciaga"
   }
 }
