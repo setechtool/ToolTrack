@@ -166,7 +166,7 @@
     {
       "id": 1783584520466,
       "name": "Yousef Abdel Latif",
-      "phone": "N/A",
+      "phone": "Missing phone number",
       "email": "yousef.abdelatif@sultanunited.com",
       "department": "LAB",
       "temperature": null
@@ -620,7 +620,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T09:40:39.736Z",
+    "updated": "2026-07-09T09:40:45.057Z",
     "user": "Donan Arciaga"
   }
 }
