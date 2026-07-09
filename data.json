@@ -170,6 +170,14 @@
       "email": "yousef.abdelatif@sultanunited.com",
       "department": "LAB",
       "temperature": null
+    },
+    {
+      "id": 1783584670729,
+      "name": "Omar Alomar",
+      "phone": "N/A",
+      "email": "omar.alomar@sultanunited.com",
+      "department": "US",
+      "temperature": null
     }
   ],
   "transactions": [
@@ -586,6 +594,10 @@
     "Yousef Abdel Latif": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Omar Alomar": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -597,7 +609,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T08:08:44.482Z",
+    "updated": "2026-07-09T08:11:14.732Z",
     "user": "Donan Arciaga"
   }
 }
