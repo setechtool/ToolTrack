@@ -102,7 +102,7 @@
     {
       "id": 1783583424470,
       "name": "Abdullah Safak",
-      "phone": "N/A",
+      "phone": "Missing phone number",
       "email": "abdullah.safak@sultanunited.com",
       "department": "CT",
       "temperature": null
@@ -620,7 +620,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T09:39:25.021Z",
+    "updated": "2026-07-09T09:39:34.403Z",
     "user": "Donan Arciaga"
   }
 }
