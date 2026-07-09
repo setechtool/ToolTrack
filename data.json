@@ -174,7 +174,7 @@
     {
       "id": 1783584670729,
       "name": "Omar Alomar",
-      "phone": "N/A",
+      "phone": "Missing phone number",
       "email": "omar.alomar@sultanunited.com",
       "department": "US",
       "temperature": null
@@ -620,7 +620,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T09:40:00.880Z",
+    "updated": "2026-07-09T09:40:05.929Z",
     "user": "Donan Arciaga"
   }
 }
