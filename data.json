@@ -146,6 +146,14 @@
       "email": "sadeq.alawneh@sultanunited.com",
       "department": "CT",
       "temperature": null
+    },
+    {
+      "id": 1783584297865,
+      "name": "Saleh AlMasri",
+      "phone": "N/A",
+      "email": "saleh.almasri@sultanunited.com",
+      "department": "X-RAY",
+      "temperature": null
     }
   ],
   "transactions": [
@@ -550,6 +558,10 @@
     "Sadeq Alawneh": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Saleh AlMasri": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -561,7 +573,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T08:04:24.330Z",
+    "updated": "2026-07-09T08:05:01.878Z",
     "user": "Donan Arciaga"
   }
 }
