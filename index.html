@@ -457,6 +457,13 @@
             opacity: 1;
             color: #1e40af;
         }
+        /* Narrow columns for email and dept */
+        .narrow-col {
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
 
         /* ── Idle toast ── */
         #idle-warning-toast {
@@ -736,6 +743,14 @@
                 font-size: 20px;
             }
         }
+
+        /* ── Datalist styling ── */
+        input[list]::-webkit-calendar-picker-indicator {
+            opacity: 0.5;
+        }
+        input[list] {
+            background: #fff;
+        }
     </style>
 </head>
 <body>
@@ -893,10 +908,26 @@
                     </div>
                     <div class="bg-white rounded-2xl border table-wrap">
                         <table class="w-full">
-                            <thead class="bg-gray-50"><tr><th class="py-3 px-4 text-left text-xs font-semibold">DESC</th><th class="py-3 px-4 text-left text-xs font-semibold">MODEL</th><th class="py-3 px-4 text-left text-xs font-semibold">SERIAL</th><th class="py-3 px-4 text-left text-xs font-semibold">OWNER</th><th class="py-3 px-4 text-left text-xs font-semibold">CAL DUE</th><th class="py-3 px-4 text-left text-xs font-semibold">STATUS</th><th class="py-3 px-4 text-left text-xs font-semibold">REC</th><th class="py-3 px-4 text-left text-xs font-semibold">BORROWED BY</th><th class="py-3 px-4 text-left text-xs font-semibold">LOCATION</th><th class="py-3 px-4 text-center text-xs font-semibold">CERT</th><th class="py-3 px-4 text-right text-xs font-semibold">ACTIONS</th></tr></thead>
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="py-3 px-4 text-left text-xs font-semibold sort-header" onclick="sortTools('desc')">DESC <i class="fa-solid fa-sort"></i></th>
+                                    <th class="py-3 px-4 text-left text-xs font-semibold sort-header" onclick="sortTools('model')">MODEL <i class="fa-solid fa-sort"></i></th>
+                                    <th class="py-3 px-4 text-left text-xs font-semibold sort-header" onclick="sortTools('serial')">SERIAL <i class="fa-solid fa-sort"></i></th>
+                                    <th class="py-3 px-4 text-left text-xs font-semibold sort-header" onclick="sortTools('owner')">OWNER <i class="fa-solid fa-sort"></i></th>
+                                    <th class="py-3 px-4 text-left text-xs font-semibold sort-header" onclick="sortTools('calDue')">CAL DUE <i class="fa-solid fa-sort"></i></th>
+                                    <th class="py-3 px-4 text-left text-xs font-semibold sort-header" onclick="sortTools('status')">STATUS <i class="fa-solid fa-sort"></i></th>
+                                    <th class="py-3 px-4 text-left text-xs font-semibold">REC</th>
+                                    <th class="py-3 px-4 text-left text-xs font-semibold sort-header" onclick="sortTools('borrowedBy')">BORROWED BY <i class="fa-solid fa-sort"></i></th>
+                                    <th class="py-3 px-4 text-left text-xs font-semibold sort-header" onclick="sortTools('location')">LOCATION <i class="fa-solid fa-sort"></i></th>
+                                    <th class="py-3 px-4 text-center text-xs font-semibold">CERT</th>
+                                    <th class="py-3 px-4 text-right text-xs font-semibold">ACTIONS</th>
+                                </tr>
+                            </thead>
                             <tbody id="tools-table" class="divide-y divide-gray-100"></tbody>
                         </table>
                     </div>
+                    <!-- Tool count summary -->
+                    <div class="mt-3 text-sm text-gray-600" id="tools-count-summary">Total Tools: 0</div>
                 </div>
 
                 <!-- Tab 2: Engineers -->
@@ -918,10 +949,18 @@
                     <div id="engineers-grid-view" class="hidden grid grid-cols-3 gap-5"></div>
                     <div id="engineers-table-view" class="bg-white rounded-2xl border table-wrap">
                         <table class="w-full">
-                            <thead class="bg-gray-50"><tr><th class="py-3 px-5 text-left text-xs font-semibold">NAME</th><th class="py-3 px-5 text-left text-xs font-semibold">DEPT</th><th class="py-3 px-5 text-left text-xs font-semibold">PHONE</th><th class="py-3 px-5 text-left text-xs font-semibold">EMAIL</th><th class="py-3 px-5 text-left text-xs font-semibold">TEMP</th><th class="py-3 px-5 text-right text-xs font-semibold">ACTIONS</th></tr></thead>
+                            <thead class="bg-gray-50"><tr>
+                                <th class="py-3 px-5 text-left text-xs font-semibold sort-header" onclick="sortEngineers('name')">NAME <i class="fa-solid fa-sort"></i></th>
+                                <th class="py-3 px-5 text-left text-xs font-semibold sort-header" onclick="sortEngineers('department')" style="max-width:120px;">DEPT <i class="fa-solid fa-sort"></i></th>
+                                <th class="py-3 px-5 text-left text-xs font-semibold sort-header" onclick="sortEngineers('phone')">PHONE <i class="fa-solid fa-sort"></i></th>
+                                <th class="py-3 px-5 text-left text-xs font-semibold sort-header" onclick="sortEngineers('email')" style="max-width:160px;">EMAIL <i class="fa-solid fa-sort"></i></th>
+                                <th class="py-3 px-5 text-right text-xs font-semibold">ACTIONS</th>
+                            </tr></thead>
                             <tbody id="engineers-table-body" class="divide-y divide-gray-100"></tbody>
                         </table>
                     </div>
+                    <!-- Engineer summary -->
+                    <div id="engineer-summary" class="mt-3 text-sm text-gray-600"></div>
                 </div>
 
                 <!-- Tab 3: Borrow/Return -->
@@ -1244,11 +1283,30 @@
         </div>
     </div>
 
-    <!-- Add Tool -->
+    <!-- Add Tool (predictive for description AND model, duplicate check on all fields) -->
     <div id="add-tool-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Add Tool</h3>
-            <div class="space-y-3"><input id="tool-desc" placeholder="Description *" class="w-full p-3 border rounded-xl" /><input id="tool-model" placeholder="Model" class="w-full p-3 border rounded-xl" /><input id="tool-serial" placeholder="Serial" class="w-full p-3 border rounded-xl" /><input id="tool-owner" placeholder="Owner" class="w-full p-3 border rounded-xl" /><input id="tool-cal-date" type="date" class="w-full p-3 border rounded-xl" /><input id="tool-location" placeholder="Location" class="w-full p-3 border rounded-xl" /></div>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+                    <input id="tool-desc" list="tool-desc-list" placeholder="Enter description" class="w-full p-3 border rounded-xl" oninput="checkToolDuplicate()" />
+                    <datalist id="tool-desc-list"></datalist>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Model</label>
+                    <input id="tool-model" list="tool-model-list" placeholder="Enter model" class="w-full p-3 border rounded-xl" oninput="checkToolDuplicate()" />
+                    <datalist id="tool-model-list"></datalist>
+                </div>
+                <input id="tool-serial" placeholder="Serial" class="w-full p-3 border rounded-xl" oninput="checkToolDuplicate()" />
+                <input id="tool-owner" placeholder="Owner" class="w-full p-3 border rounded-xl" oninput="checkToolDuplicate()" />
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Calibration Due Date</label>
+                    <input id="tool-cal-date" type="date" class="w-full p-3 border rounded-xl" onchange="checkToolDuplicate()" />
+                </div>
+                <input id="tool-location" placeholder="Location" class="w-full p-3 border rounded-xl" oninput="checkToolDuplicate()" />
+                <div id="tool-duplicate-warning" class="text-red-600 text-sm hidden">⚠️ This tool already exists. Please check the information.</div>
+            </div>
             <div class="flex gap-2 mt-4"><button onclick="hideAddToolModal()" class="flex-1 py-3 btn btn-outline">Cancel</button><button onclick="addNewTool()" class="flex-1 py-3 btn btn-primary">Save</button></div>
         </div>
     </div>
@@ -1257,7 +1315,7 @@
     <div id="edit-tool-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Edit Tool</h3>
-            <div class="space-y-3"><input id="edit-tool-id" type="hidden" /><input id="edit-tool-desc" class="w-full p-3 border rounded-xl" /><input id="edit-tool-model" class="w-full p-3 border rounded-xl" /><input id="edit-tool-serial" class="w-full p-3 border rounded-xl" /><input id="edit-tool-owner" class="w-full p-3 border rounded-xl" /><input id="edit-tool-cal-date" type="date" class="w-full p-3 border rounded-xl" /><input id="edit-tool-location" class="w-full p-3 border rounded-xl" /></div>
+            <div class="space-y-3"><input id="edit-tool-id" type="hidden" /><input id="edit-tool-desc" class="w-full p-3 border rounded-xl" /><input id="edit-tool-model" class="w-full p-3 border rounded-xl" /><input id="edit-tool-serial" class="w-full p-3 border rounded-xl" /><input id="edit-tool-owner" class="w-full p-3 border rounded-xl" /><label class="block text-sm font-medium text-gray-700 mb-1">Calibration Due Date</label><input id="edit-tool-cal-date" type="date" class="w-full p-3 border rounded-xl" /><input id="edit-tool-location" class="w-full p-3 border rounded-xl" /></div>
             <div class="flex gap-2 mt-4"><button onclick="hideEditToolModal()" class="flex-1 py-3 btn btn-outline">Cancel</button><button onclick="updateTool()" class="flex-1 py-3 btn btn-primary">Update</button></div>
         </div>
     </div>
@@ -1267,17 +1325,18 @@
         <div class="bg-white rounded-3xl w-full max-w-lg m-4 p-6">
             <h3 class="text-xl font-semibold mb-4">Add Engineer</h3>
             <div class="space-y-3">
-                <input id="eng-name" placeholder="Full Name *" class="w-full p-3 border rounded-xl" oninput="autoGenerateEmail()" />
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                    <input id="eng-name" list="eng-name-list" placeholder="Enter full name" class="w-full p-3 border rounded-xl" oninput="autoGenerateEmail(); checkEngineerDuplicate()" />
+                    <datalist id="eng-name-list"></datalist>
+                </div>
                 <div class="relative"><span class="absolute left-3 top-3 text-sm text-gray-500">(+965)</span><input id="eng-phone" class="w-full p-3 pl-16 border rounded-xl" oninput="formatPhoneNumber(this)" maxlength="9" /></div>
                 <input id="eng-email" placeholder="Email" class="w-full p-3 border rounded-xl" />
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
                     <select id="eng-department" class="w-full p-3 border rounded-xl"><option value="">Select Department</option></select>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Current Temperature (°C)</label>
-                    <input id="eng-temperature" type="number" step="0.1" placeholder="e.g., 24.5" class="w-full p-3 border rounded-xl" />
-                </div>
+                <div id="eng-duplicate-warning" class="text-red-600 text-sm hidden">⚠️ This engineer already exists. Please check the name.</div>
             </div>
             <div class="flex gap-2 mt-4">
                 <button onclick="hideAddEngineerModal()" class="flex-1 py-3 btn btn-outline">Cancel</button>
@@ -1298,10 +1357,6 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
                     <select id="edit-eng-department" class="w-full p-3 border rounded-xl"><option value="">Select Department</option></select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Current Temperature (°C)</label>
-                    <input id="edit-eng-temperature" type="number" step="0.1" placeholder="e.g., 24.5" class="w-full p-3 border rounded-xl" />
                 </div>
             </div>
             <div class="flex gap-2 mt-4">
@@ -1907,18 +1962,15 @@
         }
 
         // ─── Show weather modal (loads weather.html in iframe) ─────────────
-        // ✅ FIXED: uses absolute path to avoid 404 in subfolders
         function showWeatherModal() {
             const iframe = document.getElementById('weather-iframe');
             if (!lastLocation) {
-                // Try to get location again
                 initWeather();
                 if (!lastLocation) {
                     alert('Location not available. Please allow location access or search in the weather app.');
                     return;
                 }
             }
-            // Build the path relative to the current directory (where index.html lives)
             const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
             let url = basePath + 'weather.html';
             if (lastLocation && lastLocation.lat && lastLocation.lon && lastLocation.name) {
@@ -1930,12 +1982,10 @@
 
         function hideWeatherModal() {
             document.getElementById('weather-iframe-modal').classList.add('hidden');
-            // Optionally clear iframe src to stop loading
             const iframe = document.getElementById('weather-iframe');
             iframe.src = 'about:blank';
         }
 
-        // ─── Listen for messages from iframe (optional) ─────────────────────
         window.addEventListener('message', function(e) {
             if (e.data && e.data.type === 'weather-location-update') {
                 const loc = e.data.location;
@@ -1953,7 +2003,6 @@
             }
         });
 
-        // ─── Expose functions for widget click ─────────────────────────────
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('temp-widget').addEventListener('click', showWeatherModal);
         });
@@ -1979,8 +2028,7 @@
                         name,
                         phone,
                         email,
-                        department: depts[index % depts.length] || 'N/A',
-                        temperature: (20 + Math.random() * 10).toFixed(1)
+                        department: depts[index % depts.length] || 'N/A'
                     });
                     if (!authManager.users[name]) authManager.addUser(name, '123');
                 });
@@ -2597,8 +2645,7 @@
                 const startTab = (authManager.getCurrentUser().isAdmin || authManager.getCurrentUser().isRoy) ? 0 : 1;
                 switchTab(startTab);
                 updateAllUI();
-                initWeather(); // initialize weather widget
-                // ensure widget click opens modal
+                initWeather();
                 document.getElementById('temp-widget').onclick = showWeatherModal;
             } else {
                 showLoginError('Invalid password.');
@@ -2921,73 +2968,189 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  TOOLS (unchanged)
+        //  TOOLS (sorting, count, predictive for desc & model)
         // ═══════════════════════════════════════════════
-        function renderTools() {
-            const tbody = document.getElementById('tools-table');
-            if (!tools.length) { tbody.innerHTML =
-                '<tr><td colspan="11" class="text-center py-8 text-gray-400">No tools</td></tr>'; return; }
-            tbody.innerHTML = tools.map(t => {
-                const isBorrowed = transactions.some(tr => tr.toolId === t.id && !tr.returned);
-                const canEdit = authManager.getCurrentUser() && (authManager.getCurrentUser().isAdmin || authManager
-                    .getCurrentUser().name === t.owner);
-                const borrower = isBorrowed ? getBorrowerInfo(t.id) : null;
-                const isOverdue = borrower && new Date(borrower.expectedReturn) < new Date();
-                let statusHtml = isCalExpired(t.calDue) && !isBorrowed ?
-                    '<span class="px-3 py-1 rounded-full text-xs bg-red-100 text-red-700">Cal Expired</span>' :
-                    (isBorrowed && isOverdue ?
-                        `<button onclick="showOverdueModal(${t.id})" class="px-3 py-1 rounded-full text-xs bg-red-500 text-white overdue-btn">OVERDUE</button>` :
-                        (isBorrowed ?
-                            '<span class="px-3 py-1 rounded-full text-xs bg-amber-100 text-amber-700">BORROWED</span>' :
-                            '<span class="px-3 py-1 rounded-full text-xs bg-emerald-100 text-emerald-700">AVAILABLE</span>'
-                            ));
-                const certHtml = t.calCert ?
-                    `<a href="${t.calCert}" target="_blank" class="text-blue-500 btn text-sm"><i class="fa-solid fa-certificate"></i></a>` :
-                    `<button onclick="showCalCertModal(${t.id})" class="text-blue-500 btn text-sm"><i class="fa-solid fa-upload"></i></button>`;
-                return `
-                    <tr>
-                        <td class="px-4 py-4 font-medium">${t.desc}</td>
-                        <td class="px-4 py-4 text-sm">${t.model}</td>
-                        <td class="px-4 py-4 text-sm">${t.serial}</td>
-                        <td class="px-4 py-4 text-sm">${t.owner}</td>
-                        <td class="px-4 py-4 text-sm">${t.calDue}</td>
-                        <td class="px-4 py-4">${statusHtml}</td>
-                        <td class="px-4 py-4">${isCalSoon(t.calDue) && !isBorrowed ? '<span class="text-xs text-orange-600">Prepare Cal</span>' : '-'}</td>
-                        <td class="px-4 py-4 text-sm">${borrower ? borrower.firstName : '-'}</td>
-                        <td class="px-4 py-4 text-sm">${borrower ? borrower.location : (t.location || '-')}</td>
-                        <td class="px-4 py-4 text-center">${certHtml}</td>
-                        <td class="px-4 py-4 text-right">
-                            ${canEdit ? `
-                                <button onclick="showEditToolModal(${t.id})" class="text-blue-500 p-1.5 btn text-sm"><i class="fa-solid fa-edit"></i></button>
-                                <button onclick="deleteToolPrompt(${t.id})" class="text-red-500 p-1.5 btn text-sm"><i class="fa-solid fa-trash"></i></button>
-                            ` : '<span class="text-xs text-gray-400">No perm</span>'}
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+        let toolSortCol = 'desc',
+            toolSortDir = 'asc';
+
+        function sortTools(col) {
+            if (toolSortCol === col) toolSortDir = toolSortDir === 'asc' ? 'desc' : 'asc';
+            else { toolSortCol = col;
+                toolSortDir = 'asc'; }
+            // Update sort header icons
+            document.querySelectorAll('#tab-1 .sort-header').forEach(h => {
+                h.classList.remove('sorted');
+                const icon = h.querySelector('i');
+                if (icon) icon.className = 'fa-solid fa-sort';
+            });
+            const header = document.querySelector(`#tab-1 .sort-header[onclick*="${col}"]`);
+            if (header) {
+                header.classList.add('sorted');
+                const icon = header.querySelector('i');
+                if (icon) icon.className = `fa-solid fa-sort-${toolSortDir === 'asc' ? 'up' : 'down'}`;
+            }
+            renderTools();
         }
 
+        function renderTools() {
+            // Sort tools
+            const sorted = [...tools];
+            sorted.sort((a, b) => {
+                let va, vb;
+                if (toolSortCol === 'borrowedBy') {
+                    va = getBorrowerInfo(a.id)?.firstName || '';
+                    vb = getBorrowerInfo(b.id)?.firstName || '';
+                } else if (toolSortCol === 'status') {
+                    // Compute status string for sorting
+                    const getStatus = (t) => {
+                        const isBorrowed = transactions.some(tr => tr.toolId === t.id && !tr.returned);
+                        if (isBorrowed) {
+                            const borrower = getBorrowerInfo(t.id);
+                            if (borrower && new Date(borrower.expectedReturn) < new Date()) return 'Overdue';
+                            return 'Borrowed';
+                        }
+                        return isCalExpired(t.calDue) ? 'Cal Expired' : 'Available';
+                    };
+                    va = getStatus(a);
+                    vb = getStatus(b);
+                } else if (toolSortCol === 'location') {
+                    va = a.location || '';
+                    vb = b.location || '';
+                } else {
+                    va = a[toolSortCol] || '';
+                    vb = b[toolSortCol] || '';
+                }
+                if (typeof va === 'string') va = va.toLowerCase();
+                if (typeof vb === 'string') vb = vb.toLowerCase();
+                if (va < vb) return toolSortDir === 'asc' ? -1 : 1;
+                if (va > vb) return toolSortDir === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            const tbody = document.getElementById('tools-table');
+            if (!sorted.length) { tbody.innerHTML =
+                    '<tr><td colspan="11" class="text-center py-8 text-gray-400">No tools</td></tr>'; } else {
+                tbody.innerHTML = sorted.map(t => {
+                    const isBorrowed = transactions.some(tr => tr.toolId === t.id && !tr.returned);
+                    const canEdit = authManager.getCurrentUser() && (authManager.getCurrentUser().isAdmin || authManager
+                        .getCurrentUser().name === t.owner);
+                    const borrower = isBorrowed ? getBorrowerInfo(t.id) : null;
+                    const isOverdue = borrower && new Date(borrower.expectedReturn) < new Date();
+                    let statusHtml = isCalExpired(t.calDue) && !isBorrowed ?
+                        '<span class="px-3 py-1 rounded-full text-xs bg-red-100 text-red-700">Cal Expired</span>' :
+                        (isBorrowed && isOverdue ?
+                            `<button onclick="showOverdueModal(${t.id})" class="px-3 py-1 rounded-full text-xs bg-red-500 text-white overdue-btn">OVERDUE</button>` :
+                            (isBorrowed ?
+                                '<span class="px-3 py-1 rounded-full text-xs bg-amber-100 text-amber-700">BORROWED</span>' :
+                                '<span class="px-3 py-1 rounded-full text-xs bg-emerald-100 text-emerald-700">AVAILABLE</span>'
+                                ));
+                    const certHtml = t.calCert ?
+                        `<a href="${t.calCert}" target="_blank" class="text-blue-500 btn text-sm"><i class="fa-solid fa-certificate"></i></a>` :
+                        `<button onclick="showCalCertModal(${t.id})" class="text-blue-500 btn text-sm"><i class="fa-solid fa-upload"></i></button>`;
+                    return `
+                        <tr>
+                            <td class="px-4 py-4 font-medium">${t.desc}</td>
+                            <td class="px-4 py-4 text-sm">${t.model}</td>
+                            <td class="px-4 py-4 text-sm">${t.serial}</td>
+                            <td class="px-4 py-4 text-sm">${t.owner}</td>
+                            <td class="px-4 py-4 text-sm">${t.calDue}</td>
+                            <td class="px-4 py-4">${statusHtml}</td>
+                            <td class="px-4 py-4">${isCalSoon(t.calDue) && !isBorrowed ? '<span class="text-xs text-orange-600">Prepare Cal</span>' : '-'}</td>
+                            <td class="px-4 py-4 text-sm">${borrower ? borrower.firstName : '-'}</td>
+                            <td class="px-4 py-4 text-sm">${borrower ? borrower.location : (t.location || '-')}</td>
+                            <td class="px-4 py-4 text-center">${certHtml}</td>
+                            <td class="px-4 py-4 text-right">
+                                ${canEdit ? `
+                                    <button onclick="showEditToolModal(${t.id})" class="text-blue-500 p-1.5 btn text-sm"><i class="fa-solid fa-edit"></i></button>
+                                    <button onclick="deleteToolPrompt(${t.id})" class="text-red-500 p-1.5 btn text-sm"><i class="fa-solid fa-trash"></i></button>
+                                ` : '<span class="text-xs text-gray-400">No perm</span>'}
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            // Update total count
+            document.getElementById('tools-count-summary').textContent = `Total Tools: ${tools.length}`;
+        }
+
+        // ─── Add Tool: predictive for description AND model, duplicate check on all fields ──
         function showAddToolModal() {
+            // Populate datalist with existing descriptions
+            const descDatalist = document.getElementById('tool-desc-list');
+            const descs = tools.map(t => t.desc).filter((v, i, a) => a.indexOf(v) === i);
+            descDatalist.innerHTML = descs.map(d => `<option value="${d}">`).join('');
+
+            // Populate datalist with existing models
+            const modelDatalist = document.getElementById('tool-model-list');
+            const models = tools.map(t => t.model).filter((v, i, a) => a.indexOf(v) === i);
+            modelDatalist.innerHTML = models.map(m => `<option value="${m}">`).join('');
+
+            // Clear fields
             ['tool-desc', 'tool-model', 'tool-serial', 'tool-owner', 'tool-location'].forEach(id => document.getElementById(id)
                 .value = '');
             document.getElementById('tool-cal-date').value = new Date(Date.now() + 365 * 86400000).toISOString().split('T')[0];
+            // Hide warning
+            document.getElementById('tool-duplicate-warning').classList.add('hidden');
             document.getElementById('add-tool-modal').classList.remove('hidden');
         }
 
         function hideAddToolModal() { document.getElementById('add-tool-modal').classList.add('hidden'); }
 
+        // Called on any input change in the Add Tool modal
+        function checkToolDuplicate() {
+            const desc = document.getElementById('tool-desc').value.trim();
+            const model = document.getElementById('tool-model').value.trim();
+            const serial = document.getElementById('tool-serial').value.trim();
+            const owner = document.getElementById('tool-owner').value.trim();
+            const calDue = document.getElementById('tool-cal-date').value;
+            const warning = document.getElementById('tool-duplicate-warning');
+
+            // If any required field is empty, hide warning and return
+            if (!desc || !model || !serial || !owner || !calDue) {
+                warning.classList.add('hidden');
+                return;
+            }
+
+            // Check if a tool with exactly the same fields exists
+            const exists = tools.some(t =>
+                t.desc.toLowerCase() === desc.toLowerCase() &&
+                t.model.toLowerCase() === model.toLowerCase() &&
+                t.serial.toLowerCase() === serial.toLowerCase() &&
+                t.owner.toLowerCase() === owner.toLowerCase() &&
+                t.calDue === calDue
+            );
+            warning.classList.toggle('hidden', !exists);
+        }
+
         async function addNewTool() {
             const desc = document.getElementById('tool-desc').value.trim();
             if (!desc) { alert('Description is required.'); return; }
+            const model = document.getElementById('tool-model').value.trim() || 'N/A';
+            const serial = document.getElementById('tool-serial').value.trim() || 'N/A';
+            const owner = document.getElementById('tool-owner').value.trim() || authManager.getCurrentUser().name;
+            const calDue = document.getElementById('tool-cal-date').value;
+            const location = document.getElementById('tool-location').value.trim() || '';
+            // Check duplicate again before saving
+            const exists = tools.some(t =>
+                t.desc.toLowerCase() === desc.toLowerCase() &&
+                t.model.toLowerCase() === model.toLowerCase() &&
+                t.serial.toLowerCase() === serial.toLowerCase() &&
+                t.owner.toLowerCase() === owner.toLowerCase() &&
+                t.calDue === calDue
+            );
+            if (exists) {
+                alert('This tool already exists. Please check the information.');
+                return;
+            }
             tools.push({
                 id: Date.now(),
                 desc,
-                model: document.getElementById('tool-model').value || 'N/A',
-                serial: document.getElementById('tool-serial').value || 'N/A',
-                owner: authManager.getCurrentUser().name,
-                calDue: document.getElementById('tool-cal-date').value,
+                model,
+                serial,
+                owner,
+                calDue,
                 status: 'Available',
-                location: document.getElementById('tool-location').value || '',
+                location,
                 calCert: null,
                 calCertDate: null
             });
@@ -2997,6 +3160,7 @@
             logManager.log(authManager.getCurrentUser().name, 'Added tool: ' + desc);
         }
 
+        // Edit tool modal uses same fields but no predictive needed
         function showEditToolModal(id) {
             const t = tools.find(x => x.id === id);
             if (!t || !authManager.canEditTool(t.owner)) return;
@@ -3039,11 +3203,13 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  ENGINEERS (unchanged)
+        //  ENGINEERS (sorting, summary, predictive, phone handling)
         // ═══════════════════════════════════════════════
         let currentEngineerView = 'table';
         let pendingDeletionType = null,
             pendingDeletionId = null;
+        let engineerSortCol = 'name',
+            engineerSortDir = 'asc';
 
         function switchEngineerView(view) {
             currentEngineerView = view;
@@ -3054,14 +3220,43 @@
             renderEngineers();
         }
 
+        function sortEngineers(col) {
+            if (engineerSortCol === col) engineerSortDir = engineerSortDir === 'asc' ? 'desc' : 'asc';
+            else { engineerSortCol = col;
+                engineerSortDir = 'asc'; }
+            document.querySelectorAll('#engineers-table-view .sort-header').forEach(h => {
+                h.classList.remove('sorted');
+                const icon = h.querySelector('i');
+                if (icon) icon.className = 'fa-solid fa-sort';
+            });
+            const header = document.querySelector(`#engineers-table-view .sort-header[onclick*="${col}"]`);
+            if (header) {
+                header.classList.add('sorted');
+                const icon = header.querySelector('i');
+                if (icon) icon.className = `fa-solid fa-sort-${engineerSortDir === 'asc' ? 'up' : 'down'}`;
+            }
+            renderEngineers();
+        }
+
         function renderEngineers() {
             const user = authManager.getCurrentUser();
-            document.getElementById('engineers-grid-view').innerHTML = engineers.length ?
-                engineers.map(e => `
+            const sorted = [...engineers];
+            sorted.sort((a, b) => {
+                let va = a[engineerSortCol] || '',
+                    vb = b[engineerSortCol] || '';
+                if (typeof va === 'string') va = va.toLowerCase();
+                if (typeof vb === 'string') vb = vb.toLowerCase();
+                if (va < vb) return engineerSortDir === 'asc' ? -1 : 1;
+                if (va > vb) return engineerSortDir === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            // Grid view (without temperature)
+            document.getElementById('engineers-grid-view').innerHTML = sorted.length ?
+                sorted.map(e => `
                     <div class="bg-white rounded-2xl p-5 card-hover border">
                         <div><h4 class="font-semibold">${e.name}</h4><p class="text-sm text-blue-600">${e.department || 'N/A'}</p></div>
-                        <div class="mt-3 space-y-1 text-sm"><div>📞 ${formatPhoneDisplay(e.phone)}</div><div>✉️ <span class="email-truncate" title="${e.email}">${e.email}</span></div>
-                        <div>🌡️ ${e.temperature ? e.temperature + ' °C' : 'N/A'}</div></div>
+                        <div class="mt-3 space-y-1 text-sm"><div>📞 ${formatPhoneDisplay(e.phone)}</div><div>✉️ <span class="email-truncate" title="${e.email}">${e.email}</span></div></div>
                         <div class="mt-4 flex gap-2">
                             <button onclick="showEditEngineerModal(${e.id})" class="flex-1 py-2 bg-blue-50 text-blue-600 rounded-xl text-sm btn">Edit</button>
                             ${user?.isAdmin ? `<button onclick="deleteEngineerPrompt(${e.id})" class="flex-1 py-2 bg-red-50 text-red-600 rounded-xl text-sm btn">Delete</button>` : ''}
@@ -3070,50 +3265,84 @@
                 `).join('') :
                 '<div class="col-span-full text-center py-8 text-gray-400">No engineers</div>';
 
-            document.getElementById('engineers-table-body').innerHTML = engineers.length ?
-                engineers.map(e => `
+            // Table view (narrow columns for dept and email)
+            document.getElementById('engineers-table-body').innerHTML = sorted.length ?
+                sorted.map(e => `
                     <tr>
                         <td class="px-5 py-4 font-semibold">${e.name}</td>
-                        <td class="px-5 py-4">${e.department || 'N/A'}</td>
+                        <td class="px-5 py-4" style="max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${e.department || 'N/A'}</td>
                         <td class="px-5 py-4">${formatPhoneDisplay(e.phone)}</td>
-                        <td class="px-5 py-4"><span class="email-truncate" title="${e.email}">${e.email}</span></td>
-                        <td class="px-5 py-4">${e.temperature ? e.temperature + ' °C' : 'N/A'}</td>
+                        <td class="px-5 py-4" style="max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${e.email}">${e.email}</td>
                         <td class="px-5 py-4 text-right">
                             <button onclick="showEditEngineerModal(${e.id})" class="text-blue-500 p-1.5 btn text-sm"><i class="fa-solid fa-edit"></i></button>
                             ${user?.isAdmin ? `<button onclick="deleteEngineerPrompt(${e.id})" class="text-red-500 p-1.5 btn text-sm"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </td>
                     </tr>
                 `).join('') :
-                '<tr><td colspan="6" class="text-center py-8 text-gray-400">No engineers</td></tr>';
+                '<tr><td colspan="5" class="text-center py-8 text-gray-400">No engineers</td></tr>';
+
+            // Summary: total and per department
+            const total = engineers.length;
+            const deptCounts = {};
+            engineers.forEach(e => {
+                const d = e.department || 'Unknown';
+                deptCounts[d] = (deptCounts[d] || 0) + 1;
+            });
+            const deptSummary = Object.entries(deptCounts)
+                .sort((a, b) => a[0].localeCompare(b[0]))
+                .map(([dept, count]) => `${dept}: ${count}`)
+                .join(' | ');
+            document.getElementById('engineer-summary').innerHTML =
+                `<strong>Total Engineers:</strong> ${total} &nbsp;&nbsp; <strong>Departments:</strong> ${deptSummary || 'None'}`;
         }
 
+        // ─── Add Engineer (predictive, duplicate check, phone handling) ────
         function showAddEngineerModal() {
+            // Populate datalist with existing names
+            const datalist = document.getElementById('eng-name-list');
+            const names = engineers.map(e => e.name).filter((v, i, a) => a.indexOf(v) === i);
+            datalist.innerHTML = names.map(n => `<option value="${n}">`).join('');
             document.getElementById('eng-name').value = '';
             document.getElementById('eng-phone').value = '';
             document.getElementById('eng-email').value = '';
             document.getElementById('eng-department').value = '';
-            document.getElementById('eng-temperature').value = '';
+            document.getElementById('eng-duplicate-warning').classList.add('hidden');
             populateDepartmentDropdowns();
             document.getElementById('add-engineer-modal').classList.remove('hidden');
         }
 
         function hideAddEngineerModal() { document.getElementById('add-engineer-modal').classList.add('hidden'); }
 
+        function checkEngineerDuplicate() {
+            const name = document.getElementById('eng-name').value.trim();
+            if (!name) {
+                document.getElementById('eng-duplicate-warning').classList.add('hidden');
+                return;
+            }
+            const exists = engineers.some(e => e.name.toLowerCase() === name.toLowerCase());
+            document.getElementById('eng-duplicate-warning').classList.toggle('hidden', !exists);
+        }
+
         async function addNewEngineer() {
             const name = document.getElementById('eng-name').value.trim();
             if (!name) { alert('Name is required.'); return; }
+            // Duplicate check
+            if (engineers.some(e => e.name.toLowerCase() === name.toLowerCase())) {
+                alert('This engineer already exists. Please check the name.');
+                return;
+            }
             const dept = document.getElementById('eng-department').value;
             if (!dept) { alert('Please select a department.'); return; }
-            const temp = document.getElementById('eng-temperature').value;
-            const tempVal = temp ? parseFloat(temp) : null;
+            let phone = document.getElementById('eng-phone').value.trim();
+            if (!phone) phone = 'Missing phone number';
+            const email = document.getElementById('eng-email').value.trim() || name.toLowerCase().replace(/\s+/g, '.') +
+                '@sultanunited.com';
             engineers.push({
                 id: Date.now(),
                 name,
-                phone: document.getElementById('eng-phone').value || 'N/A',
-                email: document.getElementById('eng-email').value || name.toLowerCase().replace(/\s+/g, '.') +
-                    '@sultanunited.com',
-                department: dept,
-                temperature: (tempVal !== null && !isNaN(tempVal)) ? tempVal : null
+                phone,
+                email,
+                department: dept
             });
             authManager.addUser(name);
             saveData();
@@ -3123,16 +3352,16 @@
             logManager.log(authManager.getCurrentUser().name, 'Added engineer: ' + name);
         }
 
+        // ─── Edit Engineer ────────────────────────────────────────────────
         function showEditEngineerModal(id) {
             const e = engineers.find(x => x.id === id);
             if (!e) return;
             document.getElementById('edit-eng-id').value = id;
             document.getElementById('edit-eng-name').value = e.name;
-            document.getElementById('edit-eng-phone').value = e.phone;
+            document.getElementById('edit-eng-phone').value = e.phone === 'Missing phone number' ? '' : e.phone;
             document.getElementById('edit-eng-email').value = e.email;
             populateDepartmentDropdowns();
             document.getElementById('edit-eng-department').value = e.department || '';
-            document.getElementById('edit-eng-temperature').value = e.temperature !== null ? e.temperature : '';
             document.getElementById('edit-engineer-modal').classList.remove('hidden');
         }
 
@@ -3151,19 +3380,19 @@
             }
             const dept = document.getElementById('edit-eng-department').value;
             if (!dept) { alert('Please select a department.'); return; }
-            const temp = document.getElementById('edit-eng-temperature').value;
-            const tempVal = temp ? parseFloat(temp) : null;
+            let phone = document.getElementById('edit-eng-phone').value.trim();
+            if (!phone) phone = 'Missing phone number';
             e.name = newName;
-            e.phone = document.getElementById('edit-eng-phone').value || e.phone;
-            e.email = document.getElementById('edit-eng-email').value || e.email;
+            e.phone = phone;
+            e.email = document.getElementById('edit-eng-email').value.trim() || e.email;
             e.department = dept;
-            e.temperature = (tempVal !== null && !isNaN(tempVal)) ? tempVal : null;
             saveData();
             hideEditEngineerModal();
             refreshAllPanels();
             populateLoginDropdown();
         }
 
+        // ─── Delete Engineer ────────────────────────────────────────────────
         async function deleteEngineerPrompt(id) {
             const e = engineers.find(x => x.id === id);
             if (!e || !authManager.getCurrentUser()?.isAdmin) return;
@@ -3213,22 +3442,26 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  BORROW / RETURN (unchanged)
+        //  BORROW / RETURN (sorted dropdowns)
         // ═══════════════════════════════════════════════
         let currentEditingTransId = null;
         let pendingReturnTransId = null;
         let capturedReturnImage = null;
 
         function renderBorrowTab() {
+            // Sort available tools by description ascending
             const available = tools.filter(t => !transactions.some(tr => tr.toolId === t.id && !tr.returned));
+            available.sort((a, b) => a.desc.localeCompare(b.desc));
             const toolSel = document.getElementById('borrow-tool-select');
             toolSel.innerHTML = available.length ?
                 available.map(t => `<option value="${t.id}">${t.desc} (${t.serial})</option>`).join('') :
                 '<option disabled>No tools available</option>';
 
+            // Sort engineers by name ascending
+            const sortedEngineers = [...engineers].sort((a, b) => a.name.localeCompare(b.name));
             const engSel = document.getElementById('borrow-engineer-select');
-            engSel.innerHTML = engineers.length ?
-                engineers.map(e => `<option value="${e.id}">${e.name} - ${e.department || 'N/A'}</option>`).join('') :
+            engSel.innerHTML = sortedEngineers.length ?
+                sortedEngineers.map(e => `<option value="${e.id}">${e.name} - ${e.department || 'N/A'}</option>`).join('') :
                 '<option disabled>No engineers</option>';
 
             resetBorrowForm();
@@ -3342,7 +3575,7 @@
             document.getElementById('active-borrows-section').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // ─── Return Evidence ────────────────────────────────────────────────
+        // ─── Return Evidence (unchanged) ────────────────────────────────────
         function initiateReturn(id) {
             pendingReturnTransId = id;
             capturedReturnImage = null;
@@ -4012,9 +4245,9 @@
         }
 
         function generateEngineersCSV() {
-            let csv = 'ID,Name,Phone,Email,Department,Temperature\n';
+            let csv = 'ID,Name,Phone,Email,Department\n';
             engineers.forEach(e => {
-                csv += `${e.id},"${e.name}","${e.phone}","${e.email}","${e.department||'N/A'}","${e.temperature!==null?e.temperature:''}"\n`;
+                csv += `${e.id},"${e.name}","${e.phone}","${e.email}","${e.department||'N/A'}"\n`;
             });
             return csv;
         }
@@ -4109,14 +4342,13 @@
                     const newEngineers = [];
                     for (let i = 1; i < lines.length; i++) {
                         const cols = parseCSVLine(lines[i]);
-                        if (cols.length >= 5) {
+                        if (cols.length >= 4) {
                             newEngineers.push({
                                 id: parseInt(cols[0]) || Date.now() + i,
                                 name: cols[1]?.replace(/^"|"$/g, '') || '',
                                 phone: cols[2]?.replace(/^"|"$/g, '') || '',
                                 email: cols[3]?.replace(/^"|"$/g, '') || '',
-                                department: cols[4]?.replace(/^"|"$/g, '') || '',
-                                temperature: cols[5] ? parseFloat(cols[5]) : null
+                                department: cols[4]?.replace(/^"|"$/g, '') || ''
                             });
                         }
                     }
@@ -4190,7 +4422,10 @@
             input.value = val;
         }
 
-        function formatPhoneDisplay(phone) { return '(+965) ' + phone; }
+        function formatPhoneDisplay(phone) {
+            if (phone === 'Missing phone number') return phone;
+            return '(+965) ' + phone;
+        }
 
         function editRoyInfo() {
             if (!authManager.getCurrentUser()?.isAdmin) return;
@@ -4453,7 +4688,6 @@
                 RepoSync.setStatus('offline', 'No token');
             }
 
-            // Weather widget will be initialized after login, but we set up the click handler
             document.getElementById('temp-widget').addEventListener('click', showWeatherModal);
         };
     </script>
