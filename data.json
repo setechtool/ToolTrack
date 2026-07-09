@@ -85,7 +85,8 @@
       "name": "Ratheesh Kumar",
       "phone": "9718 6410",
       "email": "ratheesh.kumar@sultanunited.com",
-      "department": "X-RAY"
+      "department": "X-RAY",
+      "temperature": null
     },
     {
       "id": 1782649435541,
@@ -484,7 +485,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-05T03:49:19.089Z",
+    "updated": "2026-07-09T07:45:06.563Z",
     "user": "Donan Arciaga"
   }
 }
