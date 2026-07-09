@@ -93,7 +93,8 @@
       "name": "Nasr Hagy",
       "phone": "9661 2037",
       "email": "nasr.hagy@sultanunited.com",
-      "department": "X-Ray Department"
+      "department": "X-RAY",
+      "temperature": null
     }
   ],
   "transactions": [
@@ -485,7 +486,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T07:45:06.563Z",
+    "updated": "2026-07-09T07:45:13.141Z",
     "user": "Donan Arciaga"
   }
 }
