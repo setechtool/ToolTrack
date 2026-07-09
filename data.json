@@ -65,8 +65,9 @@
       "id": 1782235839489,
       "name": "Ashraf Al Anati",
       "phone": "9606 0597",
-      "email": "ashraf.al.anati@sultanunited.com",
-      "department": "MRI"
+      "email": "ashraf.alanati@sultanunited.com",
+      "department": "MRI",
+      "temperature": null
     },
     {
       "id": 1782235874369,
@@ -500,7 +501,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T07:50:28.484Z",
+    "updated": "2026-07-09T07:51:16.631Z",
     "user": "Donan Arciaga"
   }
 }
