@@ -97,6 +97,14 @@
       "email": "nasr.hagy@sultanunited.com",
       "department": "X-RAY",
       "temperature": null
+    },
+    {
+      "id": 1783583424470,
+      "name": "Abdullah Safak",
+      "phone": "N/A",
+      "email": "abdullah.safak@sultanunited.com",
+      "department": "CT",
+      "temperature": null
     }
   ],
   "transactions": [
@@ -477,6 +485,10 @@
     "Nasr Hagy": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Abdullah Safak": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -488,7 +500,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T07:49:20.678Z",
+    "updated": "2026-07-09T07:50:28.484Z",
     "user": "Donan Arciaga"
   }
 }
