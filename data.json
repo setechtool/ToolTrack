@@ -142,7 +142,7 @@
     {
       "id": 1783584045613,
       "name": "Sadeq Alawneh",
-      "phone": "N/A",
+      "phone": "Missing phone number",
       "email": "sadeq.alawneh@sultanunited.com",
       "department": "CT",
       "temperature": null
@@ -620,7 +620,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T09:40:16.329Z",
+    "updated": "2026-07-09T09:40:22.798Z",
     "user": "Donan Arciaga"
   }
 }
