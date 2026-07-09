@@ -118,7 +118,7 @@
     {
       "id": 1783583791033,
       "name": "Omar Jarrad",
-      "phone": "N/A",
+      "phone": "Missing phone number",
       "email": "omar.jarrad@sultanunited.com",
       "department": "MRI",
       "temperature": null
@@ -620,7 +620,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-09T09:39:53.240Z",
+    "updated": "2026-07-09T09:40:00.880Z",
     "user": "Donan Arciaga"
   }
 }
