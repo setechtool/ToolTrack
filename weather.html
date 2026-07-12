@@ -414,33 +414,444 @@
             white-space: nowrap;
         }
 
-        /* ── Sunrise/Sunset ── */
-        .sunrise-sunset {
+        /* ── NEW ROW: separate blocks for sunrise, watch, sunset ── */
+        .watch-row {
+            position: relative;
             display: flex;
-            justify-content: space-around;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 14px;
-            padding: 12px 10px;
-            margin: 0;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-        .sunrise-sunset .item {
-            text-align: center;
-        }
-        .sunrise-sunset .item .label {
-            font-size: 0.65rem;
-            opacity: 0.6;
-        }
-        .sunrise-sunset .item .time {
-            font-weight: 600;
-            font-size: 0.85rem;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 14px 16px;
+            min-height: 160px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            overflow: visible; /* Allow sun to overflow */
         }
 
-        .loading-text {
+        .sunrise-block,
+        .sunset-block {
+            flex: 0 0 auto;
+            width: 78px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            padding: 30px 0;
+            padding: 8px 6px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.3s;
+            z-index: 2;
+            position: relative; /* for stacking */
+        }
+        .sunrise-block .side-icon,
+        .sunset-block .side-icon {
+            font-size: 2.8rem;
+            line-height: 1.2;
+            margin-bottom: 4px;
+        }
+        .sunrise-block .side-label,
+        .sunset-block .side-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            opacity: 0.5;
+            letter-spacing: 0.6px;
+            font-weight: 500;
+        }
+        .sunrise-block .side-time,
+        .sunset-block .side-time {
+            font-size: 1.0rem;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-top: 2px;
+            letter-spacing: 0.3px;
+        }
+        .sunrise-block .side-time {
+            color: #fbbf24;
+        }
+        .sunset-block .side-time {
+            color: #f97316;
+        }
+
+        .watch-block {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .watch-center {
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.15s ease;
+        }
+        .watch-center:active {
+            transform: scale(0.96);
+        }
+
+        /* ── Watch face: SQUARE with rounded corners ── */
+        .watch-face {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 16px;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+        .watch-face::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border-radius: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.06);
+            pointer-events: none;
+            z-index: 2;
+        }
+        .watch-face::after {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .watch-face .ring-glow {
+            position: absolute;
+            inset: -2px;
+            border-radius: 18px;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.3;
+            transition: opacity 0.6s;
+        }
+
+        .watch-content {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            gap: 1px;
+        }
+
+        .watch-day {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.75;
+            margin-bottom: 1px;
+            line-height: 1.2;
+        }
+
+        .watch-time-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 1px;
+            line-height: 1;
+            margin: 0;
+        }
+        .watch-hours {
+            font-size: 2.6rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+        .watch-colon {
+            font-size: 2.4rem;
+            font-weight: 200;
+            opacity: 0.6;
+            line-height: 1;
+            margin: 0 1px;
+        }
+        .watch-minutes {
+            font-size: 2.6rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+        .watch-seconds {
+            font-size: 1.1rem;
+            font-weight: 300;
+            opacity: 0.45;
+            line-height: 1;
+            margin-left: 4px;
+            letter-spacing: 0.5px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .watch-date {
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 1.5px;
             opacity: 0.7;
-            font-size: 0.9rem;
+            margin-top: 1px;
+            line-height: 1.2;
+        }
+
+        .watch-brand {
+            font-size: 0.5rem;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            opacity: 0.4;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+
+        /* ── Theme: Rado ── */
+        .theme-rado {
+            background: radial-gradient(ellipse at 30% 25%, #3a3a3a, #111111 70%, #000000);
+            border: 2px solid #a0a0a0;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), inset 0 0 60px rgba(160, 160, 160, 0.06), 0 0 30px rgba(160, 160, 160, 0.04);
+        }
+        .theme-rado .ring-glow {
+            background: radial-gradient(ellipse at 50% 50%, rgba(200, 200, 200, 0.15), transparent 70%);
+        }
+        .theme-rado .watch-day {
+            color: #d0d0d0;
+        }
+        .theme-rado .watch-hours,
+        .theme-rado .watch-minutes,
+        .theme-rado .watch-colon {
+            color: #f0f0f0;
+        }
+        .theme-rado .watch-seconds {
+            color: #b0b0b0;
+        }
+        .theme-rado .watch-date {
+            color: #c0c0c0;
+        }
+        .theme-rado .watch-brand {
+            color: #a0a0a0;
+            letter-spacing: 3px;
+        }
+        .theme-rado .watch-brand::before {
+            content: '◆ ';
+            opacity: 0.5;
+        }
+        .theme-rado .watch-brand::after {
+            content: ' ◆';
+            opacity: 0.5;
+        }
+
+        /* ── Theme: Omega ── */
+        .theme-omega {
+            background: radial-gradient(ellipse at 35% 30%, #1a3a6a, #0a1a3a 60%, #050d1a);
+            border: 2px solid #d4a843;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), inset 0 0 60px rgba(212, 168, 67, 0.08), 0 0 30px rgba(212, 168, 67, 0.06);
+        }
+        .theme-omega .ring-glow {
+            background: radial-gradient(ellipse at 50% 50%, rgba(212, 168, 67, 0.12), transparent 70%);
+        }
+        .theme-omega .watch-day {
+            color: #d4c8a0;
+        }
+        .theme-omega .watch-hours,
+        .theme-omega .watch-minutes,
+        .theme-omega .watch-colon {
+            color: #f0e8d0;
+        }
+        .theme-omega .watch-seconds {
+            color: #b0a888;
+        }
+        .theme-omega .watch-date {
+            color: #c8b898;
+        }
+        .theme-omega .watch-brand {
+            color: #d4a843;
+            letter-spacing: 3px;
+        }
+        .theme-omega .watch-brand::before {
+            content: '✦ ';
+            opacity: 0.6;
+        }
+        .theme-omega .watch-brand::after {
+            content: ' ✦';
+            opacity: 0.6;
+        }
+
+        /* ── Theme: Patek Philippe ── */
+        .theme-patek {
+            background: radial-gradient(ellipse at 40% 30%, #f5efe6, #e8ddd0 55%, #d5c8b8);
+            border: 2px solid #d4a09b;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3), inset 0 0 60px rgba(212, 160, 155, 0.08), 0 0 30px rgba(212, 160, 155, 0.05);
+        }
+        .theme-patek .ring-glow {
+            background: radial-gradient(ellipse at 50% 50%, rgba(212, 160, 155, 0.10), transparent 70%);
+        }
+        .theme-patek .watch-day {
+            color: #5a4a3a;
+        }
+        .theme-patek .watch-hours,
+        .theme-patek .watch-minutes,
+        .theme-patek .watch-colon {
+            color: #3a2a1a;
+        }
+        .theme-patek .watch-seconds {
+            color: #8a7a6a;
+        }
+        .theme-patek .watch-date {
+            color: #6a5a4a;
+        }
+        .theme-patek .watch-brand {
+            color: #d4a09b;
+            letter-spacing: 2.5px;
+        }
+        .theme-patek .watch-brand::before {
+            content: '◈ ';
+            opacity: 0.5;
+        }
+        .theme-patek .watch-brand::after {
+            content: ' ◈';
+            opacity: 0.5;
+        }
+
+        /* ── Theme: Rolex ── */
+        .theme-rolex {
+            background: radial-gradient(ellipse at 30% 25%, #1a4a2a, #0d2818 60%, #06120a);
+            border: 2px solid #c9a84c;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), inset 0 0 60px rgba(201, 168, 76, 0.08), 0 0 30px rgba(201, 168, 76, 0.06);
+        }
+        .theme-rolex .ring-glow {
+            background: radial-gradient(ellipse at 50% 50%, rgba(201, 168, 76, 0.12), transparent 70%);
+        }
+        .theme-rolex .watch-day {
+            color: #c9b888;
+        }
+        .theme-rolex .watch-hours,
+        .theme-rolex .watch-minutes,
+        .theme-rolex .watch-colon {
+            color: #e8ddc0;
+        }
+        .theme-rolex .watch-seconds {
+            color: #a89870;
+        }
+        .theme-rolex .watch-date {
+            color: #b8a880;
+        }
+        .theme-rolex .watch-brand {
+            color: #c9a84c;
+            letter-spacing: 3px;
+        }
+        .theme-rolex .watch-brand::before {
+            content: '◉ ';
+            opacity: 0.5;
+        }
+        .theme-rolex .watch-brand::after {
+            content: ' ◉';
+            opacity: 0.5;
+        }
+
+        /* ── Theme: TAG Heuer ── */
+        .theme-tag {
+            background: radial-gradient(ellipse at 30% 25%, #2a2a2a, #0a0a0a 60%, #000000);
+            border: 2px solid #e62424;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), inset 0 0 60px rgba(230, 36, 36, 0.06), 0 0 30px rgba(230, 36, 36, 0.05);
+        }
+        .theme-tag .ring-glow {
+            background: radial-gradient(ellipse at 50% 50%, rgba(230, 36, 36, 0.08), transparent 70%);
+        }
+        .theme-tag .watch-day {
+            color: #d0d0d0;
+        }
+        .theme-tag .watch-hours,
+        .theme-tag .watch-minutes,
+        .theme-tag .watch-colon {
+            color: #f0f0f0;
+        }
+        .theme-tag .watch-seconds {
+            color: #e62424;
+            opacity: 0.6;
+        }
+        .theme-tag .watch-date {
+            color: #b0b0b0;
+        }
+        .theme-tag .watch-brand {
+            color: #e62424;
+            letter-spacing: 3px;
+        }
+        .theme-tag .watch-brand::before {
+            content: '◆ ';
+            opacity: 0.6;
+        }
+        .theme-tag .watch-brand::after {
+            content: ' ◆';
+            opacity: 0.6;
+        }
+
+        /* ── Watch theme indicator dots ── */
+        .watch-theme-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 0 4px;
+            opacity: 0.6;
+            position: relative;
+            z-index: 2;
+            margin-top: 4px;
+        }
+        .watch-theme-dots .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        .watch-theme-dots .dot.active {
+            background: rgba(255, 255, 255, 0.85);
+            transform: scale(1.3);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+        .watch-theme-dots .dot:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ── Sun Animation ── */
+        .sun-track {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10; /* Above blocks (z-index: 2) */
+            overflow: visible;
+        }
+        .moving-sun {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            background: radial-gradient(circle at 30% 30%, #FFF3B0, #FFD700 40%, #FF8C00);
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.7), 0 0 80px rgba(255, 165, 0, 0.5);
+            will-change: transform, left, top;
+            transform: translate(-50%, -50%);
         }
 
         /* ── Stars ── */
@@ -621,17 +1032,85 @@
                 gap: 12px;
                 padding-top: 4px;
             }
-            .sunrise-sunset {
-                padding: 8px 6px;
+            .watch-row {
+                gap: 8px;
+                padding: 8px 10px;
+                min-height: 130px;
             }
-            .sunrise-sunset .item .time {
-                font-size: 0.75rem;
+            .sunrise-block,
+            .sunset-block {
+                width: 60px;
+                height: 120px;
+                padding: 4px 3px;
+                border-radius: 12px;
+            }
+            .sunrise-block .side-icon,
+            .sunset-block .side-icon {
+                font-size: 2.2rem;
+            }
+            .sunrise-block .side-label,
+            .sunset-block .side-label {
+                font-size: 0.55rem;
+                letter-spacing: 0.4px;
+            }
+            .sunrise-block .side-time,
+            .sunset-block .side-time {
+                font-size: 0.8rem;
+            }
+            .watch-face {
+                width: 120px;
+                height: 120px;
+                border-radius: 14px;
+                padding: 10px 12px;
+            }
+            .watch-face::before {
+                border-radius: 10px;
+                inset: 3px;
+            }
+            .watch-face::after {
+                border-radius: 7px;
+                inset: 6px;
+            }
+            .watch-face .ring-glow {
+                border-radius: 14px;
+            }
+            .watch-hours {
+                font-size: 2.1rem;
+            }
+            .watch-minutes {
+                font-size: 2.1rem;
+            }
+            .watch-colon {
+                font-size: 1.9rem;
+            }
+            .watch-seconds {
+                font-size: 0.9rem;
+            }
+            .watch-day {
+                font-size: 0.55rem;
+                letter-spacing: 2px;
+            }
+            .watch-date {
+                font-size: 0.5rem;
+                letter-spacing: 1.2px;
+            }
+            .watch-brand {
+                font-size: 0.4rem;
+                letter-spacing: 2px;
+            }
+            .watch-theme-dots .dot {
+                width: 6px;
+                height: 6px;
             }
             .hourly-marker .marker-icon {
                 font-size: 1.1rem;
             }
             .hourly-marker .marker-time {
                 font-size: 0.5rem;
+            }
+            .moving-sun {
+                width: 28px;
+                height: 28px;
             }
         }
 
@@ -690,6 +1169,90 @@
             .hourly-marker .marker-time {
                 font-size: 0.45rem;
             }
+            .watch-row {
+                gap: 5px;
+                padding: 6px 6px;
+                min-height: 100px;
+            }
+            .sunrise-block,
+            .sunset-block {
+                width: 48px;
+                height: 94px;
+                padding: 3px 2px;
+                border-radius: 10px;
+            }
+            .sunrise-block .side-icon,
+            .sunset-block .side-icon {
+                font-size: 1.8rem;
+            }
+            .sunrise-block .side-label,
+            .sunset-block .side-label {
+                font-size: 0.45rem;
+                letter-spacing: 0.3px;
+            }
+            .sunrise-block .side-time,
+            .sunset-block .side-time {
+                font-size: 0.65rem;
+            }
+            .watch-face {
+                width: 94px;
+                height: 94px;
+                border-radius: 12px;
+                padding: 8px 8px;
+            }
+            .watch-face::before {
+                border-radius: 8px;
+                inset: 2px;
+                border-width: 1.5px;
+            }
+            .watch-face::after {
+                border-radius: 5px;
+                inset: 5px;
+                border-width: 1px;
+            }
+            .watch-face .ring-glow {
+                border-radius: 12px;
+            }
+            .watch-hours {
+                font-size: 1.7rem;
+            }
+            .watch-minutes {
+                font-size: 1.7rem;
+            }
+            .watch-colon {
+                font-size: 1.5rem;
+            }
+            .watch-seconds {
+                font-size: 0.7rem;
+                margin-left: 2px;
+            }
+            .watch-day {
+                font-size: 0.45rem;
+                letter-spacing: 1.5px;
+                margin-bottom: 0;
+            }
+            .watch-date {
+                font-size: 0.4rem;
+                letter-spacing: 1px;
+                margin-top: 0;
+            }
+            .watch-brand {
+                font-size: 0.35rem;
+                letter-spacing: 1.5px;
+                margin-top: 1px;
+            }
+            .watch-theme-dots {
+                gap: 4px;
+                padding: 4px 0 2px;
+            }
+            .watch-theme-dots .dot {
+                width: 5px;
+                height: 5px;
+            }
+            .moving-sun {
+                width: 22px;
+                height: 22px;
+            }
         }
     </style>
 </head>
@@ -725,7 +1288,7 @@
                 <div class="widget-content" id="forecast-details"></div>
             </div>
 
-            <!-- Widget: Sunrise -->
+            <!-- Widget: Sunrise · Watch · Sunset -->
             <div id="widget-sunrise">
                 <div class="widget-content" id="forecast-sunrise"></div>
             </div>
@@ -749,7 +1312,7 @@
 
     <script>
         // ═══════════════════════════════════════════════════════════════════
-        //  WEATHER APP – Simplified, Auto-location, No Settings
+        //  WEATHER APP – with Luxury Watch between Sunrise & Sunset
         // ═══════════════════════════════════════════════════════════════════
 
         // ─── State ──────────────────────────────────────────────────────────
@@ -762,6 +1325,18 @@
         let previewStopFn = null;
         let currentTimeOfDay = 'day';
         let currentWeatherCat = 'clear';
+
+        // ─── Watch state ─────────────────────────────────────────────────────
+        const WATCH_THEMES = ['rado', 'omega', 'patek', 'rolex', 'tag'];
+        const WATCH_BRAND_NAMES = {
+            rado: 'RADO',
+            omega: 'OMEGA',
+            patek: 'PATEK PHILIPPE',
+            rolex: 'ROLEX',
+            tag: 'TAG HEUER'
+        };
+        let currentThemeIndex = 0;
+        let watchUpdateInterval = null;
 
         // ─── DEFAULT SETTINGS ─────────────────────────────────────────────
         const settings = {
@@ -1602,6 +2177,223 @@
             return dt.toLocaleString({ hour: '2-digit', minute: '2-digit', hour12: true });
         }
 
+        // ─── Watch Functions ──────────────────────────────────────────────────
+
+        function getWatchThemeClass(index) {
+            return 'theme-' + WATCH_THEMES[index % WATCH_THEMES.length];
+        }
+
+        function getWatchBrand(index) {
+            return WATCH_BRAND_NAMES[WATCH_THEMES[index % WATCH_THEMES.length]] || '';
+        }
+
+        function cycleWatchTheme() {
+            currentThemeIndex = (currentThemeIndex + 1) % WATCH_THEMES.length;
+            updateWatchFace();
+            updateThemeDots();
+        }
+
+        function setWatchTheme(index) {
+            currentThemeIndex = index % WATCH_THEMES.length;
+            updateWatchFace();
+            updateThemeDots();
+        }
+
+        function updateThemeDots() {
+            const dots = document.querySelectorAll('.watch-theme-dots .dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentThemeIndex);
+            });
+        }
+
+        function updateWatchFace() {
+            const face = document.querySelector('.watch-face');
+            if (!face) return;
+            WATCH_THEMES.forEach(t => face.classList.remove('theme-' + t));
+            face.classList.add(getWatchThemeClass(currentThemeIndex));
+
+            const brandEl = face.querySelector('.watch-brand');
+            if (brandEl) {
+                brandEl.textContent = getWatchBrand(currentThemeIndex);
+            }
+        }
+
+        function updateWatchTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            const dayNames = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+            const shortDayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+            const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+            const dayOfWeek = dayNames[now.getDay()];
+            const shortDay = shortDayNames[now.getDay()];
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = monthNames[now.getMonth()];
+            const year = now.getFullYear();
+
+            const dayEl = document.querySelector('.watch-day');
+            if (dayEl) dayEl.textContent = dayOfWeek;
+
+            const hoursEl = document.querySelector('.watch-hours');
+            const minutesEl = document.querySelector('.watch-minutes');
+            const secondsEl = document.querySelector('.watch-seconds');
+            if (hoursEl) hoursEl.textContent = hours;
+            if (minutesEl) minutesEl.textContent = minutes;
+            if (secondsEl) secondsEl.textContent = seconds;
+
+            const dateEl = document.querySelector('.watch-date');
+            if (dateEl) dateEl.textContent = `${shortDay} ${day} ${month} ${year}`;
+        }
+
+        function startWatchUpdates() {
+            if (watchUpdateInterval) clearInterval(watchUpdateInterval);
+            updateWatchTime();
+            watchUpdateInterval = setInterval(updateWatchTime, 1000);
+        }
+
+        function stopWatchUpdates() {
+            if (watchUpdateInterval) {
+                clearInterval(watchUpdateInterval);
+                watchUpdateInterval = null;
+            }
+        }
+
+        // ─── Sun Animation (JavaScript) ──────────────────────────────────────
+
+        let sunAnimationId = null;
+
+        function startSunAnimation() {
+            const sun = document.querySelector('.moving-sun');
+            if (!sun) return;
+            const container = sun.closest('.watch-row');
+            if (!container) return;
+
+            // ─── CONFIGURATION ────────────────────────────────────────────────
+            // 1. To increase the sun's maximum height, make this value more negative:
+            //    e.g., -0.05 (default), -0.15 (medium), -0.25 (high), -0.40 (very high)
+            const arcHeight = -0.50; // <-- ADJUST THIS VALUE TO CONTROL ARC HEIGHT
+            // ────────────────────────────────────────────────────────────────────
+
+            const moveDuration = 13000;   // 5 seconds to move from sunrise to sunset
+            const pauseDuration = 100;  // 5 seconds to pause at sunset
+            const totalDuration = moveDuration + pauseDuration;
+            let startTime = performance.now();
+
+            function animateSun(time) {
+                let elapsed = (time - startTime) % totalDuration;
+                let t;
+
+                if (elapsed < moveDuration) {
+                    // Moving phase: calculate t from 0 to 1
+                    t = elapsed / moveDuration;
+                } else {
+                    // Pause phase: hold at sunset position (t = 1)
+                    t = 1;
+                }
+
+                // Bezier curve: P0 = (0.1, 0.8)  → sunrise (lower-left)
+                //               P1 = (0.5, arcHeight) → control point (higher = more negative)
+                //               P2 = (0.9, 0.8)  → sunset (lower-right)
+                const px = (1 - t) * (1 - t) * 0.1 + 2 * (1 - t) * t * 0.5 + t * t * 0.9;
+                const py = (1 - t) * (1 - t) * 0.8 + 2 * (1 - t) * t * arcHeight + t * t * 0.8;
+
+                const rect = container.getBoundingClientRect();
+                const cw = rect.width;
+                const ch = rect.height;
+                const x = px * cw;
+                const y = py * ch;
+
+                sun.style.left = x + 'px';
+                sun.style.top = y + 'px';
+
+                sunAnimationId = requestAnimationFrame(animateSun);
+            }
+
+            if (sunAnimationId) cancelAnimationFrame(sunAnimationId);
+            sunAnimationId = requestAnimationFrame(animateSun);
+        }
+
+        function stopSunAnimation() {
+            if (sunAnimationId) {
+                cancelAnimationFrame(sunAnimationId);
+                sunAnimationId = null;
+            }
+        }
+
+        // ─── Build Watch HTML ────────────────────────────────────────────────
+
+        function buildWatchHTML(sunriseTime, sunsetTime) {
+            const themeClass = getWatchThemeClass(0);
+            const brand = getWatchBrand(0);
+
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const dayNames = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+            const shortDayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+            const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+            const dayOfWeek = dayNames[now.getDay()];
+            const shortDay = shortDayNames[now.getDay()];
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = monthNames[now.getMonth()];
+            const year = now.getFullYear();
+
+            let dotsHtml = '';
+            WATCH_THEMES.forEach((t, i) => {
+                dotsHtml += `<button class="dot ${i === 0 ? 'active' : ''}" data-index="${i}" aria-label="Theme ${t}"></button>`;
+            });
+
+            return `
+                        <div class="watch-row" id="watch-row">
+                            <!-- Sunrise Block -->
+                            <div class="sunrise-block">
+                                <div class="side-icon">🌅</div>
+                                <div class="side-label">Sunrise</div>
+                                <div class="side-time">${sunriseTime || '--:--'}</div>
+                            </div>
+
+                            <!-- Watch Block -->
+                            <div class="watch-block">
+                                <div class="watch-center" id="watch-click-area" title="Tap to change theme">
+                                    <div class="watch-face ${themeClass}">
+                                        <div class="ring-glow"></div>
+                                        <div class="watch-content">
+                                            <div class="watch-day">${dayOfWeek}</div>
+                                            <div class="watch-time-row">
+                                                <span class="watch-hours">${hours}</span>
+                                                <span class="watch-colon">:</span>
+                                                <span class="watch-minutes">${minutes}</span>
+                                                <span class="watch-seconds">${seconds}</span>
+                                            </div>
+                                            <div class="watch-date">${shortDay} ${day} ${month} ${year}</div>
+                                            <div class="watch-brand">${brand}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="watch-theme-dots">
+                                    ${dotsHtml}
+                                </div>
+                            </div>
+
+                            <!-- Sunset Block -->
+                            <div class="sunset-block">
+                                <div class="side-icon">🌇</div>
+                                <div class="side-label">Sunset</div>
+                                <div class="side-time">${sunsetTime || '--:--'}</div>
+                            </div>
+
+                            <!-- Sun Track -->
+                            <div class="sun-track">
+                                <div class="moving-sun" style="left:10%; top:80%;"></div>
+                            </div>
+                        </div>
+                    `;
+        }
+
         // ─── Load Dashboard ──────────────────────────────────────────────────
         async function loadWeatherDashboard() {
             const headerContainer = document.getElementById('forecast-header');
@@ -1670,7 +2462,7 @@
                     return val.toFixed(0) + unit;
                 }
 
-                // ─── HEADER (centered) ──────────────────────────────────────
+                // ─── HEADER ──────────────────────────────────────────────────────
                 const dateShort = formatDateShort(localTimeStr, timezone);
                 const timeShort = formatTimeShort(localTimeStr, timezone);
                 const currentTempC = data.current.temperature_2m;
@@ -1715,15 +2507,42 @@
                             </div>
                         `;
 
-                // ─── SUNRISE ──────────────────────────────────────────────────
+                // ─── SUNRISE · WATCH · SUNSET ─────────────────────────────────
                 const sunriseLocal = formatTimeOnly(sunriseStr, timezone);
                 const sunsetLocal = formatTimeOnly(sunsetStr, timezone);
-                sunriseContainer.innerHTML = `
-                            <div class="sunrise-sunset">
-                                <div class="item"><div class="label">🌅 Sunrise</div><div class="time">${sunriseLocal}</div></div>
-                                <div class="item"><div class="label">🌇 Sunset</div><div class="time">${sunsetLocal}</div></div>
-                            </div>
-                        `;
+
+                sunriseContainer.innerHTML = buildWatchHTML(sunriseLocal, sunsetLocal);
+
+                // ─── Watch event listeners ─────────────────────────────────────
+                const watchClickArea = document.getElementById('watch-click-area');
+                if (watchClickArea) {
+                    watchClickArea.addEventListener('click', cycleWatchTheme);
+                    watchClickArea.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        cycleWatchTheme();
+                    });
+                }
+
+                document.querySelectorAll('.watch-theme-dots .dot').forEach(dot => {
+                    dot.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const idx = parseInt(this.getAttribute('data-index'), 10);
+                        if (!isNaN(idx)) setWatchTheme(idx);
+                    });
+                    dot.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const idx = parseInt(this.getAttribute('data-index'), 10);
+                        if (!isNaN(idx)) setWatchTheme(idx);
+                    });
+                });
+
+                stopWatchUpdates();
+                startWatchUpdates();
+
+                // ─── Start Sun Animation ──────────────────────────────────────
+                stopSunAnimation();
+                startSunAnimation();
 
                 // ─── HOURLY ──────────────────────────────────────────────────
                 const hourly = data.hourly;
@@ -1878,7 +2697,6 @@
                     },
                     (err) => {
                         console.warn('Geolocation error:', err);
-                        // Fallback: use a default location (e.g., New York)
                         const fallbackLat = 40.7128,
                             fallbackLon = -74.0060;
                         fetchLocationName(fallbackLat, fallbackLon).then(name => {
@@ -1888,7 +2706,6 @@
                     }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 600000 }
                 );
             } else {
-                // Fallback: use a default location
                 const fallbackLat = 40.7128,
                     fallbackLon = -74.0060;
                 fetchLocationName(fallbackLat, fallbackLon).then(name => {
@@ -1910,6 +2727,10 @@
                     wc.height = rect.height || 800;
                     wc.style.width = '100%';
                     wc.style.height = '100%';
+                }
+                if (document.querySelector('.moving-sun')) {
+                    stopSunAnimation();
+                    startSunAnimation();
                 }
             });
 
