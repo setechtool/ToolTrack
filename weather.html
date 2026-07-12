@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>Weather · ToolTrack</title>
+    <title>Weather</title>
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.5.0/build/global/luxon.min.js">
     </script>
     <style>
@@ -41,13 +41,6 @@
             color: #fff;
             position: relative;
         }
-        .weather-dashboard.layout-mode {
-            height: auto;
-            max-height: none;
-            overflow-y: visible;
-            display: block;
-            padding-bottom: 20px;
-        }
 
         /* ── Scrollbar for lower part ── */
         .scrollable-content::-webkit-scrollbar {
@@ -79,12 +72,8 @@
             position: relative;
             z-index: 10;
             background: transparent;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
+            border: none;
         }
-		.sticky-header {
-			border: none !important;
-		}
         .sticky-header::after {
             content: '';
             position: absolute;
@@ -96,36 +85,16 @@
             border-radius: 2px;
         }
 
-        .sticky-header .widget {
-            position: relative !important;
-            left: auto !important;
-            top: auto !important;
-            width: 100% !important;
-            min-height: auto !important;
-            padding: 2px 0;
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            pointer-events: auto;
-        }
-        .sticky-header .widget .drag-handle,
-        .sticky-header .widget .resize-handle {
-            display: none !important;
-        }
-
         /* ── Merged display: canvas + temperature ── */
         #merged-display {
             position: relative;
             height: 5cm;
-            /* 5 cm height */
             width: 100%;
             background: transparent;
             margin: 2px 0 4px 0;
             border-radius: 20px;
             overflow: hidden;
-            /* contain canvas */
             pointer-events: none;
-            /* allow clicks to pass through to search etc. */
         }
         #merged-display>* {
             pointer-events: none;
@@ -236,115 +205,6 @@
             color: #93c5fd;
         }
 
-        /* ── Layout mode overrides for merged display ── */
-        .weather-dashboard.layout-mode .sticky-header,
-        .weather-dashboard.layout-mode .scrollable-content {
-            position: static !important;
-            display: block !important;
-            flex: none !important;
-            overflow-y: visible !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            border: none !important;
-            gap: 0 !important;
-        }
-        .weather-dashboard.layout-mode .sticky-header {
-            border-bottom: none !important;
-            background: transparent !important;
-            backdrop-filter: none !important;
-        }
-        .weather-dashboard.layout-mode .sticky-header::after {
-            display: none;
-        }
-        .weather-dashboard.layout-mode #merged-display {
-            position: absolute !important;
-            height: auto !important;
-            min-height: 120px;
-            background: rgba(10, 20, 40, 0.25) !important;
-            backdrop-filter: blur(2px);
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            border-radius: 24px;
-            pointer-events: all;
-            cursor: grab;
-            padding: 10px !important;
-            margin: 0 !important;
-            overflow: visible;
-        }
-        .weather-dashboard.layout-mode #merged-display.dragging {
-            cursor: grabbing;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
-            z-index: 20;
-            border-color: rgba(74, 158, 255, 0.6) !important;
-            background: rgba(10, 20, 40, 0.45) !important;
-        }
-        .weather-dashboard.layout-mode #merged-display .drag-handle {
-            display: flex !important;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 26px;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 16px 16px 0 0;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 18px;
-            letter-spacing: 4px;
-            user-select: none;
-            pointer-events: all;
-            cursor: grab;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            z-index: 5;
-        }
-        .weather-dashboard.layout-mode #merged-display .drag-handle:hover {
-            background: rgba(255, 255, 255, 0.12);
-            color: rgba(255, 255, 255, 0.6);
-        }
-        .weather-dashboard.layout-mode #merged-display .resize-handle {
-            display: block !important;
-            position: absolute;
-            bottom: 4px;
-            right: 4px;
-            width: 18px;
-            height: 18px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 4px;
-            cursor: nwse-resize;
-            pointer-events: all;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            z-index: 5;
-        }
-        .weather-dashboard.layout-mode #merged-display .resize-handle:hover {
-            background: rgba(74, 158, 255, 0.35);
-            border-color: rgba(74, 158, 255, 0.5);
-        }
-        .weather-dashboard.layout-mode #merged-display .resize-handle::after {
-            content: "⤡";
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255, 255, 255, 0.4);
-            line-height: 1;
-        }
-        .weather-dashboard.layout-mode #merged-display #widget-canvas {
-            position: relative !important;
-            width: 100% !important;
-            height: 100% !important;
-            min-height: 60px;
-            pointer-events: none;
-        }
-        .weather-dashboard.layout-mode #merged-display #widget-header {
-            position: relative !important;
-            pointer-events: none;
-        }
-        /* In layout mode, the merged display is draggable as a unit */
-        .weather-dashboard.layout-mode .sticky-header .widget .drag-handle,
-        .weather-dashboard.layout-mode .sticky-header .widget .resize-handle {
-            display: none !important;
-        }
-
         /* ── Scrollable content (lower part) ── */
         .scrollable-content {
             flex: 1;
@@ -355,157 +215,6 @@
             gap: 18px;
             padding-right: 4px;
             padding-bottom: 10px;
-        }
-
-        .scrollable-content .widget {
-            position: relative !important;
-            left: auto !important;
-            top: auto !important;
-            width: 100% !important;
-            min-height: auto !important;
-            padding: 2px 0;
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            pointer-events: auto;
-        }
-        .scrollable-content .widget .drag-handle,
-        .scrollable-content .widget .resize-handle {
-            display: none !important;
-        }
-
-        /* ── Layout mode for scrollable widgets ── */
-        .weather-dashboard.layout-mode .scrollable-content .widget {
-            position: absolute !important;
-            padding: 10px !important;
-            background: rgba(10, 20, 40, 0.50) !important;
-            backdrop-filter: blur(12px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.10) !important;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25) !important;
-            min-width: 140px !important;
-            min-height: 50px !important;
-            pointer-events: all !important;
-            cursor: grab !important;
-            border-radius: 16px !important;
-        }
-        .weather-dashboard.layout-mode .scrollable-content .widget .drag-handle {
-            display: flex !important;
-        }
-        .weather-dashboard.layout-mode .scrollable-content .widget .resize-handle {
-            display: block !important;
-        }
-
-        /* ── Widget search (two rows) ── */
-        #widget-search .widget-content {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .search-top-row {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 4px;
-        }
-        .search-top-row button {
-            background: rgba(255, 255, 255, 0.12);
-            border: none;
-            color: #fff;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            font-size: 0.95rem;
-            cursor: pointer;
-            backdrop-filter: blur(4px);
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            flex-shrink: 0;
-        }
-        .search-top-row button:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-        .search-bottom-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            position: relative;
-            z-index: 100;
-        }
-        .search-bottom-row .search-input-wrap {
-            flex: 1;
-            min-width: 0;
-            position: relative;
-        }
-        .search-bottom-row .search-input-wrap input {
-            width: 100%;
-            padding: 7px 14px;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.20);
-            background: rgba(255, 255, 255, 0.10);
-            backdrop-filter: blur(4px);
-            color: #fff;
-            font-size: 0.85rem;
-            outline: none;
-        }
-        .search-bottom-row .search-input-wrap input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        .search-bottom-row .search-input-wrap input:focus {
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-        .search-bottom-row .loc-btn {
-            background: rgba(255, 255, 255, 0.12);
-            border: none;
-            color: #fff;
-            padding: 5px 14px;
-            border-radius: 24px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            white-space: nowrap;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            flex-shrink: 0;
-        }
-        .search-bottom-row .loc-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-        .search-bottom-row .loc-btn span {
-            display: inline;
-        }
-
-        /* ── Search suggestions (always on top) ── */
-        .search-suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: rgba(10, 10, 30, 0.95);
-            backdrop-filter: blur(12px);
-            border-radius: 16px;
-            margin-top: 4px;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 9999 !important;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-        }
-        .search-suggestions .suggestion-item {
-            padding: 10px 16px;
-            cursor: pointer;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: #fff;
-            font-size: 0.85rem;
-            transition: background 0.15s;
-        }
-        .search-suggestions .suggestion-item:hover {
-            background: rgba(255, 255, 255, 0.10);
         }
 
         /* ── Details grid ── */
@@ -754,463 +463,6 @@
             }
         }
 
-        /* ── Settings Overlay ── */
-        .settings-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .settings-overlay.open {
-            display: flex;
-        }
-        .settings-panel {
-            background: #1a2a3a;
-            border-radius: 28px;
-            padding: 28px 32px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            color: #e8eef5;
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .settings-panel h2 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .settings-panel h2 .close-settings {
-            margin-left: auto;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: #fff;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .settings-panel h2 .close-settings:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .settings-panel .panel-row {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 12px;
-        }
-        .settings-panel .panel-row .btn {
-            padding: 6px 14px;
-            border: none;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.08);
-            color: #c8d8e8;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .settings-panel .panel-row .btn:hover {
-            background: rgba(255, 255, 255, 0.18);
-        }
-        .settings-panel .panel-row .btn.primary {
-            background: #4a9eff;
-            color: #fff;
-        }
-        .settings-panel .panel-row .btn.primary:hover {
-            background: #3a8aee;
-        }
-        .settings-panel .panel-row .btn.danger {
-            background: #e06060;
-            color: #fff;
-        }
-        .settings-panel .panel-row .btn.danger:hover {
-            background: #d05050;
-        }
-        .settings-panel .panel-row .btn.layout-toggle {
-            background: #6c8c9c;
-            color: #fff;
-        }
-        .settings-panel .panel-row .btn.layout-toggle:hover {
-            background: #5a7a8a;
-        }
-
-        .setting-group {
-            margin-bottom: 16px;
-        }
-        .setting-group label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 3px;
-            color: #b0c4d8;
-        }
-        .setting-group label span.value {
-            color: #8bb8e8;
-            font-weight: 600;
-        }
-        .setting-group input[type="range"] {
-            width: 100%;
-            accent-color: #4a9eff;
-            background: transparent;
-            cursor: pointer;
-            height: 6px;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.15);
-        }
-        .setting-group input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #4a9eff;
-            cursor: pointer;
-            border: 2px solid #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-        .setting-group select {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #e8eef5;
-            font-size: 0.9rem;
-            outline: none;
-            cursor: pointer;
-        }
-        .setting-group select option {
-            background: #1a2a3a;
-        }
-        .setting-group .hint {
-            font-size: 0.7rem;
-            opacity: 0.4;
-            margin-top: 2px;
-        }
-        .setting-group .action-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 6px;
-        }
-        .setting-group .action-group button {
-            flex: 1;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 12px;
-            background: #4a9eff;
-            color: #fff;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .setting-group .action-group button:hover {
-            background: #3a8aee;
-        }
-
-        .param-group {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 14px;
-            padding: 14px 16px;
-            margin-bottom: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            display: none;
-        }
-        .param-group.active {
-            display: block;
-        }
-        .param-group .group-title {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            opacity: 0.5;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .preset-list {
-            max-height: 120px;
-            overflow-y: auto;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            padding: 4px;
-        }
-        .preset-list .preset-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.15s;
-            font-size: 0.85rem;
-        }
-        .preset-list .preset-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-        }
-        .preset-list .preset-item .preset-name {
-            flex: 1;
-        }
-        .preset-list .preset-item .preset-del {
-            background: none;
-            border: none;
-            color: #e06060;
-            cursor: pointer;
-            font-size: 0.8rem;
-            padding: 2px 8px;
-            border-radius: 6px;
-            transition: background 0.15s;
-        }
-        .preset-list .preset-item .preset-del:hover {
-            background: rgba(224, 96, 96, 0.2);
-        }
-        .preset-list .preset-item.active {
-            background: rgba(74, 158, 255, 0.15);
-            border-left: 3px solid #4a9eff;
-        }
-        .preset-save-row {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        .preset-save-row input {
-            flex: 1;
-            padding: 6px 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(255, 255, 255, 0.06);
-            color: #e8eef5;
-            font-size: 0.85rem;
-            outline: none;
-        }
-        .preset-save-row input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
-        .preset-save-row input:focus {
-            border-color: rgba(74, 158, 255, 0.4);
-        }
-        .preset-save-row button {
-            padding: 6px 16px;
-            border: none;
-            border-radius: 10px;
-            background: #4a9eff;
-            color: #fff;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-            font-size: 0.85rem;
-            white-space: nowrap;
-        }
-        .preset-save-row button:hover {
-            background: #3a8aee;
-        }
-
-        .preview-section {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .preview-section .preview-label {
-            font-size: 0.8rem;
-            opacity: 0.6;
-            margin-bottom: 8px;
-            display: block;
-        }
-        .preview-canvas-wrap {
-            position: relative;
-            border-radius: 16px;
-            overflow: hidden;
-            background: linear-gradient(145deg, #0b4a8a 0%, #2d7fc0 50%, #6bb3e8 100%);
-            width: 100%;
-            aspect-ratio: 16/9;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .preview-canvas-wrap canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-        .preview-status {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 6px;
-            font-size: 0.7rem;
-            opacity: 0.5;
-            color: #8aaac8;
-        }
-        .settings-apply-btn {
-            width: 100%;
-            padding: 10px;
-            margin-top: 16px;
-            border: none;
-            border-radius: 16px;
-            background: #4a9eff;
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .settings-apply-btn:hover {
-            background: #3a8aee;
-        }
-
-        .settings-panel::-webkit-scrollbar {
-            width: 4px;
-        }
-        .settings-panel::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-        }
-        .settings-panel::-webkit-scrollbar-button {
-            display: none;
-        }
-        .settings-panel {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-        }
-
-        /* ── Preset modal ── */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-overlay.open {
-            display: flex;
-        }
-        .modal-box {
-            background: #1a2a3a;
-            border-radius: 20px;
-            padding: 24px 30px;
-            max-width: 400px;
-            width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .modal-box h3 {
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-        .modal-box input {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(255, 255, 255, 0.06);
-            color: #e8eef5;
-            font-size: 0.95rem;
-            outline: none;
-            margin-bottom: 12px;
-        }
-        .modal-box input:focus {
-            border-color: rgba(74, 158, 255, 0.4);
-        }
-        .modal-box .modal-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-        .modal-box .modal-actions button {
-            padding: 8px 20px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background 0.2s;
-        }
-        .modal-box .modal-actions .btn-cancel {
-            background: rgba(255, 255, 255, 0.08);
-            color: #c8d8e8;
-        }
-        .modal-box .modal-actions .btn-cancel:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-        .modal-box .modal-actions .btn-confirm {
-            background: #4a9eff;
-            color: #fff;
-        }
-        .modal-box .modal-actions .btn-confirm:hover {
-            background: #3a8aee;
-        }
-
-        /* ── Snap indicator ── */
-        .snap-indicator {
-            position: absolute;
-            pointer-events: none;
-            z-index: 16;
-            background: rgba(74, 220, 255, 0.7);
-            border-radius: 50%;
-            width: 8px;
-            height: 8px;
-            box-shadow: 0 0 12px rgba(74, 220, 255, 0.4);
-            display: none;
-            transform: translate(-50%, -50%);
-        }
-        .snap-indicator.visible {
-            display: block;
-        }
-        .snap-indicator.horizontal {
-            width: 12px;
-            height: 3px;
-            border-radius: 2px;
-            transform: translate(-50%, -50%);
-        }
-        .snap-indicator.vertical {
-            width: 3px;
-            height: 12px;
-            border-radius: 2px;
-            transform: translate(-50%, -50%);
-        }
-
-        /* ── Spacing guide ── */
-        .spacing-guide {
-            position: absolute;
-            pointer-events: none;
-            z-index: 16;
-            border: 1px solid rgba(74, 220, 255, 0.25);
-            border-top: none;
-            border-bottom: none;
-            display: none;
-        }
-        .spacing-guide.visible {
-            display: block;
-        }
-        .spacing-guide .bracket-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: rgba(74, 220, 255, 0.5);
-            font-size: 9px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 1px 6px;
-            border-radius: 8px;
-            white-space: nowrap;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-        }
-
         /* ── Dynamic text contrast ── */
         .weather-dashboard * {
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75), 0 2px 8px rgba(0, 0, 0, 0.35);
@@ -1365,40 +617,9 @@
                 width: 36px;
                 font-size: 0.55rem;
             }
-            .search-suggestions {
-                max-height: 140px;
-            }
-
-            .search-bottom-row .search-input-wrap input {
-                font-size: 0.7rem;
-                padding: 5px 10px;
-            }
-            .search-bottom-row .loc-btn {
-                font-size: 0.65rem;
-                padding: 4px 10px;
-            }
-            .search-bottom-row .loc-btn span {
-                display: none;
-            }
-            .search-bottom-row .loc-btn i {
-                font-size: 0.9rem;
-            }
-            .search-top-row button {
-                width: 28px;
-                height: 28px;
-                font-size: 0.8rem;
-            }
-
             .scrollable-content {
                 gap: 12px;
                 padding-top: 4px;
-            }
-
-            .widget {
-                padding: 2px 0;
-            }
-            .widget .details-grid {
-                grid-template-columns: repeat(2, 1fr);
             }
             .sunrise-sunset {
                 padding: 8px 6px;
@@ -1443,25 +664,6 @@
                 grid-template-columns: 1fr 1fr;
                 gap: 4px;
             }
-            .widget .details-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .search-bottom-row .loc-btn span {
-                display: none;
-            }
-            .search-top-row button {
-                width: 24px;
-                height: 24px;
-                font-size: 0.7rem;
-            }
-            .search-bottom-row .search-input-wrap input {
-                font-size: 0.65rem;
-                padding: 4px 8px;
-            }
-            .search-bottom-row .loc-btn {
-                font-size: 0.6rem;
-                padding: 3px 8px;
-            }
             .daily-row .day {
                 width: 44px;
                 font-size: 0.6rem;
@@ -1489,58 +691,6 @@
                 font-size: 0.45rem;
             }
         }
-
-        /* ── Layout mode merged display position ── */
-        .weather-dashboard.layout-mode #merged-display {
-            left: 5% !important;
-            top: 80px !important;
-            width: 90% !important;
-            height: auto !important;
-            z-index: 1 !important;
-            margin-bottom: 0 !important;
-        }
-        .weather-dashboard.layout-mode #widget-search {
-            left: 5% !important;
-            top: 10px !important;
-            width: 90% !important;
-            z-index: 100 !important;
-        }
-        .weather-dashboard.layout-mode #widget-details {
-            left: 5% !important;
-            top: 360px !important;
-            width: 90% !important;
-            z-index: 10 !important;
-        }
-        .weather-dashboard.layout-mode #widget-sunrise {
-            left: 5% !important;
-            top: 500px !important;
-            width: 90% !important;
-            z-index: 10 !important;
-        }
-        .weather-dashboard.layout-mode #widget-hourly {
-            left: 5% !important;
-            top: 600px !important;
-            width: 90% !important;
-            z-index: 10 !important;
-        }
-        .weather-dashboard.layout-mode #widget-daily {
-            left: 5% !important;
-            top: 760px !important;
-            width: 90% !important;
-            z-index: 10 !important;
-        }
-        .weather-dashboard.layout-mode .scrollable-content {
-            overflow-y: visible !important;
-            flex: none !important;
-        }
-        .weather-dashboard.layout-mode .sticky-header {
-            border-bottom: none !important;
-            background: transparent !important;
-            backdrop-filter: none !important;
-        }
-        .weather-dashboard.layout-mode .sticky-header::after {
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -1550,38 +700,8 @@
         <!-- ─── STICKY HEADER (UPPER PART) ─── -->
         <div class="sticky-header" id="sticky-header">
 
-            <!-- Widget: Search -->
-            <div id="widget-search" class="widget">
-                <div class="drag-handle"><span class="handle-dots">⠿</span></div>
-                <div class="resize-handle"></div>
-                <div class="widget-content">
-                    <div class="search-top-row">
-                        <button id="layout-toggle-btn" aria-label="Layout Mode" title="Toggle Layout Mode">
-                            <i class="fa-regular fa-pen-to-square"></i>
-                        </button>
-                        <button id="settings-toggle-btn" aria-label="Settings" title="Weather settings">
-                            <i class="fa-solid fa-sliders"></i>
-                        </button>
-                        <button id="close-weather-btn" aria-label="Close" title="Close">✕</button>
-                    </div>
-                    <div class="search-bottom-row">
-                        <div class="search-input-wrap">
-                            <input type="text" id="location-search" placeholder="Search city…" autocomplete="off" />
-                            <div id="search-suggestions" class="search-suggestions" style="display:none;"></div>
-                        </div>
-                        <button class="loc-btn" id="use-my-location-btn" title="Use my current location">
-                            <i class="fa-solid fa-location-crosshairs"></i>
-                            <span>My Location</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
             <!-- ─── MERGED DISPLAY: Canvas + Temperature ─── -->
             <div id="merged-display">
-                <div class="drag-handle"><span class="handle-dots">⠿</span></div>
-                <div class="resize-handle"></div>
-
                 <!-- Canvas -->
                 <div id="widget-canvas">
                     <div class="widget-content">
@@ -1601,30 +721,22 @@
         <div class="scrollable-content" id="scrollable-content">
 
             <!-- Widget: Details -->
-            <div id="widget-details" class="widget">
-                <div class="drag-handle"><span class="handle-dots">⠿</span></div>
-                <div class="resize-handle"></div>
+            <div id="widget-details">
                 <div class="widget-content" id="forecast-details"></div>
             </div>
 
             <!-- Widget: Sunrise -->
-            <div id="widget-sunrise" class="widget">
-                <div class="drag-handle"><span class="handle-dots">⠿</span></div>
-                <div class="resize-handle"></div>
+            <div id="widget-sunrise">
                 <div class="widget-content" id="forecast-sunrise"></div>
             </div>
 
             <!-- Widget: Hourly -->
-            <div id="widget-hourly" class="widget">
-                <div class="drag-handle"><span class="handle-dots">⠿</span></div>
-                <div class="resize-handle"></div>
+            <div id="widget-hourly">
                 <div class="widget-content" id="forecast-hourly"></div>
             </div>
 
             <!-- Widget: Daily -->
-            <div id="widget-daily" class="widget">
-                <div class="drag-handle"><span class="handle-dots">⠿</span></div>
-                <div class="resize-handle"></div>
+            <div id="widget-daily">
                 <div class="widget-content" id="forecast-daily"></div>
             </div>
 
@@ -1633,208 +745,26 @@
         <div id="forecast-content" style="display:none;"></div>
     </div>
 
-    <!-- ─── SETTINGS OVERLAY ─── -->
-    <div class="settings-overlay" id="settings-overlay">
-        <div class="settings-panel" id="settings-panel">
-            <h2>
-                ⚙️ Weather Config
-                <button class="close-settings" id="settings-close-btn">✕</button>
-            </h2>
-
-            <div class="panel-row">
-                <button class="btn primary" id="default-settings-btn">↺ Default Settings</button>
-                <button class="btn" id="save-preset-btn">💾 Save Preset</button>
-                <button class="btn" id="load-preset-btn">📂 Load Preset</button>
-            </div>
-            <div class="panel-row">
-                <button class="btn layout-toggle" id="layout-mode-toggle-btn">🖱️ Toggle Layout Mode</button>
-                <button class="btn danger" id="reset-layout-btn">↺ Reset Layout</button>
-            </div>
-            <div class="panel-row">
-                <button class="btn" id="snap-toggle-btn" style="background:rgba(74,220,255,0.2);">🧲 Snap: ON</button>
-                <button class="btn" id="push-toggle-btn" style="background:rgba(255,200,80,0.2);">📦 Push: ON</button>
-                <button class="btn" id="guides-toggle-btn" style="background:rgba(74,158,255,0.2);">📐 Guides: ON</button>
-            </div>
-
-            <div id="preset-list-container" style="display:none; margin-bottom:14px;">
-                <div class="preset-list" id="preset-list"></div>
-                <div class="preset-save-row" style="margin-top:8px;">
-                    <input type="text" id="preset-name-input" placeholder="Preset name…" />
-                    <button id="save-preset-confirm">Save</button>
-                </div>
-            </div>
-
-            <div class="setting-group">
-                <label>Temperature Unit</label>
-                <select id="temp-unit">
-                    <option value="c">°C (Celsius)</option>
-                    <option value="f">°F (Fahrenheit)</option>
-                    <option value="k">K (Kelvin)</option>
-                </select>
-            </div>
-
-            <div class="setting-group">
-                <label>Preview Weather Condition</label>
-                <select id="preview-weather-code">
-                    <option value="0">Clear</option>
-                    <option value="3">Clouds</option>
-                    <option value="51">Drizzle</option>
-                    <option value="61">Rain (Moderate)</option>
-                    <option value="65">Heavy Rain</option>
-                    <option value="71">Snow</option>
-                    <option value="95">Thunderstorm</option>
-                    <option value="45">Fog</option>
-                </select>
-                <div class="hint">Select condition to preview with current settings</div>
-                <div class="action-group">
-                    <button id="preview-btn">▶ Apply to Live Preview</button>
-                </div>
-            </div>
-
-            <div class="param-group" id="param-group-cloud">
-                <div class="group-title">☁️ Cloud Parameters</div>
-                <div class="setting-group">
-                    <label>Cloud Density <span class="value" id="cloud-density-label">medium</span></label>
-                    <input type="range" id="cloud-density" min="0" max="100" value="50" />
-                </div>
-                <div class="setting-group">
-                    <label>Cloud Size <span class="value" id="cloud-size-label">medium</span></label>
-                    <input type="range" id="cloud-size" min="0" max="100" value="50" />
-                </div>
-                <div class="setting-group">
-                    <label>Cloud Speed <span class="value" id="cloud-speed-label">medium</span></label>
-                    <input type="range" id="cloud-speed" min="0" max="100" value="50" />
-                </div>
-                <div class="setting-group">
-                    <label>Cloud Opacity <span class="value" id="cloud-opacity-label">medium</span></label>
-                    <input type="range" id="cloud-opacity" min="0" max="100" value="50" />
-                </div>
-            </div>
-
-            <div class="param-group" id="param-group-rain">
-                <div class="group-title">🌧️ Rain Parameters</div>
-                <div class="setting-group">
-                    <label>Raindrop Size <span class="value" id="rain-size-label">medium</span></label>
-                    <input type="range" id="rain-size" min="0" max="100" value="50" />
-                </div>
-                <div class="setting-group">
-                    <label>Rain Frequency <span class="value" id="rain-freq-label">medium</span></label>
-                    <input type="range" id="rain-freq" min="0" max="100" value="50" />
-                </div>
-                <div class="setting-group">
-                    <label>Rain Speed <span class="value" id="rain-speed-label">medium</span></label>
-                    <input type="range" id="rain-speed" min="0" max="100" value="50" />
-                </div>
-            </div>
-
-            <div class="param-group" id="param-group-thunder">
-                <div class="group-title">⛈️ Thunderstorm Parameters</div>
-                <div class="setting-group">
-                    <label>Thunder Intensity <span class="value" id="thunder-intensity-label">medium</span></label>
-                    <input type="range" id="thunder-intensity" min="0" max="100" value="50" />
-                </div>
-                <div class="setting-group">
-                    <label>Lightning Frequency <span class="value" id="lightning-freq-label">medium</span></label>
-                    <input type="range" id="lightning-freq" min="0" max="100" value="50" />
-                </div>
-                <div class="setting-group">
-                    <label>Raindrop Size <span class="value" id="thunder-rain-size-label">medium</span></label>
-                    <input type="range" id="thunder-rain-size" min="0" max="100" value="50" />
-                </div>
-                <div class="setting-group">
-                    <label>Rain Frequency <span class="value" id="thunder-rain-freq-label">medium</span></label>
-                    <input type="range" id="thunder-rain-freq" min="0" max="100" value="50" />
-                </div>
-            </div>
-
-            <div class="param-group" id="param-group-snow">
-                <div class="group-title">❄️ Snow Parameters</div>
-                <div class="setting-group">
-                    <label>Snowflake Size <span class="value" id="snow-size-label">medium</span></label>
-                    <input type="range" id="snow-size" min="0" max="100" value="50" />
-                </div>
-                <div class="setting-group">
-                    <label>Snow Density <span class="value" id="snow-density-label">medium</span></label>
-                    <input type="range" id="snow-density" min="0" max="100" value="50" />
-                </div>
-                <div class="setting-group">
-                    <label>Snowfall Speed <span class="value" id="snow-speed-label">medium</span></label>
-                    <input type="range" id="snow-speed" min="0" max="100" value="50" />
-                </div>
-                <div class="setting-group">
-                    <label>Snowflake Wobble <span class="value" id="snow-wobble-label">medium</span></label>
-                    <input type="range" id="snow-wobble" min="0" max="100" value="50" />
-                </div>
-            </div>
-
-            <div class="param-group" id="param-group-fog">
-                <div class="group-title">🌫️ Fog Parameters</div>
-                <div class="setting-group">
-                    <label>Fog Density <span class="value" id="fog-density-label">medium</span></label>
-                    <input type="range" id="fog-density" min="0" max="100" value="50" />
-                </div>
-                <div class="setting-group">
-                    <label>Fog Size <span class="value" id="fog-size-label">medium</span></label>
-                    <input type="range" id="fog-size" min="0" max="100" value="50" />
-                </div>
-            </div>
-
-            <div class="preview-section">
-                <span class="preview-label">🔮 Live preview</span>
-                <div class="preview-canvas-wrap">
-                    <canvas id="preview-canvas"></canvas>
-                </div>
-                <div class="preview-status">
-                    <span id="preview-weather-label">Clear</span>
-                    <span id="preview-particle-count">0 particles</span>
-                </div>
-            </div>
-
-            <button class="settings-apply-btn" id="settings-apply-btn">Apply & Save Settings</button>
-        </div>
-    </div>
-
-    <!-- ─── PRESET MODAL ─── -->
-    <div class="modal-overlay" id="preset-modal">
-        <div class="modal-box">
-            <h3>💾 Save Preset</h3>
-            <input type="text" id="preset-modal-input" placeholder="Enter preset name…" />
-            <div class="modal-actions">
-                <button class="btn-cancel" id="preset-modal-cancel">Cancel</button>
-                <button class="btn-confirm" id="preset-modal-confirm">Save</button>
-            </div>
-        </div>
-    </div>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <script>
         // ═══════════════════════════════════════════════════════════════════
-        //  WEATHER APP + LAYOUT MANAGER with Magnetic Snap, Push & Guides
+        //  WEATHER APP – Simplified, Auto-location, No Settings
         // ═══════════════════════════════════════════════════════════════════
 
         // ─── State ──────────────────────────────────────────────────────────
         let weatherCache = null;
         let lastLocation = null;
-        let searchTimeout = null;
         let animFrame = null;
         let weatherParticles = [];
         let stars = [];
         let currentAnimationCleanup = null;
         let previewStopFn = null;
-        let previewTimeout = null;
-        let presets = {};
         let currentTimeOfDay = 'day';
         let currentWeatherCat = 'clear';
-        let layoutMode = false;
-
-        // ─── Toggle states ──────────────────────────────────────────────
-        let snapEnabled = true;
-        let pushEnabled = true;
-        let guidesEnabled = true;
 
         // ─── DEFAULT SETTINGS ─────────────────────────────────────────────
-        const DEFAULT_SETTINGS = {
+        const settings = {
             tempUnit: 'c',
             cloudDensity: 0.5,
             cloudSize: 0.5,
@@ -1854,8 +784,6 @@
             fogDensity: 0.5,
             fogSize: 0.5,
         };
-
-        const settings = { ...DEFAULT_SETTINGS };
 
         // ─── Weather icons ──────────────────────────────────────────────────
         const weatherIcons = {
@@ -1940,7 +868,7 @@
             try {
                 const url =
                     `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&accept-language=en`;
-                const res = await fetch(url, { headers: { 'User-Agent': 'ToolTrack/2.1.8' } });
+                const res = await fetch(url, { headers: { 'User-Agent': 'WeatherApp/1.0' } });
                 if (!res.ok) throw new Error('Nominatim API error');
                 const data = await res.json();
                 let displayName = `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
@@ -1962,30 +890,6 @@
             } catch (e) {
                 console.warn('Reverse geocoding error:', e);
                 return `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
-            }
-        }
-
-        async function searchLocations(query) {
-            if (!query || query.length < 2) return [];
-            const url =
-                `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=10&language=en&format=json`;
-            try {
-                const res = await fetch(url);
-                const data = await res.json();
-                if (data.results) {
-                    return data.results.map(r => ({
-                        name: r.name,
-                        country: r.country || '',
-                        admin1: r.admin1 || '',
-                        latitude: r.latitude,
-                        longitude: r.longitude,
-                        display: [r.name, r.admin1, r.country].filter(Boolean).join(', ')
-                    }));
-                }
-                return [];
-            } catch (e) {
-                console.warn('Search error:', e);
-                return [];
             }
         }
 
@@ -2278,8 +1182,8 @@
         }
 
         // ─── Particle engine ──────────────────────────────────────────────────
-        function buildParticles(weatherCode, windSpeed, timeOfDay, settingsOverride) {
-            const s = settingsOverride || settings;
+        function buildParticles(weatherCode, windSpeed, timeOfDay) {
+            const s = settings;
             const cat = getWeatherCategory(weatherCode);
             const intensity = getRainIntensity(weatherCode);
             const windFactor = Math.min(windSpeed / 15, 2.5);
@@ -2498,7 +1402,6 @@
                 x += (Math.random() - 0.5) * W * 0.12;
                 points.push([x, y]);
             }
-            // Add branches
             const branchesList = [];
             for (let b = 0; b < branches; b++) {
                 if (Math.random() < 0.4) continue;
@@ -2514,7 +1417,7 @@
             return { main: points, branches: branchesList };
         }
 
-        function runAnimation(canvas, particles, type, weatherCode, settingsOverride, isPreview) {
+        function runAnimation(canvas, particles, type, weatherCode) {
             const ctx = canvas.getContext('2d');
             const W = canvas.width,
                 H = canvas.height;
@@ -2524,28 +1427,17 @@
             let boltData = null,
                 boltLife = 0;
 
-            const thunderMul = 0.5 + (settingsOverride?.thunderIntensity || settings.thunderIntensity);
-            const lightningMul = 0.5 + (settingsOverride?.lightningFreq || settings.lightningFreq);
+            const lightningMul = 0.5 + settings.lightningFreq;
 
             function animate() {
                 if (!animating) return;
                 ctx.clearRect(0, 0, W, H);
 
-                if (isPreview) {
-                    const grad = ctx.createLinearGradient(0, 0, 0, H);
-                    grad.addColorStop(0, '#0b4a8a');
-                    grad.addColorStop(0.5, '#2d7fc0');
-                    grad.addColorStop(1, '#6bb3e8');
-                    ctx.fillStyle = grad;
-                    ctx.fillRect(0, 0, W, H);
-                }
-
                 if (type === 'thunder') {
                     flashTimer += 0.016;
-                    // Lower frequency: threshold increased
                     const lightningThreshold = Math.max(0.8, 2.2 / lightningMul);
                     if (flashTimer > lightningThreshold + Math.random() * 2.0) {
-                        flashIntensity = (0.15 + Math.random() * 0.3) * Math.min(thunderMul, 1.4);
+                        flashIntensity = (0.15 + Math.random() * 0.3);
                         flashTimer = 0;
                         if (Math.random() < 0.5) {
                             const branches = 2 + Math.floor(Math.random() * 4);
@@ -2562,11 +1454,9 @@
                         ctx.lineWidth = 2.5;
                         ctx.lineCap = 'round';
                         ctx.lineJoin = 'round';
-                        // Main bolt
                         ctx.beginPath();
                         boltData.main.forEach((pt, i) => i === 0 ? ctx.moveTo(pt[0], pt[1]) : ctx.lineTo(pt[0], pt[1]));
                         ctx.stroke();
-                        // Branches
                         for (const branch of boltData.branches) {
                             ctx.beginPath();
                             branch.forEach((pt, i) => i === 0 ? ctx.moveTo(pt[0], pt[1]) : ctx.lineTo(pt[0], pt[1]));
@@ -2626,16 +1516,6 @@
                     }
                 }
 
-                if (isPreview) {
-                    const label = document.getElementById('preview-weather-label');
-                    const count = document.getElementById('preview-particle-count');
-                    if (label) {
-                        const info = getWeatherInfo(weatherCode, true);
-                        label.textContent = info.desc;
-                    }
-                    if (count) count.textContent = particles.length + ' particles';
-                }
-
                 requestAnimationFrame(animate);
             }
             animate();
@@ -2645,7 +1525,7 @@
             };
         }
 
-        function startWeatherAnimation(weatherCode, windSpeed, timeOfDay, settingsOverride) {
+        function startWeatherAnimation(weatherCode, windSpeed, timeOfDay) {
             const canvas = document.getElementById('weather-canvas');
             if (!canvas) return;
             const container = document.getElementById('merged-display');
@@ -2659,7 +1539,7 @@
             currentTimeOfDay = timeOfDay || 'day';
             currentWeatherCat = getWeatherCategory(weatherCode);
 
-            const result = buildParticles(weatherCode, windSpeed, timeOfDay, settingsOverride);
+            const result = buildParticles(weatherCode, windSpeed, timeOfDay);
             weatherParticles = result.particles;
             const type = result.type;
 
@@ -2668,7 +1548,7 @@
                 currentAnimationCleanup = null;
             }
 
-            const stopFn = runAnimation(canvas, weatherParticles, type, weatherCode, settingsOverride, false);
+            const stopFn = runAnimation(canvas, weatherParticles, type, weatherCode);
             currentAnimationCleanup = stopFn;
 
             if (timeOfDay === 'night') createStars(80);
@@ -2691,41 +1571,6 @@
             }
             weatherParticles = [];
             clearStars();
-        }
-
-        function updatePreview(weatherCode, windSpeed) {
-            const canvas = document.getElementById('preview-canvas');
-            if (!canvas) return;
-            const rect = canvas.parentElement.getBoundingClientRect();
-            const W = canvas.width = rect.width || 400;
-            const H = canvas.height = rect.height || 225;
-            canvas.style.width = '100%';
-            canvas.style.height = '100%';
-
-            if (previewStopFn) {
-                previewStopFn();
-                previewStopFn = null;
-            }
-
-            const timeOfDay = 'day';
-            const result = buildParticles(weatherCode, windSpeed || 5, timeOfDay, settings);
-            const particles = result.particles;
-            const type = result.type;
-
-            const stopFn = runAnimation(canvas, particles, type, weatherCode, settings, true);
-            previewStopFn = stopFn;
-        }
-
-        function stopPreview() {
-            if (previewStopFn) {
-                previewStopFn();
-                previewStopFn = null;
-            }
-            const canvas = document.getElementById('preview-canvas');
-            if (canvas) {
-                const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-            }
         }
 
         // ─── Format helpers ──────────────────────────────────────────────────
@@ -2757,641 +1602,6 @@
             return dt.toLocaleString({ hour: '2-digit', minute: '2-digit', hour12: true });
         }
 
-        // ═══════════════════════════════════════════════════════════════════
-        //  LAYOUT MANAGER – with Magnetic Snap, Push & Alignment Guides
-        // ═══════════════════════════════════════════════════════════════════
-        const LAYOUT_KEY = 'weatherWidgetLayout_v9';
-        const SNAP_THRESHOLD = 16;
-        const ALIGN_THRESHOLD = 4;
-
-        let draggedWidget = null;
-        let dragOffsetX = 0,
-            dragOffsetY = 0;
-        let isResizing = false;
-        let dragDirection = { dx: 0, dy: 0 };
-        let lastDragX = 0,
-            lastDragY = 0;
-
-        function getDefaultLayout() {
-            return {
-                'widget-search': { left: '5%', top: '10px', width: '90%', height: 'auto' },
-                'merged-display': { left: '5%', top: '80px', width: '90%', height: 'auto' },
-                'widget-details': { left: '5%', top: '360px', width: '90%', height: 'auto' },
-                'widget-sunrise': { left: '5%', top: '500px', width: '90%', height: 'auto' },
-                'widget-hourly': { left: '5%', top: '600px', width: '90%', height: 'auto' },
-                'widget-daily': { left: '5%', top: '760px', width: '90%', height: 'auto' }
-            };
-        }
-
-        function loadLayout() {
-            let layout = JSON.parse(localStorage.getItem(LAYOUT_KEY));
-            if (!layout) {
-                layout = getDefaultLayout();
-                localStorage.setItem(LAYOUT_KEY, JSON.stringify(layout));
-            }
-            const widgetIds = Object.keys(layout);
-            widgetIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    const data = layout[id];
-                    if (data.left) el.style.left = data.left;
-                    if (data.top) el.style.top = data.top;
-                    if (data.width) el.style.width = data.width;
-                    if (data.height && data.height !== 'auto') el.style.height = data.height;
-                    else el.style.height = 'auto';
-                    if (id === 'merged-display') {
-                        el.style.zIndex = '1';
-                    }
-                }
-            });
-            setTimeout(() => {
-                const canvas = document.getElementById('weather-canvas');
-                const container = document.getElementById('merged-display');
-                if (canvas && container) {
-                    const rect = container.getBoundingClientRect();
-                    canvas.width = rect.width || 640;
-                    canvas.height = rect.height || 800;
-                    if (weatherCache) {
-                        const code = weatherCache.current.weather_code;
-                        const wind = weatherCache.current.wind_speed_10m || 0;
-                        const timezone = weatherCache.timezone || 'UTC';
-                        const now = new Date();
-                        const localTime = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
-                        const sunrise = new Date(weatherCache.daily.sunrise[0]);
-                        const sunset = new Date(weatherCache.daily.sunset[0]);
-                        const timeOfDay = getTimeOfDay(sunrise, sunset, localTime);
-                        stopWeatherAnimation();
-                        startWeatherAnimation(code, wind, timeOfDay, settings);
-                    }
-                }
-            }, 50);
-        }
-
-        function saveLayout() {
-            const layout = {};
-            const widgets = document.querySelectorAll('.widget');
-            const merged = document.getElementById('merged-display');
-            if (merged) {
-                layout['merged-display'] = {
-                    left: merged.style.left || 'auto',
-                    top: merged.style.top || 'auto',
-                    width: merged.style.width || 'auto',
-                    height: merged.style.height || 'auto'
-                };
-            }
-            widgets.forEach(el => {
-                layout[el.id] = {
-                    left: el.style.left || 'auto',
-                    top: el.style.top || 'auto',
-                    width: el.style.width || 'auto',
-                    height: el.style.height || 'auto'
-                };
-            });
-            localStorage.setItem(LAYOUT_KEY, JSON.stringify(layout));
-        }
-
-        function resetLayout() {
-            localStorage.removeItem(LAYOUT_KEY);
-            location.reload();
-        }
-
-        function updateContainerHeight() {
-            // Not needed in new flex layout
-        }
-
-        // ─── Get widget rects ──────────────────────────────────────────────
-        function getWidgetRects(container) {
-            const rects = {};
-            const widgets = document.querySelectorAll('.widget');
-            const merged = document.getElementById('merged-display');
-            const containerRect = container.getBoundingClientRect();
-            if (merged) {
-                const r = merged.getBoundingClientRect();
-                rects['merged-display'] = {
-                    left: r.left - containerRect.left,
-                    top: r.top - containerRect.top,
-                    right: r.right - containerRect.left,
-                    bottom: r.bottom - containerRect.top,
-                    width: r.width,
-                    height: r.height,
-                    centerX: (r.left + r.right) / 2 - containerRect.left,
-                    centerY: (r.top + r.bottom) / 2 - containerRect.top,
-                    el: merged,
-                    id: 'merged-display'
-                };
-            }
-            widgets.forEach(w => {
-                const r = w.getBoundingClientRect();
-                rects[w.id] = {
-                    left: r.left - containerRect.left,
-                    top: r.top - containerRect.top,
-                    right: r.right - containerRect.left,
-                    bottom: r.bottom - containerRect.top,
-                    width: r.width,
-                    height: r.height,
-                    centerX: (r.left + r.right) / 2 - containerRect.left,
-                    centerY: (r.top + r.bottom) / 2 - containerRect.top,
-                    el: w,
-                    id: w.id
-                };
-            });
-            return rects;
-        }
-
-        // ─── Snap detection ──────────────────────────────────────────────────
-        function applySnap(widget, proposedLeft, proposedTop, container) {
-            if (!snapEnabled) return { left: proposedLeft, top: proposedTop, snapped: false };
-
-            const allRects = getWidgetRects(container);
-            const widgetId = widget.id;
-            const others = Object.keys(allRects).filter(id => id !== widgetId);
-
-            let bestSnap = { dx: 0, dy: 0, dist: Infinity, edge: null };
-
-            const w = widget.offsetWidth;
-            const h = widget.offsetHeight;
-
-            for (const id of others) {
-                const r = allRects[id];
-                let d = Math.abs(proposedLeft - r.right);
-                if (d < SNAP_THRESHOLD && d < bestSnap.dist) {
-                    bestSnap = { dx: r.right - proposedLeft, dy: 0, dist: d, edge: 'left-right' };
-                }
-                d = Math.abs(proposedLeft + w - r.left);
-                if (d < SNAP_THRESHOLD && d < bestSnap.dist) {
-                    bestSnap = { dx: r.left - (proposedLeft + w), dy: 0, dist: d, edge: 'right-left' };
-                }
-                d = Math.abs(proposedTop - r.bottom);
-                if (d < SNAP_THRESHOLD && d < bestSnap.dist) {
-                    bestSnap = { dx: 0, dy: r.bottom - proposedTop, dist: d, edge: 'top-bottom' };
-                }
-                d = Math.abs(proposedTop + h - r.top);
-                if (d < SNAP_THRESHOLD && d < bestSnap.dist) {
-                    bestSnap = { dx: 0, dy: r.top - (proposedTop + h), dist: d, edge: 'bottom-top' };
-                }
-                d = Math.abs((proposedLeft + w / 2) - r.centerX);
-                if (d < ALIGN_THRESHOLD && d < bestSnap.dist) {
-                    bestSnap = { dx: r.centerX - (proposedLeft + w / 2), dy: 0, dist: d, edge: 'center-h' };
-                }
-                d = Math.abs((proposedTop + h / 2) - r.centerY);
-                if (d < ALIGN_THRESHOLD && d < bestSnap.dist) {
-                    bestSnap = { dx: 0, dy: r.centerY - (proposedTop + h / 2), dist: d, edge: 'center-v' };
-                }
-            }
-
-            if (bestSnap.dist < SNAP_THRESHOLD || bestSnap.dist < ALIGN_THRESHOLD) {
-                return {
-                    left: proposedLeft + bestSnap.dx,
-                    top: proposedTop + bestSnap.dy,
-                    snapped: true,
-                    edge: bestSnap.edge,
-                    dx: bestSnap.dx,
-                    dy: bestSnap.dy
-                };
-            }
-            return { left: proposedLeft, top: proposedTop, snapped: false };
-        }
-
-        // ─── Push detection ──────────────────────────────────────────────────
-        function applyPush(widget, proposedLeft, proposedTop, container, dragDx, dragDy) {
-            if (!pushEnabled) return;
-
-            const allRects = getWidgetRects(container);
-            const widgetId = widget.id;
-            const w = widget.offsetWidth;
-            const h = widget.offsetHeight;
-
-            const isDraggingHorizontal = Math.abs(dragDx) > Math.abs(dragDy);
-            const isDraggingDown = dragDy > 0;
-            const isDraggingRight = dragDx > 0;
-
-            for (const id of Object.keys(allRects)) {
-                if (id === widgetId) continue;
-                const r = allRects[id];
-                const el = document.getElementById(id);
-                if (!el) continue;
-
-                const aLeft = proposedLeft,
-                    aRight = proposedLeft + w;
-                const aTop = proposedTop,
-                    aBottom = proposedTop + h;
-                const bLeft = r.left,
-                    bRight = r.right;
-                const bTop = r.top,
-                    bBottom = r.bottom;
-
-                const overlapX = Math.min(aRight, bRight) - Math.max(aLeft, bLeft);
-                const overlapY = Math.min(aBottom, bBottom) - Math.max(aTop, bTop);
-
-                if (overlapX > 0 && overlapY > 0) {
-                    const pushX = overlapX;
-                    const pushY = overlapY;
-
-                    let newLeft = r.left;
-                    let newTop = r.top;
-                    let pushed = false;
-
-                    if (isDraggingHorizontal || pushX < pushY) {
-                        if (isDraggingRight) {
-                            if (r.centerX > proposedLeft + w / 2) {
-                                newLeft = r.left + pushX + 2;
-                            } else {
-                                newLeft = r.left - pushX - 2;
-                            }
-                        } else {
-                            if (r.centerX < proposedLeft + w / 2) {
-                                newLeft = r.left - pushX - 2;
-                            } else {
-                                newLeft = r.left + pushX + 2;
-                            }
-                        }
-                        pushed = true;
-                    } else {
-                        if (isDraggingDown) {
-                            if (r.centerY > proposedTop + h / 2) {
-                                newTop = r.top + pushY + 2;
-                            } else {
-                                newTop = r.top - pushY - 2;
-                            }
-                        } else {
-                            if (r.centerY < proposedTop + h / 2) {
-                                newTop = r.top - pushY - 2;
-                            } else {
-                                newTop = r.top + pushY + 2;
-                            }
-                        }
-                        pushed = true;
-                    }
-
-                    if (pushed) {
-                        const containerRect = container.getBoundingClientRect();
-                        const elW = el.offsetWidth;
-                        const elH = el.offsetHeight;
-                        newLeft = Math.max(0, Math.min(newLeft, containerRect.width - elW));
-                        newTop = Math.max(0, Math.min(newTop, containerRect.height - elH));
-
-                        const currentLeft = parseFloat(el.style.left) || 0;
-                        const currentTop = parseFloat(el.style.top) || 0;
-                        if (Math.abs(newLeft - currentLeft) > 0.5 || Math.abs(newTop - currentTop) > 0.5) {
-                            el.style.left = newLeft + 'px';
-                            el.style.top = newTop + 'px';
-                            el.classList.add('push-highlight');
-                            setTimeout(() => el.classList.remove('push-highlight'), 400);
-                        }
-                    }
-                }
-            }
-        }
-
-        // ─── Alignment guides ────────────────────────────────────────────────
-        function drawGuides(draggedWidget, container) {
-            if (!guidesEnabled || !layoutMode) {
-                const canvas = document.getElementById('guide-canvas');
-                if (canvas) {
-                    const ctx = canvas.getContext('2d');
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                }
-                return;
-            }
-
-            const canvas = document.getElementById('guide-canvas');
-            const ctx = canvas.getContext('2d');
-            const rect = container.getBoundingClientRect();
-            canvas.width = rect.width;
-            canvas.height = rect.height;
-            canvas.style.width = rect.width + 'px';
-            canvas.style.height = rect.height + 'px';
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            const allRects = getWidgetRects(container);
-            const widgetId = draggedWidget ? draggedWidget.id : null;
-            const others = Object.keys(allRects).filter(id => id !== widgetId);
-
-            for (const id of others) {
-                const r = allRects[id];
-                if (draggedWidget) {
-                    const dw = draggedWidget.offsetWidth;
-                    const dh = draggedWidget.offsetHeight;
-                    const dLeft = parseFloat(draggedWidget.style.left) || 0;
-                    const dTop = parseFloat(draggedWidget.style.top) || 0;
-                    const dCenterX = dLeft + dw / 2;
-                    const dCenterY = dTop + dh / 2;
-
-                    if (Math.abs(dCenterX - r.centerX) < ALIGN_THRESHOLD) {
-                        ctx.strokeStyle = 'rgba(74, 220, 255, 0.25)';
-                        ctx.lineWidth = 1;
-                        ctx.setLineDash([4, 6]);
-                        ctx.beginPath();
-                        ctx.moveTo(r.centerX, 0);
-                        ctx.lineTo(r.centerX, canvas.height);
-                        ctx.stroke();
-                        ctx.setLineDash([]);
-                    }
-                    if (Math.abs(dCenterY - r.centerY) < ALIGN_THRESHOLD) {
-                        ctx.strokeStyle = 'rgba(74, 220, 255, 0.25)';
-                        ctx.lineWidth = 1;
-                        ctx.setLineDash([4, 6]);
-                        ctx.beginPath();
-                        ctx.moveTo(0, r.centerY);
-                        ctx.lineTo(canvas.width, r.centerY);
-                        ctx.stroke();
-                        ctx.setLineDash([]);
-                    }
-                    if (Math.abs(dLeft - r.left) < SNAP_THRESHOLD) {
-                        ctx.strokeStyle = 'rgba(74, 220, 255, 0.15)';
-                        ctx.lineWidth = 1;
-                        ctx.setLineDash([3, 5]);
-                        ctx.beginPath();
-                        ctx.moveTo(r.left, 0);
-                        ctx.lineTo(r.left, canvas.height);
-                        ctx.stroke();
-                        ctx.setLineDash([]);
-                    }
-                    if (Math.abs(dLeft + dw - r.right) < SNAP_THRESHOLD) {
-                        ctx.strokeStyle = 'rgba(74, 220, 255, 0.15)';
-                        ctx.lineWidth = 1;
-                        ctx.setLineDash([3, 5]);
-                        ctx.beginPath();
-                        ctx.moveTo(r.right, 0);
-                        ctx.lineTo(r.right, canvas.height);
-                        ctx.stroke();
-                        ctx.setLineDash([]);
-                    }
-                    if (Math.abs(dTop - r.top) < SNAP_THRESHOLD) {
-                        ctx.strokeStyle = 'rgba(74, 220, 255, 0.15)';
-                        ctx.lineWidth = 1;
-                        ctx.setLineDash([3, 5]);
-                        ctx.beginPath();
-                        ctx.moveTo(0, r.top);
-                        ctx.lineTo(canvas.width, r.top);
-                        ctx.stroke();
-                        ctx.setLineDash([]);
-                    }
-                    if (Math.abs(dTop + dh - r.bottom) < SNAP_THRESHOLD) {
-                        ctx.strokeStyle = 'rgba(74, 220, 255, 0.15)';
-                        ctx.lineWidth = 1;
-                        ctx.setLineDash([3, 5]);
-                        ctx.beginPath();
-                        ctx.moveTo(0, r.bottom);
-                        ctx.lineTo(canvas.width, r.bottom);
-                        ctx.stroke();
-                        ctx.setLineDash([]);
-                    }
-                }
-            }
-
-            if (draggedWidget) {
-                const dLeft = parseFloat(draggedWidget.style.left) || 0;
-                const dTop = parseFloat(draggedWidget.style.top) || 0;
-                const dw = draggedWidget.offsetWidth;
-                const dh = draggedWidget.offsetHeight;
-                ctx.strokeStyle = 'rgba(74, 220, 255, 0.6)';
-                ctx.lineWidth = 1.5;
-                ctx.setLineDash([2, 4]);
-                const cx = dLeft + dw / 2;
-                const cy = dTop + dh / 2;
-                const crossSize = 12;
-                ctx.beginPath();
-                ctx.moveTo(cx - crossSize, cy);
-                ctx.lineTo(cx + crossSize, cy);
-                ctx.moveTo(cx, cy - crossSize);
-                ctx.lineTo(cx, cy + crossSize);
-                ctx.stroke();
-                ctx.setLineDash([]);
-                ctx.fillStyle = 'rgba(74, 220, 255, 0.7)';
-                ctx.beginPath();
-                ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        // ─── Toggle layout mode ──────────────────────────────────────────────
-        function toggleLayoutMode() {
-            const dashboard = document.querySelector('.weather-dashboard');
-            layoutMode = !layoutMode;
-            if (layoutMode) {
-                dashboard.classList.add('layout-mode');
-                document.getElementById('layout-toggle-btn').innerHTML = '<i class="fa-solid fa-check"></i>';
-                document.getElementById('layout-toggle-btn').style.background = 'rgba(74, 158, 255, 0.4)';
-                const canvas = document.getElementById('guide-canvas');
-                canvas.style.display = 'block';
-                document.getElementById('sticky-header').style.position = 'static';
-                document.getElementById('sticky-header').style.backdropFilter = 'none';
-                document.getElementById('sticky-header').style.background = 'transparent';
-                document.getElementById('sticky-header').style.boxShadow = 'none';
-                document.getElementById('sticky-header').style.border = 'none';
-                document.getElementById('scrollable-content').style.overflowY = 'visible';
-                document.getElementById('scrollable-content').style.flex = 'none';
-                document.getElementById('scrollable-content').style.display = 'block';
-                // Show internal drag handles for merged display in layout mode
-                document.querySelectorAll('#merged-display .drag-handle, #merged-display .resize-handle').forEach(el => el
-                    .style.display = '');
-                setTimeout(() => {
-                    drawGuides(null, dashboard);
-                }, 50);
-            } else {
-                dashboard.classList.remove('layout-mode');
-                document.getElementById('layout-toggle-btn').innerHTML = '<i class="fa-regular fa-pen-to-square"></i>';
-                document.getElementById('layout-toggle-btn').style.background = '';
-                const canvas = document.getElementById('guide-canvas');
-                canvas.style.display = 'none';
-                document.getElementById('sticky-header').style.position = 'sticky';
-                document.getElementById('sticky-header').style.backdropFilter = 'none';
-                document.getElementById('sticky-header').style.background = 'transparent';
-                document.getElementById('sticky-header').style.boxShadow = 'none';
-                document.getElementById('sticky-header').style.border = '1px solid rgba(255, 255, 255, 0.06)';
-                document.getElementById('scrollable-content').style.overflowY = 'auto';
-                document.getElementById('scrollable-content').style.flex = '1';
-                document.getElementById('scrollable-content').style.display = 'flex';
-                // Hide internal drag handles for merged display in normal mode
-                document.querySelectorAll('#merged-display .drag-handle, #merged-display .resize-handle').forEach(el => el
-                    .style.display = 'none');
-                saveLayout();
-            }
-        }
-
-        // ─── Drag & Drop for merged display (as a unit) ────────────────────
-        function initMergedDrag() {
-            const merged = document.getElementById('merged-display');
-            if (!merged) return;
-            const handle = merged.querySelector('.drag-handle');
-            const resize = merged.querySelector('.resize-handle');
-            if (handle) {
-                handle.addEventListener('mousedown', (e) => startDrag(e, merged));
-                handle.addEventListener('touchstart', (e) => startDrag(e, merged), { passive: false });
-            }
-            if (resize) {
-                resize.addEventListener('mousedown', (e) => startResize(e, merged));
-                resize.addEventListener('touchstart', (e) => startResize(e, merged), { passive: false });
-                resize.addEventListener('dblclick', (e) => {
-                    e.stopPropagation();
-                    merged.style.width = '90%';
-                    merged.style.height = 'auto';
-                    saveLayout();
-                });
-            }
-        }
-
-        // ─── Drag & Drop for scrollable widgets ────────────────────────────
-        function initLayoutEvents() {
-            const widgets = document.querySelectorAll('.scrollable-content .widget');
-            widgets.forEach(w => {
-                const handle = w.querySelector('.drag-handle');
-                if (handle) {
-                    handle.addEventListener('mousedown', (e) => startDrag(e, w));
-                    handle.addEventListener('touchstart', (e) => startDrag(e, w), { passive: false });
-                }
-                const resizeHandle = w.querySelector('.resize-handle');
-                if (resizeHandle) {
-                    resizeHandle.addEventListener('mousedown', (e) => startResize(e, w));
-                    resizeHandle.addEventListener('touchstart', (e) => startResize(e, w), { passive: false });
-                    resizeHandle.addEventListener('dblclick', (e) => {
-                        e.stopPropagation();
-                        w.style.width = '90%';
-                        w.style.height = 'auto';
-                        saveLayout();
-                    });
-                }
-            });
-            // Also init merged display drag
-            initMergedDrag();
-        }
-
-        function startDrag(e, widget) {
-            if (!layoutMode) return;
-            e.preventDefault();
-            const touch = e.touches ? e.touches[0] : e;
-            const rect = widget.getBoundingClientRect();
-            dragOffsetX = touch.clientX - rect.left;
-            dragOffsetY = touch.clientY - rect.top;
-            draggedWidget = widget;
-            widget.classList.add('dragging');
-            widget.style.transition = 'none';
-            lastDragX = touch.clientX;
-            lastDragY = touch.clientY;
-            dragDirection = { dx: 0, dy: 0 };
-
-            document.addEventListener('mousemove', onDrag);
-            document.addEventListener('touchmove', onDrag, { passive: false });
-            document.addEventListener('mouseup', endDrag);
-            document.addEventListener('touchend', endDrag);
-        }
-
-        function onDrag(e) {
-            if (!draggedWidget) return;
-            e.preventDefault();
-            const touch = e.touches ? e.touches[0] : e;
-            const container = draggedWidget.parentElement;
-            const containerRect = container.getBoundingClientRect();
-
-            const dx = touch.clientX - lastDragX;
-            const dy = touch.clientY - lastDragY;
-            dragDirection = { dx, dy };
-            lastDragX = touch.clientX;
-            lastDragY = touch.clientY;
-
-            let x = touch.clientX - containerRect.left - dragOffsetX;
-            let y = touch.clientY - containerRect.top - dragOffsetY;
-
-            x = Math.max(0, Math.min(x, containerRect.width - draggedWidget.offsetWidth));
-            y = Math.max(0, Math.min(y, containerRect.height - draggedWidget.offsetHeight));
-
-            const snapResult = applySnap(draggedWidget, x, y, container);
-            if (snapResult.snapped) {
-                x = snapResult.left;
-                y = snapResult.top;
-                draggedWidget.classList.add('snap-highlight');
-                setTimeout(() => draggedWidget.classList.remove('snap-highlight'), 200);
-            }
-
-            draggedWidget.style.left = x + 'px';
-            draggedWidget.style.top = y + 'px';
-
-            applyPush(draggedWidget, x, y, container, dx, dy);
-
-            drawGuides(draggedWidget, container);
-        }
-
-        function endDrag() {
-            if (draggedWidget) {
-                draggedWidget.classList.remove('dragging');
-                draggedWidget.style.transition = '';
-                saveLayout();
-                const container = draggedWidget.parentElement;
-                drawGuides(null, container);
-                draggedWidget = null;
-            }
-            document.removeEventListener('mousemove', onDrag);
-            document.removeEventListener('touchmove', onDrag);
-            document.removeEventListener('mouseup', endDrag);
-            document.removeEventListener('touchend', endDrag);
-        }
-
-        function startResize(e, widget) {
-            if (!layoutMode) return;
-            e.preventDefault();
-            e.stopPropagation();
-            isResizing = true;
-            const touch = e.touches ? e.touches[0] : e;
-            const rect = widget.getBoundingClientRect();
-            const startX = touch.clientX;
-            const startY = touch.clientY;
-            const startWidth = rect.width;
-            const startHeight = rect.height;
-
-            function onMove(ev) {
-                if (!isResizing) return;
-                ev.preventDefault();
-                const t = ev.touches ? ev.touches[0] : ev;
-                let dx = t.clientX - startX;
-                let dy = t.clientY - startY;
-                let newWidth = Math.max(140, startWidth + dx);
-                let newHeight = Math.max(50, startHeight + dy);
-                widget.style.width = newWidth + 'px';
-                widget.style.height = newHeight + 'px';
-                if (widget.id === 'merged-display') {
-                    // Resize the canvas inside
-                    const canvas = document.getElementById('weather-canvas');
-                    if (canvas) {
-                        const rect = widget.getBoundingClientRect();
-                        canvas.width = rect.width || 640;
-                        canvas.height = rect.height || 800;
-                        canvas.style.width = '100%';
-                        canvas.style.height = '100%';
-                        if (weatherCache) {
-                            const code = weatherCache.current.weather_code;
-                            const wind = weatherCache.current.wind_speed_10m || 0;
-                            const timezone = weatherCache.timezone || 'UTC';
-                            const now = new Date();
-                            const localTime = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
-                            const sunrise = new Date(weatherCache.daily.sunrise[0]);
-                            const sunset = new Date(weatherCache.daily.sunset[0]);
-                            const timeOfDay = getTimeOfDay(sunrise, sunset, localTime);
-                            stopWeatherAnimation();
-                            startWeatherAnimation(code, wind, timeOfDay, settings);
-                        }
-                    }
-                }
-            }
-
-            function onEnd() {
-                isResizing = false;
-                document.removeEventListener('mousemove', onMove);
-                document.removeEventListener('touchmove', onMove);
-                document.removeEventListener('mouseup', onEnd);
-                document.removeEventListener('touchend', onEnd);
-                saveLayout();
-                const container = widget.parentElement;
-                drawGuides(null, container);
-            }
-
-            document.addEventListener('mousemove', onMove);
-            document.addEventListener('touchmove', onMove, { passive: false });
-            document.addEventListener('mouseup', onEnd);
-            document.addEventListener('touchend', onEnd);
-        }
-
         // ─── Load Dashboard ──────────────────────────────────────────────────
         async function loadWeatherDashboard() {
             const headerContainer = document.getElementById('forecast-header');
@@ -3401,7 +1611,7 @@
             const dailyContainer = document.getElementById('forecast-daily');
 
             if (!lastLocation) {
-                headerContainer.innerHTML = '<div class="loading-text">Location not available.</div>';
+                headerContainer.innerHTML = '<div class="loading-text">📍 Location not available.</div>';
                 return;
             }
             try {
@@ -3443,9 +1653,7 @@
                 }
 
                 stopWeatherAnimation();
-                startWeatherAnimation(weatherCode, windSpeed, timeOfDay, settings);
-
-                updatePreview(weatherCode, windSpeed);
+                startWeatherAnimation(weatherCode, windSpeed, timeOfDay);
 
                 const daily = data.daily;
                 const days = daily.time.length;
@@ -3517,20 +1725,33 @@
                             </div>
                         `;
 
-                // ─── HOURLY with sunrise/sunset as markers BETWEEN hours ────
+                // ─── HOURLY ──────────────────────────────────────────────────
                 const hourly = data.hourly;
                 const hourlyTimes = hourly.time.map(t => {
                     return luxon.DateTime.fromISO(t, { zone: timezone }).toJSDate();
                 });
 
-                // Use luxon DateTime for accurate timezone-aware comparison
-                const sunriseDT = luxon.DateTime.fromISO(sunriseStr, { zone: timezone });
-                const sunsetDT = luxon.DateTime.fromISO(sunsetStr, { zone: timezone });
+                const nowLocalDT = luxon.DateTime.fromISO(localTimeStr, { zone: timezone });
+                const currentHour = nowLocalDT.startOf('hour');
+                let startIdx = hourlyTimes.findIndex(t => {
+                    const dt = luxon.DateTime.fromJSDate(t, { zone: timezone });
+                    return dt.hasSame(currentHour, 'hour');
+                });
+                if (startIdx === -1) {
+                    for (let i = hourlyTimes.length - 1; i >= 0; i--) {
+                        if (hourlyTimes[i] <= nowLocal) {
+                            startIdx = i;
+                            break;
+                        }
+                    }
+                    if (startIdx === -1) startIdx = 0;
+                }
 
-                let startIdx = hourlyTimes.findIndex(t => t >= nowLocal);
-                if (startIdx === -1) startIdx = 0;
                 const extraStart = Math.max(0, startIdx - 2);
                 const endIdx = Math.min(hourlyTimes.length, extraStart + 28);
+
+                const sunriseDT = luxon.DateTime.fromISO(sunriseStr, { zone: timezone });
+                const sunsetDT = luxon.DateTime.fromISO(sunsetStr, { zone: timezone });
 
                 const displayItems = [];
                 let sunriseInserted = false;
@@ -3541,7 +1762,6 @@
                     const hourStart = luxon.DateTime.fromJSDate(h, { zone: timezone }).startOf('hour');
                     const hourEnd = hourStart.plus({ hours: 1 });
 
-                    // Add the hour first
                     displayItems.push({
                         type: 'hour',
                         date: h,
@@ -3550,7 +1770,6 @@
                         code: hourly.weather_code[i],
                     });
 
-                    // Check if sunrise falls within this hour (after pushing hour)
                     if (!sunriseInserted && sunriseDT >= hourStart && sunriseDT < hourEnd) {
                         displayItems.push({
                             type: 'sunrise',
@@ -3560,7 +1779,6 @@
                         sunriseInserted = true;
                     }
 
-                    // Check if sunset falls within this hour
                     if (!sunsetInserted && sunsetDT >= hourStart && sunsetDT < hourEnd) {
                         displayItems.push({
                             type: 'sunset',
@@ -3571,7 +1789,6 @@
                     }
                 }
 
-                // Sort by time to ensure correct order
                 displayItems.sort((a, b) => a.date.getTime() - b.date.getTime());
 
                 let hourlyHtml = `<div class="section-title">Hourly Forecast</div><div class="hourly-scroll">`;
@@ -3629,43 +1846,8 @@
                 dailyHtml += `</div>`;
                 dailyContainer.innerHTML = dailyHtml;
 
+                // Update canvas size after layout
                 setTimeout(() => {
-                    loadLayout();
-                    initLayoutEvents();
-                    if (layoutMode) {
-                        document.getElementById('sticky-header').style.position = 'static';
-                        document.getElementById('sticky-header').style.backdropFilter = 'none';
-                        document.getElementById('sticky-header').style.background = 'transparent';
-                        document.getElementById('sticky-header').style.boxShadow = 'none';
-                        document.getElementById('sticky-header').style.border = 'none';
-                        document.getElementById('scrollable-content').style.overflowY = 'visible';
-                        document.getElementById('scrollable-content').style.flex = 'none';
-                        document.getElementById('scrollable-content').style.display = 'block';
-                        // Show drag handles for merged display in layout mode
-                        document.querySelectorAll('#merged-display .drag-handle, #merged-display .resize-handle')
-                            .forEach(el => el.style.display = '');
-                    } else {
-                        document.getElementById('sticky-header').style.position = 'sticky';
-                        document.getElementById('sticky-header').style.backdropFilter = 'none';
-                        document.getElementById('sticky-header').style.background = 'transparent';
-                        document.getElementById('sticky-header').style.boxShadow = 'none';
-                        document.getElementById('sticky-header').style.border = '1px solid rgba(255, 255, 255, 0.06)';
-                        document.getElementById('scrollable-content').style.overflowY = 'auto';
-                        document.getElementById('scrollable-content').style.flex = '1';
-                        document.getElementById('scrollable-content').style.display = 'flex';
-                        // Hide drag handles for merged display in normal mode
-                        document.querySelectorAll('#merged-display .drag-handle, #merged-display .resize-handle')
-                            .forEach(el => el.style.display = 'none');
-                    }
-                    const canvas = document.getElementById('guide-canvas');
-                    if (canvas) {
-                        canvas.style.display = layoutMode ? 'block' : 'none';
-                        const rect = dashboard.getBoundingClientRect();
-                        canvas.width = rect.width;
-                        canvas.height = rect.height;
-                        canvas.style.width = rect.width + 'px';
-                        canvas.style.height = rect.height + 'px';
-                    }
                     const c = document.getElementById('weather-canvas');
                     const cont = document.getElementById('merged-display');
                     if (c && cont) {
@@ -3680,647 +1862,46 @@
             } catch (err) {
                 console.error('Weather dashboard error:', err);
                 headerContainer.innerHTML =
-                    `<div class="loading-text" style="color: #f87171;">Failed to load weather.</div>`;
+                    `<div class="loading-text" style="color: #f87171;">⚠️ Failed to load weather. ${err.message}</div>`;
             }
-        }
-
-        // ─── Search ──────────────────────────────────────────────────────────
-        function setupSearch() {
-            const input = document.getElementById('location-search');
-            const suggestions = document.getElementById('search-suggestions');
-
-            input.addEventListener('input', function() {
-                const query = this.value.trim();
-                if (query.length < 2) {
-                    suggestions.style.display = 'none';
-                    return;
-                }
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(async () => {
-                    const results = await searchLocations(query);
-                    if (results.length === 0) {
-                        suggestions.innerHTML =
-                            '<div class="suggestion-item" style="color:#aaa;">No results found</div>';
-                        suggestions.style.display = 'block';
-                        return;
-                    }
-                    suggestions.innerHTML = results.map(r =>
-                        `<div class="suggestion-item" data-lat="${r.latitude}" data-lon="${r.longitude}" data-name="${r.display}">${r.display}</div>`
-                    ).join('');
-                    suggestions.style.display = 'block';
-                    suggestions.querySelectorAll('.suggestion-item').forEach(el => {
-                        el.addEventListener('click', function() {
-                            const lat = parseFloat(this.dataset.lat);
-                            const lon = parseFloat(this.dataset.lon);
-                            const name = this.dataset.name;
-                            input.value = name;
-                            suggestions.style.display = 'none';
-                            lastLocation = { lat, lon, name };
-                            localStorage.setItem('selectedLocation', JSON.stringify(lastLocation));
-                            loadWeatherDashboard();
-                            if (window.parent && window.parent !== window) {
-                                try {
-                                    window.parent.postMessage({ type: 'weather-location-update',
-                                        location: lastLocation }, '*');
-                                } catch (e) {}
-                            }
-                        });
-                    });
-                }, 300);
-            });
-
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('#widget-search')) {
-                    suggestions.style.display = 'none';
-                }
-            });
-
-            document.getElementById('use-my-location-btn').addEventListener('click', function() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        async (pos) => {
-                            const { latitude, longitude } = pos.coords;
-                            const name = await fetchLocationName(latitude, longitude);
-                            lastLocation = { lat: latitude, lon: longitude, name };
-                            localStorage.setItem('selectedLocation', JSON.stringify(lastLocation));
-                            loadWeatherDashboard();
-                            document.getElementById('location-search').value = name;
-                            suggestions.style.display = 'none';
-                            if (window.parent && window.parent !== window) {
-                                try {
-                                    window.parent.postMessage({ type: 'weather-location-update',
-                                        location: lastLocation }, '*');
-                                } catch (e) {}
-                            }
-                        },
-                        (err) => {
-                            alert('Unable to get your location. Please check permissions.');
-                        }, { enableHighAccuracy: true }
-                    );
-                } else {
-                    alert('Geolocation not supported by your browser.');
-                }
-            });
-        }
-
-        // ─── Settings ──────────────────────────────────────────────────────
-        function setupSettings() {
-            const overlay = document.getElementById('settings-overlay');
-            const openBtn = document.getElementById('settings-toggle-btn');
-            const closeBtn = document.getElementById('settings-close-btn');
-            const applyBtn = document.getElementById('settings-apply-btn');
-            const previewBtn = document.getElementById('preview-btn');
-            const defaultBtn = document.getElementById('default-settings-btn');
-            const savePresetBtn = document.getElementById('save-preset-btn');
-            const loadPresetBtn = document.getElementById('load-preset-btn');
-            const savePresetConfirm = document.getElementById('save-preset-confirm');
-            const presetNameInput = document.getElementById('preset-name-input');
-            const presetListContainer = document.getElementById('preset-list-container');
-            const presetList = document.getElementById('preset-list');
-            const presetModal = document.getElementById('preset-modal');
-            const presetModalInput = document.getElementById('preset-modal-input');
-            const presetModalConfirm = document.getElementById('preset-modal-confirm');
-            const presetModalCancel = document.getElementById('preset-modal-cancel');
-            const layoutToggleBtn = document.getElementById('layout-mode-toggle-btn');
-            const resetLayoutBtn = document.getElementById('reset-layout-btn');
-            const snapToggleBtn = document.getElementById('snap-toggle-btn');
-            const pushToggleBtn = document.getElementById('push-toggle-btn');
-            const guidesToggleBtn = document.getElementById('guides-toggle-btn');
-
-            const tempUnit = document.getElementById('temp-unit');
-            const previewWeather = document.getElementById('preview-weather-code');
-
-            const cloudDensity = document.getElementById('cloud-density');
-            const cloudSize = document.getElementById('cloud-size');
-            const cloudSpeed = document.getElementById('cloud-speed');
-            const cloudOpacity = document.getElementById('cloud-opacity');
-
-            const rainSize = document.getElementById('rain-size');
-            const rainFreq = document.getElementById('rain-freq');
-            const rainSpeed = document.getElementById('rain-speed');
-
-            const thunderIntensity = document.getElementById('thunder-intensity');
-            const lightningFreq = document.getElementById('lightning-freq');
-            const thunderRainSize = document.getElementById('thunder-rain-size');
-            const thunderRainFreq = document.getElementById('thunder-rain-freq');
-
-            const snowSize = document.getElementById('snow-size');
-            const snowDensity = document.getElementById('snow-density');
-            const snowSpeed = document.getElementById('snow-speed');
-            const snowWobble = document.getElementById('snow-wobble');
-
-            const fogDensity = document.getElementById('fog-density');
-            const fogSize = document.getElementById('fog-size');
-
-            function readSettingsFromUI() {
-                settings.tempUnit = tempUnit.value;
-                settings.cloudDensity = parseFloat(cloudDensity.value) / 100;
-                settings.cloudSize = parseFloat(cloudSize.value) / 100;
-                settings.cloudSpeed = parseFloat(cloudSpeed.value) / 100;
-                settings.cloudOpacity = parseFloat(cloudOpacity.value) / 100;
-                settings.rainSize = parseFloat(rainSize.value) / 100;
-                settings.rainFreq = parseFloat(rainFreq.value) / 100;
-                settings.rainSpeed = parseFloat(rainSpeed.value) / 100;
-                settings.thunderIntensity = parseFloat(thunderIntensity.value) / 100;
-                settings.lightningFreq = parseFloat(lightningFreq.value) / 100;
-                settings.thunderRainSize = parseFloat(thunderRainSize.value) / 100;
-                settings.thunderRainFreq = parseFloat(thunderRainFreq.value) / 100;
-                settings.snowSize = parseFloat(snowSize.value) / 100;
-                settings.snowDensity = parseFloat(snowDensity.value) / 100;
-                settings.snowSpeed = parseFloat(snowSpeed.value) / 100;
-                settings.snowWobble = parseFloat(snowWobble.value) / 100;
-                settings.fogDensity = parseFloat(fogDensity.value) / 100;
-                settings.fogSize = parseFloat(fogSize.value) / 100;
-            }
-
-            function writeSettingsToUI() {
-                tempUnit.value = settings.tempUnit;
-                cloudDensity.value = settings.cloudDensity * 100;
-                cloudSize.value = settings.cloudSize * 100;
-                cloudSpeed.value = settings.cloudSpeed * 100;
-                cloudOpacity.value = settings.cloudOpacity * 100;
-                rainSize.value = settings.rainSize * 100;
-                rainFreq.value = settings.rainFreq * 100;
-                rainSpeed.value = settings.rainSpeed * 100;
-                thunderIntensity.value = settings.thunderIntensity * 100;
-                lightningFreq.value = settings.lightningFreq * 100;
-                thunderRainSize.value = settings.thunderRainSize * 100;
-                thunderRainFreq.value = settings.thunderRainFreq * 100;
-                snowSize.value = settings.snowSize * 100;
-                snowDensity.value = settings.snowDensity * 100;
-                snowSpeed.value = settings.snowSpeed * 100;
-                snowWobble.value = settings.snowWobble * 100;
-                fogDensity.value = settings.fogDensity * 100;
-                fogSize.value = settings.fogSize * 100;
-                updateAllLabels();
-            }
-
-            function updateAllLabels() {
-                const cd = parseFloat(cloudDensity.value);
-                document.getElementById('cloud-density-label').textContent = cd < 33 ? 'low' : cd < 66 ? 'medium' : 'high';
-                const cs = parseFloat(cloudSize.value);
-                document.getElementById('cloud-size-label').textContent = cs < 33 ? 'small' : cs < 66 ? 'medium' : 'large';
-                const csp = parseFloat(cloudSpeed.value);
-                document.getElementById('cloud-speed-label').textContent = csp < 33 ? 'slow' : csp < 66 ? 'medium' : 'fast';
-                const co = parseFloat(cloudOpacity.value);
-                document.getElementById('cloud-opacity-label').textContent = co < 33 ? 'light' : co < 66 ? 'medium' : 'dense';
-
-                const rs = parseFloat(rainSize.value);
-                document.getElementById('rain-size-label').textContent = rs < 33 ? 'small' : rs < 66 ? 'medium' : 'large';
-                const rf = parseFloat(rainFreq.value);
-                document.getElementById('rain-freq-label').textContent = rf < 33 ? 'low' : rf < 66 ? 'medium' : 'high';
-                const rsp = parseFloat(rainSpeed.value);
-                document.getElementById('rain-speed-label').textContent = rsp < 33 ? 'slow' : rsp < 66 ? 'medium' : 'fast';
-
-                const ti = parseFloat(thunderIntensity.value);
-                document.getElementById('thunder-intensity-label').textContent = ti < 33 ? 'mild' : ti < 66 ? 'medium' :
-                    'severe';
-                const lf = parseFloat(lightningFreq.value);
-                document.getElementById('lightning-freq-label').textContent = lf < 33 ? 'rare' : lf < 66 ? 'medium' :
-                    'frequent';
-                const trs = parseFloat(thunderRainSize.value);
-                document.getElementById('thunder-rain-size-label').textContent = trs < 33 ? 'small' : trs < 66 ? 'medium' :
-                    'large';
-                const trf = parseFloat(thunderRainFreq.value);
-                document.getElementById('thunder-rain-freq-label').textContent = trf < 33 ? 'low' : trf < 66 ? 'medium' :
-                    'high';
-
-                const ss = parseFloat(snowSize.value);
-                document.getElementById('snow-size-label').textContent = ss < 33 ? 'small' : ss < 66 ? 'medium' : 'large';
-                const sd = parseFloat(snowDensity.value);
-                document.getElementById('snow-density-label').textContent = sd < 33 ? 'light' : sd < 66 ? 'medium' : 'heavy';
-                const ssp = parseFloat(snowSpeed.value);
-                document.getElementById('snow-speed-label').textContent = ssp < 33 ? 'slow' : ssp < 66 ? 'medium' : 'fast';
-                const sw = parseFloat(snowWobble.value);
-                document.getElementById('snow-wobble-label').textContent = sw < 33 ? 'gentle' : sw < 66 ? 'moderate' :
-                    'erratic';
-
-                const fd = parseFloat(fogDensity.value);
-                document.getElementById('fog-density-label').textContent = fd < 33 ? 'light' : fd < 66 ? 'medium' : 'thick';
-                const fs = parseFloat(fogSize.value);
-                document.getElementById('fog-size-label').textContent = fs < 33 ? 'small' : fs < 66 ? 'medium' : 'large';
-            }
-
-            function updateParamGroups(weatherCode) {
-                const cat = getWeatherCategory(weatherCode);
-                const groups = {
-                    'clouds': 'param-group-cloud',
-                    'rain': 'param-group-rain',
-                    'thunderstorm': 'param-group-thunder',
-                    'snow': 'param-group-snow',
-                    'fog': 'param-group-fog',
-                };
-                document.querySelectorAll('.param-group').forEach(el => el.classList.remove('active'));
-                if (groups[cat]) {
-                    document.getElementById(groups[cat]).classList.add('active');
-                }
-                if (cat === 'rain') {
-                    document.getElementById('param-group-rain').classList.add('active');
-                }
-            }
-
-            function resetToDefaults() {
-                Object.assign(settings, DEFAULT_SETTINGS);
-                writeSettingsToUI();
-                const code = parseInt(previewWeather.value);
-                updatePreview(code, 5);
-                const info = getWeatherInfo(code, true);
-                document.getElementById('preview-weather-label').textContent = info.desc;
-                updateParamGroups(code);
-                localStorage.setItem('weatherSettings', JSON.stringify(settings));
-            }
-
-            function loadPresets() {
-                const saved = localStorage.getItem('weatherPresets');
-                if (saved) {
-                    try {
-                        presets = JSON.parse(saved);
-                    } catch (e) { presets = {}; }
-                } else {
-                    presets = {};
-                }
-                renderPresetList();
-            }
-
-            function savePresets() {
-                localStorage.setItem('weatherPresets', JSON.stringify(presets));
-                renderPresetList();
-            }
-
-            function renderPresetList() {
-                const names = Object.keys(presets);
-                if (names.length === 0) {
-                    presetList.innerHTML =
-                        '<div style="padding:12px;text-align:center;opacity:0.4;font-size:0.85rem;">No presets saved</div>';
-                    return;
-                }
-                presetList.innerHTML = names.map(name => `
-                        <div class="preset-item" data-name="${name}">
-                            <span class="preset-name">${name}</span>
-                            <button class="preset-del" data-name="${name}">✕</button>
-                        </div>
-                    `).join('');
-
-                presetList.querySelectorAll('.preset-item').forEach(el => {
-                    el.addEventListener('click', function(e) {
-                        if (e.target.classList.contains('preset-del')) return;
-                        const name = this.dataset.name;
-                        if (presets[name]) {
-                            Object.assign(settings, presets[name]);
-                            writeSettingsToUI();
-                            const code = parseInt(previewWeather.value);
-                            updatePreview(code, 5);
-                            const info = getWeatherInfo(code, true);
-                            document.getElementById('preview-weather-label').textContent = info.desc;
-                            updateParamGroups(code);
-                            document.querySelectorAll('.preset-item').forEach(p => p.classList.remove('active'));
-                            this.classList.add('active');
-                        }
-                    });
-                    el.querySelector('.preset-del').addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const name = this.dataset.name;
-                        if (confirm(`Delete preset "${name}"?`)) {
-                            delete presets[name];
-                            savePresets();
-                            renderPresetList();
-                        }
-                    });
-                });
-            }
-
-            function saveCurrentPreset(name) {
-                readSettingsFromUI();
-                presets[name] = { ...settings };
-                savePresets();
-                renderPresetList();
-                document.querySelectorAll('.preset-item').forEach(p => p.classList.remove('active'));
-                const items = presetList.querySelectorAll('.preset-item');
-                for (const item of items) {
-                    if (item.dataset.name === name) {
-                        item.classList.add('active');
-                        break;
-                    }
-                }
-            }
-
-            previewBtn.addEventListener('click', function() {
-                readSettingsFromUI();
-                const code = parseInt(previewWeather.value);
-                updatePreview(code, 5);
-                const info = getWeatherInfo(code, true);
-                document.getElementById('preview-weather-label').textContent = info.desc;
-                updateParamGroups(code);
-            });
-
-            defaultBtn.addEventListener('click', function() {
-                if (confirm('Reset all settings to default values?')) {
-                    resetToDefaults();
-                }
-            });
-
-            savePresetBtn.addEventListener('click', function() {
-                presetModal.classList.add('open');
-                presetModalInput.value = '';
-                presetModalInput.focus();
-            });
-
-            presetModalConfirm.addEventListener('click', function() {
-                const name = presetModalInput.value.trim();
-                if (name) {
-                    saveCurrentPreset(name);
-                    presetModal.classList.remove('open');
-                } else {
-                    alert('Please enter a preset name.');
-                }
-            });
-
-            presetModalCancel.addEventListener('click', function() {
-                presetModal.classList.remove('open');
-            });
-
-            presetModal.addEventListener('click', function(e) {
-                if (e.target === presetModal) {
-                    presetModal.classList.remove('open');
-                }
-            });
-
-            loadPresetBtn.addEventListener('click', function() {
-                const container = presetListContainer;
-                if (container.style.display === 'none') {
-                    container.style.display = 'block';
-                    loadPresets();
-                    loadPresetBtn.textContent = '📂 Hide Presets';
-                } else {
-                    container.style.display = 'none';
-                    loadPresetBtn.textContent = '📂 Load Preset';
-                }
-            });
-
-            savePresetConfirm.addEventListener('click', function() {
-                const name = presetNameInput.value.trim();
-                if (name) {
-                    saveCurrentPreset(name);
-                    presetNameInput.value = '';
-                } else {
-                    alert('Please enter a preset name.');
-                }
-            });
-
-            previewWeather.addEventListener('change', function() {
-                const code = parseInt(this.value);
-                updateParamGroups(code);
-                readSettingsFromUI();
-                updatePreview(code, 5);
-                const info = getWeatherInfo(code, true);
-                document.getElementById('preview-weather-label').textContent = info.desc;
-            });
-
-            applyBtn.addEventListener('click', function() {
-                readSettingsFromUI();
-                localStorage.setItem('weatherSettings', JSON.stringify(settings));
-                if (weatherCache) {
-                    loadWeatherDashboard();
-                }
-                overlay.classList.remove('open');
-                stopPreview();
-            });
-
-            openBtn.addEventListener('click', function() {
-                writeSettingsToUI();
-                const code = parseInt(previewWeather.value);
-                updateParamGroups(code);
-                overlay.classList.add('open');
-                updatePreview(code, 5);
-                loadPresets();
-                presetListContainer.style.display = 'none';
-                loadPresetBtn.textContent = '📂 Load Preset';
-            });
-
-            closeBtn.addEventListener('click', function() {
-                overlay.classList.remove('open');
-                stopPreview();
-                presetListContainer.style.display = 'none';
-                loadPresetBtn.textContent = '📂 Load Preset';
-            });
-
-            overlay.addEventListener('click', function(e) {
-                if (e.target === overlay) {
-                    overlay.classList.remove('open');
-                    stopPreview();
-                    presetListContainer.style.display = 'none';
-                    loadPresetBtn.textContent = '📂 Load Preset';
-                }
-            });
-
-            layoutToggleBtn.addEventListener('click', function() {
-                toggleLayoutMode();
-                overlay.classList.remove('open');
-            });
-
-            resetLayoutBtn.addEventListener('click', function() {
-                if (confirm('Reset widget layout to default?')) {
-                    resetLayout();
-                }
-            });
-
-            snapToggleBtn.addEventListener('click', function() {
-                snapEnabled = !snapEnabled;
-                this.textContent = snapEnabled ? '🧲 Snap: ON' : '🧲 Snap: OFF';
-                this.style.background = snapEnabled ? 'rgba(74,220,255,0.2)' : 'rgba(100,100,100,0.2)';
-            });
-
-            pushToggleBtn.addEventListener('click', function() {
-                pushEnabled = !pushEnabled;
-                this.textContent = pushEnabled ? '📦 Push: ON' : '📦 Push: OFF';
-                this.style.background = pushEnabled ? 'rgba(255,200,80,0.2)' : 'rgba(100,100,100,0.2)';
-            });
-
-            guidesToggleBtn.addEventListener('click', function() {
-                guidesEnabled = !guidesEnabled;
-                this.textContent = guidesEnabled ? '📐 Guides: ON' : '📐 Guides: OFF';
-                this.style.background = guidesEnabled ? 'rgba(74,158,255,0.2)' : 'rgba(100,100,100,0.2)';
-                if (!guidesEnabled) {
-                    const canvas = document.getElementById('guide-canvas');
-                    if (canvas) {
-                        const ctx = canvas.getContext('2d');
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    }
-                } else {
-                    const container = document.getElementById('weather-dashboard-container');
-                    drawGuides(null, container);
-                }
-            });
-
-            const sliders = [cloudDensity, cloudSize, cloudSpeed, cloudOpacity,
-                rainSize, rainFreq, rainSpeed,
-                thunderIntensity, lightningFreq, thunderRainSize, thunderRainFreq,
-                snowSize, snowDensity, snowSpeed, snowWobble,
-                fogDensity, fogSize
-            ];
-            sliders.forEach(el => {
-                el.addEventListener('input', function() {
-                    readSettingsFromUI();
-                    updateAllLabels();
-                    if (previewTimeout) clearTimeout(previewTimeout);
-                    previewTimeout = setTimeout(() => {
-                        const code = parseInt(previewWeather.value);
-                        updatePreview(code, 5);
-                    }, 100);
-                });
-            });
-
-            tempUnit.addEventListener('change', function() {
-                readSettingsFromUI();
-                const code = parseInt(previewWeather.value);
-                updatePreview(code, 5);
-            });
-
-            updateAllLabels();
-            const saved = localStorage.getItem('weatherSettings');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    Object.assign(settings, parsed);
-                } catch (e) {}
-            }
-            writeSettingsToUI();
-            loadPresets();
         }
 
         // ─── Init ────────────────────────────────────────────────────────────
         function initWeather() {
-            const saved = localStorage.getItem('weatherSettings');
-            if (saved) {
-                try {
-                    Object.assign(settings, JSON.parse(saved));
-                } catch (e) {}
-            }
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const latParam = urlParams.get('lat');
-            const lonParam = urlParams.get('lon');
-            const nameParam = urlParams.get('name');
-
-            // Highest priority: URL parameters (shared links)
-            if (latParam && lonParam && nameParam) {
-                lastLocation = {
-                    lat: parseFloat(latParam),
-                    lon: parseFloat(lonParam),
-                    name: nameParam
-                };
-                localStorage.setItem('selectedLocation', JSON.stringify(lastLocation));
-                loadWeatherDashboard();
-                document.getElementById('location-search').value = nameParam;
-                return;
-            }
-
-            // Second priority: Current location (Geolocation) - ALWAYS try this first
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     async (pos) => {
                         const { latitude, longitude } = pos.coords;
                         const name = await fetchLocationName(latitude, longitude);
                         lastLocation = { lat: latitude, lon: longitude, name };
-                        localStorage.setItem('selectedLocation', JSON.stringify(lastLocation));
                         loadWeatherDashboard();
-                        document.getElementById('location-search').value = name;
                     },
                     (err) => {
-                        console.warn('Geolocation error, falling back to saved or default:', err);
-                        // Third priority: localStorage
-                        const stored = localStorage.getItem('selectedLocation');
-                        if (stored) {
-                            try {
-                                const parsed = JSON.parse(stored);
-                                if (parsed.lat && parsed.lon && parsed.name) {
-                                    lastLocation = parsed;
-                                    loadWeatherDashboard();
-                                    document.getElementById('location-search').value = parsed.name;
-                                    return;
-                                }
-                            } catch (e) {}
-                        }
-                        // Fourth priority: Fallback
-                        const fallbackLat = 29.3759,
-                            fallbackLon = 47.9774;
+                        console.warn('Geolocation error:', err);
+                        // Fallback: use a default location (e.g., New York)
+                        const fallbackLat = 40.7128,
+                            fallbackLon = -74.0060;
                         fetchLocationName(fallbackLat, fallbackLon).then(name => {
                             lastLocation = { lat: fallbackLat, lon: fallbackLon, name };
-                            localStorage.setItem('selectedLocation', JSON.stringify(lastLocation));
                             loadWeatherDashboard();
-                            document.getElementById('location-search').value = name;
                         });
                     }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 600000 }
                 );
             } else {
-                // Geolocation not supported, fallback to localStorage or default
-                const stored = localStorage.getItem('selectedLocation');
-                if (stored) {
-                    try {
-                        const parsed = JSON.parse(stored);
-                        if (parsed.lat && parsed.lon && parsed.name) {
-                            lastLocation = parsed;
-                            loadWeatherDashboard();
-                            document.getElementById('location-search').value = parsed.name;
-                            return;
-                        }
-                    } catch (e) {}
-                }
-                const fallbackLat = 29.3759,
-                    fallbackLon = 47.9774;
+                // Fallback: use a default location
+                const fallbackLat = 40.7128,
+                    fallbackLon = -74.0060;
                 fetchLocationName(fallbackLat, fallbackLon).then(name => {
                     lastLocation = { lat: fallbackLat, lon: fallbackLon, name };
-                    localStorage.setItem('selectedLocation', JSON.stringify(lastLocation));
                     loadWeatherDashboard();
-                    document.getElementById('location-search').value = name;
                 });
             }
         }
 
-        document.getElementById('close-weather-btn').addEventListener('click', function() {
-            if (window.parent && window.parent !== window) {
-                try {
-                    window.parent.postMessage({ type: 'close-weather' }, '*');
-                } catch (e) {}
-            } else {
-                if (window.history.length > 1) window.history.back();
-                else window.close();
-            }
-        });
-
-        document.getElementById('layout-toggle-btn').addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleLayoutMode();
-        });
-
-        window.addEventListener('message', function(e) {
-            if (e.data && e.data.type === 'update-location') {
-                const loc = e.data.location;
-                if (loc && loc.lat && loc.lon && loc.name) {
-                    lastLocation = loc;
-                    localStorage.setItem('selectedLocation', JSON.stringify(loc));
-                    loadWeatherDashboard();
-                    document.getElementById('location-search').value = loc.name;
-                }
-            }
-        });
-
         document.addEventListener('DOMContentLoaded', function() {
-            setupSearch();
-            setupSettings();
             initWeather();
 
             window.addEventListener('resize', function() {
-                const canvas = document.getElementById('guide-canvas');
-                if (canvas && layoutMode) {
-                    const container = document.getElementById('weather-dashboard-container');
-                    const rect = container.getBoundingClientRect();
-                    canvas.width = rect.width;
-                    canvas.height = rect.height;
-                    canvas.style.width = rect.width + 'px';
-                    canvas.style.height = rect.height + 'px';
-                    drawGuides(null, container);
-                }
                 const wc = document.getElementById('weather-canvas');
                 const cw = document.getElementById('merged-display');
                 if (wc && cw && weatherCache) {
@@ -4346,7 +1927,7 @@
                         let code = weatherCache.current.weather_code;
                         let wind = weatherCache.current.wind_speed_10m || 0;
                         stopWeatherAnimation();
-                        startWeatherAnimation(code, wind, timeOfDay, settings);
+                        startWeatherAnimation(code, wind, timeOfDay);
                     }
                 }
             }, 300000);
