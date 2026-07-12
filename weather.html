@@ -19,7 +19,7 @@
             color: #fff;
             min-height: 100vh;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: center;
             padding: 12px;
             margin: 0;
@@ -31,57 +31,71 @@
             width: 100%;
             max-width: 760px;
             margin: 0 auto;
+            height: 98vh;
             max-height: 98vh;
-            overflow-y: auto;
-            overflow-x: hidden;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #0b4a8a 0%, #2d7fc0 60%, #6bb3e8 100%);
             transition: background 1.2s ease;
             color: #fff;
             position: relative;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-            background: linear-gradient(135deg, #0b4a8a 0%, #2d7fc0 60%, #6bb3e8 100%);
-            min-height: 500px;
-            display: flex;
-            flex-direction: column;
         }
         .weather-dashboard.layout-mode {
-            min-height: 1200px;
+            height: auto;
+            max-height: none;
             overflow-y: visible;
             display: block;
+            padding-bottom: 20px;
         }
 
-        /* ── Scrollbar ── */
-        .weather-dashboard::-webkit-scrollbar {
+        /* ── Scrollbar for lower part ── */
+        .scrollable-content::-webkit-scrollbar {
             width: 5px;
         }
-        .weather-dashboard::-webkit-scrollbar-track {
+        .scrollable-content::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.08);
             border-radius: 10px;
             margin: 10px 0;
         }
-        .weather-dashboard::-webkit-scrollbar-thumb {
+        .scrollable-content::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.35);
             border-radius: 10px;
         }
-        .weather-dashboard::-webkit-scrollbar-button {
+        .scrollable-content::-webkit-scrollbar-button {
             display: none;
         }
-        .weather-dashboard {
+        .scrollable-content {
             scrollbar-width: thin;
             scrollbar-color: rgba(255, 255, 255, 0.35) rgba(255, 255, 255, 0.08);
-            padding-top: 12px;
-            padding-bottom: 12px;
         }
 
-        /* ── Sticky header ── */
+        /* ── Sticky header (upper part) ── */
         .sticky-header {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: transparent;
-            padding-bottom: 2px;
             flex-shrink: 0;
+            padding: 0 0 8px 0;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 10;
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
         }
+		.sticky-header {
+			border: none !important;
+		}
+        .sticky-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), rgba(255, 100, 100, 0.3), transparent);
+            border-radius: 2px;
+        }
+
         .sticky-header .widget {
             position: relative !important;
             left: auto !important;
@@ -99,14 +113,250 @@
             display: none !important;
         }
 
-        /* ── Scrollable content ── */
+        /* ── Merged display: canvas + temperature ── */
+        #merged-display {
+            position: relative;
+            height: 5cm;
+            /* 5 cm height */
+            width: 100%;
+            background: transparent;
+            margin: 2px 0 4px 0;
+            border-radius: 20px;
+            overflow: hidden;
+            /* contain canvas */
+            pointer-events: none;
+            /* allow clicks to pass through to search etc. */
+        }
+        #merged-display>* {
+            pointer-events: none;
+        }
+        #merged-display #widget-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0 !important;
+            border: none !important;
+            background: transparent !important;
+            pointer-events: none;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+        #merged-display #widget-canvas canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+            border-radius: 20px;
+            pointer-events: none;
+        }
+        #merged-display #widget-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            pointer-events: none;
+        }
+        #merged-display #widget-header .widget-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+        #merged-display #widget-header .weather-header-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            text-align: center;
+            padding: 0 10px;
+            width: 100%;
+            pointer-events: none;
+        }
+        #merged-display #widget-header .weather-header-row .weather-icon-header {
+            font-size: 2.8rem;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+        #merged-display #widget-header .weather-header-row .location-datetime {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        #merged-display #widget-header .weather-header-row .location-datetime .loc-name {
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        #merged-display #widget-header .weather-header-row .location-datetime .loc-date {
+            font-size: 0.65rem;
+            opacity: 0.7;
+            line-height: 1.2;
+        }
+        #merged-display #widget-header .weather-header-row .temp-header {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2px;
+        }
+        #merged-display #widget-header .weather-header-row .temp-header .temp-value {
+            font-size: 3.8rem;
+            font-weight: 300;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+        #merged-display #widget-header .weather-header-row .temp-header .temp-condition {
+            font-size: 0.85rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+        #merged-display #widget-header .weather-header-row .temp-header .temp-highlow {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            display: inline-flex;
+            gap: 6px;
+        }
+        #merged-display #widget-header .weather-header-row .temp-header .temp-highlow .max {
+            color: #fbbf24;
+        }
+        #merged-display #widget-header .weather-header-row .temp-header .temp-highlow .min {
+            color: #93c5fd;
+        }
+
+        /* ── Layout mode overrides for merged display ── */
+        .weather-dashboard.layout-mode .sticky-header,
+        .weather-dashboard.layout-mode .scrollable-content {
+            position: static !important;
+            display: block !important;
+            flex: none !important;
+            overflow-y: visible !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+            gap: 0 !important;
+        }
+        .weather-dashboard.layout-mode .sticky-header {
+            border-bottom: none !important;
+            background: transparent !important;
+            backdrop-filter: none !important;
+        }
+        .weather-dashboard.layout-mode .sticky-header::after {
+            display: none;
+        }
+        .weather-dashboard.layout-mode #merged-display {
+            position: absolute !important;
+            height: auto !important;
+            min-height: 120px;
+            background: rgba(10, 20, 40, 0.25) !important;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 24px;
+            pointer-events: all;
+            cursor: grab;
+            padding: 10px !important;
+            margin: 0 !important;
+            overflow: visible;
+        }
+        .weather-dashboard.layout-mode #merged-display.dragging {
+            cursor: grabbing;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            z-index: 20;
+            border-color: rgba(74, 158, 255, 0.6) !important;
+            background: rgba(10, 20, 40, 0.45) !important;
+        }
+        .weather-dashboard.layout-mode #merged-display .drag-handle {
+            display: flex !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 26px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 16px 16px 0 0;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 18px;
+            letter-spacing: 4px;
+            user-select: none;
+            pointer-events: all;
+            cursor: grab;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 5;
+        }
+        .weather-dashboard.layout-mode #merged-display .drag-handle:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .weather-dashboard.layout-mode #merged-display .resize-handle {
+            display: block !important;
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 18px;
+            height: 18px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            cursor: nwse-resize;
+            pointer-events: all;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            z-index: 5;
+        }
+        .weather-dashboard.layout-mode #merged-display .resize-handle:hover {
+            background: rgba(74, 158, 255, 0.35);
+            border-color: rgba(74, 158, 255, 0.5);
+        }
+        .weather-dashboard.layout-mode #merged-display .resize-handle::after {
+            content: "⤡";
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.4);
+            line-height: 1;
+        }
+        .weather-dashboard.layout-mode #merged-display #widget-canvas {
+            position: relative !important;
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 60px;
+            pointer-events: none;
+        }
+        .weather-dashboard.layout-mode #merged-display #widget-header {
+            position: relative !important;
+            pointer-events: none;
+        }
+        /* In layout mode, the merged display is draggable as a unit */
+        .weather-dashboard.layout-mode .sticky-header .widget .drag-handle,
+        .weather-dashboard.layout-mode .sticky-header .widget .resize-handle {
+            display: none !important;
+        }
+
+        /* ── Scrollable content (lower part) ── */
         .scrollable-content {
             flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
             gap: 18px;
-            padding-top: 2px;
+            padding-right: 4px;
+            padding-bottom: 10px;
         }
+
         .scrollable-content .widget {
             position: relative !important;
             left: auto !important;
@@ -124,18 +374,7 @@
             display: none !important;
         }
 
-        /* ── Layout mode overrides ── */
-        .weather-dashboard.layout-mode .sticky-header,
-        .weather-dashboard.layout-mode .scrollable-content {
-            position: static !important;
-            display: block !important;
-            flex: none !important;
-            backdrop-filter: none !important;
-            background: transparent !important;
-            padding: 0 !important;
-            gap: 0 !important;
-        }
-        .weather-dashboard.layout-mode .sticky-header .widget,
+        /* ── Layout mode for scrollable widgets ── */
         .weather-dashboard.layout-mode .scrollable-content .widget {
             position: absolute !important;
             padding: 10px !important;
@@ -149,94 +388,11 @@
             cursor: grab !important;
             border-radius: 16px !important;
         }
-        .weather-dashboard.layout-mode .sticky-header .widget .drag-handle,
         .weather-dashboard.layout-mode .scrollable-content .widget .drag-handle {
             display: flex !important;
         }
-        .weather-dashboard.layout-mode .sticky-header .widget .resize-handle,
         .weather-dashboard.layout-mode .scrollable-content .widget .resize-handle {
             display: block !important;
-        }
-        .weather-dashboard.layout-mode .sticky-header .widget .widget-content,
-        .weather-dashboard.layout-mode .scrollable-content .widget .widget-content {
-            height: 100%;
-            overflow: visible;
-        }
-
-        /* ── Canvas widget ── */
-        #widget-canvas {
-            position: relative !important;
-            padding: 0 !important;
-            border: none !important;
-            background: transparent !important;
-            pointer-events: none;
-            overflow: hidden;
-            border-radius: 24px;
-            width: 100% !important;
-            height: 180px !important;
-            min-height: 100px;
-            flex-shrink: 0;
-            left: auto !important;
-            top: auto !important;
-            margin-bottom: 10px;
-        }
-        #widget-canvas>* {
-            pointer-events: none;
-        }
-        #widget-canvas canvas {
-            width: 100% !important;
-            height: 100% !important;
-            display: block;
-            border-radius: 24px;
-            pointer-events: none;
-        }
-        .weather-dashboard.layout-mode #widget-canvas {
-            position: absolute !important;
-            background: rgba(10, 20, 40, 0.25) !important;
-            backdrop-filter: blur(2px);
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            border-radius: 24px;
-            pointer-events: all;
-            cursor: grab;
-            min-width: 140px;
-            min-height: 100px;
-            height: auto !important;
-            margin-bottom: 0;
-        }
-        .weather-dashboard.layout-mode #widget-canvas.dragging {
-            cursor: grabbing;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
-            z-index: 20;
-            border-color: rgba(74, 158, 255, 0.6) !important;
-            background: rgba(10, 20, 40, 0.45) !important;
-        }
-        #widget-canvas .drag-handle {
-            display: none !important;
-        }
-        .weather-dashboard.layout-mode #widget-canvas .drag-handle {
-            display: flex !important;
-        }
-        #widget-canvas .resize-handle {
-            display: none !important;
-        }
-        .weather-dashboard.layout-mode #widget-canvas .resize-handle {
-            display: block !important;
-        }
-
-        /* ── Guide Canvas ── */
-        #guide-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 15;
-            border-radius: 24px;
-            display: none;
-        }
-        .layout-mode #guide-canvas {
-            display: block;
         }
 
         /* ── Widget search (two rows) ── */
@@ -252,7 +408,7 @@
             gap: 4px;
         }
         .search-top-row button {
-            background: rgba(255, 255, 255, 0.10);
+            background: rgba(255, 255, 255, 0.12);
             border: none;
             color: #fff;
             width: 32px;
@@ -265,11 +421,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             flex-shrink: 0;
         }
         .search-top-row button:hover {
-            background: rgba(255, 255, 255, 0.22);
+            background: rgba(255, 255, 255, 0.25);
         }
         .search-bottom-row {
             display: flex;
@@ -318,7 +474,7 @@
             flex-shrink: 0;
         }
         .search-bottom-row .loc-btn:hover {
-            background: rgba(255, 255, 255, 0.22);
+            background: rgba(255, 255, 255, 0.25);
         }
         .search-bottom-row .loc-btn span {
             display: inline;
@@ -350,70 +506,6 @@
         }
         .search-suggestions .suggestion-item:hover {
             background: rgba(255, 255, 255, 0.10);
-        }
-
-        /* ── Header row (temperature) ── */
-        .weather-header-row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
-            padding: 2px 0;
-        }
-        .weather-header-row .weather-icon-header {
-            font-size: 2.8rem;
-            line-height: 1;
-            flex-shrink: 0;
-        }
-        .weather-header-row .location-datetime {
-            flex: 1;
-            min-width: 120px;
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-        }
-        .weather-header-row .location-datetime .loc-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            line-height: 1.2;
-        }
-        .weather-header-row .location-datetime .loc-date {
-            font-size: 0.7rem;
-            opacity: 0.7;
-            line-height: 1.2;
-        }
-        .weather-header-row .temp-header {
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            flex-wrap: wrap;
-            flex-shrink: 0;
-            margin-left: auto;
-        }
-        .weather-header-row .temp-header .temp-value {
-            font-size: 2.4rem;
-            font-weight: 300;
-            line-height: 1;
-            letter-spacing: -0.02em;
-        }
-        .weather-header-row .temp-header .temp-condition {
-            font-size: 0.85rem;
-            font-weight: 500;
-            opacity: 0.9;
-            white-space: nowrap;
-        }
-        .weather-header-row .temp-header .temp-highlow {
-            font-size: 0.7rem;
-            opacity: 0.7;
-            white-space: nowrap;
-            display: inline-flex;
-            gap: 4px;
-        }
-        .weather-header-row .temp-header .temp-highlow .max {
-            color: #fbbf24;
-        }
-        .weather-header-row .temp-header .temp-highlow .min {
-            color: #93c5fd;
         }
 
         /* ── Details grid ── */
@@ -511,7 +603,7 @@
 
         /* ── Sunrise / Sunset markers in hourly ── */
         .hourly-marker {
-            flex: 0 0 44px;
+            flex: 0 0 52px;
             text-align: center;
             font-size: 0.6rem;
             position: relative;
@@ -519,30 +611,37 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: transparent;
-            border: none;
-            padding: 2px 0;
+            background: rgba(255, 215, 0, 0.08);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            padding: 4px 2px;
+            flex-shrink: 0;
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.05);
         }
         .hourly-marker .marker-icon {
-            font-size: 1.1rem;
+            font-size: 1.4rem;
             line-height: 1.2;
         }
         .hourly-marker .marker-time {
-            font-size: 0.55rem;
-            opacity: 0.7;
-            font-weight: 500;
+            font-size: 0.6rem;
+            opacity: 0.9;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+        }
+        .hourly-marker.sunrise-marker {
+            border-color: rgba(255, 215, 0, 0.4);
+            background: rgba(255, 215, 0, 0.12);
         }
         .hourly-marker.sunrise-marker .marker-icon {
             color: #fbbf24;
         }
+        .hourly-marker.sunset-marker {
+            border-color: rgba(255, 100, 50, 0.4);
+            background: rgba(255, 100, 50, 0.12);
+        }
         .hourly-marker.sunset-marker .marker-icon {
             color: #f97316;
-        }
-        .hourly-marker .marker-line {
-            width: 1px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.15);
-            margin: 2px auto;
         }
 
         /* ── Daily ── */
@@ -1211,6 +1310,32 @@
             .weather-dashboard {
                 padding: 8px 10px 14px;
                 border-radius: 16px;
+                height: 98vh;
+            }
+            .sticky-header {
+                padding-bottom: 6px;
+                margin-bottom: 6px;
+            }
+            #merged-display {
+                height: 4.5cm;
+            }
+            #merged-display #widget-header .weather-header-row .weather-icon-header {
+                font-size: 2.2rem;
+            }
+            #merged-display #widget-header .weather-header-row .location-datetime .loc-name {
+                font-size: 0.85rem;
+            }
+            #merged-display #widget-header .weather-header-row .location-datetime .loc-date {
+                font-size: 0.55rem;
+            }
+            #merged-display #widget-header .weather-header-row .temp-header .temp-value {
+                font-size: 3rem;
+            }
+            #merged-display #widget-header .weather-header-row .temp-header .temp-condition {
+                font-size: 0.7rem;
+            }
+            #merged-display #widget-header .weather-header-row .temp-header .temp-highlow {
+                font-size: 0.6rem;
             }
             .details-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -1220,7 +1345,7 @@
                 flex: 0 0 48px;
             }
             .hourly-marker {
-                flex: 0 0 34px;
+                flex: 0 0 42px;
             }
             .detail-card {
                 padding: 6px 4px;
@@ -1244,30 +1369,6 @@
                 max-height: 140px;
             }
 
-            .weather-header-row {
-                gap: 8px;
-                padding: 4px 0 2px;
-            }
-            .weather-header-row .weather-icon-header {
-                font-size: 2rem;
-            }
-            .weather-header-row .location-datetime .loc-name {
-                font-size: 0.9rem;
-            }
-            .weather-header-row .location-datetime .loc-date {
-                font-size: 0.6rem;
-            }
-            .weather-header-row .temp-header .temp-value {
-                font-size: 1.8rem;
-            }
-            .weather-header-row .temp-header .temp-condition {
-                font-size: 0.7rem;
-                white-space: normal;
-            }
-            .weather-header-row .temp-header .temp-highlow {
-                font-size: 0.6rem;
-            }
-
             .search-bottom-row .search-input-wrap input {
                 font-size: 0.7rem;
                 padding: 5px 10px;
@@ -1288,13 +1389,9 @@
                 font-size: 0.8rem;
             }
 
-            #widget-canvas {
-                height: 120px !important;
-                min-height: 70px;
-                margin-bottom: 6px;
-            }
             .scrollable-content {
                 gap: 12px;
+                padding-top: 4px;
             }
 
             .widget {
@@ -1310,28 +1407,37 @@
                 font-size: 0.75rem;
             }
             .hourly-marker .marker-icon {
-                font-size: 0.9rem;
+                font-size: 1.1rem;
             }
             .hourly-marker .marker-time {
                 font-size: 0.5rem;
             }
-            .hourly-marker .marker-line {
-                height: 14px;
-            }
         }
 
         @media (max-width: 420px) {
-            .weather-header-row .temp-header {
-                gap: 2px;
+            .sticky-header {
+                padding: 6px 0 4px 0;
             }
-            .weather-header-row .location-datetime {
-                min-width: 60px;
+            #merged-display {
+                height: 3.8cm;
             }
-            .weather-header-row .weather-icon-header {
-                font-size: 1.4rem;
+            #merged-display #widget-header .weather-header-row .weather-icon-header {
+                font-size: 1.6rem;
             }
-            .weather-header-row .temp-header .temp-value {
-                font-size: 1.3rem;
+            #merged-display #widget-header .weather-header-row .temp-header .temp-value {
+                font-size: 2.2rem;
+            }
+            #merged-display #widget-header .weather-header-row .temp-header .temp-condition {
+                font-size: 0.6rem;
+            }
+            #merged-display #widget-header .weather-header-row .temp-header .temp-highlow {
+                font-size: 0.5rem;
+            }
+            #merged-display #widget-header .weather-header-row .location-datetime .loc-name {
+                font-size: 0.7rem;
+            }
+            #merged-display #widget-header .weather-header-row .location-datetime .loc-date {
+                font-size: 0.5rem;
             }
             .details-grid {
                 grid-template-columns: 1fr 1fr;
@@ -1339,11 +1445,6 @@
             }
             .widget .details-grid {
                 grid-template-columns: 1fr 1fr;
-            }
-            #widget-canvas {
-                height: 90px !important;
-                min-height: 60px;
-                margin-bottom: 4px;
             }
             .search-bottom-row .loc-btn span {
                 display: none;
@@ -1379,63 +1480,66 @@
                 flex: 0 0 40px;
             }
             .hourly-marker {
-                flex: 0 0 28px;
+                flex: 0 0 34px;
             }
             .hourly-marker .marker-icon {
-                font-size: 0.75rem;
+                font-size: 0.9rem;
             }
             .hourly-marker .marker-time {
                 font-size: 0.45rem;
             }
-            .hourly-marker .marker-line {
-                height: 10px;
-            }
         }
 
-        /* ── Layout mode widget positions (fallback) ── */
+        /* ── Layout mode merged display position ── */
+        .weather-dashboard.layout-mode #merged-display {
+            left: 5% !important;
+            top: 80px !important;
+            width: 90% !important;
+            height: auto !important;
+            z-index: 1 !important;
+            margin-bottom: 0 !important;
+        }
         .weather-dashboard.layout-mode #widget-search {
             left: 5% !important;
             top: 10px !important;
             width: 90% !important;
             z-index: 100 !important;
         }
-        .weather-dashboard.layout-mode #widget-canvas {
-            left: 5% !important;
-            top: 80px !important;
-            width: 90% !important;
-            height: 180px !important;
-            z-index: 1 !important;
-            margin-bottom: 0 !important;
-        }
-        .weather-dashboard.layout-mode #widget-header {
-            left: 5% !important;
-            top: 280px !important;
-            width: 90% !important;
-            z-index: 10 !important;
-        }
         .weather-dashboard.layout-mode #widget-details {
             left: 5% !important;
-            top: 400px !important;
+            top: 360px !important;
             width: 90% !important;
             z-index: 10 !important;
         }
         .weather-dashboard.layout-mode #widget-sunrise {
             left: 5% !important;
-            top: 540px !important;
+            top: 500px !important;
             width: 90% !important;
             z-index: 10 !important;
         }
         .weather-dashboard.layout-mode #widget-hourly {
             left: 5% !important;
-            top: 640px !important;
+            top: 600px !important;
             width: 90% !important;
             z-index: 10 !important;
         }
         .weather-dashboard.layout-mode #widget-daily {
             left: 5% !important;
-            top: 800px !important;
+            top: 760px !important;
             width: 90% !important;
             z-index: 10 !important;
+        }
+        .weather-dashboard.layout-mode .scrollable-content {
+            overflow-y: visible !important;
+            flex: none !important;
+        }
+        .weather-dashboard.layout-mode .sticky-header {
+            border-bottom: none !important;
+            background: transparent !important;
+            backdrop-filter: none !important;
+        }
+        .weather-dashboard.layout-mode .sticky-header::after {
+            display: none;
         }
     </style>
 </head>
@@ -1443,7 +1547,7 @@
 
     <div class="weather-dashboard" id="weather-dashboard-container" data-time="day" data-weather="clear">
 
-        <!-- ─── STICKY HEADER ─── -->
+        <!-- ─── STICKY HEADER (UPPER PART) ─── -->
         <div class="sticky-header" id="sticky-header">
 
             <!-- Widget: Search -->
@@ -1473,25 +1577,27 @@
                 </div>
             </div>
 
-            <!-- Widget: Canvas -->
-            <div id="widget-canvas">
+            <!-- ─── MERGED DISPLAY: Canvas + Temperature ─── -->
+            <div id="merged-display">
                 <div class="drag-handle"><span class="handle-dots">⠿</span></div>
                 <div class="resize-handle"></div>
-                <div class="widget-content">
-                    <canvas id="weather-canvas"></canvas>
-                </div>
-            </div>
 
-            <!-- Widget: Header (temperature) -->
-            <div id="widget-header" class="widget">
-                <div class="drag-handle"><span class="handle-dots">⠿</span></div>
-                <div class="resize-handle"></div>
-                <div class="widget-content" id="forecast-header"></div>
+                <!-- Canvas -->
+                <div id="widget-canvas">
+                    <div class="widget-content">
+                        <canvas id="weather-canvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- Temperature -->
+                <div id="widget-header">
+                    <div class="widget-content" id="forecast-header"></div>
+                </div>
             </div>
 
         </div>
 
-        <!-- ─── SCROLLABLE CONTENT ─── -->
+        <!-- ─── SCROLLABLE CONTENT (LOWER PART) ─── -->
         <div class="scrollable-content" id="scrollable-content">
 
             <!-- Widget: Details -->
@@ -2379,19 +2485,33 @@
             return { particles, type, cat, intensity };
         }
 
-        function generateLightningBolt(W, H) {
+        // ─── Lightning with branching ──────────────────────────────────────
+        function generateLightningBolt(W, H, branches = 3) {
             const points = [];
-            let x = W * (0.25 + Math.random() * 0.5);
+            let x = W * (0.2 + Math.random() * 0.6);
             let y = 0;
-            const endY = H * (0.45 + Math.random() * 0.4);
+            const endY = H * (0.5 + Math.random() * 0.4);
             points.push([x, y]);
-            const segments = 7 + Math.floor(Math.random() * 4);
+            const segments = 8 + Math.floor(Math.random() * 5);
             for (let i = 1; i <= segments; i++) {
                 y = (endY / segments) * i;
                 x += (Math.random() - 0.5) * W * 0.12;
                 points.push([x, y]);
             }
-            return points;
+            // Add branches
+            const branchesList = [];
+            for (let b = 0; b < branches; b++) {
+                if (Math.random() < 0.4) continue;
+                const startIdx = 2 + Math.floor(Math.random() * (points.length - 3));
+                const [sx, sy] = points[startIdx];
+                const branchPoints = [
+                    [sx, sy],
+                    [sx + (Math.random() - 0.5) * W * 0.08, sy + (Math.random() * H * 0.08)],
+                    [sx + (Math.random() - 0.5) * W * 0.12, sy + (Math.random() * H * 0.15)]
+                ];
+                branchesList.push(branchPoints);
+            }
+            return { main: points, branches: branchesList };
         }
 
         function runAnimation(canvas, particles, type, weatherCode, settingsOverride, isPreview) {
@@ -2401,7 +2521,7 @@
             let animating = true;
             let flashTimer = 0,
                 flashIntensity = 0;
-            let boltPoints = [],
+            let boltData = null,
                 boltLife = 0;
 
             const thunderMul = 0.5 + (settingsOverride?.thunderIntensity || settings.thunderIntensity);
@@ -2422,40 +2542,52 @@
 
                 if (type === 'thunder') {
                     flashTimer += 0.016;
-                    const lightningThreshold = Math.max(0.25, 1.1 / lightningMul);
-                    if (flashTimer > lightningThreshold + Math.random() * 1.4) {
-                        flashIntensity = (0.1 + Math.random() * 0.35) * Math.min(thunderMul, 1.6);
+                    // Lower frequency: threshold increased
+                    const lightningThreshold = Math.max(0.8, 2.2 / lightningMul);
+                    if (flashTimer > lightningThreshold + Math.random() * 2.0) {
+                        flashIntensity = (0.15 + Math.random() * 0.3) * Math.min(thunderMul, 1.4);
                         flashTimer = 0;
-                        if (Math.random() < 0.55) {
-                            boltPoints = generateLightningBolt(W, H);
-                            boltLife = 1;
+                        if (Math.random() < 0.5) {
+                            const branches = 2 + Math.floor(Math.random() * 4);
+                            boltData = generateLightningBolt(W, H, branches);
+                            boltLife = 1.0;
                         }
                     }
-                    if (boltLife > 0 && boltPoints.length) {
+                    if (boltData && boltLife > 0) {
                         ctx.save();
                         ctx.globalAlpha = boltLife;
                         ctx.shadowColor = 'rgba(200,225,255,0.9)';
-                        ctx.shadowBlur = 18;
+                        ctx.shadowBlur = 20;
                         ctx.strokeStyle = 'rgba(235,245,255,0.95)';
-                        ctx.lineWidth = 2.2;
+                        ctx.lineWidth = 2.5;
                         ctx.lineCap = 'round';
+                        ctx.lineJoin = 'round';
+                        // Main bolt
                         ctx.beginPath();
-                        boltPoints.forEach((pt, i) => i === 0 ? ctx.moveTo(pt[0], pt[1]) : ctx.lineTo(pt[0], pt[1]));
+                        boltData.main.forEach((pt, i) => i === 0 ? ctx.moveTo(pt[0], pt[1]) : ctx.lineTo(pt[0], pt[1]));
                         ctx.stroke();
-                        ctx.shadowBlur = 8;
+                        // Branches
+                        for (const branch of boltData.branches) {
+                            ctx.beginPath();
+                            branch.forEach((pt, i) => i === 0 ? ctx.moveTo(pt[0], pt[1]) : ctx.lineTo(pt[0], pt[1]));
+                            ctx.stroke();
+                        }
+                        ctx.shadowBlur = 10;
                         ctx.lineWidth = 5;
-                        ctx.strokeStyle = 'rgba(210,230,255,0.35)';
+                        ctx.strokeStyle = 'rgba(210,230,255,0.3)';
+                        ctx.beginPath();
+                        boltData.main.forEach((pt, i) => i === 0 ? ctx.moveTo(pt[0], pt[1]) : ctx.lineTo(pt[0], pt[1]));
                         ctx.stroke();
                         ctx.restore();
-                        boltLife *= 0.72;
-                        if (boltLife < 0.04) { boltLife = 0;
-                            boltPoints = []; }
+                        boltLife *= 0.65;
+                        if (boltLife < 0.03) { boltLife = 0;
+                            boltData = null; }
                     }
                     if (flashIntensity > 0) {
                         ctx.fillStyle = `rgba(225,235,255,${flashIntensity})`;
                         ctx.fillRect(0, 0, W, H);
-                        flashIntensity *= 0.91;
-                        if (flashIntensity < 0.003) flashIntensity = 0;
+                        flashIntensity *= 0.90;
+                        if (flashIntensity < 0.002) flashIntensity = 0;
                     }
                 }
 
@@ -2516,7 +2648,7 @@
         function startWeatherAnimation(weatherCode, windSpeed, timeOfDay, settingsOverride) {
             const canvas = document.getElementById('weather-canvas');
             if (!canvas) return;
-            const container = document.getElementById('widget-canvas');
+            const container = document.getElementById('merged-display');
             const rect = container.getBoundingClientRect();
 
             const W = canvas.width = rect.width || 640;
@@ -2643,12 +2775,11 @@
         function getDefaultLayout() {
             return {
                 'widget-search': { left: '5%', top: '10px', width: '90%', height: 'auto' },
-                'widget-canvas': { left: '5%', top: '80px', width: '90%', height: '180px' },
-                'widget-header': { left: '5%', top: '280px', width: '90%', height: 'auto' },
-                'widget-details': { left: '5%', top: '400px', width: '90%', height: 'auto' },
-                'widget-sunrise': { left: '5%', top: '540px', width: '90%', height: 'auto' },
-                'widget-hourly': { left: '5%', top: '640px', width: '90%', height: 'auto' },
-                'widget-daily': { left: '5%', top: '800px', width: '90%', height: 'auto' }
+                'merged-display': { left: '5%', top: '80px', width: '90%', height: 'auto' },
+                'widget-details': { left: '5%', top: '360px', width: '90%', height: 'auto' },
+                'widget-sunrise': { left: '5%', top: '500px', width: '90%', height: 'auto' },
+                'widget-hourly': { left: '5%', top: '600px', width: '90%', height: 'auto' },
+                'widget-daily': { left: '5%', top: '760px', width: '90%', height: 'auto' }
             };
         }
 
@@ -2668,14 +2799,14 @@
                     if (data.width) el.style.width = data.width;
                     if (data.height && data.height !== 'auto') el.style.height = data.height;
                     else el.style.height = 'auto';
-                    if (id === 'widget-canvas') {
+                    if (id === 'merged-display') {
                         el.style.zIndex = '1';
                     }
                 }
             });
             setTimeout(() => {
                 const canvas = document.getElementById('weather-canvas');
-                const container = document.getElementById('widget-canvas');
+                const container = document.getElementById('merged-display');
                 if (canvas && container) {
                     const rect = container.getBoundingClientRect();
                     canvas.width = rect.width || 640;
@@ -2699,12 +2830,22 @@
         function saveLayout() {
             const layout = {};
             const widgets = document.querySelectorAll('.widget');
+            const merged = document.getElementById('merged-display');
+            if (merged) {
+                layout['merged-display'] = {
+                    left: merged.style.left || 'auto',
+                    top: merged.style.top || 'auto',
+                    width: merged.style.width || 'auto',
+                    height: merged.style.height || 'auto'
+                };
+            }
             widgets.forEach(el => {
-                const left = el.style.left || 'auto';
-                const top = el.style.top || 'auto';
-                const width = el.style.width || 'auto';
-                const height = el.style.height || 'auto';
-                layout[el.id] = { left, top, width, height };
+                layout[el.id] = {
+                    left: el.style.left || 'auto',
+                    top: el.style.top || 'auto',
+                    width: el.style.width || 'auto',
+                    height: el.style.height || 'auto'
+                };
             });
             localStorage.setItem(LAYOUT_KEY, JSON.stringify(layout));
         }
@@ -2722,7 +2863,23 @@
         function getWidgetRects(container) {
             const rects = {};
             const widgets = document.querySelectorAll('.widget');
+            const merged = document.getElementById('merged-display');
             const containerRect = container.getBoundingClientRect();
+            if (merged) {
+                const r = merged.getBoundingClientRect();
+                rects['merged-display'] = {
+                    left: r.left - containerRect.left,
+                    top: r.top - containerRect.top,
+                    right: r.right - containerRect.left,
+                    bottom: r.bottom - containerRect.top,
+                    width: r.width,
+                    height: r.height,
+                    centerX: (r.left + r.right) / 2 - containerRect.left,
+                    centerY: (r.top + r.bottom) / 2 - containerRect.top,
+                    el: merged,
+                    id: 'merged-display'
+                };
+            }
             widgets.forEach(w => {
                 const r = w.getBoundingClientRect();
                 rects[w.id] = {
@@ -3021,7 +3178,15 @@
                 canvas.style.display = 'block';
                 document.getElementById('sticky-header').style.position = 'static';
                 document.getElementById('sticky-header').style.backdropFilter = 'none';
+                document.getElementById('sticky-header').style.background = 'transparent';
+                document.getElementById('sticky-header').style.boxShadow = 'none';
+                document.getElementById('sticky-header').style.border = 'none';
+                document.getElementById('scrollable-content').style.overflowY = 'visible';
+                document.getElementById('scrollable-content').style.flex = 'none';
                 document.getElementById('scrollable-content').style.display = 'block';
+                // Show internal drag handles for merged display in layout mode
+                document.querySelectorAll('#merged-display .drag-handle, #merged-display .resize-handle').forEach(el => el
+                    .style.display = '');
                 setTimeout(() => {
                     drawGuides(null, dashboard);
                 }, 50);
@@ -3032,15 +3197,45 @@
                 const canvas = document.getElementById('guide-canvas');
                 canvas.style.display = 'none';
                 document.getElementById('sticky-header').style.position = 'sticky';
-                document.getElementById('sticky-header').style.backdropFilter = 'blur(2px)';
+                document.getElementById('sticky-header').style.backdropFilter = 'none';
+                document.getElementById('sticky-header').style.background = 'transparent';
+                document.getElementById('sticky-header').style.boxShadow = 'none';
+                document.getElementById('sticky-header').style.border = '1px solid rgba(255, 255, 255, 0.06)';
+                document.getElementById('scrollable-content').style.overflowY = 'auto';
+                document.getElementById('scrollable-content').style.flex = '1';
                 document.getElementById('scrollable-content').style.display = 'flex';
+                // Hide internal drag handles for merged display in normal mode
+                document.querySelectorAll('#merged-display .drag-handle, #merged-display .resize-handle').forEach(el => el
+                    .style.display = 'none');
                 saveLayout();
             }
         }
 
-        // ─── Drag & Drop with Snap, Push, Guides ────────────────────────────
+        // ─── Drag & Drop for merged display (as a unit) ────────────────────
+        function initMergedDrag() {
+            const merged = document.getElementById('merged-display');
+            if (!merged) return;
+            const handle = merged.querySelector('.drag-handle');
+            const resize = merged.querySelector('.resize-handle');
+            if (handle) {
+                handle.addEventListener('mousedown', (e) => startDrag(e, merged));
+                handle.addEventListener('touchstart', (e) => startDrag(e, merged), { passive: false });
+            }
+            if (resize) {
+                resize.addEventListener('mousedown', (e) => startResize(e, merged));
+                resize.addEventListener('touchstart', (e) => startResize(e, merged), { passive: false });
+                resize.addEventListener('dblclick', (e) => {
+                    e.stopPropagation();
+                    merged.style.width = '90%';
+                    merged.style.height = 'auto';
+                    saveLayout();
+                });
+            }
+        }
+
+        // ─── Drag & Drop for scrollable widgets ────────────────────────────
         function initLayoutEvents() {
-            const widgets = document.querySelectorAll('.widget');
+            const widgets = document.querySelectorAll('.scrollable-content .widget');
             widgets.forEach(w => {
                 const handle = w.querySelector('.drag-handle');
                 if (handle) {
@@ -3059,6 +3254,8 @@
                     });
                 }
             });
+            // Also init merged display drag
+            initMergedDrag();
         }
 
         function startDrag(e, widget) {
@@ -3153,11 +3350,13 @@
                 let newHeight = Math.max(50, startHeight + dy);
                 widget.style.width = newWidth + 'px';
                 widget.style.height = newHeight + 'px';
-                if (widget.id === 'widget-canvas') {
-                    const canvas = widget.querySelector('canvas');
+                if (widget.id === 'merged-display') {
+                    // Resize the canvas inside
+                    const canvas = document.getElementById('weather-canvas');
                     if (canvas) {
-                        canvas.width = newWidth;
-                        canvas.height = newHeight;
+                        const rect = widget.getBoundingClientRect();
+                        canvas.width = rect.width || 640;
+                        canvas.height = rect.height || 800;
                         canvas.style.width = '100%';
                         canvas.style.height = '100%';
                         if (weatherCache) {
@@ -3233,10 +3432,10 @@
                 dashboard.setAttribute('data-weather', cat);
 
                 // Update canvas widget size
-                const canvasWidget = document.getElementById('widget-canvas');
                 const canvas = document.getElementById('weather-canvas');
-                if (canvas && canvasWidget) {
-                    const rect = canvasWidget.getBoundingClientRect();
+                const container = document.getElementById('merged-display');
+                if (canvas && container) {
+                    const rect = container.getBoundingClientRect();
                     canvas.width = rect.width || 640;
                     canvas.height = rect.height || 800;
                     canvas.style.width = '100%';
@@ -3263,7 +3462,7 @@
                     return val.toFixed(0) + unit;
                 }
 
-                // ─── HEADER ──────────────────────────────────────────────────
+                // ─── HEADER (centered) ──────────────────────────────────────
                 const dateShort = formatDateShort(localTimeStr, timezone);
                 const timeShort = formatTimeShort(localTimeStr, timezone);
                 const currentTempC = data.current.temperature_2m;
@@ -3342,7 +3541,16 @@
                     const hourStart = luxon.DateTime.fromJSDate(h, { zone: timezone }).startOf('hour');
                     const hourEnd = hourStart.plus({ hours: 1 });
 
-                    // Check if sunrise falls within this hour
+                    // Add the hour first
+                    displayItems.push({
+                        type: 'hour',
+                        date: h,
+                        index: i,
+                        temp: hourly.temperature_2m[i],
+                        code: hourly.weather_code[i],
+                    });
+
+                    // Check if sunrise falls within this hour (after pushing hour)
                     if (!sunriseInserted && sunriseDT >= hourStart && sunriseDT < hourEnd) {
                         displayItems.push({
                             type: 'sunrise',
@@ -3351,15 +3559,6 @@
                         });
                         sunriseInserted = true;
                     }
-
-                    // Add the hour
-                    displayItems.push({
-                        type: 'hour',
-                        date: h,
-                        index: i,
-                        temp: hourly.temperature_2m[i],
-                        code: hourly.weather_code[i],
-                    });
 
                     // Check if sunset falls within this hour
                     if (!sunsetInserted && sunsetDT >= hourStart && sunsetDT < hourEnd) {
@@ -3436,11 +3635,27 @@
                     if (layoutMode) {
                         document.getElementById('sticky-header').style.position = 'static';
                         document.getElementById('sticky-header').style.backdropFilter = 'none';
+                        document.getElementById('sticky-header').style.background = 'transparent';
+                        document.getElementById('sticky-header').style.boxShadow = 'none';
+                        document.getElementById('sticky-header').style.border = 'none';
+                        document.getElementById('scrollable-content').style.overflowY = 'visible';
+                        document.getElementById('scrollable-content').style.flex = 'none';
                         document.getElementById('scrollable-content').style.display = 'block';
+                        // Show drag handles for merged display in layout mode
+                        document.querySelectorAll('#merged-display .drag-handle, #merged-display .resize-handle')
+                            .forEach(el => el.style.display = '');
                     } else {
                         document.getElementById('sticky-header').style.position = 'sticky';
-                        document.getElementById('sticky-header').style.backdropFilter = 'blur(2px)';
+                        document.getElementById('sticky-header').style.backdropFilter = 'none';
+                        document.getElementById('sticky-header').style.background = 'transparent';
+                        document.getElementById('sticky-header').style.boxShadow = 'none';
+                        document.getElementById('sticky-header').style.border = '1px solid rgba(255, 255, 255, 0.06)';
+                        document.getElementById('scrollable-content').style.overflowY = 'auto';
+                        document.getElementById('scrollable-content').style.flex = '1';
                         document.getElementById('scrollable-content').style.display = 'flex';
+                        // Hide drag handles for merged display in normal mode
+                        document.querySelectorAll('#merged-display .drag-handle, #merged-display .resize-handle')
+                            .forEach(el => el.style.display = 'none');
                     }
                     const canvas = document.getElementById('guide-canvas');
                     if (canvas) {
@@ -3451,10 +3666,10 @@
                         canvas.style.width = rect.width + 'px';
                         canvas.style.height = rect.height + 'px';
                     }
-                    const cw = document.getElementById('widget-canvas');
                     const c = document.getElementById('weather-canvas');
-                    if (cw && c) {
-                        const r = cw.getBoundingClientRect();
+                    const cont = document.getElementById('merged-display');
+                    if (c && cont) {
+                        const r = cont.getBoundingClientRect();
                         c.width = r.width || 640;
                         c.height = r.height || 800;
                         c.style.width = '100%';
@@ -3978,8 +4193,7 @@
             const saved = localStorage.getItem('weatherSettings');
             if (saved) {
                 try {
-                    const parsed = JSON.parse(saved);
-                    Object.assign(settings, parsed);
+                    Object.assign(settings, JSON.parse(saved));
                 } catch (e) {}
             }
 
@@ -3988,6 +4202,7 @@
             const lonParam = urlParams.get('lon');
             const nameParam = urlParams.get('name');
 
+            // Highest priority: URL parameters (shared links)
             if (latParam && lonParam && nameParam) {
                 lastLocation = {
                     lat: parseFloat(latParam),
@@ -4000,20 +4215,57 @@
                 return;
             }
 
-            const stored = localStorage.getItem('selectedLocation');
-            if (stored) {
-                try {
-                    const parsed = JSON.parse(stored);
-                    if (parsed.lat && parsed.lon && parsed.name) {
-                        lastLocation = parsed;
+            // Second priority: Current location (Geolocation) - ALWAYS try this first
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async (pos) => {
+                        const { latitude, longitude } = pos.coords;
+                        const name = await fetchLocationName(latitude, longitude);
+                        lastLocation = { lat: latitude, lon: longitude, name };
+                        localStorage.setItem('selectedLocation', JSON.stringify(lastLocation));
                         loadWeatherDashboard();
-                        document.getElementById('location-search').value = parsed.name;
-                        return;
-                    }
-                } catch (e) {}
-            }
-
-            if (!navigator.geolocation) {
+                        document.getElementById('location-search').value = name;
+                    },
+                    (err) => {
+                        console.warn('Geolocation error, falling back to saved or default:', err);
+                        // Third priority: localStorage
+                        const stored = localStorage.getItem('selectedLocation');
+                        if (stored) {
+                            try {
+                                const parsed = JSON.parse(stored);
+                                if (parsed.lat && parsed.lon && parsed.name) {
+                                    lastLocation = parsed;
+                                    loadWeatherDashboard();
+                                    document.getElementById('location-search').value = parsed.name;
+                                    return;
+                                }
+                            } catch (e) {}
+                        }
+                        // Fourth priority: Fallback
+                        const fallbackLat = 29.3759,
+                            fallbackLon = 47.9774;
+                        fetchLocationName(fallbackLat, fallbackLon).then(name => {
+                            lastLocation = { lat: fallbackLat, lon: fallbackLon, name };
+                            localStorage.setItem('selectedLocation', JSON.stringify(lastLocation));
+                            loadWeatherDashboard();
+                            document.getElementById('location-search').value = name;
+                        });
+                    }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 600000 }
+                );
+            } else {
+                // Geolocation not supported, fallback to localStorage or default
+                const stored = localStorage.getItem('selectedLocation');
+                if (stored) {
+                    try {
+                        const parsed = JSON.parse(stored);
+                        if (parsed.lat && parsed.lon && parsed.name) {
+                            lastLocation = parsed;
+                            loadWeatherDashboard();
+                            document.getElementById('location-search').value = parsed.name;
+                            return;
+                        }
+                    } catch (e) {}
+                }
                 const fallbackLat = 29.3759,
                     fallbackLon = 47.9774;
                 fetchLocationName(fallbackLat, fallbackLon).then(name => {
@@ -4022,30 +4274,7 @@
                     loadWeatherDashboard();
                     document.getElementById('location-search').value = name;
                 });
-                return;
             }
-
-            navigator.geolocation.getCurrentPosition(
-                async (pos) => {
-                    const { latitude, longitude } = pos.coords;
-                    const name = await fetchLocationName(latitude, longitude);
-                    lastLocation = { lat: latitude, lon: longitude, name };
-                    localStorage.setItem('selectedLocation', JSON.stringify(lastLocation));
-                    loadWeatherDashboard();
-                    document.getElementById('location-search').value = name;
-                },
-                (err) => {
-                    console.warn('Geolocation error:', err);
-                    const fallbackLat = 29.3759,
-                        fallbackLon = 47.9774;
-                    fetchLocationName(fallbackLat, fallbackLon).then(name => {
-                        lastLocation = { lat: fallbackLat, lon: fallbackLon, name };
-                        localStorage.setItem('selectedLocation', JSON.stringify(lastLocation));
-                        loadWeatherDashboard();
-                        document.getElementById('location-search').value = name;
-                    });
-                }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 600000 }
-            );
         }
 
         document.getElementById('close-weather-btn').addEventListener('click', function() {
@@ -4093,7 +4322,7 @@
                     drawGuides(null, container);
                 }
                 const wc = document.getElementById('weather-canvas');
-                const cw = document.getElementById('widget-canvas');
+                const cw = document.getElementById('merged-display');
                 if (wc && cw && weatherCache) {
                     const rect = cw.getBoundingClientRect();
                     wc.width = rect.width || 640;
