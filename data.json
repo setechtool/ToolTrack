@@ -500,15 +500,15 @@
       "engineerId": 1782235138098,
       "takenDate": "2026-07-23",
       "expectedReturn": "2026-07-23",
-      "returned": false,
+      "returned": true,
       "location": "Amiri Hospital",
       "extensionNotes": "",
       "newExpectedReturn": "",
-      "actualReturnDate": "",
-      "returnConfirmedBy": "",
+      "actualReturnDate": "2026-07-23T11:58:51.680Z",
+      "returnConfirmedBy": "Royston Dcosta",
       "confirmationNotes": "",
-      "transDate": "2026-07-23T11:58:40.309Z",
-      "approvalStatus": "",
+      "transDate": "2026-07-23T11:58:51.680Z",
+      "approvalStatus": "Approved (In Person)",
       "incidentRemarks": "",
       "confirmedBy": ""
     }
@@ -756,7 +756,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-23T11:58:45.779Z",
+    "updated": "2026-07-23T11:58:59.063Z",
     "user": "Donan Arciaga"
   }
 }
