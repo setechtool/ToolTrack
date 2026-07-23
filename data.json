@@ -59,6 +59,18 @@
       "location": "SUMC",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1784807837597,
+      "desc": "HV Dummy plugs E BEZ",
+      "model": "HV Dummy plugs E BEZ 1621791",
+      "serial": "N/A",
+      "owner": "Roy",
+      "calDue": "2027-07-23",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -726,7 +738,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-23T11:55:38.179Z",
+    "updated": "2026-07-23T11:57:21.599Z",
     "user": "Donan Arciaga"
   }
 }
