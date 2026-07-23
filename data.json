@@ -35,6 +35,18 @@
       "location": "Roy",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1784807577116,
+      "desc": "Tektronix Oscilloscope",
+      "model": "TDS 2014",
+      "serial": "C032007",
+      "owner": "SUMC",
+      "calDue": "2027-06-24",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -702,7 +714,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-17T07:56:21.503Z",
+    "updated": "2026-07-23T11:53:01.128Z",
     "user": "Donan Arciaga"
   }
 }
