@@ -590,15 +590,15 @@
       "engineerId": 1783583424470,
       "takenDate": "2026-07-23",
       "expectedReturn": "2026-07-30",
-      "returned": false,
+      "returned": true,
       "location": "Hospital ",
       "extensionNotes": "",
       "newExpectedReturn": "",
-      "actualReturnDate": "",
-      "returnConfirmedBy": "",
+      "actualReturnDate": "2026-07-29T14:17:39.008Z",
+      "returnConfirmedBy": "Royston Dcosta",
       "confirmationNotes": "",
-      "transDate": "2026-07-23T12:01:37.079Z",
-      "approvalStatus": "",
+      "transDate": "2026-07-29T14:17:39.008Z",
+      "approvalStatus": "Approved (In Person)",
       "incidentRemarks": "",
       "confirmedBy": ""
     },
@@ -608,15 +608,15 @@
       "engineerId": 1782235138098,
       "takenDate": "2026-07-23",
       "expectedReturn": "2026-07-30",
-      "returned": false,
+      "returned": true,
       "location": "Amiri Hospital ",
       "extensionNotes": "",
       "newExpectedReturn": "",
-      "actualReturnDate": "",
-      "returnConfirmedBy": "",
+      "actualReturnDate": "2026-07-29T14:17:43.275Z",
+      "returnConfirmedBy": "Royston Dcosta",
       "confirmationNotes": "",
-      "transDate": "2026-07-23T12:05:17.200Z",
-      "approvalStatus": "",
+      "transDate": "2026-07-29T14:17:43.275Z",
+      "approvalStatus": "Approved (In Person)",
       "incidentRemarks": "",
       "confirmedBy": ""
     }
@@ -894,7 +894,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-29T14:17:38.675Z",
+    "updated": "2026-07-29T14:17:49.164Z",
     "user": "Donan Arciaga"
   }
 }
