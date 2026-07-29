@@ -536,15 +536,15 @@
       "engineerId": 1782235138098,
       "takenDate": "2026-07-23",
       "expectedReturn": "2026-07-30",
-      "returned": false,
+      "returned": true,
       "location": "Amiri hospital",
       "extensionNotes": "",
       "newExpectedReturn": "",
-      "actualReturnDate": "",
-      "returnConfirmedBy": "",
+      "actualReturnDate": "2026-07-23T12:08:11.997Z",
+      "returnConfirmedBy": "Donan Arciaga",
       "confirmationNotes": "",
-      "transDate": "2026-07-23T12:08:11.997Z",
-      "approvalStatus": "",
+      "transDate": "2026-07-29T14:17:10.766Z",
+      "approvalStatus": "Approved",
       "incidentRemarks": "",
       "confirmedBy": ""
     },
@@ -608,15 +608,15 @@
       "engineerId": 1782235138098,
       "takenDate": "2026-07-23",
       "expectedReturn": "2026-07-30",
-      "returned": false,
+      "returned": true,
       "location": "Amiri Hospital ",
       "extensionNotes": "",
       "newExpectedReturn": "",
-      "actualReturnDate": "",
-      "returnConfirmedBy": "",
+      "actualReturnDate": "2026-07-23T12:05:17.200Z",
+      "returnConfirmedBy": "Donan Arciaga",
       "confirmationNotes": "",
-      "transDate": "2026-07-23T12:05:17.200Z",
-      "approvalStatus": "",
+      "transDate": "2026-07-29T14:17:09.953Z",
+      "approvalStatus": "Approved",
       "incidentRemarks": "",
       "confirmedBy": ""
     }
@@ -759,7 +759,7 @@
       "engineerId": 1782235138098,
       "returnDate": "2026-07-23T12:02:47.495Z",
       "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1784808163820_p05417.jpeg",
-      "status": "pending",
+      "status": "approved",
       "requestedBy": "Donan Arciaga"
     },
     {
@@ -769,7 +769,7 @@
       "engineerId": 1782235138098,
       "returnDate": "2026-07-23T12:05:17.200Z",
       "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1784808313484_lw6ykt.jpeg",
-      "status": "pending",
+      "status": "approved",
       "requestedBy": "Donan Arciaga"
     },
     {
@@ -779,7 +779,7 @@
       "engineerId": 1782235138098,
       "returnDate": "2026-07-23T12:08:11.997Z",
       "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1784808488587_pqtvky.jpeg",
-      "status": "pending",
+      "status": "approved",
       "requestedBy": "Donan Arciaga"
     }
   ],
@@ -894,7 +894,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-29T14:15:17.280Z",
+    "updated": "2026-07-29T14:17:14.770Z",
     "user": "Donan Arciaga"
   }
 }
