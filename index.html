@@ -856,6 +856,22 @@
             flex-wrap: wrap;
             margin-top: 8px;
         }
+
+        /* ── Auto-login status ── */
+        #auto-login-status {
+            transition: all 0.3s;
+        }
+        #auto-login-status .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #e2e8f0;
+            border-top: 2px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
@@ -878,6 +894,10 @@
                 <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1.8</p>
                 <p class="text-xs text-gray-400 mt-0.5">Settings for all · reliable sync</p>
             </div>
+            <!-- Auto-login status (hidden by default) -->
+            <div id="auto-login-status" class="hidden text-center text-sm text-blue-600 bg-blue-50 rounded-xl py-3 mb-4">
+                <span class="spinner"></span> Authenticating with biometric...
+            </div>
             <div class="space-y-5">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Select Engineer</label>
@@ -893,6 +913,11 @@
                             <i class="fa-solid fa-eye" id="password-toggle-icon"></i>
                         </button>
                     </div>
+                </div>
+                <!-- Remember Me checkbox -->
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="remember-me" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500" />
+                    <label for="remember-me" class="text-sm text-gray-700 cursor-pointer">Remember Me</label>
                 </div>
                 <div id="login-error-msg" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
                     <span id="login-error-text"></span>
@@ -3218,34 +3243,116 @@
             }
         }
 
+        // ═══════════════════════════════════════════════
+        //  REMEMBER ME & AUTO-LOGIN (NEW)
+        // ═══════════════════════════════════════════════
+        const REMEMBER_USER_KEY = 'tooltrack_remember_user';
+        const REMEMBER_FLAG_KEY = 'tooltrack_remember_flag';
+
+        function clearRememberMe() {
+            localStorage.removeItem(REMEMBER_USER_KEY);
+            localStorage.removeItem(REMEMBER_FLAG_KEY);
+        }
+
+        function setRememberMe(username) {
+            localStorage.setItem(REMEMBER_USER_KEY, username);
+            localStorage.setItem(REMEMBER_FLAG_KEY, 'true');
+        }
+
+        function getRememberedUser() {
+            const flag = localStorage.getItem(REMEMBER_FLAG_KEY);
+            if (flag !== 'true') return null;
+            return localStorage.getItem(REMEMBER_USER_KEY) || null;
+        }
+
+        /**
+         * Attempt auto-login with biometric authentication if the user has a stored credential
+         * and the "Remember Me" flag is set.
+         */
+        async function attemptAutoLogin() {
+            const rememberedUser = getRememberedUser();
+            if (!rememberedUser) return;
+
+            // If already logged in (e.g., after a reload while session is active), skip
+            if (authManager.getCurrentUser()) return;
+
+            // If no credential, just pre-select the user in the dropdown and show login screen
+            if (!FaceLoginManager.hasCredential(rememberedUser)) {
+                document.getElementById('login-user-select').value = rememberedUser;
+                // Show a subtle message? Not needed.
+                return;
+            }
+
+            // Show the auto-login status
+            const statusDiv = document.getElementById('auto-login-status');
+            statusDiv.classList.remove('hidden');
+
+            try {
+                const success = await FaceLoginManager.authenticate(rememberedUser);
+                if (success) {
+                    // Login succeeded
+                    const user = authManager.users[rememberedUser];
+                    if (user) {
+                        const role = user.role || 'Engineer';
+                        const isAdmin = ['Royston Dcosta', 'Donan Arciaga'].includes(rememberedUser);
+                        const isDonan = rememberedUser === 'Donan Arciaga';
+                        const isRoy = rememberedUser === 'Royston Dcosta';
+                        authManager.currentUser = {
+                            name: rememberedUser,
+                            role,
+                            isAdmin,
+                            isDonan,
+                            isRoy
+                        };
+                        // Proceed to main app
+                        document.getElementById('login-screen').classList.add('hidden');
+                        document.getElementById('main-app').classList.remove('hidden');
+                        document.getElementById('logged-user-name').textContent = rememberedUser;
+                        document.getElementById('logged-user-role').textContent = authManager.getCurrentUser().role;
+                        buildSidebarNavigation();
+                        buildMobileNav();
+                        IdleManager.start();
+                        await logManager.logAuth(rememberedUser, 'Auto-login via biometric');
+
+                        if (CONFIG.token) {
+                            RepoSync.startPolling();
+                        } else {
+                            RepoSync.setStatus('offline', 'No token');
+                        }
+
+                        const startTab = (authManager.getCurrentUser().isAdmin || authManager.getCurrentUser().isRoy) ? 0 : 1;
+                        switchTab(startTab);
+                        updateAllUI();
+                        initWeather();
+                        document.getElementById('temp-widget').onclick = showWeatherModal;
+                    } else {
+                        // Should not happen
+                        statusDiv.textContent = 'User data missing. Please login manually.';
+                        statusDiv.className = 'text-center text-sm text-red-600 bg-red-50 rounded-xl py-3';
+                        // Fall through to show login screen
+                    }
+                } else {
+                    // Authentication failed
+                    statusDiv.textContent = 'Biometric authentication failed. Please login manually.';
+                    statusDiv.className = 'text-center text-sm text-red-600 bg-red-50 rounded-xl py-3';
+                    // Pre-select the remembered user
+                    document.getElementById('login-user-select').value = rememberedUser;
+                }
+            } catch (error) {
+                console.warn('Auto-login error:', error);
+                statusDiv.textContent = 'Biometric authentication failed. Please login manually.';
+                statusDiv.className = 'text-center text-sm text-red-600 bg-red-50 rounded-xl py-3';
+                document.getElementById('login-user-select').value = rememberedUser;
+            } finally {
+                // Keep status visible for a moment, then hide? We'll leave it visible with the message.
+                // But if login succeeded, the login screen is hidden, so it's fine.
+                // If failed, we keep the message.
+            }
+        }
+
         // ─── Integrate with existing login flow ─────────────────────────────
 
-        // Override the existing performLogin to check for face registration after successful password login.
-        // We'll keep the existing logic but add a call to promptFaceRegistration.
-
-        // ─── REVISED: performLogin (with face registration prompt) ──────────
-        // We will replace the original performLogin function with an enhanced version.
-        // However, since the code is large, we'll redefine it here.
-
-        // (Note: We are redefining performLogin to include the prompt; the rest of the code remains the same.)
-
-        // We'll use the original performLogin logic but add the prompt after successful login.
-        // Since the original performLogin is defined later, we'll override it after all definitions.
-        // But we need to ensure we don't break existing functionality.
-
-        // We'll define a new function that wraps the original logic.
-
-        // The original performLogin will be replaced with a version that calls promptFaceRegistration.
-        // However, to keep the code clean, we'll modify the original function definition.
-
-        // Since we are providing the entire code, we will include the revised performLogin in the script.
-
-        // ─── Revised performLogin (replaces the earlier one) ────────────────
-
-        // We'll comment out the old one and define the new one here.
-        // Actually, we'll just define the new one and keep the rest.
-
-        // The rest of the code (login, logout, etc.) remains unchanged.
+        // Override the existing performLogin to include the prompt.
 
         // ─── Navigation and UI helpers (unchanged) ──────────────────────────
 
@@ -3257,6 +3364,11 @@
             // Update face login UI when dropdown changes
             sel.onchange = updateFaceLoginUI;
             updateFaceLoginUI();
+            // Pre-select remembered user if exists and not already logged in
+            const remembered = getRememberedUser();
+            if (remembered && !authManager.getCurrentUser()) {
+                sel.value = remembered;
+            }
         }
 
         function showLoginError(msg) {
@@ -3266,7 +3378,7 @@
             setTimeout(() => el.classList.add('hidden'), 5000);
         }
 
-        // ─── REVISED: performLogin (with face registration prompt) ──────────
+        // ─── REVISED: performLogin (with remember me support) ──────────────
         async function performLogin() {
             const name = document.getElementById('login-user-select').value;
             const pass = document.getElementById('login-password').value;
@@ -3349,6 +3461,14 @@
             }
 
             if (loginSuccess) {
+                // Handle Remember Me
+                const rememberCheckbox = document.getElementById('remember-me');
+                if (rememberCheckbox.checked) {
+                    setRememberMe(name);
+                } else {
+                    clearRememberMe();
+                }
+
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
                 document.getElementById('logged-user-name').textContent = name;
@@ -3383,7 +3503,7 @@
             }
         }
 
-        // ─── logout (unchanged) ──────────────────────────────────────────────
+        // ─── logout (clear remember me if needed) ──────────────────────────────
         async function logout() {
             const user = authManager.getCurrentUser();
             if (user) await logManager.logAuth(user.name, 'User logged out');
@@ -3395,7 +3515,14 @@
             document.getElementById('main-app').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('login-password').value = '';
+            // Clear remember me on explicit logout
+            clearRememberMe();
             updateFaceLoginUI();
+            // Reset auto-login status
+            const statusDiv = document.getElementById('auto-login-status');
+            statusDiv.classList.add('hidden');
+            statusDiv.textContent = '';
+            statusDiv.className = 'hidden text-center text-sm text-blue-600 bg-blue-50 rounded-xl py-3';
         }
 
         function togglePasswordVisibility() {
@@ -3405,7 +3532,7 @@
             document.getElementById('password-toggle-icon').classList.toggle('fa-eye-slash');
         }
 
-        // ─── changePassword (unchanged, but we'll keep the revision from earlier) ──
+        // ─── changePassword (unchanged) ──────────────────────────────────────
         async function changePassword() {
             const current = document.getElementById('current-password').value;
             const newPass = document.getElementById('new-password').value;
@@ -4190,7 +4317,7 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  BORROW / RETURN (sorted dropdowns)
+        //  BORROW / RETURN (sorted dropdowns + auto-select logged-in engineer)
         // ═══════════════════════════════════════════════
         let currentEditingTransId = null;
         let pendingReturnTransId = null;
@@ -4213,6 +4340,16 @@
                 '<option disabled>No engineers</option>';
 
             resetBorrowForm();
+
+            // ─── NEW: Auto-select the logged-in user ──────────────────────────
+            const currentUser = authManager.getCurrentUser();
+            if (currentUser) {
+                const matchingEngineer = sortedEngineers.find(e => e.name === currentUser.name);
+                if (matchingEngineer) {
+                    engSel.value = matchingEngineer.id;
+                }
+            }
+            // ───────────────────────────────────────────────────────────────────
 
             const active = transactions.filter(t => !t.returned);
             document.getElementById('currently-borrowed').innerHTML = active.length ?
@@ -5343,12 +5480,14 @@
                         <h1>🛠️ ToolTrack Service Tools Manager v2.1.8</h1>
                         <p><strong>GitHub‑Synced Dashboard</strong> · Settings for all users</p>
                         <div class="new-feature">
-                            <strong>v2.1.8:</strong> Fixed login dropdown missing engineers. Default engineers are now seeded automatically on first run. Settings gear visible to all users. Non‑admins see only GitHub Sync. Improved conflict handling with smart merge prevents "Save failed" errors. Return confirmation now reliably removes borrowed tools from the list.
+                            <strong>v2.1.8:</strong> Added "Remember Me" for persistent login and automatic biometric authentication on supported devices.
                         </div>
 
                         <h2>Quick Start</h2>
                         <ol>
                             <li>Login with your name (default password: <code>123</code>) – engineers are pre‑loaded.</li>
+                            <li>Check "Remember Me" to stay logged in across sessions.</li>
+                            <li>On supported devices (Face ID, Touch ID, Windows Hello), you'll be automatically authenticated on next visit.</li>
                             <li>Click the Settings gear (⚙️) – visible to everyone.</li>
                             <li>Enter the token provided by the administrator.</li>
                             <li>Click Save – the token is stored on your device only.</li>
@@ -5372,7 +5511,7 @@
                         <h2>Version History</h2>
                         <table>
                             <tr><th>Version</th><th>Features</th></tr>
-                            <tr><td>2.1.8</td><td>Fixed login dropdown, settings for all, smart merge</td></tr>
+                            <tr><td>2.1.8</td><td>Remember Me, auto-biometric login, settings for all</td></tr>
                             <tr><td>2.1.7</td><td>Manual token entry, restricted settings</td></tr>
                         </table>
 
@@ -5407,6 +5546,7 @@
             updateSettingsVisibility();
             populateDepartmentDropdowns();
 
+            // Show login screen initially
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('main-app').classList.add('hidden');
             currentEngineerView = 'table';
@@ -5427,6 +5567,9 @@
             document.getElementById('temp-widget').addEventListener('click', showWeatherModal);
             updateSecuritySettingsUI();
             updateFaceLoginUI();
+
+            // ─── Attempt auto-login after everything is loaded ────────────────
+            await attemptAutoLogin();
         };
     </script>
 </body>
