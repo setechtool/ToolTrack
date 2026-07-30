@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>ToolTrack v2.2.0 · Service Manager</title>
+    <title>ToolTrack v2.1.8 · Service Manager</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -124,20 +124,6 @@
         .btn-outline:hover {
             background: #f1f5f9;
             border-color: #9ca3af;
-        }
-        .btn-face {
-            background: #1a1a2e;
-            color: #fff;
-            border: 1.5px solid #2d2d44;
-        }
-        .btn-face:hover {
-            background: #2d2d44;
-            border-color: #3d3d5a;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(26, 26, 46, 0.3);
-        }
-        .btn-face i {
-            color: #a78bfa;
         }
 
         /* ── Overdue pulse ── */
@@ -765,253 +751,6 @@
         input[list] {
             background: #fff;
         }
-
-        /* ── Face Login Button ── */
-        .face-login-btn {
-            background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
-            color: #fff;
-            border: none;
-            padding: 14px 20px;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 500;
-            width: 100%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            position: relative;
-            overflow: hidden;
-        }
-        .face-login-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(26, 26, 46, 0.4);
-        }
-        .face-login-btn:active:not(:disabled) {
-            transform: translateY(0);
-        }
-        .face-login-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-        .face-login-btn i {
-            font-size: 22px;
-            color: #a78bfa;
-        }
-        .face-login-btn .face-icon-bg {
-            background: rgba(167, 139, 250, 0.15);
-            border-radius: 50%;
-            padding: 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-        }
-        .face-login-btn .face-text {
-            flex: 1;
-            text-align: left;
-        }
-        .face-login-btn .face-sub {
-            font-size: 11px;
-            opacity: 0.6;
-            font-weight: 400;
-        }
-        .face-login-btn .badge-new {
-            background: #a78bfa;
-            color: #1a1a2e;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .face-login-btn .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(167, 139, 250, 0.2);
-            transform: scale(0);
-            animation: ripple-anim 0.6s linear;
-            pointer-events: none;
-        }
-        @keyframes ripple-anim {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-        .face-login-btn.loading .face-icon-bg i {
-            animation: spin 1s linear infinite;
-        }
-
-        /* ── Login screen divider ── */
-        .login-divider {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin: 20px 0 16px;
-            color: #94a3b8;
-            font-size: 13px;
-        }
-        .login-divider::before,
-        .login-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #e2e8f0;
-        }
-
-        /* ── Face login status toast ── */
-        .face-toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 500;
-            background: #1a1a2e;
-            color: #fff;
-            padding: 16px 28px;
-            border-radius: 16px;
-            font-weight: 500;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.4s ease;
-            max-width: 92%;
-            text-align: center;
-            display: none;
-            align-items: center;
-            gap: 12px;
-            border: 1px solid rgba(167, 139, 250, 0.3);
-        }
-        .face-toast.show {
-            display: flex;
-        }
-        .face-toast i {
-            font-size: 20px;
-            color: #a78bfa;
-        }
-        .face-toast.success i {
-            color: #34d399;
-        }
-        .face-toast.error i {
-            color: #f87171;
-        }
-        @keyframes slideUp {
-            from {
-                transform: translateX(-50%) translateY(30px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(-50%) translateY(0);
-                opacity: 1;
-            }
-        }
-
-        /* ── Face enable modal ── */
-        .face-enable-modal .modal-content {
-            background: #fff;
-            border-radius: 24px;
-            padding: 32px;
-            max-width: 440px;
-            width: 92%;
-            text-align: center;
-            animation: slideIn 0.3s ease;
-        }
-        .face-enable-modal .face-icon-large {
-            font-size: 56px;
-            color: #a78bfa;
-            background: rgba(167, 139, 250, 0.1);
-            border-radius: 50%;
-            padding: 20px;
-            display: inline-block;
-            margin-bottom: 16px;
-        }
-        .face-enable-modal h3 {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .face-enable-modal p {
-            color: #64748b;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 24px;
-        }
-        .face-enable-modal .btn-group {
-            display: flex;
-            gap: 12px;
-        }
-        .face-enable-modal .btn-group .btn {
-            flex: 1;
-            padding: 12px;
-            font-size: 15px;
-        }
-
-        /* ── WebAuthn unsupported ── */
-        .webauthn-unsupported {
-            background: #fef2f2;
-            border: 1px solid #fca5a5;
-            border-radius: 12px;
-            padding: 12px 16px;
-            color: #991b1b;
-            font-size: 13px;
-            display: none;
-            align-items: center;
-            gap: 10px;
-            margin-top: 8px;
-        }
-        .webauthn-unsupported.show {
-            display: flex;
-        }
-        .webauthn-unsupported i {
-            font-size: 18px;
-        }
-
-        /* ── Face settings card ── */
-        .face-settings-card {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 16px 20px;
-        }
-        .face-settings-card .face-status {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .face-settings-card .face-status .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .face-settings-card .face-status .status-dot.enabled {
-            background: #22c55e;
-        }
-        .face-settings-card .face-status .status-dot.disabled {
-            background: #94a3b8;
-        }
-        .face-settings-card .face-status .status-label {
-            font-weight: 500;
-            font-size: 14px;
-        }
-        .face-settings-card .face-status .status-sub {
-            font-size: 12px;
-            color: #64748b;
-        }
-        .face-settings-card .face-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-        }
-        .face-settings-card .face-actions .btn {
-            padding: 8px 16px;
-            font-size: 13px;
-        }
     </style>
 </head>
 <body>
@@ -1022,13 +761,7 @@
     <!-- ─── LOADING OVERLAY ─── -->
     <div id="loading-overlay" class="loading-overlay" style="display:none;">
         <div class="loading-spinner"></div>
-        <div class="loading-text">Processing...</div>
-    </div>
-
-    <!-- ─── FACE TOAST ─── -->
-    <div id="face-toast" class="face-toast">
-        <i class="fa-solid fa-face-smile"></i>
-        <span id="face-toast-text">Face authentication successful</span>
+        <div class="loading-text">Generating message...</div>
     </div>
 
     <!-- ─── LOGIN SCREEN ─── -->
@@ -1037,8 +770,8 @@
             <div class="text-center mb-6">
                 <i class="fa-solid fa-toolbox text-5xl text-blue-600 mb-3"></i>
                 <h1 class="text-3xl font-bold text-gray-800">ToolTrack</h1>
-                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.2.0</p>
-                <p class="text-xs text-gray-400 mt-0.5">Secure · Face Login Ready</p>
+                <p class="text-gray-500 mt-1 text-sm">Service Tools Manager v2.1.8</p>
+                <p class="text-xs text-gray-400 mt-0.5">Settings for all · reliable sync</p>
             </div>
             <div class="space-y-5">
                 <div>
@@ -1062,43 +795,12 @@
                 <button onclick="performLogin()" class="w-full py-4 btn btn-primary text-lg">
                     <i class="fa-solid fa-right-to-bracket mr-2"></i> Login
                 </button>
-
-                <!-- ─── Divider ─── -->
-                <div class="login-divider">OR</div>
-
-                <!-- ─── Face Login Button ─── -->
-                <button id="face-login-btn" onclick="startFaceLogin()" class="face-login-btn" disabled>
-                    <span class="face-icon-bg"><i class="fa-solid fa-face-smile"></i></span>
-                    <span class="face-text">
-                        Login with Face
-                        <span class="face-sub">Biometric authentication</span>
-                    </span>
-                    <span class="badge-new">Secure</span>
-                </button>
-                <div id="webauthn-unsupported" class="webauthn-unsupported">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    <span>This device does not support biometric authentication.</span>
-                </div>
-
                 <div class="text-center">
                     <button onclick="showPasswordRecoveryModal()" class="text-sm text-blue-600 hover:underline">
                         <i class="fa-solid fa-key mr-1"></i> Forgot Password?
                     </button>
                 </div>
                 <p class="text-xs text-gray-400 text-center">Default password: <strong>123</strong></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ─── FACE ENABLE MODAL ─── -->
-    <div id="face-enable-modal" class="hidden fixed inset-0 bg-black/60 modal-overlay flex items-center justify-center z-[150]">
-        <div class="face-enable-modal modal-content">
-            <div class="face-icon-large"><i class="fa-solid fa-face-smile"></i></div>
-            <h3>Enable Face Login?</h3>
-            <p>Would you like to use Face Recognition for faster and more secure login on this device?</p>
-            <div class="btn-group">
-                <button onclick="enableFaceLogin()" class="btn btn-primary">Enable</button>
-                <button onclick="dismissFaceEnable()" class="btn btn-outline">Not Now</button>
             </div>
         </div>
     </div>
@@ -1113,7 +815,7 @@
                     <i class="fa-solid fa-toolbox text-3xl text-blue-600"></i>
                     <div>
                         <h1 class="text-xl font-bold">ToolTrack</h1>
-                        <p class="text-[10px] text-gray-500">v2.2.0 · Face Login</p>
+                        <p class="text-[10px] text-gray-500">v2.1.8 · settings for all</p>
                     </div>
                 </div>
             </div>
@@ -1385,23 +1087,6 @@
                 <button onclick="hideSettingsPanel()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
             </div>
             <div class="settings-modal-body">
-                <!-- Face Login Settings -->
-                <div class="settings-card face-settings-card mb-4">
-                    <h4><i class="fa-solid fa-face-smile text-indigo-500"></i> Face Login</h4>
-                    <div class="face-status">
-                        <span class="status-dot disabled" id="face-status-dot"></span>
-                        <div>
-                            <div class="status-label" id="face-status-label">Disabled</div>
-                            <div class="status-sub" id="face-status-sub">No face credentials registered</div>
-                        </div>
-                    </div>
-                    <div class="face-actions">
-                        <button onclick="registerFaceCredential()" id="face-register-btn" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Register Face</button>
-                        <button onclick="removeFaceCredential()" id="face-remove-btn" class="btn btn-danger" style="display:none;"><i class="fa-solid fa-trash"></i> Remove</button>
-                    </div>
-                    <div id="face-device-status" class="text-xs text-gray-500 mt-2"></div>
-                </div>
-
                 <!-- GitHub sync -->
                 <div class="settings-card">
                     <h4><i class="fa-brands fa-github text-blue-600"></i> GitHub Sync</h4>
@@ -1507,9 +1192,8 @@
             <h2 class="text-2xl font-bold mt-2">ToolTrack</h2>
             <p class="text-gray-500">Service Tools Manager</p>
             <div class="mt-5 bg-gray-50 rounded-2xl p-4 text-left space-y-1 text-sm">
-                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.2.0</span></div>
+                <div class="flex justify-between"><span>Version</span><span class="font-semibold">2.1.8</span></div>
                 <div class="flex justify-between"><span>Sync</span><span class="font-semibold text-blue-600">GitHub · manual token</span></div>
-                <div class="flex justify-between"><span>Face Login</span><span class="font-semibold text-indigo-600" id="about-face-status">Not enabled</span></div>
             </div>
             <div class="mt-5 flex gap-2">
                 <button onclick="openReadmeViewer()" class="flex-1 py-2.5 btn btn-primary">View README</button>
@@ -1782,7 +1466,7 @@
         // ═══════════════════════════════════════════════
         //  APP VERSION – increment to force cache refresh
         // ═══════════════════════════════════════════════
-        const APP_VERSION = '2.2.0';
+        const APP_VERSION = '2.1.8';
         const storedVersion = sessionStorage.getItem('tooltrack_app_version');
         if (storedVersion && storedVersion !== APP_VERSION) {
             sessionStorage.setItem('tooltrack_app_version', APP_VERSION);
@@ -1804,388 +1488,6 @@
             set branch(v) { localStorage.setItem('gh_branch', v); },
             get dataPath() { return localStorage.getItem('gh_dataPath') || 'data.json'; },
             set dataPath(v) { localStorage.setItem('gh_dataPath', v); },
-        };
-
-        // ═══════════════════════════════════════════════
-        //  WEBAUTHN / FACE LOGIN MANAGER
-        // ═══════════════════════════════════════════════
-        const FaceAuthManager = {
-            // Store credentials per user
-            getCredentials(userName) {
-                const key = `webauthn_creds_${userName}`;
-                const raw = localStorage.getItem(key);
-                return raw ? JSON.parse(raw) : null;
-            },
-            setCredentials(userName, creds) {
-                const key = `webauthn_creds_${userName}`;
-                localStorage.setItem(key, JSON.stringify(creds));
-                // Also sync to main data
-                if (!window.faceCredentials) window.faceCredentials = {};
-                window.faceCredentials[userName] = creds;
-                saveData();
-            },
-            removeCredentials(userName) {
-                const key = `webauthn_creds_${userName}`;
-                localStorage.removeItem(key);
-                if (window.faceCredentials) delete window.faceCredentials[userName];
-                saveData();
-            },
-            // Check if WebAuthn is supported
-            isSupported() {
-                return window.PublicKeyCredential &&
-                    typeof window.PublicKeyCredential === 'function' &&
-                    window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable &&
-                    navigator.credentials &&
-                    navigator.credentials.create &&
-                    navigator.credentials.get;
-            },
-            // Check if device has biometrics
-            async isBiometricAvailable() {
-                if (!this.isSupported()) return false;
-                try {
-                    return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-                } catch {
-                    return false;
-                }
-            },
-            // Generate a random challenge
-            generateChallenge() {
-                const arr = new Uint8Array(32);
-                crypto.getRandomValues(arr);
-                return arr;
-            },
-            // Encode buffer to base64url
-            bufferToBase64Url(buffer) {
-                const bytes = new Uint8Array(buffer);
-                let str = '';
-                for (const b of bytes) str += String.fromCharCode(b);
-                return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-            },
-            // Decode base64url to buffer
-            base64UrlToBuffer(base64url) {
-                const str = atob(base64url.replace(/-/g, '+').replace(/_/g, '/'));
-                const bytes = new Uint8Array(str.length);
-                for (let i = 0; i < str.length; i++) bytes[i] = str.charCodeAt(i);
-                return bytes;
-            },
-            // Register a new credential
-            async register(userName, userId) {
-                if (!this.isSupported()) {
-                    throw new Error('WebAuthn not supported on this device.');
-                }
-                const available = await this.isBiometricAvailable();
-                if (!available) {
-                    throw new Error('Biometric authentication is not available on this device.');
-                }
-
-                const challenge = this.generateChallenge();
-                const rpId = window.location.hostname || 'localhost';
-                const rpName = 'ToolTrack';
-
-                // Use a fixed user ID based on the username
-                const encoder = new TextEncoder();
-                const userIdBytes = encoder.encode(userId || userName);
-
-                const publicKey = {
-                    challenge: challenge,
-                    rp: { id: rpId, name: rpName },
-                    user: {
-                        id: userIdBytes,
-                        name: userName,
-                        displayName: userName,
-                    },
-                    pubKeyCredParams: [
-                        { type: 'public-key', alg: -7 }, // ES256
-                        { type: 'public-key', alg: -257 }, // RS256
-                    ],
-                    authenticatorSelection: {
-                        authenticatorAttachment: 'platform',
-                        userVerification: 'required',
-                        residentKey: 'preferred',
-                    },
-                    timeout: 60000,
-                    attestation: 'none',
-                    excludeCredentials: [],
-                };
-
-                const credential = await navigator.credentials.create({ publicKey });
-                if (!credential) throw new Error('Registration failed.');
-
-                const response = credential.response;
-                const credData = {
-                    id: credential.id,
-                    rawId: this.bufferToBase64Url(credential.rawId),
-                    type: credential.type,
-                    response: {
-                        clientDataJSON: this.bufferToBase64Url(response.clientDataJSON),
-                        attestationObject: this.bufferToBase64Url(response.attestationObject),
-                        // For authenticator data we need to extract from attestation
-                    },
-                    // Store the public key (derived from attestation)
-                    // For simplicity we store the whole response
-                    // In production, you'd parse the attestation to extract the public key
-                    // We'll store the credential ID and rely on the server-side verification
-                };
-
-                // Extract the credential ID as the primary identifier
-                const credId = credential.id;
-
-                // Store the credential
-                const stored = {
-                    credentialId: credId,
-                    rawId: credData.rawId,
-                    userId: userId || userName,
-                    userName: userName,
-                    registeredAt: new Date().toISOString(),
-                    rpId: rpId,
-                    // Store the entire credential for later authentication
-                    credential: credData,
-                    // Also store the public key if we can extract it
-                    // For this implementation we'll store the credential
-                    // and use it for authentication
-                };
-
-                this.setCredentials(userName, stored);
-                return stored;
-            },
-
-            // Authenticate with a credential
-            async authenticate(userName) {
-                const creds = this.getCredentials(userName);
-                if (!creds) {
-                    throw new Error('No face credentials registered for this user.');
-                }
-
-                if (!this.isSupported()) {
-                    throw new Error('WebAuthn not supported on this device.');
-                }
-
-                const available = await this.isBiometricAvailable();
-                if (!available) {
-                    throw new Error('Biometric authentication is not available on this device.');
-                }
-
-                const challenge = this.generateChallenge();
-                const rpId = window.location.hostname || 'localhost';
-
-                // Build allowCredentials
-                const allowCreds = [{
-                    type: 'public-key',
-                    id: this.base64UrlToBuffer(creds.rawId),
-                }];
-
-                const publicKey = {
-                    challenge: challenge,
-                    rpId: rpId,
-                    allowCredentials: allowCreds,
-                    userVerification: 'required',
-                    timeout: 60000,
-                };
-
-                const assertion = await navigator.credentials.get({ publicKey });
-                if (!assertion) throw new Error('Authentication failed.');
-
-                // Verify the assertion (in production, you'd validate with the server)
-                // For this client-side implementation, we check that we got a valid response
-                const response = assertion.response;
-                if (!response || !response.authenticatorData || !response.signature) {
-                    throw new Error('Invalid authentication response.');
-                }
-
-                // Return success with user info
-                return {
-                    success: true,
-                    userName: userName,
-                    credentialId: assertion.id,
-                };
-            },
-
-            // Check if a user has face credentials
-            hasCredentials(userName) {
-                return !!this.getCredentials(userName);
-            },
-
-            // Get all users with face credentials
-            getUsersWithFace() {
-                const users = [];
-                // Check all keys in localStorage
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key && key.startsWith('webauthn_creds_')) {
-                        const userName = key.replace('webauthn_creds_', '');
-                        users.push(userName);
-                    }
-                }
-                return users;
-            },
-
-            // Update face status in UI
-            updateUI() {
-                const user = authManager.getCurrentUser();
-                if (!user) return;
-
-                const hasFace = this.hasCredentials(user.name);
-                const dot = document.getElementById('face-status-dot');
-                const label = document.getElementById('face-status-label');
-                const sub = document.getElementById('face-status-sub');
-                const registerBtn = document.getElementById('face-register-btn');
-                const removeBtn = document.getElementById('face-remove-btn');
-                const deviceStatus = document.getElementById('face-device-status');
-
-                if (hasFace) {
-                    dot.className = 'status-dot enabled';
-                    label.textContent = 'Enabled';
-                    const creds = this.getCredentials(user.name);
-                    sub.textContent = `Registered ${new Date(creds.registeredAt).toLocaleDateString()}`;
-                    registerBtn.textContent = 'Re-register Face';
-                    registerBtn.className = 'btn btn-warning';
-                    removeBtn.style.display = 'inline-flex';
-                } else {
-                    dot.className = 'status-dot disabled';
-                    label.textContent = 'Disabled';
-                    sub.textContent = 'No face credentials registered';
-                    registerBtn.textContent = 'Register Face';
-                    registerBtn.className = 'btn btn-primary';
-                    removeBtn.style.display = 'none';
-                }
-
-                // Device status
-                if (this.isSupported()) {
-                    this.isBiometricAvailable().then(avail => {
-                        if (avail) {
-                            deviceStatus.textContent = '✅ Biometric authentication available on this device.';
-                            deviceStatus.style.color = '#166534';
-                        } else {
-                            deviceStatus.textContent = '⚠️ Biometric authentication not available. Face Login disabled.';
-                            deviceStatus.style.color = '#991b1b';
-                            document.getElementById('face-login-btn').disabled = true;
-                            document.getElementById('webauthn-unsupported').classList.add('show');
-                        }
-                    });
-                } else {
-                    deviceStatus.textContent = '❌ WebAuthn not supported. Face Login unavailable.';
-                    deviceStatus.style.color = '#991b1b';
-                    document.getElementById('face-login-btn').disabled = true;
-                    document.getElementById('webauthn-unsupported').classList.add('show');
-                }
-
-                // Update about panel
-                const aboutStatus = document.getElementById('about-face-status');
-                if (aboutStatus) {
-                    aboutStatus.textContent = hasFace ? '✅ Enabled' : 'Not enabled';
-                    aboutStatus.style.color = hasFace ? '#166534' : '#64748b';
-                }
-
-                // Update face login button on login screen
-                this.updateLoginButton();
-            },
-
-            // Update the face login button on the login screen
-            async updateLoginButton() {
-                const btn = document.getElementById('face-login-btn');
-                const unsupported = document.getElementById('webauthn-unsupported');
-                const user = document.getElementById('login-user-select').value;
-
-                if (!this.isSupported()) {
-                    btn.disabled = true;
-                    unsupported.classList.add('show');
-                    btn.innerHTML = `
-                        <span class="face-icon-bg"><i class="fa-solid fa-face-frown"></i></span>
-                        <span class="face-text">
-                            Face Login Unavailable
-                            <span class="face-sub">Device not supported</span>
-                        </span>
-                    `;
-                    return;
-                }
-
-                const avail = await this.isBiometricAvailable();
-                if (!avail) {
-                    btn.disabled = true;
-                    unsupported.classList.add('show');
-                    btn.innerHTML = `
-                        <span class="face-icon-bg"><i class="fa-solid fa-face-frown"></i></span>
-                        <span class="face-text">
-                            Face Login Unavailable
-                            <span class="face-sub">No biometrics detected</span>
-                        </span>
-                    `;
-                    return;
-                }
-
-                unsupported.classList.remove('show');
-
-                if (user && this.hasCredentials(user)) {
-                    btn.disabled = false;
-                    btn.innerHTML = `
-                        <span class="face-icon-bg"><i class="fa-solid fa-face-smile"></i></span>
-                        <span class="face-text">
-                            Login with Face
-                            <span class="face-sub">Tap to authenticate</span>
-                        </span>
-                        <span class="badge-new">Ready</span>
-                    `;
-                } else if (user) {
-                    btn.disabled = false;
-                    btn.innerHTML = `
-                        <span class="face-icon-bg"><i class="fa-solid fa-face-smile"></i></span>
-                        <span class="face-text">
-                            Register Face
-                            <span class="face-sub">Set up face login for ${user}</span>
-                        </span>
-                        <span class="badge-new">Setup</span>
-                    `;
-                } else {
-                    btn.disabled = true;
-                    btn.innerHTML = `
-                        <span class="face-icon-bg"><i class="fa-solid fa-face-meh"></i></span>
-                        <span class="face-text">
-                            Select a user first
-                            <span class="face-sub">Choose your name above</span>
-                        </span>
-                    `;
-                }
-            },
-
-            // Show face toast
-            showToast(message, type = 'info') {
-                const toast = document.getElementById('face-toast');
-                const text = document.getElementById('face-toast-text');
-                const icon = toast.querySelector('i');
-
-                toast.className = 'face-toast show ' + type;
-                text.textContent = message;
-
-                if (type === 'success') icon.className = 'fa-solid fa-circle-check';
-                else if (type === 'error') icon.className = 'fa-solid fa-circle-xmark';
-                else icon.className = 'fa-solid fa-face-smile';
-
-                clearTimeout(this._toastTimeout);
-                this._toastTimeout = setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 4000);
-            },
-
-            // Store face credentials in the global data
-            syncCredentialsToData() {
-                // This is called during data save
-                if (!window.faceCredentials) window.faceCredentials = {};
-                const users = this.getUsersWithFace();
-                for (const user of users) {
-                    const creds = this.getCredentials(user);
-                    if (creds) window.faceCredentials[user] = creds;
-                }
-            },
-
-            // Load credentials from data
-            loadCredentialsFromData(data) {
-                if (data && data.faceCredentials) {
-                    window.faceCredentials = data.faceCredentials;
-                    for (const [user, creds] of Object.entries(data.faceCredentials)) {
-                        this.setCredentials(user, creds);
-                    }
-                }
-            }
         };
 
         // ═══════════════════════════════════════════════
@@ -2311,7 +1613,7 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  AUTH MANAGER (extended with face login support)
+        //  AUTH MANAGER (unchanged)
         // ═══════════════════════════════════════════════
         class AuthManager {
             constructor() {
@@ -2337,14 +1639,6 @@
             save() { localStorage.setItem('tooltrack_users', JSON.stringify(this.users)); }
             login(name, pass) {
                 if (this.users[name] && this.users[name].password === pass) {
-                    this.currentUser = { name, role: this.users[name].role, isAdmin: this.adminUsers.includes(name),
-                        isDonan: this.fullAccessUsers.includes(name), isRoy: this.royAccessUsers.includes(name) };
-                    return true;
-                }
-                return false;
-            }
-            loginWithFace(name) {
-                if (this.users[name]) {
                     this.currentUser = { name, role: this.users[name].role, isAdmin: this.adminUsers.includes(name),
                         isDonan: this.fullAccessUsers.includes(name), isRoy: this.royAccessUsers.includes(name) };
                     return true;
@@ -2387,10 +1681,6 @@
                 if (!this.users[name]) { this.users[name] = { password: pass, role: 'Engineer' };
                     this.save(); return true; }
                 return false;
-            }
-            // Face login: check if user has face credentials
-            hasFaceCredentials(name) {
-                return FaceAuthManager.hasCredentials(name);
             }
         }
         const authManager = new AuthManager();
@@ -2542,20 +1832,22 @@
         //  WEATHER – minimal widget only (dashboard extracted)
         // ═══════════════════════════════════════════════
         let weatherCache = null;
-        let lastLocation = null;
+        let lastLocation = null; // {lat, lon, name, timezone}
 
+        // ─── Fetch weather data (only current temp needed) ──────────────────
         function fetchWeatherData(lat, lon) {
             const url =
                 `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&timezone=auto`;
             return fetch(url).then(r => { if (!r.ok) throw new Error('Weather API error'); return r.json(); });
         }
 
+        // ─── Reverse geocoding ──────────────────────────────────────────────
         async function fetchLocationName(lat, lon) {
             try {
                 const url =
                     `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&accept-language=en`;
                 const res = await fetch(url, {
-                    headers: { 'User-Agent': 'ToolTrack/2.2.0 (https://github.com/your-app)' }
+                    headers: { 'User-Agent': 'ToolTrack/2.1.8 (https://github.com/your-app)' }
                 });
                 if (!res.ok) throw new Error('Nominatim API error');
                 const data = await res.json();
@@ -2573,6 +1865,7 @@
                     if (parts.length > 0) displayName = parts.join(', ');
                     else displayName = data.display_name || displayName;
                 }
+                // Remove coordinate suffix if present
                 displayName = displayName.replace(/\(\d+\.\d+,\s*\d+\.\d+\)/, '').trim();
                 return displayName;
             } catch (e) {
@@ -2581,6 +1874,7 @@
             }
         }
 
+        // ─── Update widget ───────────────────────────────────────────────────
         function updateTempWidget(temp, location) {
             const widget = document.getElementById('temp-widget');
             const valueSpan = widget.querySelector('.temp-value');
@@ -2602,6 +1896,7 @@
             }
         }
 
+        // ─── Initialize weather widget ──────────────────────────────────────
         function initWeather() {
             const stored = localStorage.getItem('selectedLocation');
             if (stored) {
@@ -2666,6 +1961,7 @@
             });
         }
 
+        // ─── Show weather modal (loads weather.html in iframe) ─────────────
         function showWeatherModal() {
             const iframe = document.getElementById('weather-iframe');
             if (!lastLocation) {
@@ -2712,14 +2008,13 @@
         });
 
         // ═══════════════════════════════════════════════
-        //  DATA STORE (extended with face credentials)
+        //  DATA STORE (unchanged)
         // ═══════════════════════════════════════════════
         let tools = [];
         let engineers = [];
         let transactions = [];
         let returnRequests = [];
         let roy = { phone: '+965 97421668', email: 'royston.dcosta@sultanunited.com' };
-        let faceCredentials = {};
 
         function seedDefaultEngineers() {
             if (engineers.length === 0) {
@@ -2760,13 +2055,6 @@
                     }
                     if (data.logConfig) { logManager.logConfig = data.logConfig;
                         localStorage.setItem('logConfig', JSON.stringify(data.logConfig)); }
-                    // Load face credentials
-                    if (data.faceCredentials) {
-                        faceCredentials = data.faceCredentials;
-                        for (const [user, creds] of Object.entries(data.faceCredentials)) {
-                            FaceAuthManager.setCredentials(user, creds);
-                        }
-                    }
                     if (!localStorage.getItem('tooltrack_departments')) {
                         localStorage.setItem('tooltrack_departments', JSON.stringify(DEFAULT_DEPARTMENTS));
                     }
@@ -2787,7 +2075,6 @@
                 users: authManager.users,
                 deletionRecords: DeletionLogger.deletionRecords,
                 logConfig: logManager.logConfig,
-                faceCredentials: faceCredentials,
                 _meta: { version: APP_VERSION, updated: new Date().toISOString(), user: authManager.getCurrentUser()
                         ?.name || 'system' }
             };
@@ -2811,16 +2098,6 @@
                 DeletionLogger.deletionRecords = JSON.parse(localStorage.getItem('deletionRecords') || '[]');
                 logManager.logConfig = JSON.parse(localStorage.getItem('logConfig') || '{"enabled":true,"level":"all","retentionDays":30,"autoDelete":false}');
                 if (localStorage.getItem('gh_token')) CONFIG.token = localStorage.getItem('gh_token');
-                // Load face credentials from legacy
-                const faceRaw = localStorage.getItem('tooltrack_face_credentials');
-                if (faceRaw) {
-                    try {
-                        faceCredentials = JSON.parse(faceRaw);
-                        for (const [user, creds] of Object.entries(faceCredentials)) {
-                            FaceAuthManager.setCredentials(user, creds);
-                        }
-                    } catch (e) {}
-                }
                 if (!localStorage.getItem('tooltrack_departments')) {
                     localStorage.setItem('tooltrack_departments', JSON.stringify(DEFAULT_DEPARTMENTS));
                 }
@@ -2927,8 +2204,6 @@
                         const content = atob(data.content.replace(/\n/g, ''));
                         localStorage.setItem('tooltrack_data', content);
                         loadDataFromStorage();
-                        // Update face UI
-                        FaceAuthManager.updateUI();
                         this.setStatus('synced', 'Synced ✓');
                         return true;
                     }
@@ -2965,7 +2240,6 @@
                         users: authManager.users,
                         deletionRecords: DeletionLogger.deletionRecords,
                         logConfig: logManager.logConfig,
-                        faceCredentials: faceCredentials,
                         _meta: { version: APP_VERSION, updated: new Date().toISOString(), user: authManager
                                 .getCurrentUser()?.name || 'system' }
                     };
@@ -3015,7 +2289,6 @@
                                     deletionRecords: DeletionLogger.deletionRecords || remoteContent
                                         .deletionRecords || [],
                                     logConfig: logManager.logConfig || remoteContent.logConfig || {},
-                                    faceCredentials: faceCredentials || remoteContent.faceCredentials || {},
                                     _meta: {
                                         version: APP_VERSION,
                                         merged: true,
@@ -3035,7 +2308,6 @@
 
                                 localStorage.setItem('tooltrack_data', JSON.stringify(merged));
                                 loadDataFromStorage();
-                                FaceAuthManager.updateUI();
 
                                 this.setStatus('syncing', 'Retrying after merge…');
                                 const mergedEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(merged, null,
@@ -3222,184 +2494,7 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  FACE LOGIN FUNCTIONS
-        // ═══════════════════════════════════════════════
-
-        // Start face login from the login screen
-        async function startFaceLogin() {
-            const userSelect = document.getElementById('login-user-select');
-            const userName = userSelect.value;
-
-            if (!userName) {
-                FaceAuthManager.showToast('Please select your name first.', 'error');
-                return;
-            }
-
-            const btn = document.getElementById('face-login-btn');
-            btn.disabled = true;
-            btn.classList.add('loading');
-
-            try {
-                // Check if user has credentials
-                const hasCreds = FaceAuthManager.hasCredentials(userName);
-
-                if (!hasCreds) {
-                    // No credentials - start registration flow
-                    btn.disabled = false;
-                    btn.classList.remove('loading');
-                    // Prompt to register
-                    const enableModal = document.getElementById('face-enable-modal');
-                    enableModal.classList.remove('hidden');
-                    // Store the user name for the registration
-                    enableModal.dataset.user = userName;
-                    return;
-                }
-
-                // Authenticate with face
-                const result = await FaceAuthManager.authenticate(userName);
-                if (result && result.success) {
-                    FaceAuthManager.showToast(`Welcome back, ${userName}!`, 'success');
-                    // Login the user
-                    if (authManager.loginWithFace(userName)) {
-                        document.getElementById('login-screen').classList.add('hidden');
-                        document.getElementById('main-app').classList.remove('hidden');
-                        document.getElementById('logged-user-name').textContent = userName;
-                        document.getElementById('logged-user-role').textContent = authManager.getCurrentUser().role;
-                        buildSidebarNavigation();
-                        buildMobileNav();
-                        IdleManager.start();
-                        await logManager.logAuth(userName, 'Face login successful');
-
-                        if (CONFIG.token) {
-                            RepoSync.setStatus('syncing', 'Syncing…');
-                            await RepoSync.pull();
-                            refreshAllPanels();
-                            populateLoginDropdown();
-                            RepoSync.startPolling();
-                        } else {
-                            RepoSync.setStatus('offline', 'No token');
-                        }
-
-                        const startTab = (authManager.getCurrentUser().isAdmin || authManager.getCurrentUser().isRoy) ?
-                            0 : 1;
-                        switchTab(startTab);
-                        updateAllUI();
-                        initWeather();
-                        document.getElementById('temp-widget').onclick = showWeatherModal;
-                        FaceAuthManager.updateUI();
-                    }
-                } else {
-                    FaceAuthManager.showToast('Face authentication failed. Please try again.', 'error');
-                }
-            } catch (err) {
-                console.error('Face login error:', err);
-                FaceAuthManager.showToast('Face authentication failed: ' + err.message, 'error');
-            } finally {
-                btn.disabled = false;
-                btn.classList.remove('loading');
-            }
-        }
-
-        // Enable face login (called from the enable modal)
-        async function enableFaceLogin() {
-            const modal = document.getElementById('face-enable-modal');
-            const userName = modal.dataset.user || document.getElementById('login-user-select').value;
-
-            if (!userName) {
-                FaceAuthManager.showToast('No user selected.', 'error');
-                return;
-            }
-
-            modal.classList.add('hidden');
-
-            const btn = document.getElementById('face-login-btn');
-            btn.disabled = true;
-            btn.classList.add('loading');
-
-            try {
-                const result = await FaceAuthManager.register(userName, userName);
-                if (result) {
-                    FaceAuthManager.showToast(`Face login enabled for ${userName}!`, 'success');
-                    faceCredentials[userName] = result;
-                    saveData();
-                    FaceAuthManager.updateUI();
-                    logManager.logAuth(userName, 'Face login registered');
-                    // Update the login button
-                    FaceAuthManager.updateLoginButton();
-                } else {
-                    FaceAuthManager.showToast('Registration failed. Please try again.', 'error');
-                }
-            } catch (err) {
-                console.error('Face registration error:', err);
-                FaceAuthManager.showToast('Registration failed: ' + err.message, 'error');
-            } finally {
-                btn.disabled = false;
-                btn.classList.remove('loading');
-            }
-        }
-
-        function dismissFaceEnable() {
-            document.getElementById('face-enable-modal').classList.add('hidden');
-            FaceAuthManager.showToast('Face login disabled. You can enable it later in Settings.', 'info');
-        }
-
-        // Register face credential from settings
-        async function registerFaceCredential() {
-            const user = authManager.getCurrentUser();
-            if (!user) {
-                FaceAuthManager.showToast('Please login first.', 'error');
-                return;
-            }
-
-            const btn = document.getElementById('face-register-btn');
-            btn.disabled = true;
-            btn.textContent = 'Registering…';
-
-            try {
-                const result = await FaceAuthManager.register(user.name, user.name);
-                if (result) {
-                    FaceAuthManager.showToast(`Face login enabled for ${user.name}!`, 'success');
-                    faceCredentials[user.name] = result;
-                    saveData();
-                    FaceAuthManager.updateUI();
-                    logManager.logAuth(user.name, 'Face login registered from settings');
-                } else {
-                    FaceAuthManager.showToast('Registration failed. Please try again.', 'error');
-                }
-            } catch (err) {
-                console.error('Face registration error:', err);
-                FaceAuthManager.showToast('Registration failed: ' + err.message, 'error');
-            } finally {
-                btn.disabled = false;
-                FaceAuthManager.updateUI();
-            }
-        }
-
-        // Remove face credential
-        async function removeFaceCredential() {
-            const user = authManager.getCurrentUser();
-            if (!user) {
-                FaceAuthManager.showToast('Please login first.', 'error');
-                return;
-            }
-
-            const confirmed = await CustomConfirmDialog.show(
-                `Remove Face Login from this device for ${user.name}?`,
-                'Remove Face Login'
-            );
-
-            if (!confirmed) return;
-
-            FaceAuthManager.removeCredentials(user.name);
-            delete faceCredentials[user.name];
-            saveData();
-            FaceAuthManager.updateUI();
-            logManager.logAuth(user.name, 'Face login removed');
-            FaceAuthManager.showToast('Face login removed.', 'info');
-        }
-
-        // ═══════════════════════════════════════════════
-        //  SETTINGS VISIBILITY
+        //  SETTINGS VISIBILITY (unchanged)
         // ═══════════════════════════════════════════════
         function updateSettingsVisibility() {
             const user = authManager.getCurrentUser();
@@ -3415,8 +2510,6 @@
                     .getTimeoutMinutes() + ' minute(s).';
                 } else idleSection.style.display = 'none';
             }
-            // Update face UI
-            FaceAuthManager.updateUI();
         }
 
         // ═══════════════════════════════════════════════
@@ -3483,7 +2576,6 @@
                 closeMobileMoreDrawer();
                 logManager.log('SYSTEM', 'Auto-logout due to inactivity (' + this._timeoutMinutes + ' min)');
                 this._hideWarningToast();
-                FaceAuthManager.updateLoginButton();
             },
             _onActivity() { this.reset(); },
             _attachActivityListeners() {
@@ -3510,17 +2602,13 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  LOGIN / LOGOUT (updated with face login)
+        //  LOGIN / LOGOUT (unchanged)
         // ═══════════════════════════════════════════════
         function populateLoginDropdown() {
             const sel = document.getElementById('login-user-select');
             const users = authManager.getAllUsers();
-            const currentVal = sel.value;
             sel.innerHTML = '<option value="">— Select Your Name —</option>' +
                 users.map(u => `<option value="${u}">${u}</option>`).join('');
-            if (currentVal && users.includes(currentVal)) sel.value = currentVal;
-            // Update face login button
-            FaceAuthManager.updateLoginButton();
         }
 
         function showLoginError(msg) {
@@ -3533,21 +2621,6 @@
         async function performLogin() {
             const name = document.getElementById('login-user-select').value;
             const pass = document.getElementById('login-password').value;
-
-            // ─── REVISION: Pull latest data before login ───
-            // This ensures password changes from other devices are reflected
-            if (CONFIG.token) {
-                try {
-                    RepoSync.setStatus('syncing', 'Checking updates…');
-                    await RepoSync.pull();
-                    // Reload the user list after pull
-                    populateLoginDropdown();
-                } catch (e) {
-                    console.warn('Pre-login sync failed:', e);
-                    // Continue with local data if sync fails
-                }
-            }
-
             if (!name) { showLoginError('Select your name.'); return; }
             if (authManager.login(name, pass)) {
                 document.getElementById('login-screen').classList.add('hidden');
@@ -3574,18 +2647,6 @@
                 updateAllUI();
                 initWeather();
                 document.getElementById('temp-widget').onclick = showWeatherModal;
-                FaceAuthManager.updateUI();
-
-                // ─── Check if face login should be enabled ───
-                // If user has no face credentials, show the enable modal
-                if (!FaceAuthManager.hasCredentials(name) && FaceAuthManager.isSupported()) {
-                    const avail = await FaceAuthManager.isBiometricAvailable();
-                    if (avail) {
-                        const modal = document.getElementById('face-enable-modal');
-                        modal.dataset.user = name;
-                        modal.classList.remove('hidden');
-                    }
-                }
             } else {
                 showLoginError('Invalid password.');
                 logManager.logAuth('SYSTEM', 'Failed login: ' + name);
@@ -3603,7 +2664,6 @@
             document.getElementById('main-app').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('login-password').value = '';
-            FaceAuthManager.updateLoginButton();
         }
 
         function togglePasswordVisibility() {
@@ -3720,7 +2780,7 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  UI HELPERS
+        //  UI HELPERS (unchanged)
         // ═══════════════════════════════════════════════
         function updateAllUI() {
             const user = authManager.getCurrentUser();
@@ -3733,7 +2793,6 @@
             updateSettingsVisibility();
             populateLoginDropdown();
             populateDepartmentDropdowns();
-            FaceAuthManager.updateUI();
         }
 
         function updateRoyUI() {
@@ -3749,7 +2808,6 @@
             try { renderAnalytics(); } catch (e) {}
             try { refreshLogViewer(); } catch (e) {}
             populateDepartmentDropdowns();
-            FaceAuthManager.updateUI();
         }
 
         // ═══════════════════════════════════════════════
@@ -3769,7 +2827,7 @@
             renderApprovalPanel();
         }
 
-        // ─── Incident Modal Functions (unchanged) ───────────────────────────
+        // ─── Incident Modal Functions ────────────────────────────────────────
         let currentIncidentRequestId = null;
 
         function showIncidentModal(requestId) {
@@ -3811,8 +2869,7 @@
             const eng = engineers.find(e => e.id === trans.engineerId);
             if (!eng) { alert('Engineer not found.'); return; }
             const selectedLabel = document.querySelector(`label[for="inc-${selected.value}"]`)?.textContent || '';
-            let message =
-                `Incident Report for Tool Return\n\nTool: ${tool?.desc || 'Unknown'} (${tool?.serial || 'N/A'})\nReason: ${selectedLabel}`;
+            let message = `Incident Report for Tool Return\n\nTool: ${tool?.desc || 'Unknown'} (${tool?.serial || 'N/A'})\nReason: ${selectedLabel}`;
             if (selected.value === 'f') {
                 const othersText = document.getElementById('incident-others-text').value.trim();
                 if (!othersText) { alert('Please provide more information for "Others".'); return; }
@@ -3825,8 +2882,7 @@
             trans.transDate = new Date().toISOString();
             saveData();
             refreshAllPanels();
-            const mailtoLink =
-                `mailto:${eng.email}?subject=Incident%20Report%20-%20Tool%20Return&body=${encodeURIComponent(message)}`;
+            const mailtoLink = `mailto:${eng.email}?subject=Incident%20Report%20-%20Tool%20Return&body=${encodeURIComponent(message)}`;
             window.open(mailtoLink, '_blank');
             cancelIncident();
             logManager.log(authManager.getCurrentUser().name, 'Incident report sent to ' + eng.email);
@@ -3912,7 +2968,7 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  TOOLS (unchanged)
+        //  TOOLS (sorting, count, predictive for desc & model)
         // ═══════════════════════════════════════════════
         let toolSortCol = 'desc',
             toolSortDir = 'asc';
@@ -3921,6 +2977,7 @@
             if (toolSortCol === col) toolSortDir = toolSortDir === 'asc' ? 'desc' : 'asc';
             else { toolSortCol = col;
                 toolSortDir = 'asc'; }
+            // Update sort header icons
             document.querySelectorAll('#tab-1 .sort-header').forEach(h => {
                 h.classList.remove('sorted');
                 const icon = h.querySelector('i');
@@ -3936,6 +2993,7 @@
         }
 
         function renderTools() {
+            // Sort tools
             const sorted = [...tools];
             sorted.sort((a, b) => {
                 let va, vb;
@@ -3943,6 +3001,7 @@
                     va = getBorrowerInfo(a.id)?.firstName || '';
                     vb = getBorrowerInfo(b.id)?.firstName || '';
                 } else if (toolSortCol === 'status') {
+                    // Compute status string for sorting
                     const getStatus = (t) => {
                         const isBorrowed = transactions.some(tr => tr.toolId === t.id && !tr.returned);
                         if (isBorrowed) {
@@ -4010,26 +3069,34 @@
                     `;
                 }).join('');
             }
+            // Update total count
             document.getElementById('tools-count-summary').textContent = `Total Tools: ${tools.length}`;
         }
 
-        // ─── Add Tool (unchanged) ────────────────────────────────────────────
+        // ─── Add Tool: predictive for description AND model, duplicate check on all fields ──
         function showAddToolModal() {
+            // Populate datalist with existing descriptions
             const descDatalist = document.getElementById('tool-desc-list');
             const descs = tools.map(t => t.desc).filter((v, i, a) => a.indexOf(v) === i);
             descDatalist.innerHTML = descs.map(d => `<option value="${d}">`).join('');
+
+            // Populate datalist with existing models
             const modelDatalist = document.getElementById('tool-model-list');
             const models = tools.map(t => t.model).filter((v, i, a) => a.indexOf(v) === i);
             modelDatalist.innerHTML = models.map(m => `<option value="${m}">`).join('');
+
+            // Clear fields
             ['tool-desc', 'tool-model', 'tool-serial', 'tool-owner', 'tool-location'].forEach(id => document.getElementById(id)
                 .value = '');
             document.getElementById('tool-cal-date').value = new Date(Date.now() + 365 * 86400000).toISOString().split('T')[0];
+            // Hide warning
             document.getElementById('tool-duplicate-warning').classList.add('hidden');
             document.getElementById('add-tool-modal').classList.remove('hidden');
         }
 
         function hideAddToolModal() { document.getElementById('add-tool-modal').classList.add('hidden'); }
 
+        // Called on any input change in the Add Tool modal
         function checkToolDuplicate() {
             const desc = document.getElementById('tool-desc').value.trim();
             const model = document.getElementById('tool-model').value.trim();
@@ -4037,10 +3104,14 @@
             const owner = document.getElementById('tool-owner').value.trim();
             const calDue = document.getElementById('tool-cal-date').value;
             const warning = document.getElementById('tool-duplicate-warning');
+
+            // If any required field is empty, hide warning and return
             if (!desc || !model || !serial || !owner || !calDue) {
                 warning.classList.add('hidden');
                 return;
             }
+
+            // Check if a tool with exactly the same fields exists
             const exists = tools.some(t =>
                 t.desc.toLowerCase() === desc.toLowerCase() &&
                 t.model.toLowerCase() === model.toLowerCase() &&
@@ -4059,6 +3130,7 @@
             const owner = document.getElementById('tool-owner').value.trim() || authManager.getCurrentUser().name;
             const calDue = document.getElementById('tool-cal-date').value;
             const location = document.getElementById('tool-location').value.trim() || '';
+            // Check duplicate again before saving
             const exists = tools.some(t =>
                 t.desc.toLowerCase() === desc.toLowerCase() &&
                 t.model.toLowerCase() === model.toLowerCase() &&
@@ -4088,7 +3160,7 @@
             logManager.log(authManager.getCurrentUser().name, 'Added tool: ' + desc);
         }
 
-        // Edit tool
+        // Edit tool modal uses same fields but no predictive needed
         function showEditToolModal(id) {
             const t = tools.find(x => x.id === id);
             if (!t || !authManager.canEditTool(t.owner)) return;
@@ -4131,7 +3203,7 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  ENGINEERS (unchanged)
+        //  ENGINEERS (sorting, summary, predictive, phone handling)
         // ═══════════════════════════════════════════════
         let currentEngineerView = 'table';
         let pendingDeletionType = null,
@@ -4179,6 +3251,7 @@
                 return 0;
             });
 
+            // Grid view (without temperature)
             document.getElementById('engineers-grid-view').innerHTML = sorted.length ?
                 sorted.map(e => `
                     <div class="bg-white rounded-2xl p-5 card-hover border">
@@ -4192,6 +3265,7 @@
                 `).join('') :
                 '<div class="col-span-full text-center py-8 text-gray-400">No engineers</div>';
 
+            // Table view (narrow columns for dept and email)
             document.getElementById('engineers-table-body').innerHTML = sorted.length ?
                 sorted.map(e => `
                     <tr>
@@ -4207,6 +3281,7 @@
                 `).join('') :
                 '<tr><td colspan="5" class="text-center py-8 text-gray-400">No engineers</td></tr>';
 
+            // Summary: total and per department
             const total = engineers.length;
             const deptCounts = {};
             engineers.forEach(e => {
@@ -4221,8 +3296,9 @@
                 `<strong>Total Engineers:</strong> ${total} &nbsp;&nbsp; <strong>Departments:</strong> ${deptSummary || 'None'}`;
         }
 
-        // ─── Add Engineer ────────────────────────────────────────────────────
+        // ─── Add Engineer (predictive, duplicate check, phone handling) ────
         function showAddEngineerModal() {
+            // Populate datalist with existing names
             const datalist = document.getElementById('eng-name-list');
             const names = engineers.map(e => e.name).filter((v, i, a) => a.indexOf(v) === i);
             datalist.innerHTML = names.map(n => `<option value="${n}">`).join('');
@@ -4250,6 +3326,7 @@
         async function addNewEngineer() {
             const name = document.getElementById('eng-name').value.trim();
             if (!name) { alert('Name is required.'); return; }
+            // Duplicate check
             if (engineers.some(e => e.name.toLowerCase() === name.toLowerCase())) {
                 alert('This engineer already exists. Please check the name.');
                 return;
@@ -4275,7 +3352,7 @@
             logManager.log(authManager.getCurrentUser().name, 'Added engineer: ' + name);
         }
 
-        // ─── Edit Engineer ──────────────────────────────────────────────────
+        // ─── Edit Engineer ────────────────────────────────────────────────
         function showEditEngineerModal(id) {
             const e = engineers.find(x => x.id === id);
             if (!e) return;
@@ -4315,7 +3392,7 @@
             populateLoginDropdown();
         }
 
-        // ─── Delete Engineer ──────────────────────────────────────────────────
+        // ─── Delete Engineer ────────────────────────────────────────────────
         async function deleteEngineerPrompt(id) {
             const e = engineers.find(x => x.id === id);
             if (!e || !authManager.getCurrentUser()?.isAdmin) return;
@@ -4365,13 +3442,14 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  BORROW / RETURN (unchanged)
+        //  BORROW / RETURN (sorted dropdowns)
         // ═══════════════════════════════════════════════
         let currentEditingTransId = null;
         let pendingReturnTransId = null;
         let capturedReturnImage = null;
 
         function renderBorrowTab() {
+            // Sort available tools by description ascending
             const available = tools.filter(t => !transactions.some(tr => tr.toolId === t.id && !tr.returned));
             available.sort((a, b) => a.desc.localeCompare(b.desc));
             const toolSel = document.getElementById('borrow-tool-select');
@@ -4379,6 +3457,7 @@
                 available.map(t => `<option value="${t.id}">${t.desc} (${t.serial})</option>`).join('') :
                 '<option disabled>No tools available</option>';
 
+            // Sort engineers by name ascending
             const sortedEngineers = [...engineers].sort((a, b) => a.name.localeCompare(b.name));
             const engSel = document.getElementById('borrow-engineer-select');
             engSel.innerHTML = sortedEngineers.length ?
@@ -4496,7 +3575,7 @@
             document.getElementById('active-borrows-section').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // ─── Return Evidence ──────────────────────────────────────────────────
+        // ─── Return Evidence (unchanged) ────────────────────────────────────
         function initiateReturn(id) {
             pendingReturnTransId = id;
             capturedReturnImage = null;
@@ -4959,7 +4038,6 @@
             document.getElementById('settings-panel-modal').classList.remove('hidden');
             loadGitHubSettingsUI();
             updateSettingsVisibility();
-            FaceAuthManager.updateUI();
         }
 
         function hideSettingsPanel() { document.getElementById('settings-panel-modal').classList.add('hidden'); }
@@ -5002,7 +4080,7 @@
             }
         }
 
-        // ─── Backup / Restore ──────────────────────────────────────────────────
+        // ─── Backup / Restore ────────────────────────────────────────────────
         function getBackupFileName() {
             const now = new Date();
             return `BackupCFG_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}.zip`;
@@ -5032,7 +4110,6 @@
                     users: authManager.users,
                     deletionRecords: DeletionLogger.deletionRecords,
                     logConfig: logManager.logConfig,
-                    faceCredentials: faceCredentials,
                     _meta: { version: APP_VERSION, user: authManager.getCurrentUser()?.name, ts: new Date()
                             .toISOString() }
                 };
@@ -5138,13 +4215,6 @@
                             } catch (e) { /* ignore */ }
                         }
                     });
-                    // Restore face credentials
-                    if (snapshot.faceCredentials) {
-                        faceCredentials = snapshot.faceCredentials;
-                        for (const [user, creds] of Object.entries(snapshot.faceCredentials)) {
-                            FaceAuthManager.setCredentials(user, creds);
-                        }
-                    }
 
                     bar.style.width = '100%';
                     percent.textContent = '100%';
@@ -5153,7 +4223,6 @@
                     refreshAllPanels();
                     populateLoginDropdown();
                     updateAllUI();
-                    FaceAuthManager.updateUI();
                     logManager.log(authManager.getCurrentUser()?.name || 'User', 'Restore completed');
                     alert('Restore complete!');
                 } catch (e) {
@@ -5312,7 +4381,7 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  UTILITY FUNCTIONS
+        //  UTILITY FUNCTIONS (unchanged)
         // ═══════════════════════════════════════════════
         function getBorrowerInfo(toolId) {
             const trans = transactions.find(t => t.toolId === toolId && !t.returned);
@@ -5382,23 +4451,10 @@
                 alert('Password updated!');
                 hideChangePasswordModal();
                 logManager.logAuth(user.name, 'Password changed');
-                // ─── REVISION: Force sync after password change ───
-                if (CONFIG.token) {
-                    try {
-                        RepoSync.setStatus('syncing', 'Syncing password…');
-                        await RepoSync.push(true);
-                        RepoSync.setStatus('synced', 'Password synced ✓');
-                    } catch (e) {
-                        console.warn('Password sync error:', e);
-                        RepoSync.setStatus('error', 'Sync failed');
-                    }
-                }
-                // Also update the login dropdown to reflect any changes
-                populateLoginDropdown();
             } else { alert('Current password is incorrect.'); }
         }
 
-        // ─── Cal Cert ──────────────────────────────────────────────────────────
+        // ─── Cal Cert ────────────────────────────────────────────────────────
         let currentCalCertToolId = null;
 
         function showCalCertModal(id) {
@@ -5453,7 +4509,7 @@
             });
         }
 
-        // ─── Password Recovery ──────────────────────────────────────────────────
+        // ─── Password Recovery ──────────────────────────────────────────────
         let recoveryUser = null;
 
         function showPasswordRecoveryModal() {
@@ -5501,17 +4557,6 @@
                 alert('Password reset!');
                 hidePasswordRecoveryModal();
                 logManager.logAuth('SYSTEM', 'Password reset for ' + recoveryUser);
-                // ─── REVISION: Force sync after password reset ───
-                if (CONFIG.token) {
-                    try {
-                        RepoSync.setStatus('syncing', 'Syncing password…');
-                        await RepoSync.push(true);
-                        RepoSync.setStatus('synced', 'Password synced ✓');
-                    } catch (e) {
-                        console.warn('Password sync error:', e);
-                    }
-                }
-                populateLoginDropdown();
             }
         }
 
@@ -5528,8 +4573,7 @@
         }
 
         // ─── About / README ──────────────────────────────────────────────────
-        function showAboutPanel() { document.getElementById('about-panel-modal').classList.remove('hidden');
-            FaceAuthManager.updateUI(); }
+        function showAboutPanel() { document.getElementById('about-panel-modal').classList.remove('hidden'); }
 
         function hideAboutPanel() { document.getElementById('about-panel-modal').classList.add('hidden'); }
 
@@ -5546,7 +4590,7 @@
             static generateReadmeContent() {
                 return `
                     <!DOCTYPE html>
-                    <html><head><title>ToolTrack v2.2.0 Help</title>
+                    <html><head><title>ToolTrack v2.1.8 Help</title>
                     <style>
                         body{font-family:'Segoe UI',Arial;line-height:1.8;max-width:100%;margin:0;padding:20px;color:#1e293b;overflow-wrap:break-word;}
                         h1{color:#1e40af;border-bottom:3px solid #1e40af;padding-bottom:10px;}
@@ -5560,26 +4604,11 @@
                         code{background:#f1f5f9;padding:2px 8px;border-radius:6px;color:#1e293b;}
                     </style>
                     </head><body>
-                        <h1>🛠️ ToolTrack Service Tools Manager v2.2.0</h1>
-                        <p><strong>GitHub‑Synced Dashboard</strong> · Settings for all users · <strong>Face Login</strong></p>
+                        <h1>🛠️ ToolTrack Service Tools Manager v2.1.8</h1>
+                        <p><strong>GitHub‑Synced Dashboard</strong> · Settings for all users</p>
                         <div class="new-feature">
-                            <strong>v2.2.0:</strong> Added Face Recognition Login using WebAuthn API. Password changes now sync across all devices instantly. Biometric authentication supported on iPhone (Face ID), Android (Face Unlock), Windows Hello, and macOS Touch ID.
+                            <strong>v2.1.8:</strong> Fixed login dropdown missing engineers. Default engineers are now seeded automatically on first run. Settings gear visible to all users. Non‑admins see only GitHub Sync. Improved conflict handling with smart merge prevents "Save failed" errors. Return confirmation now reliably removes borrowed tools from the list.
                         </div>
-
-                        <h2>Face Login</h2>
-                        <ul>
-                            <li><strong>Registration:</strong> After successful login, you'll be prompted to enable Face Login.</li>
-                            <li><strong>Authentication:</strong> Tap "Login with Face" on the login screen.</li>
-                            <li><strong>Settings:</strong> Manage face login in Settings → Face Login.</li>
-                            <li><strong>Security:</strong> Uses WebAuthn - no facial images or biometric templates are stored.</li>
-                        </ul>
-
-                        <h2>Password Sync (Revision)</h2>
-                        <ul>
-                            <li>When you change your password on one device, it now syncs to all devices via GitHub.</li>
-                            <li>The login flow pulls the latest data before checking credentials.</li>
-                            <li>Password changes are pushed immediately to the repository.</li>
-                        </ul>
 
                         <h2>Quick Start</h2>
                         <ol>
@@ -5591,19 +4620,27 @@
 
                         <h2>Settings Access</h2>
                         <ul>
-                            <li><strong>All users:</strong> See GitHub Sync (enter token, repo, branch, test connection) and Face Login settings.</li>
+                            <li><strong>All users:</strong> See GitHub Sync (enter token, repo, branch, test connection).</li>
                             <li><strong>Admins only:</strong> See Backup/Restore, Auto-Logout, and Maintenance.</li>
                         </ul>
 
-                        <h2>Browser Support</h2>
+                        <h2>Conflict Resolution</h2>
+                        <p>When a push conflict occurs (409), the system now merges remote and local data instead of overwriting, preventing loss of your confirmation actions.</p>
+
+                        <h2>Return Evidence</h2>
                         <ul>
-                            <li>Chrome 70+</li>
-                            <li>Edge 79+</li>
-                            <li>Safari 13+ (macOS/iOS)</li>
-                            <li>Firefox 60+ (with WebAuthn enabled)</li>
+                            <li>Admin sees: "Image will be auto‑deleted after 10 days."</li>
+                            <li>Admin can click "Backup Image" to download the image locally.</li>
                         </ul>
 
-                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.2.0 · Built with ❤️</p>
+                        <h2>Version History</h2>
+                        <table>
+                            <tr><th>Version</th><th>Features</th></tr>
+                            <tr><td>2.1.8</td><td>Fixed login dropdown, settings for all, smart merge</td></tr>
+                            <tr><td>2.1.7</td><td>Manual token entry, restricted settings</td></tr>
+                        </table>
+
+                        <p style="text-align:center;margin-top:40px;color:#94a3b8;">ToolTrack v2.1.8 · Built with ❤️</p>
                     </body></html>
                 `;
             }
@@ -5611,7 +4648,7 @@
                 const blob = new Blob([this.generateReadmeContent()], { type: 'text/html' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = 'ToolTrack_README_v2.2.0.html';
+                a.download = 'ToolTrack_README_v2.1.8.html';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -5633,7 +4670,6 @@
             loadGitHubSettingsUI();
             updateSettingsVisibility();
             populateDepartmentDropdowns();
-            FaceAuthManager.updateUI();
 
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('main-app').classList.add('hidden');
@@ -5653,11 +4689,6 @@
             }
 
             document.getElementById('temp-widget').addEventListener('click', showWeatherModal);
-
-            // Update face login button when user selection changes
-            document.getElementById('login-user-select').addEventListener('change', function() {
-                FaceAuthManager.updateLoginButton();
-            });
         };
     </script>
 </body>
