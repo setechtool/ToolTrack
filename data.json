@@ -540,11 +540,11 @@
       "location": "Amiri hospital",
       "extensionNotes": "",
       "newExpectedReturn": "",
-      "actualReturnDate": "2026-07-29T14:17:25.871Z",
-      "returnConfirmedBy": "Royston Dcosta",
+      "actualReturnDate": "2026-07-23T12:02:47.495Z",
+      "returnConfirmedBy": "Donan Arciaga",
       "confirmationNotes": "",
-      "transDate": "2026-07-29T14:17:25.871Z",
-      "approvalStatus": "Approved (In Person)",
+      "transDate": "2026-07-30T03:00:41.852Z",
+      "approvalStatus": "Approved",
       "incidentRemarks": "",
       "confirmedBy": ""
     },
@@ -612,11 +612,11 @@
       "location": "Amiri Hospital ",
       "extensionNotes": "",
       "newExpectedReturn": "",
-      "actualReturnDate": "2026-07-29T14:17:43.275Z",
-      "returnConfirmedBy": "Royston Dcosta",
+      "actualReturnDate": "2026-07-23T12:05:17.200Z",
+      "returnConfirmedBy": "Donan Arciaga",
       "confirmationNotes": "",
-      "transDate": "2026-07-29T14:17:43.275Z",
-      "approvalStatus": "Approved (In Person)",
+      "transDate": "2026-07-30T03:00:42.750Z",
+      "approvalStatus": "Approved",
       "incidentRemarks": "",
       "confirmedBy": ""
     }
@@ -759,7 +759,7 @@
       "engineerId": 1782235138098,
       "returnDate": "2026-07-23T12:02:47.495Z",
       "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1784808163820_p05417.jpeg",
-      "status": "pending",
+      "status": "approved",
       "requestedBy": "Donan Arciaga"
     },
     {
@@ -769,7 +769,7 @@
       "engineerId": 1782235138098,
       "returnDate": "2026-07-23T12:05:17.200Z",
       "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1784808313484_lw6ykt.jpeg",
-      "status": "pending",
+      "status": "approved",
       "requestedBy": "Donan Arciaga"
     },
     {
@@ -779,7 +779,7 @@
       "engineerId": 1782235138098,
       "returnDate": "2026-07-23T12:08:11.997Z",
       "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1784808488587_pqtvky.jpeg",
-      "status": "pending",
+      "status": "approved",
       "requestedBy": "Donan Arciaga"
     }
   ],
@@ -894,7 +894,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-29T14:17:49.164Z",
+    "updated": "2026-07-30T03:00:46.755Z",
     "user": "Donan Arciaga"
   }
 }
