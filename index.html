@@ -2602,7 +2602,7 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  LOGIN / LOGOUT (unchanged)
+        //  LOGIN / LOGOUT (REVISED)
         // ═══════════════════════════════════════════════
         function populateLoginDropdown() {
             const sel = document.getElementById('login-user-select');
@@ -2618,11 +2618,92 @@
             setTimeout(() => el.classList.add('hidden'), 5000);
         }
 
+        // ─── REVISED: performLogin ──────────────────────────────────────────
         async function performLogin() {
             const name = document.getElementById('login-user-select').value;
             const pass = document.getElementById('login-password').value;
             if (!name) { showLoginError('Select your name.'); return; }
-            if (authManager.login(name, pass)) {
+
+            let loginSuccess = false;
+            let remoteUsers = null;
+
+            // If GitHub token is configured, try to fetch the latest data.json
+            if (CONFIG.token) {
+                // Update sync status to indicate we are checking remotely
+                const statusEl = document.querySelector('.sync-status-badge');
+                if (statusEl) {
+                    statusEl.className = 'sync-status-badge syncing';
+                    const label = statusEl.querySelector('.sync-label');
+                    if (label) label.textContent = 'Checking credentials...';
+                }
+
+                try {
+                    const cfg = {
+                        token: CONFIG.token,
+                        owner: CONFIG.owner,
+                        repo: CONFIG.repo,
+                        branch: CONFIG.branch,
+                        path: CONFIG.dataPath
+                    };
+                    const url =
+                        `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${cfg.branch}`;
+                    const response = await fetch(url, {
+                        headers: {
+                            'Authorization': 'token ' + cfg.token,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.content) {
+                            const decoded = atob(data.content.replace(/\n/g, ''));
+                            const remoteData = JSON.parse(decoded);
+                            remoteUsers = remoteData.users || {};
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Remote fetch failed, falling back to local:', e);
+                } finally {
+                    // Reset sync status (will be updated later)
+                    const statusEl = document.querySelector('.sync-status-badge');
+                    if (statusEl) {
+                        statusEl.className = 'sync-status-badge synced';
+                        const label = statusEl.querySelector('.sync-label');
+                        if (label) label.textContent = 'Synced ✓';
+                        setTimeout(() => {
+                            if (!authManager.getCurrentUser()) {
+                                statusEl.className = 'sync-status-badge offline';
+                                if (label) label.textContent = 'Offline';
+                            }
+                        }, 3000);
+                    }
+                }
+            }
+
+            // Validate: if remote users exist, use them; otherwise fallback to local AuthManager
+            if (remoteUsers) {
+                // Check if the user exists in remote and password matches
+                if (remoteUsers[name] && remoteUsers[name].password === pass) {
+                    loginSuccess = true;
+                    // Set the current user session without altering local storage
+                    const role = remoteUsers[name].role || 'Engineer';
+                    const isAdmin = ['Royston Dcosta', 'Donan Arciaga'].includes(name);
+                    const isDonan = name === 'Donan Arciaga';
+                    const isRoy = name === 'Royston Dcosta';
+                    authManager.currentUser = {
+                        name,
+                        role,
+                        isAdmin,
+                        isDonan,
+                        isRoy
+                    };
+                }
+            } else {
+                // Fallback to local authentication
+                loginSuccess = authManager.login(name, pass);
+            }
+
+            if (loginSuccess) {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
                 document.getElementById('logged-user-name').textContent = name;
@@ -2633,10 +2714,6 @@
                 await logManager.logAuth(name, 'Successful login');
 
                 if (CONFIG.token) {
-                    RepoSync.setStatus('syncing', 'Syncing…');
-                    await RepoSync.pull();
-                    refreshAllPanels();
-                    populateLoginDropdown();
                     RepoSync.startPolling();
                 } else {
                     RepoSync.setStatus('offline', 'No token');
@@ -2653,6 +2730,23 @@
             }
         }
 
+        // ─── REVISED: changePassword ──────────────────────────────────────────
+        async function changePassword() {
+            const current = document.getElementById('current-password').value;
+            const newPass = document.getElementById('new-password').value;
+            const confirmPass = document.getElementById('confirm-new-password').value;
+            if (!current || newPass !== confirmPass) { alert('Passwords do not match.'); return; }
+            const user = authManager.getCurrentUser();
+            if (user && authManager.changePassword(user.name, current, newPass)) {
+                // --- REVISION: Save data to update data.json and sync ---
+                saveData(); // Triggers a push to GitHub
+                alert('Password updated!');
+                hideChangePasswordModal();
+                logManager.logAuth(user.name, 'Password changed');
+            } else { alert('Current password is incorrect.'); }
+        }
+
+        // ─── logout (unchanged) ──────────────────────────────────────────────
         async function logout() {
             const user = authManager.getCurrentUser();
             if (user) await logManager.logAuth(user.name, 'User logged out');
@@ -4441,18 +4535,7 @@
 
         function hideChangePasswordModal() { document.getElementById('change-password-modal').classList.add('hidden'); }
 
-        async function changePassword() {
-            const current = document.getElementById('current-password').value;
-            const newPass = document.getElementById('new-password').value;
-            const confirmPass = document.getElementById('confirm-new-password').value;
-            if (!current || newPass !== confirmPass) { alert('Passwords do not match.'); return; }
-            const user = authManager.getCurrentUser();
-            if (user && authManager.changePassword(user.name, current, newPass)) {
-                alert('Password updated!');
-                hideChangePasswordModal();
-                logManager.logAuth(user.name, 'Password changed');
-            } else { alert('Current password is incorrect.'); }
-        }
+        // ─── REVISED changePassword (already included above) ──────────────────
 
         // ─── Cal Cert ────────────────────────────────────────────────────────
         let currentCalCertToolId = null;
