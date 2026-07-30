@@ -793,7 +793,7 @@
       "role": "Administrator"
     },
     "Donan Arciaga": {
-      "password": "1234",
+      "password": "111",
       "role": "Administrator"
     },
     "Ahmed Al-Sabah": {
@@ -894,7 +894,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-07-30T07:48:12.968Z",
+    "updated": "2026-07-30T07:49:07.682Z",
     "user": "Donan Arciaga"
   }
 }
