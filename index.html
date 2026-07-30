@@ -872,6 +872,20 @@
             margin-right: 8px;
             vertical-align: middle;
         }
+        /* ── Remember Me label ── */
+        .remember-label {
+            font-size: 0.9rem;
+            color: #374151;
+            cursor: pointer;
+            user-select: none;
+        }
+        .remember-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            accent-color: #2563eb;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -914,10 +928,12 @@
                         </button>
                     </div>
                 </div>
-                <!-- Remember Me checkbox -->
-                <div class="flex items-center gap-2">
-                    <input type="checkbox" id="remember-me" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500" />
-                    <label for="remember-me" class="text-sm text-gray-700 cursor-pointer">Remember Me</label>
+                <!-- Remember Me checkbox (styled) -->
+                <div class="flex items-center">
+                    <label class="remember-label flex items-center">
+                        <input type="checkbox" id="remember-me" />
+                        <span>Remember Me</span>
+                    </label>
                 </div>
                 <div id="login-error-msg" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
                     <span id="login-error-text"></span>
@@ -3276,15 +3292,28 @@
             // If already logged in (e.g., after a reload while session is active), skip
             if (authManager.getCurrentUser()) return;
 
-            // If no credential, just pre-select the user in the dropdown and show login screen
+            // Pre-select the remembered user in the dropdown (always)
+            const select = document.getElementById('login-user-select');
+            if (select) {
+                select.value = rememberedUser;
+                // Trigger change to update face login button state
+                if (select.onchange) select.onchange();
+            }
+
+            // If no credential, just pre-select the user and show login screen (password fallback)
             if (!FaceLoginManager.hasCredential(rememberedUser)) {
-                document.getElementById('login-user-select').value = rememberedUser;
-                // Show a subtle message? Not needed.
+                // Show a subtle message that we pre-selected the user
+                const statusDiv = document.getElementById('auto-login-status');
+                statusDiv.textContent = 'Remembered user pre-selected. Enter your password.';
+                statusDiv.className = 'text-center text-sm text-blue-600 bg-blue-50 rounded-xl py-3 mb-4';
+                statusDiv.classList.remove('hidden');
                 return;
             }
 
             // Show the auto-login status
             const statusDiv = document.getElementById('auto-login-status');
+            statusDiv.textContent = 'Authenticating with biometric...';
+            statusDiv.className = 'text-center text-sm text-blue-600 bg-blue-50 rounded-xl py-3 mb-4';
             statusDiv.classList.remove('hidden');
 
             try {
@@ -3325,28 +3354,22 @@
                         updateAllUI();
                         initWeather();
                         document.getElementById('temp-widget').onclick = showWeatherModal;
+                        // Clean up status
+                        statusDiv.classList.add('hidden');
                     } else {
                         // Should not happen
                         statusDiv.textContent = 'User data missing. Please login manually.';
-                        statusDiv.className = 'text-center text-sm text-red-600 bg-red-50 rounded-xl py-3';
-                        // Fall through to show login screen
+                        statusDiv.className = 'text-center text-sm text-red-600 bg-red-50 rounded-xl py-3 mb-4';
                     }
                 } else {
                     // Authentication failed
-                    statusDiv.textContent = 'Biometric authentication failed. Please login manually.';
-                    statusDiv.className = 'text-center text-sm text-red-600 bg-red-50 rounded-xl py-3';
-                    // Pre-select the remembered user
-                    document.getElementById('login-user-select').value = rememberedUser;
+                    statusDiv.textContent = 'Biometric authentication failed. Enter your password.';
+                    statusDiv.className = 'text-center text-sm text-red-600 bg-red-50 rounded-xl py-3 mb-4';
                 }
             } catch (error) {
                 console.warn('Auto-login error:', error);
-                statusDiv.textContent = 'Biometric authentication failed. Please login manually.';
-                statusDiv.className = 'text-center text-sm text-red-600 bg-red-50 rounded-xl py-3';
-                document.getElementById('login-user-select').value = rememberedUser;
-            } finally {
-                // Keep status visible for a moment, then hide? We'll leave it visible with the message.
-                // But if login succeeded, the login screen is hidden, so it's fine.
-                // If failed, we keep the message.
+                statusDiv.textContent = 'Biometric authentication failed. Enter your password.';
+                statusDiv.className = 'text-center text-sm text-red-600 bg-red-50 rounded-xl py-3 mb-4';
             }
         }
 
