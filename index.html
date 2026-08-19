@@ -3811,7 +3811,7 @@
                             <td class="px-4 py-4 text-sm">${t.owner}</td>
                             <td class="px-4 py-4 text-sm">${t.calDue}</td>
                             <td class="px-4 py-4">${statusHtml}</td>
-                            <td class="px-4 py-4">${isCalSoon(t.calDue) && !isBorrowed ? '<span class="text-xs text-orange-600">Prepare Cal</span>' : '-'}</td>
+                            <td class="px-4 py-4">${isCalSoon(t.calDue) && !isBorrowed ? '<span class="text-xs text-orange-600">Send for Calibration Immediately</span>' : '-'}</td>
                             <td class="px-4 py-4 text-sm">${borrower ? borrower.firstName : '-'}</td>
                             <td class="px-4 py-4 text-sm">${borrower ? borrower.location : (t.location || '-')}</td>
                             <td class="px-4 py-4 text-center">${certHtml}</td>
