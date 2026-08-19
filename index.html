@@ -2174,7 +2174,7 @@
         let engineers = [];
         let transactions = [];
         let returnRequests = [];
-        let roy = { phone: '+965 97421668', email: 'royston.dcosta@sultanunited.com' };
+        let roy = { phone: '+965 66944704', email: 'royston.dcosta@sultanunited.com' };
 
         function seedDefaultEngineers() {
             if (engineers.length === 0) {
@@ -2206,7 +2206,7 @@
                     engineers = data.engineers || [];
                     transactions = data.transactions || [];
                     returnRequests = data.returnRequests || [];
-                    roy = data.roy || { phone: '+965 97421668', email: 'royston.dcosta@sultanunited.com' };
+                    roy = data.roy || { phone: '+965 66944704', email: 'royston.dcosta@sultanunited.com' };
                     if (data.users) { authManager.users = data.users;
                         authManager.save(); }
                     if (data.deletionRecords) {
@@ -2253,7 +2253,7 @@
                 engineers = JSON.parse(localStorage.getItem('engineers') || '[]');
                 transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
                 returnRequests = JSON.parse(localStorage.getItem('returnRequests') || '[]');
-                roy = JSON.parse(localStorage.getItem('royContact') || '{"phone":"+965 97421668","email":"royston.dcosta@sultanunited.com"}');
+                roy = JSON.parse(localStorage.getItem('royContact') || '{"phone":"+965 66944704","email":"royston.dcosta@sultanunited.com"}');
                 authManager.users = JSON.parse(localStorage.getItem('tooltrack_users') || '{}');
                 DeletionLogger.deletionRecords = JSON.parse(localStorage.getItem('deletionRecords') || '[]');
                 logManager.logConfig = JSON.parse(localStorage.getItem('logConfig') || '{"enabled":true,"level":"all","retentionDays":30,"autoDelete":false}');
@@ -2443,7 +2443,7 @@
                                     transactions: transactions.length ? transactions : remoteContent.transactions || [],
                                     returnRequests: returnRequests.length ? returnRequests : remoteContent
                                     .returnRequests || [],
-                                    roy: roy || remoteContent.roy || { phone: '+965 97421668',
+                                    roy: roy || remoteContent.roy || { phone: '+965 66944704',
                                         email: 'royston.dcosta@sultanunited.com' },
                                     users: authManager.users || remoteContent.users || {},
                                     deletionRecords: DeletionLogger.deletionRecords || remoteContent
