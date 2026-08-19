@@ -680,15 +680,15 @@
       "engineerId": 1782235138098,
       "takenDate": "2026-08-19",
       "expectedReturn": "2026-08-26",
-      "returned": false,
+      "returned": true,
       "location": "N/A",
       "extensionNotes": "",
       "newExpectedReturn": "",
-      "actualReturnDate": "",
-      "returnConfirmedBy": "",
+      "actualReturnDate": "2026-08-19T13:35:27.590Z",
+      "returnConfirmedBy": "Royston Dcosta",
       "confirmationNotes": "",
-      "transDate": "2026-08-19T13:17:44.233Z",
-      "approvalStatus": "",
+      "transDate": "2026-08-19T13:35:27.590Z",
+      "approvalStatus": "Approved (In Person)",
       "incidentRemarks": "",
       "confirmedBy": ""
     },
@@ -1012,7 +1012,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-19T13:34:40.423Z",
+    "updated": "2026-08-19T13:35:31.594Z",
     "user": "Abdullah Safak"
   }
 }
