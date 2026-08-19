@@ -78,7 +78,7 @@
       "model": "FLUKE 177 TRUE RMS MULTIMETER",
       "serial": "123456789",
       "owner": "Royston D Costa",
-      "calDue": "2026-09-02",
+      "calDue": "2026-09-03",
       "status": "Available",
       "location": "Roy",
       "calCert": null,
@@ -1080,7 +1080,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-19T20:10:35.970Z",
+    "updated": "2026-08-19T20:10:42.209Z",
     "user": "Donan Arciaga"
   }
 }
