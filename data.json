@@ -655,6 +655,24 @@
       "approvalStatus": "Approved (In Person)",
       "incidentRemarks": "",
       "confirmedBy": ""
+    },
+    {
+      "id": 1787145336281,
+      "toolId": 1782235171067,
+      "engineerId": 1782235138098,
+      "takenDate": "2026-08-16",
+      "expectedReturn": "2026-08-18",
+      "returned": false,
+      "location": "N/A",
+      "extensionNotes": "",
+      "newExpectedReturn": "",
+      "actualReturnDate": "",
+      "returnConfirmedBy": "",
+      "confirmationNotes": "",
+      "transDate": "2026-08-19T13:15:36.281Z",
+      "approvalStatus": "",
+      "incidentRemarks": "",
+      "confirmedBy": ""
     }
   ],
   "returnRequests": [
@@ -940,7 +958,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-19T13:13:54.761Z",
+    "updated": "2026-08-19T13:15:40.288Z",
     "user": "Donan Arciaga"
   }
 }
