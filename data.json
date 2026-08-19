@@ -71,6 +71,18 @@
       "location": "SUMC",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1787169957642,
+      "desc": "Digital Multimeter",
+      "model": "FLUKE 177 TRUE RMS MULTIMETER",
+      "serial": "123456789",
+      "owner": "Royston D Costa",
+      "calDue": "2026-08-21",
+      "status": "Available",
+      "location": "Roy",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -1068,7 +1080,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-19T19:45:51.137Z",
-    "user": "Ahmed Al-Sabah"
+    "updated": "2026-08-19T20:06:01.650Z",
+    "user": "Donan Arciaga"
   }
 }
