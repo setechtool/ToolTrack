@@ -18,9 +18,9 @@
       "model": "FLUKE 177 TRUE RMS MULTIMETER",
       "serial": "47960201",
       "owner": "Donan Arciaga",
-      "calDue": "2027-05-23",
+      "calDue": "2026-08-21",
       "status": "Available",
-      "location": "Abdullah Safak",
+      "location": "Donan",
       "calCert": null,
       "calCertDate": null
     },
@@ -940,7 +940,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-19T02:00:53.012Z",
+    "updated": "2026-08-19T13:13:54.761Z",
     "user": "Donan Arciaga"
   }
 }
