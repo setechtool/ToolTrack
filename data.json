@@ -89,10 +89,10 @@
       "desc": "Digital Multimeter",
       "model": "FLUKE 177 TRUE RMS MULTIMETER",
       "serial": "987654",
-      "owner": "Ahmed Al-Sabah",
+      "owner": "Ratheesh ",
       "calDue": "2027-08-19",
       "status": "Available",
-      "location": "Ahmed Al-Sabah",
+      "location": "Ratheesh ",
       "calCert": null,
       "calCertDate": null
     },
@@ -1160,7 +1160,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-19T22:11:11.429Z",
+    "updated": "2026-08-19T22:11:41.062Z",
     "user": "Donan Arciaga"
   }
 }
