@@ -66,7 +66,7 @@
       "model": "HV Dummy plugs E BEZ 1621791",
       "serial": "N/A",
       "owner": "Roy",
-      "calDue": "2026-08-23",
+      "calDue": "2026-07-23",
       "status": "Available",
       "location": "SUMC",
       "calCert": null,
@@ -1068,7 +1068,9 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-19T13:52:23.180Z",
-    "user": "Donan Arciaga"
+    "merged": true,
+    "mergedAt": "2026-08-19T13:53:06.864Z",
+    "user": "Donan Arciaga",
+    "updated": "2026-08-19T13:52:23.180Z"
   }
 }
