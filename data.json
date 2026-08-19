@@ -738,10 +738,10 @@
       "location": "Mubarak Hospital",
       "extensionNotes": "",
       "newExpectedReturn": "",
-      "actualReturnDate": "2026-08-19T13:46:24.592Z",
+      "actualReturnDate": "2026-08-19T13:47:16.559Z",
       "returnConfirmedBy": "Donan Arciaga",
       "confirmationNotes": "",
-      "transDate": "2026-08-19T13:48:13.415Z",
+      "transDate": "2026-08-19T13:48:29.731Z",
       "approvalStatus": "Approved",
       "incidentRemarks": "",
       "confirmedBy": ""
@@ -935,7 +935,7 @@
       "engineerId": 1782649435541,
       "returnDate": "2026-08-19T13:47:16.559Z",
       "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787147234198_p00o7i.jpeg",
-      "status": "pending",
+      "status": "approved",
       "requestedBy": "Nasr Hagy"
     }
   ],
@@ -1050,9 +1050,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "merged": true,
-    "mergedAt": "2026-08-19T13:48:18.914Z",
-    "user": "Nasr Hagy",
-    "updated": "2026-08-19T13:48:12.826Z"
+    "updated": "2026-08-19T13:48:33.733Z",
+    "user": "Donan Arciaga"
   }
 }
