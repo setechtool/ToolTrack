@@ -698,15 +698,15 @@
       "engineerId": 1782235138098,
       "takenDate": "2026-08-16",
       "expectedReturn": "2026-08-18",
-      "returned": false,
+      "returned": true,
       "location": "N/A",
       "extensionNotes": "",
       "newExpectedReturn": "",
-      "actualReturnDate": "",
-      "returnConfirmedBy": "",
+      "actualReturnDate": "2026-08-20T04:04:56.665Z",
+      "returnConfirmedBy": "Royston Dcosta",
       "confirmationNotes": "",
-      "transDate": "2026-08-19T13:15:36.281Z",
-      "approvalStatus": "",
+      "transDate": "2026-08-20T04:04:56.665Z",
+      "approvalStatus": "Approved (In Person)",
       "incidentRemarks": "",
       "confirmedBy": ""
     },
@@ -1216,7 +1216,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T04:04:46.615Z",
+    "updated": "2026-08-20T04:05:00.673Z",
     "user": "Donan Arciaga"
   }
 }
