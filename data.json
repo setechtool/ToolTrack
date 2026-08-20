@@ -67,6 +67,13 @@
       "phone": "9747 1005",
       "email": "sara.al-otaibi@sultanunited.com",
       "department": "OTHERS"
+    },
+    {
+      "id": 1787210518998,
+      "name": "Oussama Bob",
+      "phone": "9971 8049",
+      "email": "oussama.bob@sultanunited.com",
+      "department": "ANGIO"
     }
   ],
   "transactions": [
@@ -85,7 +92,7 @@
       "confirmationNotes": "",
       "transDate": "2026-08-20T07:17:25.755Z",
       "approvalStatus": "Incident",
-      "incidentRemarks": "Return tool cannot be located in the assigned storage or return location Ã¢ÂÂ The system indicates the tool has been returned, but it is not physically found in the expected location.",
+      "incidentRemarks": "Return tool cannot be located in the assigned storage or return location ÃÂ¢ÃÂÃÂ The system indicates the tool has been returned, but it is not physically found in the expected location.",
       "confirmedBy": ""
     },
     {
@@ -175,6 +182,10 @@
     "Sara Al-Otaibi": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Oussama Bob": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -186,7 +197,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T07:20:49.835Z",
-    "user": "Nasr Hagy"
+    "updated": "2026-08-20T07:22:03.010Z",
+    "user": "Fatima Al-Mutairi"
   }
 }
