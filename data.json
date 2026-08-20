@@ -56,6 +56,13 @@
       "phone": "9798 9261",
       "email": "mustafa.alshamali@sultanunited.com",
       "department": "ANGIO"
+    },
+    {
+      "id": 1787211795452,
+      "name": "Sadeq Alawneh",
+      "phone": "9968 2919",
+      "email": "sadeq.alawneh@sultanunited.com",
+      "department": "CT & MI"
     }
   ],
   "transactions": [],
@@ -119,7 +126,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T07:42:27.572Z",
+    "updated": "2026-08-20T07:43:19.467Z",
     "user": "Donan Arciaga"
   }
 }
