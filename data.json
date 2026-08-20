@@ -70,6 +70,13 @@
       "phone": "9661 2037",
       "email": "nasr.hagy@sultanunited.com",
       "department": "X-RAY"
+    },
+    {
+      "id": 1787211961609,
+      "name": "Saleh Almasri",
+      "phone": "6508 4329",
+      "email": "saleh.almasri@sultanunited.com",
+      "department": "X-RAY"
     }
   ],
   "transactions": [],
@@ -126,6 +133,10 @@
     "Nasr Hagy": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Saleh Almasri": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -137,7 +148,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T07:44:56.793Z",
+    "updated": "2026-08-20T07:46:05.622Z",
     "user": "Donan Arciaga"
   }
 }
