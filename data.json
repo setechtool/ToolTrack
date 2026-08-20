@@ -1,149 +1,8 @@
 {
-  "tools": [
-    {
-      "id": 1787209803412,
-      "desc": "Meter",
-      "model": "Fluke",
-      "serial": "123",
-      "owner": "Donan",
-      "calDue": "2027-08-20",
-      "status": "Available",
-      "location": "SUMC",
-      "calCert": null,
-      "calCertDate": null
-    },
-    {
-      "id": 1787209878408,
-      "desc": "Meter",
-      "model": "fluke 65656",
-      "serial": "45454",
-      "owner": "Donan Arciaga",
-      "calDue": "2027-08-20",
-      "status": "Available",
-      "location": "SUMC",
-      "calCert": null,
-      "calCertDate": null
-    },
-    {
-      "id": 1787210900783,
-      "desc": "177 True RMS Multimeter",
-      "model": "Fluke",
-      "serial": "54950357",
-      "owner": "Oussama Bob",
-      "calDue": "2027-05-07",
-      "status": "Available",
-      "location": "Oussama Bob",
-      "calCert": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787210911218_i5jje2.pdf",
-      "calCertDate": "2026-08-20"
-    },
-    {
-      "id": 1787211013896,
-      "desc": "Digital Multimeter",
-      "model": "Fluke",
-      "serial": "27730604",
-      "owner": "Sadeq Alawneh",
-      "calDue": "2027-05-05",
-      "status": "Available",
-      "location": "Sadeq Alawneh",
-      "calCert": null,
-      "calCertDate": null
-    }
-  ],
-  "engineers": [
-    {
-      "id": 1787208704952,
-      "name": "Royston Dcosta",
-      "phone": "9747 1000",
-      "email": "royston.dcosta@sultanunited.com",
-      "department": "ANGIO"
-    },
-    {
-      "id": 1787208704953,
-      "name": "Donan Arciaga",
-      "phone": "9747 1001",
-      "email": "donan.arciaga@sultanunited.com",
-      "department": "CT"
-    },
-    {
-      "id": 1787208704954,
-      "name": "Ahmed Al-Sabah",
-      "phone": "9747 1002",
-      "email": "ahmed.al-sabah@sultanunited.com",
-      "department": "LAB"
-    },
-    {
-      "id": 1787208704955,
-      "name": "Fatima Al-Mutairi",
-      "phone": "9747 1003",
-      "email": "fatima.al-mutairi@sultanunited.com",
-      "department": "MRI"
-    },
-    {
-      "id": 1787208704956,
-      "name": "Mohammed Al-Rashid",
-      "phone": "9747 1004",
-      "email": "mohammed.al-rashid@sultanunited.com",
-      "department": "NUCLEAR"
-    },
-    {
-      "id": 1787208704957,
-      "name": "Sara Al-Otaibi",
-      "phone": "9747 1005",
-      "email": "sara.al-otaibi@sultanunited.com",
-      "department": "OTHERS"
-    },
-    {
-      "id": 1787210518998,
-      "name": "Oussama Bob",
-      "phone": "9971 8049",
-      "email": "oussama.bob@sultanunited.com",
-      "department": "ANGIO"
-    },
-    {
-      "id": 1787210602993,
-      "name": "Yousef Abdelatif",
-      "phone": "9858 1391",
-      "email": "yousef.abdelatif@sultanunited.com",
-      "department": "LAB"
-    },
-    {
-      "id": 1787210688344,
-      "name": "Mustafa Shamali",
-      "phone": "9798 9261",
-      "email": "mustafa.shamali@sultanunited.com",
-      "department": "ANGIO"
-    },
-    {
-      "id": 1787210776173,
-      "name": "Sadeq Alawneh",
-      "phone": "9968 2919",
-      "email": "sadeq.alawneh@sultanunited.com",
-      "department": "CT & MI"
-    }
-  ],
+  "tools": [],
+  "engineers": [],
   "transactions": [],
-  "returnRequests": [
-    {
-      "id": "RR1787210059827",
-      "transId": 1787210010945,
-      "toolId": 1787209878408,
-      "engineerId": 1787208704953,
-      "returnDate": "2026-08-20T07:14:19.827Z",
-      "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787210056838_8pq19u.jpeg",
-      "status": "approved",
-      "requestedBy": "Donan Arciaga"
-    },
-    {
-      "id": "RR1787210141024",
-      "transId": 1787209907451,
-      "toolId": 1787209803412,
-      "engineerId": 1787208704953,
-      "returnDate": "2026-08-20T07:15:41.023Z",
-      "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787210138379_75p5n1.jpeg",
-      "status": "incident",
-      "requestedBy": "Donan Arciaga"
-    }
-  ],
+  "returnRequests": [],
   "roy": {
     "phone": "+965 66944704",
     "email": "royston.dcosta@sultanunited.com"
@@ -199,7 +58,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T07:37:52.990Z",
+    "updated": "2026-08-20T07:37:58.271Z",
     "user": "Donan Arciaga"
   }
 }
