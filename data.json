@@ -35,6 +35,18 @@
       "location": "Oussama Bob",
       "calCert": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787210911218_i5jje2.pdf",
       "calCertDate": "2026-08-20"
+    },
+    {
+      "id": 1787211013896,
+      "desc": "Digital Multimeter",
+      "model": "Fluke",
+      "serial": "27730604",
+      "owner": "Sadeq Alawneh",
+      "calDue": "2027-05-05",
+      "status": "Available",
+      "location": "Sadeq Alawneh",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -242,7 +254,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T07:29:33.439Z",
-    "user": "Oussama Bob"
+    "updated": "2026-08-20T07:30:17.901Z",
+    "user": "Sadeq Alawneh"
   }
 }
