@@ -35,6 +35,18 @@
       "location": "Nasr",
       "calCert": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787215639815_ga98fp.pdf",
       "calCertDate": "2026-08-20"
+    },
+    {
+      "id": 1787216173845,
+      "desc": "TRUE RMS MULTIMETER",
+      "model": "FLUKE 177 TRUE RMS MULTIMETER",
+      "serial": "43662770WS",
+      "owner": "Ratheesh",
+      "calDue": "2027-05-04",
+      "status": "Available",
+      "location": "Ratheesh",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -192,9 +204,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "merged": true,
-    "mergedAt": "2026-08-20T08:55:40.820Z",
-    "user": "Donan Arciaga",
-    "updated": "2026-08-20T08:55:37.014Z"
+    "updated": "2026-08-20T08:56:17.850Z",
+    "user": "Donan Arciaga"
   }
 }
