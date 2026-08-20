@@ -42,6 +42,13 @@
       "phone": "9747 1005",
       "email": "sara.al-otaibi@sultanunited.com",
       "department": "OTHERS"
+    },
+    {
+      "id": 1787211671411,
+      "name": "Yousef Abdelatif",
+      "phone": "9858 1391",
+      "email": "yousef.abdelatif@sultanunited.com",
+      "department": "LAB"
     }
   ],
   "transactions": [],
@@ -101,7 +108,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T07:40:24.508Z",
+    "updated": "2026-08-20T07:41:15.426Z",
     "user": "Donan Arciaga"
   }
 }
