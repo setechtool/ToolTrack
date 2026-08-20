@@ -150,9 +150,9 @@
     },
     {
       "id": 1782235908713,
-      "name": "Ossama Bob",
-      "phone": "9971 7084",
-      "email": "ossama.bob@sultanunited.com",
+      "name": "Oussama Bob",
+      "phone": "9971 8049",
+      "email": "oussama.bob@sultanunited.com",
       "department": "ANGIO"
     },
     {
@@ -214,7 +214,7 @@
     {
       "id": 1783584045613,
       "name": "Sadeq Alawneh",
-      "phone": "9968 2919",
+      "phone": "Missing phone number",
       "email": "sadeq.alawneh@sultanunited.com",
       "department": "CT",
       "temperature": null
@@ -1168,10 +1168,6 @@
       "password": "123",
       "role": "Engineer"
     },
-    "Ossama Bob": {
-      "password": "123",
-      "role": "Engineer"
-    },
     "Ratheesh Kumar": {
       "password": "123",
       "role": "Engineer"
@@ -1223,6 +1219,10 @@
     "Yara Hindiyeh": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Oussama Bob": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -1234,7 +1234,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T06:51:28.254Z",
-    "user": "Sadeq Alawneh"
+    "updated": "2026-08-20T06:52:35.107Z",
+    "user": "Ossama Bob"
   }
 }
