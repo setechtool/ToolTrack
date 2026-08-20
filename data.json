@@ -815,7 +815,7 @@
       "confirmationNotes": "",
       "transDate": "2026-08-20T03:28:39.341Z",
       "approvalStatus": "Incident",
-      "incidentRemarks": "Serial number or asset tag mismatch detected — The returned tool does not match the recorded serial number or asset identification in the system, affecting traceability and inventory accuracy.",
+      "incidentRemarks": "Serial number or asset tag mismatch detected â The returned tool does not match the recorded serial number or asset identification in the system, affecting traceability and inventory accuracy.",
       "confirmedBy": ""
     },
     {
@@ -1160,7 +1160,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T03:28:46.807Z",
+    "updated": "2026-08-20T03:30:35.692Z",
     "user": "Donan Arciaga"
   }
 }
