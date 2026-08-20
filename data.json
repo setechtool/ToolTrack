@@ -63,6 +63,13 @@
       "phone": "9968 2919",
       "email": "sadeq.alawneh@sultanunited.com",
       "department": "CT & MI"
+    },
+    {
+      "id": 1787211892777,
+      "name": "Nasr Hagy",
+      "phone": "9661 2037",
+      "email": "nasr.hagy@sultanunited.com",
+      "department": "X-RAY"
     }
   ],
   "transactions": [],
@@ -115,6 +122,10 @@
     "Mustafa Alshamali": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Nasr Hagy": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -126,7 +137,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T07:43:19.467Z",
+    "updated": "2026-08-20T07:44:56.793Z",
     "user": "Donan Arciaga"
   }
 }
