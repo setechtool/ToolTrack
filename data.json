@@ -815,7 +815,7 @@
       "confirmationNotes": "",
       "transDate": "2026-08-20T03:28:39.341Z",
       "approvalStatus": "Incident",
-      "incidentRemarks": "Serial number or asset tag mismatch detected ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ The returned tool does not match the recorded serial number or asset identification in the system, affecting traceability and inventory accuracy.",
+      "incidentRemarks": "Serial number or asset tag mismatch detected ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ The returned tool does not match the recorded serial number or asset identification in the system, affecting traceability and inventory accuracy.",
       "confirmedBy": ""
     },
     {
@@ -851,7 +851,7 @@
       "confirmationNotes": "",
       "transDate": "2026-08-20T03:36:52.964Z",
       "approvalStatus": "Approved",
-      "incidentRemarks": "Return tool cannot be located in the assigned storage or return location ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ The system indicates the tool has been returned, but it is not physically found in the expected location.",
+      "incidentRemarks": "Return tool cannot be located in the assigned storage or return location ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ The system indicates the tool has been returned, but it is not physically found in the expected location.",
       "confirmedBy": ""
     }
   ],
@@ -1198,7 +1198,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T04:00:16.628Z",
+    "updated": "2026-08-20T04:03:41.659Z",
     "user": "Donan Arciaga"
   }
 }
