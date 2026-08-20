@@ -47,6 +47,18 @@
       "location": "Ratheesh",
       "calCert": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787216197868_bngel6.pdf",
       "calCertDate": "2026-08-20"
+    },
+    {
+      "id": 1787216258546,
+      "desc": "TRUE RMS MULTIMETER",
+      "model": "FLUKE 177 TRUE RMS MULTIMETER",
+      "serial": "47960208",
+      "owner": "Saleh",
+      "calDue": "2027-05-04",
+      "status": "Available",
+      "location": "Saleh",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -204,7 +216,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T08:56:51.100Z",
+    "updated": "2026-08-20T08:57:42.556Z",
     "user": "Donan Arciaga"
   }
 }
