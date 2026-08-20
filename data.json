@@ -23,6 +23,18 @@
       "location": "Donan",
       "calCert": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787215507035_if5d9q.pdf",
       "calCertDate": "2026-08-20"
+    },
+    {
+      "id": 1787215630265,
+      "desc": "Fluke Multimeter",
+      "model": "Fluke 177 TRUE RMS MULTIMETER",
+      "serial": "26310068",
+      "owner": "Nasr",
+      "calDue": "2027-04-28",
+      "status": "Available",
+      "location": "Nasr",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -180,7 +192,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T08:45:16.909Z",
+    "updated": "2026-08-20T08:47:14.275Z",
     "user": "Donan Arciaga"
   }
 }
