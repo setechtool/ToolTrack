@@ -3916,10 +3916,21 @@
             logManager.log(authManager.getCurrentUser().name, 'Added tool: ' + desc);
         }
 
-        // Edit tool modal uses same fields but no predictive needed
+        // ─── MODIFIED: Edit Tool with engineer permission for Calibration Due Date only ──
         function showEditToolModal(id) {
             const t = tools.find(x => x.id === id);
-            if (!t || !authManager.canEditTool(t.owner)) return;
+            if (!t) return;
+            
+            const user = authManager.getCurrentUser();
+            const isAdmin = user?.isAdmin || false;
+            
+            // Check if user has permission to edit this tool
+            const canEdit = isAdmin || user?.name === t.owner;
+            if (!canEdit) {
+                alert('You do not have permission to edit this tool.');
+                return;
+            }
+            
             document.getElementById('edit-tool-id').value = id;
             document.getElementById('edit-tool-desc').value = t.desc;
             document.getElementById('edit-tool-model').value = t.model;
@@ -3927,23 +3938,81 @@
             document.getElementById('edit-tool-owner').value = t.owner;
             document.getElementById('edit-tool-cal-date').value = t.calDue;
             document.getElementById('edit-tool-location').value = t.location || '';
+            
+            // Apply field restrictions for non-admin users
+            if (!isAdmin) {
+                // Engineers can only edit Calibration Due Date
+                document.getElementById('edit-tool-desc').readOnly = true;
+                document.getElementById('edit-tool-desc').classList.add('locked-field');
+                document.getElementById('edit-tool-model').readOnly = true;
+                document.getElementById('edit-tool-model').classList.add('locked-field');
+                document.getElementById('edit-tool-serial').readOnly = true;
+                document.getElementById('edit-tool-serial').classList.add('locked-field');
+                document.getElementById('edit-tool-owner').readOnly = true;
+                document.getElementById('edit-tool-owner').classList.add('locked-field');
+                document.getElementById('edit-tool-location').readOnly = true;
+                document.getElementById('edit-tool-location').classList.add('locked-field');
+                // Calibration Due Date remains editable
+                document.getElementById('edit-tool-cal-date').readOnly = false;
+                document.getElementById('edit-tool-cal-date').classList.remove('locked-field');
+            } else {
+                // Admins have full access
+                ['edit-tool-desc', 'edit-tool-model', 'edit-tool-serial', 'edit-tool-owner', 'edit-tool-location', 'edit-tool-cal-date'].forEach(id => {
+                    document.getElementById(id).readOnly = false;
+                    document.getElementById(id).classList.remove('locked-field');
+                });
+            }
+            
             document.getElementById('edit-tool-modal').classList.remove('hidden');
         }
 
         function hideEditToolModal() { document.getElementById('edit-tool-modal').classList.add('hidden'); }
 
+        // ─── MODIFIED: Update Tool with engineer permission for Calibration Due Date only ──
         async function updateTool() {
             const t = tools.find(x => x.id === parseInt(document.getElementById('edit-tool-id').value));
             if (!t) return;
+            
+            const user = authManager.getCurrentUser();
+            const isAdmin = user?.isAdmin || false;
+            const canEdit = isAdmin || user?.name === t.owner;
+            
+            if (!canEdit) {
+                alert('You do not have permission to edit this tool.');
+                return;
+            }
+            
+            // Only update Calibration Due Date for non-admin users
+            if (!isAdmin) {
+                const newCalDate = document.getElementById('edit-tool-cal-date').value;
+                if (newCalDate && newCalDate !== t.calDue) {
+                    t.calDue = newCalDate;
+                    saveData();
+                    hideEditToolModal();
+                    refreshAllPanels();
+                    logManager.log(user.name, `Updated calibration due date for tool: ${t.desc} (ID: ${t.id})`);
+                    alert('Calibration Due Date updated successfully.');
+                    return;
+                } else {
+                    alert('No changes made to Calibration Due Date.');
+                    hideEditToolModal();
+                    return;
+                }
+            }
+            
+            // Admin full update
             t.desc = document.getElementById('edit-tool-desc').value.trim() || t.desc;
             t.model = document.getElementById('edit-tool-model').value || t.model;
             t.serial = document.getElementById('edit-tool-serial').value || t.serial;
-            if (authManager.getCurrentUser().isAdmin) t.owner = document.getElementById('edit-tool-owner').value || t.owner;
+            t.owner = document.getElementById('edit-tool-owner').value || t.owner;
             t.calDue = document.getElementById('edit-tool-cal-date').value || t.calDue;
             t.location = document.getElementById('edit-tool-location').value || t.location;
+            
             saveData();
             hideEditToolModal();
             refreshAllPanels();
+            logManager.log(user.name, `Updated tool: ${t.desc} (ID: ${t.id})`);
+            alert('Tool updated successfully.');
         }
 
         async function deleteToolPrompt(id) {
