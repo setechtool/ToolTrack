@@ -69,7 +69,26 @@
       "department": "OTHERS"
     }
   ],
-  "transactions": [],
+  "transactions": [
+    {
+      "id": 1787209907451,
+      "toolId": 1787209803412,
+      "engineerId": 1787208704953,
+      "takenDate": "2026-08-20",
+      "expectedReturn": "2026-08-27",
+      "returned": false,
+      "location": "Farwaniya",
+      "extensionNotes": "",
+      "newExpectedReturn": "",
+      "actualReturnDate": "",
+      "returnConfirmedBy": "",
+      "confirmationNotes": "",
+      "transDate": "2026-08-20T07:11:47.451Z",
+      "approvalStatus": "",
+      "incidentRemarks": "",
+      "confirmedBy": ""
+    }
+  ],
   "returnRequests": [],
   "roy": {
     "phone": "+965 66944704",
@@ -110,7 +129,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T07:11:22.417Z",
+    "updated": "2026-08-20T07:11:51.454Z",
     "user": "Donan Arciaga"
   }
 }
