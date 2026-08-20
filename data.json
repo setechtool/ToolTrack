@@ -49,6 +49,13 @@
       "phone": "9858 1391",
       "email": "yousef.abdelatif@sultanunited.com",
       "department": "LAB"
+    },
+    {
+      "id": 1787211743556,
+      "name": "Mustafa Alshamali",
+      "phone": "9798 9261",
+      "email": "mustafa.alshamali@sultanunited.com",
+      "department": "ANGIO"
     }
   ],
   "transactions": [],
@@ -97,6 +104,10 @@
     "Sadeq Alawneh": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Mustafa Alshamali": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -108,7 +119,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T07:41:52.571Z",
+    "updated": "2026-08-20T07:42:27.572Z",
     "user": "Donan Arciaga"
   }
 }
