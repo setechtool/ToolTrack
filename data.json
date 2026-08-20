@@ -815,7 +815,7 @@
       "confirmationNotes": "",
       "transDate": "2026-08-20T03:28:39.341Z",
       "approvalStatus": "Incident",
-      "incidentRemarks": "Serial number or asset tag mismatch detected Ã¢ÂÂ The returned tool does not match the recorded serial number or asset identification in the system, affecting traceability and inventory accuracy.",
+      "incidentRemarks": "Serial number or asset tag mismatch detected ÃÂ¢ÃÂÃÂ The returned tool does not match the recorded serial number or asset identification in the system, affecting traceability and inventory accuracy.",
       "confirmedBy": ""
     },
     {
@@ -849,7 +849,7 @@
       "actualReturnDate": "",
       "returnConfirmedBy": "",
       "confirmationNotes": "",
-      "transDate": "2026-08-20T03:32:07.229Z",
+      "transDate": "2026-08-20T03:34:18.385Z",
       "approvalStatus": "",
       "incidentRemarks": "",
       "confirmedBy": ""
@@ -1065,6 +1065,16 @@
       "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787171604564_x2zm0b.jpeg",
       "status": "pending",
       "requestedBy": "Donan Arciaga"
+    },
+    {
+      "id": "RR1787196858385",
+      "transId": 1787196727229,
+      "toolId": 1787177059992,
+      "engineerId": 1782235138098,
+      "returnDate": "2026-08-20T03:34:18.385Z",
+      "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787196855221_3gwp86.jpeg",
+      "status": "pending",
+      "requestedBy": "Donan Arciaga"
     }
   ],
   "roy": {
@@ -1178,7 +1188,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T03:32:14.849Z",
+    "updated": "2026-08-20T03:34:23.252Z",
     "user": "Donan Arciaga"
   }
 }
