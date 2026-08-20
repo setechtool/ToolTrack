@@ -118,7 +118,7 @@
       "role": "Engineer"
     },
     "Oussama Bob": {
-      "password": "123",
+      "password": "Bob@2912002",
       "role": "Engineer"
     },
     "Yousef Abdelatif": {
@@ -155,7 +155,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T07:48:04.319Z",
-    "user": "Sadeq Alawneh"
+    "updated": "2026-08-20T07:49:18.377Z",
+    "user": "system"
   }
 }
