@@ -815,7 +815,7 @@
       "confirmationNotes": "",
       "transDate": "2026-08-20T03:28:39.341Z",
       "approvalStatus": "Incident",
-      "incidentRemarks": "Serial number or asset tag mismatch detected ÃÂ¢ÃÂÃÂ The returned tool does not match the recorded serial number or asset identification in the system, affecting traceability and inventory accuracy.",
+      "incidentRemarks": "Serial number or asset tag mismatch detected ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ The returned tool does not match the recorded serial number or asset identification in the system, affecting traceability and inventory accuracy.",
       "confirmedBy": ""
     },
     {
@@ -849,9 +849,9 @@
       "actualReturnDate": "",
       "returnConfirmedBy": "",
       "confirmationNotes": "",
-      "transDate": "2026-08-20T03:34:18.385Z",
-      "approvalStatus": "",
-      "incidentRemarks": "",
+      "transDate": "2026-08-20T03:35:26.091Z",
+      "approvalStatus": "Incident",
+      "incidentRemarks": "Return tool cannot be located in the assigned storage or return location — The system indicates the tool has been returned, but it is not physically found in the expected location.",
       "confirmedBy": ""
     }
   ],
@@ -1073,7 +1073,7 @@
       "engineerId": 1782235138098,
       "returnDate": "2026-08-20T03:34:18.385Z",
       "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787196855221_3gwp86.jpeg",
-      "status": "pending",
+      "status": "incident",
       "requestedBy": "Donan Arciaga"
     }
   ],
@@ -1188,7 +1188,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T03:34:23.252Z",
+    "updated": "2026-08-20T03:35:30.094Z",
     "user": "Donan Arciaga"
   }
 }
