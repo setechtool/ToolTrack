@@ -815,7 +815,7 @@
       "confirmationNotes": "",
       "transDate": "2026-08-20T03:28:39.341Z",
       "approvalStatus": "Incident",
-      "incidentRemarks": "Serial number or asset tag mismatch detected ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ The returned tool does not match the recorded serial number or asset identification in the system, affecting traceability and inventory accuracy.",
+      "incidentRemarks": "Serial number or asset tag mismatch detected ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ The returned tool does not match the recorded serial number or asset identification in the system, affecting traceability and inventory accuracy.",
       "confirmedBy": ""
     },
     {
@@ -849,9 +849,9 @@
       "actualReturnDate": "",
       "returnConfirmedBy": "",
       "confirmationNotes": "",
-      "transDate": "2026-08-20T03:35:26.091Z",
+      "transDate": "2026-08-20T03:36:27.706Z",
       "approvalStatus": "Incident",
-      "incidentRemarks": "Return tool cannot be located in the assigned storage or return location Ã¢ÂÂ The system indicates the tool has been returned, but it is not physically found in the expected location.",
+      "incidentRemarks": "Return tool cannot be located in the assigned storage or return location ÃÂ¢ÃÂÃÂ The system indicates the tool has been returned, but it is not physically found in the expected location.",
       "confirmedBy": ""
     }
   ],
@@ -1075,6 +1075,16 @@
       "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787196855221_3gwp86.jpeg",
       "status": "incident",
       "requestedBy": "Donan Arciaga"
+    },
+    {
+      "id": "RR1787196987706",
+      "transId": 1787196727229,
+      "toolId": 1787177059992,
+      "engineerId": 1782235138098,
+      "returnDate": "2026-08-20T03:36:27.706Z",
+      "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787196984845_xlu6lr.jpeg",
+      "status": "pending",
+      "requestedBy": "Donan Arciaga"
     }
   ],
   "roy": {
@@ -1188,7 +1198,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T03:35:56.027Z",
+    "updated": "2026-08-20T03:36:32.239Z",
     "user": "Donan Arciaga"
   }
 }
