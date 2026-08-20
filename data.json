@@ -214,7 +214,7 @@
     {
       "id": 1783584045613,
       "name": "Sadeq Alawneh",
-      "phone": "9968 2919",
+      "phone": "Missing phone number",
       "email": "sadeq.alawneh@sultanunited.com",
       "department": "CT",
       "temperature": null
@@ -889,6 +889,24 @@
       "approvalStatus": "",
       "incidentRemarks": "",
       "confirmedBy": ""
+    },
+    {
+      "id": 1787208829668,
+      "toolId": 1787177003293,
+      "engineerId": 1782649435541,
+      "takenDate": "2026-08-20",
+      "expectedReturn": "2026-08-27",
+      "returned": false,
+      "location": "N/A",
+      "extensionNotes": "",
+      "newExpectedReturn": "",
+      "actualReturnDate": "",
+      "returnConfirmedBy": "",
+      "confirmationNotes": "",
+      "transDate": "2026-08-20T06:53:49.668Z",
+      "approvalStatus": "",
+      "incidentRemarks": "",
+      "confirmedBy": ""
     }
   ],
   "returnRequests": [
@@ -1201,7 +1219,7 @@
       "role": "Engineer"
     },
     "Sadeq Alawneh": {
-      "password": "Amj12@ina",
+      "password": "123",
       "role": "Engineer"
     },
     "Saleh AlMasri": {
@@ -1234,7 +1252,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T06:53:36.244Z",
-    "user": "Sadeq Alawneh"
+    "updated": "2026-08-20T06:53:55.130Z",
+    "user": "Nasr Hagy"
   }
 }
