@@ -83,9 +83,9 @@
       "actualReturnDate": "",
       "returnConfirmedBy": "",
       "confirmationNotes": "",
-      "transDate": "2026-08-20T07:15:41.024Z",
-      "approvalStatus": "",
-      "incidentRemarks": "",
+      "transDate": "2026-08-20T07:17:25.755Z",
+      "approvalStatus": "Incident",
+      "incidentRemarks": "Return tool cannot be located in the assigned storage or return location — The system indicates the tool has been returned, but it is not physically found in the expected location.",
       "confirmedBy": ""
     },
     {
@@ -125,7 +125,7 @@
       "engineerId": 1787208704953,
       "returnDate": "2026-08-20T07:15:41.023Z",
       "evidenceImage": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787210138379_75p5n1.jpeg",
-      "status": "pending",
+      "status": "incident",
       "requestedBy": "Donan Arciaga"
     }
   ],
@@ -168,7 +168,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T07:15:45.224Z",
+    "updated": "2026-08-20T07:17:30.222Z",
     "user": "Donan Arciaga"
   }
 }
