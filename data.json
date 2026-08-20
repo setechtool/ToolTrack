@@ -815,7 +815,7 @@
       "confirmationNotes": "",
       "transDate": "2026-08-20T03:28:39.341Z",
       "approvalStatus": "Incident",
-      "incidentRemarks": "Serial number or asset tag mismatch detected â The returned tool does not match the recorded serial number or asset identification in the system, affecting traceability and inventory accuracy.",
+      "incidentRemarks": "Serial number or asset tag mismatch detected Ã¢ÂÂ The returned tool does not match the recorded serial number or asset identification in the system, affecting traceability and inventory accuracy.",
       "confirmedBy": ""
     },
     {
@@ -832,6 +832,24 @@
       "returnConfirmedBy": "",
       "confirmationNotes": "",
       "transDate": "2026-08-19T22:09:43.139Z",
+      "approvalStatus": "",
+      "incidentRemarks": "",
+      "confirmedBy": ""
+    },
+    {
+      "id": 1787196727229,
+      "toolId": 1787177059992,
+      "engineerId": 1782235138098,
+      "takenDate": "2026-08-11",
+      "expectedReturn": "2026-08-19",
+      "returned": false,
+      "location": "N/A",
+      "extensionNotes": "",
+      "newExpectedReturn": "",
+      "actualReturnDate": "",
+      "returnConfirmedBy": "",
+      "confirmationNotes": "",
+      "transDate": "2026-08-20T03:32:07.229Z",
       "approvalStatus": "",
       "incidentRemarks": "",
       "confirmedBy": ""
@@ -1160,7 +1178,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T03:30:35.692Z",
+    "updated": "2026-08-20T03:32:14.849Z",
     "user": "Donan Arciaga"
   }
 }
