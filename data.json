@@ -81,6 +81,13 @@
       "phone": "9858 1391",
       "email": "yousef.abdelatif@sultanunited.com",
       "department": "LAB"
+    },
+    {
+      "id": 1787210670553,
+      "name": "Sadeq Alawneh",
+      "phone": "9968 2919",
+      "email": "sadeq.alawneh@sultanunited.com",
+      "department": "CT & MI"
     }
   ],
   "transactions": [
@@ -197,6 +204,10 @@
     "Yousef Abdelatif": {
       "password": "123",
       "role": "Engineer"
+    },
+    "Sadeq Alawneh": {
+      "password": "123",
+      "role": "Engineer"
     }
   },
   "deletionRecords": [],
@@ -208,7 +219,9 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T07:23:45.473Z",
-    "user": "Royston Dcosta"
+    "merged": true,
+    "mergedAt": "2026-08-20T07:24:35.970Z",
+    "user": "Royston Dcosta",
+    "updated": "2026-08-20T07:23:45.473Z"
   }
 }
