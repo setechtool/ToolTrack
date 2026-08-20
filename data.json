@@ -11,6 +11,18 @@
       "location": "SUMC",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1787209878408,
+      "desc": "Meter",
+      "model": "fluke 65656",
+      "serial": "45454",
+      "owner": "Donan Arciaga",
+      "calDue": "2027-08-20",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -98,7 +110,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T07:10:41.073Z",
+    "updated": "2026-08-20T07:11:22.417Z",
     "user": "Donan Arciaga"
   }
 }
