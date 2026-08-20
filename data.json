@@ -92,7 +92,7 @@
       "confirmationNotes": "",
       "transDate": "2026-08-20T07:17:25.755Z",
       "approvalStatus": "Incident",
-      "incidentRemarks": "Return tool cannot be located in the assigned storage or return location ÃÂ¢ÃÂÃÂ The system indicates the tool has been returned, but it is not physically found in the expected location.",
+      "incidentRemarks": "Return tool cannot be located in the assigned storage or return location ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ The system indicates the tool has been returned, but it is not physically found in the expected location.",
       "confirmedBy": ""
     },
     {
@@ -197,7 +197,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T07:22:10.335Z",
-    "user": "system"
+    "updated": "2026-08-20T07:22:46.350Z",
+    "user": "Donan Arciaga"
   }
 }
