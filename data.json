@@ -51,7 +51,7 @@
     {
       "id": 1787216258546,
       "desc": "TRUE RMS MULTIMETER",
-      "model": "FLUKE 177",
+      "model": "FLUKE 177 TRUE RMS MULTIMETER",
       "serial": "47960208",
       "owner": "Saleh",
       "calDue": "2027-05-04",
@@ -62,8 +62,8 @@
     },
     {
       "id": 1787217661634,
-      "desc": "True RMS Multimeter",
-      "model": "Fluke 177",
+      "desc": "TRUE RMS MULTIMETER",
+      "model": "FLUKE 177",
       "serial": "27730604",
       "owner": "Sadeq Alawneh",
       "calDue": "2027-04-28",
@@ -228,7 +228,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T09:34:49.332Z",
+    "updated": "2026-08-20T09:35:21.292Z",
     "user": "Donan Arciaga"
   }
 }
