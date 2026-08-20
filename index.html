@@ -125,7 +125,7 @@
             background: #f1f5f9;
             border-color: #9ca3af;
         }
-        /* Face login specific */
+        /* Biometric Login specific */
         .btn-face {
             background: #1e40af;
             color: #fff;
@@ -767,7 +767,7 @@
             background: #fff;
         }
 
-        /* ── Face Login UI ── */
+        /* ── Biometric Login UI ── */
         .face-login-section {
             margin-top: 16px;
             text-align: center;
@@ -923,7 +923,7 @@
                     <i class="fa-solid fa-right-to-bracket mr-2"></i> Login
                 </button>
 
-                <!-- ─── FACE LOGIN SECTION ─── -->
+                <!-- ─── Biometric Login SECTION ─── -->
                 <div class="face-login-section">
                     <div class="divider">OR</div>
                     <button id="face-login-btn" class="face-login-btn" onclick="authenticateWithFace()" disabled>
@@ -1261,13 +1261,13 @@
                     </div>
                 </div>
 
-                <!-- ─── SECURITY: Face Login ─── -->
+                <!-- ─── SECURITY: Biometric Login ─── -->
                 <div class="settings-card">
                     <h4><i class="fa-solid fa-shield-halved text-blue-600"></i> Security</h4>
                     <div class="security-card">
                         <div class="flex-between">
                             <div>
-                                <div class="font-medium">Face Login</div>
+                                <div class="font-medium">Biometric Login</div>
                                 <div class="desc">Use biometric authentication (Face ID, Touch ID, Windows Hello) for quick login.</div>
                             </div>
                             <label class="toggle-switch">
@@ -1276,8 +1276,8 @@
                             </label>
                         </div>
                         <div class="actions">
-                            <button id="face-register-btn" class="btn btn-primary text-sm px-4 py-1.5" onclick="registerFaceLogin()" disabled>Register Face Login</button>
-                            <button id="face-remove-btn" class="btn btn-danger text-sm px-4 py-1.5" onclick="removeFaceLogin()" disabled>Remove Face Login</button>
+                            <button id="face-register-btn" class="btn btn-primary text-sm px-4 py-1.5" onclick="registerFaceLogin()" disabled>Register Biometric Login</button>
+                            <button id="face-remove-btn" class="btn btn-danger text-sm px-4 py-1.5" onclick="removeFaceLogin()" disabled>Remove Biometric Login</button>
                         </div>
                         <div id="face-status-message" class="text-sm text-gray-500 mt-2"></div>
                     </div>
@@ -2762,7 +2762,7 @@
         }
 
         // ═══════════════════════════════════════════════
-        //  FACE LOGIN – WebAuthn Integration
+        //  Biometric Login – WebAuthn Integration
         // ═══════════════════════════════════════════════
 
         /**
@@ -2961,10 +2961,10 @@
             }
         }
 
-        // ─── UI Helpers for Face Login ──────────────────────────────────────
+        // ─── UI Helpers for Biometric Login ──────────────────────────────────────
 
         /**
-         * Update the Face Login button state based on the currently selected user and device support.
+         * Update the Biometric Login button state based on the currently selected user and device support.
          */
         function updateFaceLoginUI() {
             const select = document.getElementById('login-user-select');
@@ -2997,8 +2997,8 @@
             const hasCred = FaceLoginManager.hasCredential(selectedUser);
             if (!hasCred) {
                 btn.disabled = true;
-                btn.title = 'Face Login not registered. Log in with password first to enable.';
-                errorMsg.textContent = 'Face Login not registered for this user. Please login with password first.';
+                btn.title = 'Biometric Login not registered. Log in with password first to enable.';
+                errorMsg.textContent = 'Biometric Login not registered for this user. Please login with password first.';
                 errorMsg.classList.add('show');
                 return;
             }
@@ -3008,7 +3008,7 @@
             errorMsg.classList.remove('show');
         }
 
-        // ─── Face Login Registration (called after successful password login) ──
+        // ─── Biometric Login Registration (called after successful password login) ──
         async function promptFaceRegistration(userName) {
             if (!navigator.credentials || !navigator.credentials.create) {
                 // Biometrics not supported
@@ -3019,8 +3019,8 @@
             if (FaceLoginManager.hasCredential(userName)) return;
 
             const result = await CustomConfirmDialog.show(
-                'Would you like to use Face Recognition for faster and more secure login on this device?',
-                'Enable Face Login?'
+                'Would you like to use Biometric Login for faster and more secure login on this device?',
+                'Enable Biometric Login?'
             );
 
             if (!result) return;
@@ -3028,20 +3028,20 @@
             try {
                 const credential = await FaceLoginManager.register(userName);
                 if (credential) {
-                    alert('Face Login registered successfully! You can now use Face Login.');
-                    logManager.logAuth(userName, 'Face Login registered');
+                    alert('Biometric Login registered successfully! You can now use Biometric Login.');
+                    logManager.logAuth(userName, 'Biometric Login registered');
                     updateFaceLoginUI();
                     updateSecuritySettingsUI();
                 } else {
-                    alert('Face Login registration failed. Please try again.');
+                    alert('Biometric Login registration failed. Please try again.');
                 }
             } catch (error) {
                 console.error('Face registration error:', error);
-                alert('Face Login registration failed: ' + (error.message || 'Unknown error'));
+                alert('Biometric Login registration failed: ' + (error.message || 'Unknown error'));
             }
         }
 
-        // ─── Face Login Authentication ──────────────────────────────────────
+        // ─── Biometric Login Authentication ──────────────────────────────────────
 
         /**
          * Trigger WebAuthn authentication for the selected user.
@@ -3092,7 +3092,7 @@
                         buildSidebarNavigation();
                         buildMobileNav();
                         IdleManager.start();
-                        await logManager.logAuth(userName, 'Face Login successful');
+                        await logManager.logAuth(userName, 'Biometric Login successful');
 
                         if (CONFIG.token) {
                             RepoSync.startPolling();
@@ -3126,7 +3126,7 @@
             }
         }
 
-        // ─── Settings UI for Face Login ─────────────────────────────────────
+        // ─── Settings UI for Biometric Login ─────────────────────────────────────
 
         /**
          * Update the Security settings panel based on the current user.
@@ -3156,7 +3156,7 @@
         }
 
         /**
-         * Toggle the Face Login setting (enable/disable). This only affects the UI,
+         * Toggle the Biometric Login setting (enable/disable). This only affects the UI,
          * but removal/registration is done via separate buttons.
          */
         function toggleFaceLoginSetting() {
@@ -3184,7 +3184,7 @@
             }
 
             if (FaceLoginManager.hasCredential(user.name)) {
-                alert('Face Login already registered for this user.');
+                alert('Biometric Login already registered for this user.');
                 updateSecuritySettingsUI();
                 return;
             }
@@ -3197,8 +3197,8 @@
             try {
                 const credential = await FaceLoginManager.register(user.name);
                 if (credential) {
-                    alert('Face Login registered successfully!');
-                    logManager.logAuth(user.name, 'Face Login registered from settings');
+                    alert('Biometric Login registered successfully!');
+                    logManager.logAuth(user.name, 'Biometric Login registered from settings');
                     updateSecuritySettingsUI();
                     updateFaceLoginUI();
                 } else {
@@ -3223,13 +3223,13 @@
             }
 
             const ok = await CustomConfirmDialog.show(
-                'Remove Face Login from this device?',
-                'Remove Face Login'
+                'Remove Biometric Login from this device?',
+                'Remove Biometric Login'
             );
             if (ok) {
                 FaceLoginManager.removeCredential(user.name);
-                alert('Face Login removed.');
-                logManager.logAuth(user.name, 'Face Login removed');
+                alert('Biometric Login removed.');
+                logManager.logAuth(user.name, 'Biometric Login removed');
                 updateSecuritySettingsUI();
                 updateFaceLoginUI();
                 // Also update toggle
@@ -3254,7 +3254,7 @@
             const users = authManager.getAllUsers();
             sel.innerHTML = '<option value="">— Select Your Name —</option>' +
                 users.map(u => `<option value="${u}">${u}</option>`).join('');
-            // Update face login UI when dropdown changes
+            // Update Biometric Login UI when dropdown changes
             sel.onchange = updateFaceLoginUI;
             updateFaceLoginUI();
         }
@@ -3372,7 +3372,7 @@
                 initWeather();
                 document.getElementById('temp-widget').onclick = showWeatherModal;
 
-                // ─── FACE LOGIN: Prompt for registration if not already registered ───
+                // ─── Biometric Login: Prompt for registration if not already registered ───
                 if (navigator.credentials && navigator.credentials.create) {
                     if (!FaceLoginManager.hasCredential(name)) {
                         // Delay a bit to let UI settle
@@ -5369,13 +5369,13 @@
                         <h1>🛠️ ToolTrack Service Tools Manager v2.1.8</h1>
                         <p><strong>GitHub‑Synced Dashboard</strong> · Settings for all users</p>
                         <div class="new-feature">
-                            <strong>v2.1.8:</strong> Face Login with WebAuthn, enhanced sync conflict resolution, and improved mobile experience.
+                            <strong>v2.1.8:</strong> Biometric Login with WebAuthn, enhanced sync conflict resolution, and improved mobile experience.
                         </div>
 
                         <h2>Quick Start</h2>
                         <ol>
                             <li>Login with your name (default password: <code>123</code>) – engineers are pre‑loaded.</li>
-                            <li>Use Face Login if supported on your device.</li>
+                            <li>Use Biometric Login if supported on your device.</li>
                             <li>Click the Settings gear (⚙️) – visible to everyone.</li>
                             <li>Enter the token provided by the administrator.</li>
                             <li>Click Save – the token is stored on your device only.</li>
@@ -5399,7 +5399,7 @@
                         <h2>Version History</h2>
                         <table>
                             <tr><th>Version</th><th>Features</th></tr>
-                            <tr><td>2.1.8</td><td>Face Login, enhanced sync, mobile improvements</td></tr>
+                            <tr><td>2.1.8</td><td>Biometric Login, enhanced sync, mobile improvements</td></tr>
                             <tr><td>2.1.7</td><td>Manual token entry, restricted settings</td></tr>
                         </table>
 
