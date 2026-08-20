@@ -106,7 +106,7 @@
       "confirmationNotes": "",
       "transDate": "2026-08-20T07:17:25.755Z",
       "approvalStatus": "Incident",
-      "incidentRemarks": "Return tool cannot be located in the assigned storage or return location ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ The system indicates the tool has been returned, but it is not physically found in the expected location.",
+      "incidentRemarks": "Return tool cannot be located in the assigned storage or return location ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ The system indicates the tool has been returned, but it is not physically found in the expected location.",
       "confirmedBy": ""
     },
     {
@@ -219,9 +219,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "merged": true,
-    "mergedAt": "2026-08-20T07:24:35.970Z",
-    "user": "Royston Dcosta",
-    "updated": "2026-08-20T07:23:45.473Z"
+    "updated": "2026-08-20T07:24:45.964Z",
+    "user": "Oussama Bob"
   }
 }
