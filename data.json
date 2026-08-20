@@ -14,7 +14,7 @@
     },
     {
       "id": 1787215237223,
-      "desc": "FLUKE TRUE RMS MULTIMETER",
+      "desc": "TRUE RMS MULTIMETER",
       "model": "FLUKE 177 TRUE RMS MULTIMETER",
       "serial": "26310065",
       "owner": "Donan",
@@ -192,7 +192,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T08:51:33.972Z",
+    "updated": "2026-08-20T08:51:53.376Z",
     "user": "Donan Arciaga"
   }
 }
