@@ -83,6 +83,18 @@
       "location": "SUMC",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1787494876346,
+      "desc": "Kathodbox",
+      "model": "Kathodbox",
+      "serial": "1030",
+      "owner": "Roy",
+      "calDue": "2027-08-23",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -240,7 +252,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-23T14:20:42.133Z",
+    "updated": "2026-08-23T14:21:20.349Z",
     "user": "Donan Arciaga"
   }
 }
