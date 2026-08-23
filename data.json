@@ -85,10 +85,10 @@
       "calCertDate": null
     },
     {
-      "id": 1787494876346,
-      "desc": "Kathodbox",
-      "model": "Kathodbox",
-      "serial": "1030",
+      "id": 1787494900690,
+      "desc": "HV Dummy plugs E BEZ",
+      "model": "HV Dummy plugs E BEZ",
+      "serial": "N/A",
       "owner": "Roy",
       "calDue": "2027-08-23",
       "status": "Available",
@@ -252,7 +252,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-23T14:21:20.349Z",
+    "updated": "2026-08-23T14:21:44.697Z",
     "user": "Donan Arciaga"
   }
 }
