@@ -71,6 +71,18 @@
       "location": "Sadeq",
       "calCert": "https://raw.githubusercontent.com/setechtool/ToolTrack/main/images/1787217807639_7y29ex.jpeg",
       "calCertDate": "2026-08-20"
+    },
+    {
+      "id": 1787494838122,
+      "desc": "Tektronix Oscilloscope",
+      "model": "TDS 2014",
+      "serial": "C032007",
+      "owner": "Roy",
+      "calDue": "2027-06-24",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -228,7 +240,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-20T17:58:48.111Z",
+    "updated": "2026-08-23T14:20:42.133Z",
     "user": "Donan Arciaga"
   }
 }
