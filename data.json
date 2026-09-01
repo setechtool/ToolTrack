@@ -256,15 +256,15 @@
       "engineerId": 1787211620498,
       "takenDate": "2026-09-01",
       "expectedReturn": "2026-09-08",
-      "returned": false,
+      "returned": true,
       "location": "International Hospital ",
       "extensionNotes": "",
       "newExpectedReturn": "",
-      "actualReturnDate": "",
-      "returnConfirmedBy": "",
+      "actualReturnDate": "2026-09-01T11:18:45.382Z",
+      "returnConfirmedBy": "Royston Dcosta",
       "confirmationNotes": "",
-      "transDate": "2026-09-01T06:12:44.345Z",
-      "approvalStatus": "",
+      "transDate": "2026-09-01T11:18:45.382Z",
+      "approvalStatus": "Approved (In Person)",
       "incidentRemarks": "",
       "confirmedBy": ""
     },
@@ -355,7 +355,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-09-01T11:18:44.487Z",
+    "updated": "2026-09-01T11:18:53.401Z",
     "user": "Donan Arciaga"
   }
 }
