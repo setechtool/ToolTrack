@@ -95,6 +95,18 @@
       "location": "SUMC",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1788243100237,
+      "desc": "Kathobox",
+      "model": "Kathobox",
+      "serial": "1030",
+      "owner": "SUMC",
+      "calDue": "2027-09-01",
+      "status": "Available",
+      "location": "SUMc",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -289,7 +301,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-09-01T06:09:42.881Z",
+    "updated": "2026-09-01T06:11:44.250Z",
     "user": "Donan Arciaga"
   }
 }
