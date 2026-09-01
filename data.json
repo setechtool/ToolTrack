@@ -183,7 +183,26 @@
       "department": "ANGIO"
     }
   ],
-  "transactions": [],
+  "transactions": [
+    {
+      "id": 1788242957102,
+      "toolId": 1787494900690,
+      "engineerId": 1787211620498,
+      "takenDate": "2026-09-01",
+      "expectedReturn": "2026-09-08",
+      "returned": false,
+      "location": "N/A",
+      "extensionNotes": "",
+      "newExpectedReturn": "",
+      "actualReturnDate": "",
+      "returnConfirmedBy": "",
+      "confirmationNotes": "",
+      "transDate": "2026-09-01T06:09:17.103Z",
+      "approvalStatus": "",
+      "incidentRemarks": "",
+      "confirmedBy": ""
+    }
+  ],
   "returnRequests": [],
   "roy": {
     "phone": "+965 66944704",
@@ -252,7 +271,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-08-23T14:22:04.014Z",
+    "updated": "2026-09-01T06:09:23.211Z",
     "user": "Donan Arciaga"
   }
 }
