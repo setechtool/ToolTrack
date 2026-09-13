@@ -107,18 +107,6 @@
       "location": "SUMc",
       "calCert": null,
       "calCertDate": null
-    },
-    {
-      "id": 1789303703192,
-      "desc": "TRUE RMS MULTIMETER",
-      "model": "FLUKE 117",
-      "serial": "221857",
-      "owner": "Mina Matta",
-      "calDue": "2027-05-03",
-      "status": "Available",
-      "location": "",
-      "calCert": null,
-      "calCertDate": null
     }
   ],
   "engineers": [
@@ -408,7 +396,18 @@
       "role": "Engineer"
     }
   },
-  "deletionRecords": [],
+  "deletionRecords": [
+    {
+      "id": "DEL_1789303839041",
+      "type": "tool",
+      "itemName": "TRUE RMS MULTIMETER",
+      "itemDetails": "S/N:221857",
+      "deletedBy": "Mina Matta",
+      "reason": "Test Entry Only",
+      "dateTime": "2026-09-13T12:50:39.041Z",
+      "actionType": "Tool Record Deleted"
+    }
+  ],
   "logConfig": {
     "enabled": true,
     "level": "all",
@@ -417,7 +416,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-09-13T12:48:27.199Z",
+    "updated": "2026-09-13T12:50:43.048Z",
     "user": "Mina Matta"
   }
 }
