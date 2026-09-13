@@ -107,6 +107,18 @@
       "location": "SUMc",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1789303703192,
+      "desc": "TRUE RMS MULTIMETER",
+      "model": "FLUKE 117",
+      "serial": "221857",
+      "owner": "Mina Matta",
+      "calDue": "2027-05-03",
+      "status": "Available",
+      "location": "",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -405,7 +417,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-09-01T11:37:18.306Z",
+    "updated": "2026-09-13T12:48:27.199Z",
     "user": "Mina Matta"
   }
 }
