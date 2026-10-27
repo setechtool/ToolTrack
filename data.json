@@ -347,6 +347,18 @@
       "location": "SUMC",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793092751149,
+      "desc": "Grease Mobitemp SHC -380g =G=",
+      "model": "Grease Mobitemp SHC -380g =G=",
+      "serial": "3499894",
+      "owner": "SUMC",
+      "calDue": "2027-10-27",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -656,7 +668,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:17:28.633Z",
+    "updated": "2026-10-27T09:19:15.166Z",
     "user": "Donan Arciaga"
   }
 }
