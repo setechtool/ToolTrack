@@ -203,6 +203,18 @@
       "location": "DSV",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793092140711,
+      "desc": "MONITOR OPTIMIZATION KIT",
+      "model": "MONITOR OPTIMIZATION KIT",
+      "serial": "N/A",
+      "owner": "SUMC",
+      "calDue": "2027-10-27",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -512,7 +524,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:08:26.206Z",
+    "updated": "2026-10-27T09:09:04.726Z",
     "user": "Donan Arciaga"
   }
 }
