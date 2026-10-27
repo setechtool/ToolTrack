@@ -251,6 +251,18 @@
       "location": "SUMC",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793092265045,
+      "desc": "NORMI 13 SET WITH HOLDER+DOSEMETER",
+      "model": "NORMI 13 SET WITH HOLDER+DOSEMETER",
+      "serial": "N/A",
+      "owner": "SUMC",
+      "calDue": "2027-10-27",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -560,7 +572,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:10:37.489Z",
+    "updated": "2026-10-27T09:11:09.055Z",
     "user": "Donan Arciaga"
   }
 }
