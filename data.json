@@ -311,6 +311,18 @@
       "location": "ANGIO TEAM",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793092481458,
+      "desc": "LEAD INSERT 30X40 CALIBRATION",
+      "model": "LEAD INSERT 30X40 CALIBRATION",
+      "serial": "7008852",
+      "owner": "SUMC",
+      "calDue": "2027-10-27",
+      "status": "Available",
+      "location": "ANGIO TEAM",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -620,7 +632,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:14:14.909Z",
+    "updated": "2026-10-27T09:14:45.470Z",
     "user": "Donan Arciaga"
   }
 }
