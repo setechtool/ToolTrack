@@ -371,6 +371,18 @@
       "location": "CT TEAM",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793092810533,
+      "desc": "PROSIM 8 VITAL SIGNS SIMULATOR",
+      "model": "PROSIM 8 VITAL SIGNS SIMULATOR",
+      "serial": "PROSIM 8",
+      "owner": "SUMC",
+      "calDue": "2027-10-27",
+      "status": "Available",
+      "location": "ANGIO TEAM",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -680,7 +692,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:19:47.569Z",
+    "updated": "2026-10-27T09:20:14.536Z",
     "user": "Donan Arciaga"
   }
 }
