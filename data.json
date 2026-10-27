@@ -359,6 +359,18 @@
       "location": "SUMC",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793092783561,
+      "desc": "VERTICAL STRUTS-2",
+      "model": "VERTICAL STRUTS-2",
+      "serial": "11106934",
+      "owner": "SUMC",
+      "calDue": "2027-10-27",
+      "status": "Available",
+      "location": "CT TEAM",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -668,7 +680,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:19:15.166Z",
+    "updated": "2026-10-27T09:19:47.569Z",
     "user": "Donan Arciaga"
   }
 }
