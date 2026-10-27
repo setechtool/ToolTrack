@@ -335,6 +335,18 @@
       "location": "CT TEAM",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793092613496,
+      "desc": "Grease Tribol GR 100-2 PD -30g =G=",
+      "model": "Grease Tribol GR 100-2 PD -30g =G=",
+      "serial": "3491271",
+      "owner": "SUMC",
+      "calDue": "2027-10-27",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -644,7 +656,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:16:30.187Z",
+    "updated": "2026-10-27T09:16:57.508Z",
     "user": "Donan Arciaga"
   }
 }
