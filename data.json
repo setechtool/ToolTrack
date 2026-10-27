@@ -263,6 +263,18 @@
       "location": "SUMC",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793092298227,
+      "desc": "ROBOT EMD MEAS. PROBE",
+      "model": "ROBOT EMD MEAS. PROBE",
+      "serial": "N/A",
+      "owner": "SUMC",
+      "calDue": "2027-10-27",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -572,7 +584,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:11:09.055Z",
+    "updated": "2026-10-27T09:11:42.229Z",
     "user": "Donan Arciaga"
   }
 }
