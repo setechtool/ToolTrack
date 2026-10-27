@@ -239,6 +239,18 @@
       "location": "SUMC",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793092233487,
+      "desc": "ERDU TEST LOAD III",
+      "model": "ERDU TEST LOAD III",
+      "serial": "N/A",
+      "owner": "SUMC",
+      "calDue": "2027-10-27",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -548,7 +560,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:10:07.504Z",
+    "updated": "2026-10-27T09:10:37.489Z",
     "user": "Donan Arciaga"
   }
 }
