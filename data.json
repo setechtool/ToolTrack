@@ -131,6 +131,18 @@
       "location": "SUMC",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793091758260,
+      "desc": "X-RAY METER",
+      "model": "DIADOS DIAGNOSTIC METER",
+      "serial": "3009",
+      "owner": "SUMC",
+      "calDue": "2027-02-27",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -440,7 +452,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:00:17.622Z",
+    "updated": "2026-10-27T09:02:42.261Z",
     "user": "Donan Arciaga"
   }
 }
