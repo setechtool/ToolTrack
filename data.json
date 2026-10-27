@@ -227,6 +227,18 @@
       "location": "SRIDHAR - KEPT IN DAR AL SHIFA MR",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793092203502,
+      "desc": "MIRA WHEEL EXTRACTOR",
+      "model": "MIRA WHEEL EXTRACTOR",
+      "serial": "N/A",
+      "owner": "SUMC",
+      "calDue": "2027-10-27",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -536,7 +548,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:09:44.835Z",
+    "updated": "2026-10-27T09:10:07.504Z",
     "user": "Donan Arciaga"
   }
 }
