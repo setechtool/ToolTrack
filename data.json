@@ -728,7 +728,9 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:23:23.673Z",
-    "user": "Donan Arciaga"
+    "merged": true,
+    "mergedAt": "2026-10-27T09:23:26.336Z",
+    "user": "Donan Arciaga",
+    "updated": "2026-10-27T09:23:23.673Z"
   }
 }
