@@ -143,6 +143,18 @@
       "location": "SUMC",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793091796835,
+      "desc": "MEASURING TOOL",
+      "model": "DIADOS DIAGNOSTIC METER",
+      "serial": "3009",
+      "owner": "SUMC",
+      "calDue": "2027-02-27",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -452,7 +464,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:02:42.261Z",
+    "updated": "2026-10-27T09:03:20.846Z",
     "user": "Donan Arciaga"
   }
 }
