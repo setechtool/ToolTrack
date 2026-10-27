@@ -407,6 +407,18 @@
       "location": "SUMC",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793092909594,
+      "desc": "SPRING BALANCE 25 N",
+      "model": "SPRING BALANCE 25 N",
+      "serial": "4429114",
+      "owner": "SUMC",
+      "calDue": "2027-10-27",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -716,7 +728,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:21:29.860Z",
+    "updated": "2026-10-27T09:21:53.598Z",
     "user": "Donan Arciaga"
   }
 }
