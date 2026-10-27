@@ -179,6 +179,18 @@
       "location": "636/23056",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793091965503,
+      "desc": "SERVICE PLUG AERA/SKYRA",
+      "model": "636/23090",
+      "serial": "10500104",
+      "owner": "SUMC",
+      "calDue": "2027-10-27",
+      "status": "Available",
+      "location": "SUMC",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -488,7 +500,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:05:23.270Z",
+    "updated": "2026-10-27T09:06:09.516Z",
     "user": "Donan Arciaga"
   }
 }
