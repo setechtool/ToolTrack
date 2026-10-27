@@ -191,6 +191,18 @@
       "location": "SUMC",
       "calCert": null,
       "calCertDate": null
+    },
+    {
+      "id": 1793092042012,
+      "desc": "TX BOX LIFTING TOOL",
+      "model": "636/23237",
+      "serial": "10759454",
+      "owner": "SUMC",
+      "calDue": "2027-10-27",
+      "status": "Available",
+      "location": "DSV",
+      "calCert": null,
+      "calCertDate": null
     }
   ],
   "engineers": [
@@ -500,7 +512,7 @@
   },
   "_meta": {
     "version": "2.1.8",
-    "updated": "2026-10-27T09:06:09.516Z",
+    "updated": "2026-10-27T09:07:26.022Z",
     "user": "Donan Arciaga"
   }
 }
